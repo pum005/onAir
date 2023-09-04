@@ -1,0 +1,14 @@
+app:
+  auth:
+    token-secret: devbeekei-token-secret-key
+    token-expiration-time: 1209600000
+  oauth2:
+    authorized-redirect-uris:
+      - http://localhost:8080/auth/token
+
+  api-key:
+    chat-gpt: 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
+
+  jwt:
+    secret: dyAeHubOOc8KaOfYB6XEQoEj1QzRlVgtjNL8PYs1A1tymZvvqkcEU7L1imkKHeDa
+    expiration-in-ms: 1000000

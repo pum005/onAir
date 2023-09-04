@@ -1,0 +1,3 @@
+spring:
+  profiles:
+    include: connection, oauth2, app
