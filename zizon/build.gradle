@@ -52,6 +52,9 @@ dependencies {
 	// thymeleaf
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
+	//tts
+	implementation 'com.google.cloud:google-cloud-texttospeech:2.24.0'
 }
 
 tasks.named('test') {

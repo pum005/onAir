@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers().permitAll()
+                .antMatchers("/api/v1/tts").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
