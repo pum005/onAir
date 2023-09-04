@@ -1,62 +1,100 @@
 package com.b302.zizon.domain.user.entity;
 
-import com.b302.zizon.domain.user.enums.AuthProvider;
-import com.b302.zizon.domain.user.enums.Role;
-import lombok.Builder;
+import com.b302.zizon.util.oauth.entity.ProviderType;
+import com.b302.zizon.util.oauth.entity.RoleType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
-@Entity
 @Getter
+@Setter
 @NoArgsConstructor
-public class User extends BaseTimeEntity {
+@AllArgsConstructor
+@Entity
+@Table(name = "USER")
+public class User {
+    @JsonIgnore
     @Id
-    private String id;
+    @Column(name = "USER_SEQ")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userSeq;
 
-    @Column(nullable = false)
-    private String nickname;
+    @Column(name = "USER_ID", length = 64, unique = true)
+    @NotNull
+    @Size(max = 64)
+    private String userId;
 
-    @Column(nullable = false)
+    @Column(name = "USERNAME", length = 100)
+    @NotNull
+    @Size(max = 100)
+    private String username;
+
+    @JsonIgnore
+    @Column(name = "PASSWORD", length = 128)
+    @NotNull
+    @Size(max = 128)
+    private String password;
+
+    @Column(name = "EMAIL", length = 512, unique = true)
+    @NotNull
+    @Size(max = 512)
     private String email;
 
-    @Column
+    @Column(name = "EMAIL_VERIFIED_YN", length = 1)
+    @NotNull
+    @Size(min = 1, max = 1)
+    private String emailVerifiedYn;
+
+    @Column(name = "PROFILE_IMAGE_URL", length = 512)
+    @NotNull
+    @Size(max = 512)
     private String profileImageUrl;
 
+    @Column(name = "PROVIDER_TYPE", length = 20)
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+    @NotNull
+    private ProviderType providerType;
 
+    @Column(name = "ROLE_TYPE", length = 20)
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private AuthProvider authProvider;
+    @NotNull
+    private RoleType roleType;
 
-    @Builder
+    @Column(name = "CREATED_AT")
+    @NotNull
+    private LocalDateTime createdAt;
+
+    @Column(name = "MODIFIED_AT")
+    @NotNull
+    private LocalDateTime modifiedAt;
+
     public User(
-            String id
-            , String nickname
-            , String email
-            , String profileImageUrl
-            , Role role
-            , AuthProvider authProvider
-    ){
-        this.id = id;
-        this.nickname = nickname;
-        this.email = email;
-        this.profileImageUrl = profileImageUrl;
-        this.role = role;
-        this.authProvider = authProvider;
-    }
-
-    public User update(String name, String picture){
-        this.nickname = name;
-        this.profileImageUrl = picture;
-
-        return this;
-    }
-
-    public String getRoleKey(){
-        return this.role.getKey();
+            @NotNull @Size(max = 64) String userId,
+            @NotNull @Size(max = 100) String username,
+            @NotNull @Size(max = 512) String email,
+            @NotNull @Size(max = 1) String emailVerifiedYn,
+            @NotNull @Size(max = 512) String profileImageUrl,
+            @NotNull ProviderType providerType,
+            @NotNull RoleType roleType,
+            @NotNull LocalDateTime createdAt,
+            @NotNull LocalDateTime modifiedAt
+    ) {
+        this.userId = userId;
+        this.username = username;
+        this.password = "NO_PASS";
+        this.email = email != null ? email : "NO_EMAIL";
+        this.emailVerifiedYn = emailVerifiedYn;
+        this.profileImageUrl = profileImageUrl != null ? profileImageUrl : "";
+        this.providerType = providerType;
+        this.roleType = roleType;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
     }
 }
