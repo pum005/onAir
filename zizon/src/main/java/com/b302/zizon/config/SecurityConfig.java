@@ -73,6 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/todo/**").hasAnyAuthority(RoleType.USER.getCode())
                 .antMatchers("/board/**").hasAnyAuthority(RoleType.USER.getCode())
                 .antMatchers("/user/**").hasAnyAuthority(RoleType.USER.getCode())
+                .antMatchers("/api/v1/tts").permitAll()
                 .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
                 .anyRequest().authenticated()
                 .and()
