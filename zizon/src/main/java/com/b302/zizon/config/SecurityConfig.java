@@ -75,6 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/**").hasAnyAuthority(RoleType.USER.getCode())
                 .antMatchers("/api/v1/tts").permitAll()
                 .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
+                .antMatchers("/api/v1/tts").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()

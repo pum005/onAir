@@ -8,6 +8,7 @@ app:
 
   api-key:
     chat-gpt: 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
+    tts: AIzaSyDGrQ9bKtY-I0H6_0JNp4FWrSuQeOxF6r0
 
   jwt:
     secret: dyAeHubOOc8KaOfYB6XEQoEj1QzRlVgtjNL8PYs1A1tymZvvqkcEU7L1imkKHeDa
