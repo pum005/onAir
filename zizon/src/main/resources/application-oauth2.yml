@@ -12,13 +12,16 @@ spring:
             scope: nickname, email, profile_image
             clientName: Naver
           kakao:
-            clientId: e2aaec24653e9049ceded19718ba137b
-            clientSecret: IptAcRuyzYZgLLwzp81q0qzFqY1UDLl9
-            clientAuthenticationMethod: post
-            authorizationGrantType: authorization_code
-            redirectUri: http://localhost:3000/oauth2/callback/kakao
-            scope: profile_nickname, account_email, profile_image
-            clientName: Kakao
+            client-id: e2aaec24653e9049ceded19718ba137b
+            client-secret: RATYCYGdFMGeszpqR1Wdu2zKXlSKy1tX
+            scope:
+              - account_email
+              - profile_nickname
+              - profile_image
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            client-name: Kakao
+            client-authentication-method: POST
         provider:
           naver:
             authorizationUri: https://nid.naver.com/oauth2.0/authorize
@@ -31,19 +34,5 @@ spring:
             userInfoUri: https://kapi.kakao.com/v2/user/me
             userNameAttribute: id
 
-cors:
-  allowed-origins: http://localhost:3000
-  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
-  allowed-headers: '*'
-  max-age: 3600
-
 jwt:
   secret: sadfjodioi12jio3j21iojoifaiadhgsapdfiojsdifopjdif
-
-app:
-  auth:
-    tokenSecret:
-    tokenExpiry: 1800000
-    refreshTokenExpiry: 604800000
-  oauth2:
-    authorizedRedirectUris: http://localhost:3000/oauth/redirect
