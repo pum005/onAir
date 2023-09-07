@@ -1,100 +1,71 @@
-package com.b302.zizon.domain.user.entity;
+    package com.b302.zizon.domain.user.entity;
 
-import com.b302.zizon.util.oauth.entity.ProviderType;
-import com.b302.zizon.util.oauth.entity.RoleType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
+    import lombok.Builder;
+    import lombok.Getter;
+    import lombok.ToString;
+    import org.springframework.data.annotation.CreatedDate;
+    import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
-import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
+    import javax.persistence.*;
+    import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Table(name = "USER")
-public class User {
-    @JsonIgnore
-    @Id
-    @Column(name = "USER_SEQ")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userSeq;
+    @Entity
+    @Getter
+    @ToString
+    @EntityListeners(AuditingEntityListener.class)
+    @Builder
+    public class User {
 
-    @Column(name = "USER_ID", length = 64, unique = true)
-    @NotNull
-    @Size(max = 64)
-    private String userId;
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long userNo;
+        @Column(nullable = false)
+        private String accountType;
+        @Column(nullable = false, unique = true)
+        private String email;
+        @Column(nullable = false)
+        private String userPw;
+        private String nickname;
+        private String profileImage;
+        @CreatedDate
+        @Column(nullable = false)
+        private LocalDateTime registDate;
 
-    @Column(name = "USERNAME", length = 100)
-    @NotNull
-    @Size(max = 100)
-    private String username;
+        public User() {
+        }
 
-    @JsonIgnore
-    @Column(name = "PASSWORD", length = 128)
-    @NotNull
-    @Size(max = 128)
-    private String password;
+        public User(Long userNo, String accountType, String email, String userPw, String nickname, String profileImage, LocalDateTime registDate) {
+            this.userNo = userNo;
+            this.accountType = accountType;
+            this.email = email;
+            this.userPw = userPw;
+            this.nickname = nickname;
+            this.profileImage = profileImage;
+            this.registDate = registDate;
+        }
 
-    @Column(name = "EMAIL", length = 512, unique = true)
-    @NotNull
-    @Size(max = 512)
-    private String email;
+        public void updatePassword(String userPw) {
+            this.userPw = userPw;
+        }
 
-    @Column(name = "EMAIL_VERIFIED_YN", length = 1)
-    @NotNull
-    @Size(min = 1, max = 1)
-    private String emailVerifiedYn;
+        public void updateNickname(String newNickname) {
+            this.nickname = newNickname;
+        }
 
-    @Column(name = "PROFILE_IMAGE_URL", length = 512)
-    @NotNull
-    @Size(max = 512)
-    private String profileImageUrl;
 
-    @Column(name = "PROVIDER_TYPE", length = 20)
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private ProviderType providerType;
+        public void updateprofileImage(String profileImage){
+            this.profileImage = profileImage;
+        }
 
-    @Column(name = "ROLE_TYPE", length = 20)
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private RoleType roleType;
 
-    @Column(name = "CREATED_AT")
-    @NotNull
-    private LocalDateTime createdAt;
+        public UserDTO toUserDTO(){
+            return UserDTO.builder()
+                    .userNo(this.userNo)
+                    .accountType(this.accountType)
+                    .email(this.email)
+                    .nickname(this.nickname)
+                    .profileImage(this.profileImage)
+                    .build();
+        }
 
-    @Column(name = "MODIFIED_AT")
-    @NotNull
-    private LocalDateTime modifiedAt;
 
-    public User(
-            @NotNull @Size(max = 64) String userId,
-            @NotNull @Size(max = 100) String username,
-            @NotNull @Size(max = 512) String email,
-            @NotNull @Size(max = 1) String emailVerifiedYn,
-            @NotNull @Size(max = 512) String profileImageUrl,
-            @NotNull ProviderType providerType,
-            @NotNull RoleType roleType,
-            @NotNull LocalDateTime createdAt,
-            @NotNull LocalDateTime modifiedAt
-    ) {
-        this.userId = userId;
-        this.username = username;
-        this.password = "NO_PASS";
-        this.email = email != null ? email : "NO_EMAIL";
-        this.emailVerifiedYn = emailVerifiedYn;
-        this.profileImageUrl = profileImageUrl != null ? profileImageUrl : "";
-        this.providerType = providerType;
-        this.roleType = roleType;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
     }
-}
