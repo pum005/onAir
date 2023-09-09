@@ -13,19 +13,16 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Slf4j
-public class JwtSuccessHandler implements AuthenticationSuccessHandler {
+public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-        System.out.println("성공");
 
         User UserInfo = principalDetails.getUser(); //PrincipalDetails에서 사용자 정보 가져오기
 
-        //String assessToken = principalDetails.getAssessToken();
+        String assessToken = UserInfo.getPrivateAccess();
 
-
-        String userCode = UserInfo.getUserPw();
 
         /*
         RestTemplate restTemplate = new RestTemplate();
@@ -50,6 +47,6 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
         }
 
         */
-        response.sendRedirect("http://localhost:3000/success" + userCode);
+        response.sendRedirect("http://localhost:3000/success?access=" + assessToken);
     }
 }
