@@ -15,12 +15,12 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 
     private Map<String, Object> attributes;
     private User user;
-    private String assessToken;
+    private String accessToken;
 
-    public PrincipalDetails(User user , Map<String, Object> attributes, String assessToken){
+    public PrincipalDetails(User user , Map<String, Object> attributes, String accessToken){
         this.user = user;
         this.attributes = attributes;
-        this.assessToken = assessToken;
+        this.accessToken = accessToken;
     }
 
     @Override
@@ -35,8 +35,8 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
         return collections;
     }
 
-    public String getAssessToken() {
-        return this.assessToken;
+    public String getAccessToken() {
+        return this.accessToken;
     }
 
     @Override

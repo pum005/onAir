@@ -2,14 +2,13 @@ package com.b302.zizon.config;
 
 import com.b302.zizon.domain.user.service.UserService;
 import com.b302.zizon.util.jwt.JwtFilter;
-import com.b302.zizon.util.kakaoAPI.service.JwtSuccessHandler;
-import com.b302.zizon.util.kakaoAPI.service.KakaoFailHandler;
+import com.b302.zizon.util.kakaoAPI.service.OAuthSuccessHandler;
+import com.b302.zizon.util.kakaoAPI.service.OAuthFailHandler;
 import com.b302.zizon.util.kakaoAPI.service.PrincipalOauth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -52,9 +51,8 @@ public class SecurityConfig{
                 .and()
                 // oauth2 login
                 .oauth2Login()
-                .loginPage("/user/login")
-                .successHandler(new JwtSuccessHandler())
-                .failureHandler(new KakaoFailHandler())
+                .successHandler(new OAuthSuccessHandler())
+                .failureHandler(new OAuthFailHandler())
                 .userInfoEndpoint().userService(principalOauth2UserService)
                 .and();
 
