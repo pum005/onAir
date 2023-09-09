@@ -4,13 +4,22 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class JwtUtil {
 
     private static Long acExpiredMs = 1000 * 60 * 60L; // 액세스 토큰의 만료 시간(30분) * 48 * 30 = 30일
     private static Long rfExpiredMs = 1000 * 60 * 60 * 24 * 14L; // 리프레쉬 토큰의 만료 시간(14일)
+    private static StringRedisTemplate redisTemplate;
+
+
 
     // 유저 pk 꺼내기
     public static Long getUserNo(String token, String secretKey){
@@ -46,11 +55,15 @@ public class JwtUtil {
     public static String createRefreshToken(String secretKey){
         Claims claims = Jwts.claims();
 
-        return Jwts.builder() // 리프레쉬 토큰을 생성
-                .setClaims(claims) // claim은 비어있음
-                .setIssuedAt(new Date(System.currentTimeMillis())) // 현재 시간
-                .setExpiration(new Date(System.currentTimeMillis() + rfExpiredMs)) // 언제까지
-                .signWith(SignatureAlgorithm.HS256, secretKey) // 어떤 키로 사인할지
+        String refreshToken = Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + rfExpiredMs))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
+
+
+        return refreshToken;
+
     }
 }

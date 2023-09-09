@@ -4,6 +4,7 @@
     import lombok.Getter;
     import lombok.ToString;
     import org.springframework.data.annotation.CreatedDate;
+    import org.springframework.data.annotation.LastModifiedDate;
     import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
     import javax.persistence.*;
@@ -20,31 +21,39 @@
         private Long userNo;
         @Column(nullable = false)
         private String accountType;
-        @Column(nullable = false, unique = true)
-        private String email;
         @Column(nullable = false)
-        private String userPw;
+        private String email;
+        @Column(nullable = false, unique = true)
         private String nickname;
+        @Column(nullable = false)
         private String profileImage;
+        @Column(nullable = false)
+        private String privateAccess;
         @CreatedDate
         @Column(nullable = false)
         private LocalDateTime registDate;
+        @LastModifiedDate
+        @Column(nullable = false)
+        private LocalDateTime lastLoginDate;
+        @Column(nullable = false)
+        private boolean deleteCheck = false;
+        @Column(nullable = false)
+        private String accessToken;
 
         public User() {
         }
 
-        public User(Long userNo, String accountType, String email, String userPw, String nickname, String profileImage, LocalDateTime registDate) {
+        public User(Long userNo, String accountType, String email, String nickname, String profileImage, String privateAccess, LocalDateTime registDate, LocalDateTime lastLoginDate, boolean deleteCheck, String accessToken) {
             this.userNo = userNo;
             this.accountType = accountType;
             this.email = email;
-            this.userPw = userPw;
             this.nickname = nickname;
             this.profileImage = profileImage;
+            this.privateAccess = privateAccess;
             this.registDate = registDate;
-        }
-
-        public void updatePassword(String userPw) {
-            this.userPw = userPw;
+            this.lastLoginDate = lastLoginDate;
+            this.deleteCheck = deleteCheck;
+            this.accessToken = accessToken;
         }
 
         public void updateNickname(String newNickname) {
@@ -65,6 +74,10 @@
                     .nickname(this.nickname)
                     .profileImage(this.profileImage)
                     .build();
+        }
+
+        public void updateLastLoginDate() {
+            this.lastLoginDate = LocalDateTime.now();
         }
 
 

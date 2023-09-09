@@ -14,22 +14,11 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    //Optional<User> findByEmail(String email);
-
-    @Query("SELECT u FROM User u WHERE u.email = :email AND u.accountType = 'ORIGIN'")
-    Optional<User> findByOriginEmail(@Param("email") String email);
-
-
-    @Query("SELECT u FROM User u WHERE u.email = :email AND u.accountType = 'KAKAO'")
-    Optional<User> findByKakaoEmail(@Param("email")String email);
-
-    Optional<User> findByUserPw(String userPw);
-
-    @Query("SELECT u FROM User u WHERE u.nickname LIKE %:nickname% AND u.userNo != :userNo") // 나는 빼고 검색
-    List<User> findByNicknameContainingAndUserNoNot(@Param("nickname") String nickname, @Param("userNo") Long userNo);
+    Optional<User> findByEmailAndAccountType(String email, String provider);
 
     Optional<User> findByUserNo(Long userNo);
 
-    @Query("SELECT u.nickname FROM User u WHERE u.userNo = :userNo")
-    String findUserNicknameByUserNo(@Param("userNo") Long userNo);
+    Optional<User> findByPrivateAccess(String access);
+
+    boolean existsByNickname(String nickname);
 }

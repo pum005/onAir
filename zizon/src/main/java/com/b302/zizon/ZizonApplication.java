@@ -11,7 +11,6 @@ import java.util.TimeZone;
 
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @EnableJpaAuditing
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ZizonApplication {
 
 
