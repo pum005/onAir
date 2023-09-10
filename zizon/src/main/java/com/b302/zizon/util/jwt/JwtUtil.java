@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 public class JwtUtil {
 
-    private static Long acExpiredMs = 1000 * 60 * 60L; // 액세스 토큰의 만료 시간(30분) * 48 * 30 = 30일
+    private static Long acExpiredMs = 1000 * 60 * 60L; // 액세스 토큰의 만료 시간(60분)
     private static Long rfExpiredMs = 1000 * 60 * 60 * 24 * 14L; // 리프레쉬 토큰의 만료 시간(14일)
     private static StringRedisTemplate redisTemplate;
 
