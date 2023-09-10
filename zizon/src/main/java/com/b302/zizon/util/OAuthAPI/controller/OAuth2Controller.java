@@ -1,6 +1,5 @@
-package com.b302.zizon.util.kakaoAPI.controller;
+package com.b302.zizon.util.OAuthAPI.controller;
 
-import com.b302.zizon.domain.refreshtoken.entity.RefreshToken;
 import com.b302.zizon.domain.refreshtoken.repository.RefreshTokenRepository;
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.repository.UserRepository;

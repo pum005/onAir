@@ -1,4 +1,4 @@
-package com.b302.zizon.util.kakaoAPI.service;
+package com.b302.zizon.util.OAuthAPI.service;
 
 
 import com.b302.zizon.domain.user.entity.User;
@@ -12,7 +12,6 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -42,11 +41,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         String email = oAuth2UserInfo.getEmail();
         String profileImage = oAuth2UserInfo.getImagePath();
         String accessToken = userRequest.getAccessToken().getTokenValue();
-        
-        // 프사가 없으면 우리의 기본 프사로 설정하면 될 듯
-        if(profileImage == null){
-            profileImage = "https://damda.s3.ap-northeast-2.amazonaws.com/user-profileImage/profile.jpg";
-        }
 
         Optional<User> optionalUser = userRepository.findByEmailAndAccountType(email, provider);
         User user = null;

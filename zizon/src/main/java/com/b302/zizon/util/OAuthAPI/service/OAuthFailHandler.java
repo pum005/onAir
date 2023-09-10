@@ -1,4 +1,4 @@
-package com.b302.zizon.util.kakaoAPI.service;
+package com.b302.zizon.util.OAuthAPI.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;

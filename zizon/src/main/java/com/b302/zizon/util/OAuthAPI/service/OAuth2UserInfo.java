@@ -1,4 +1,4 @@
-package com.b302.zizon.util.kakaoAPI.service;
+package com.b302.zizon.util.OAuthAPI.service;
 
 public interface OAuth2UserInfo {
     String getProviderId();
