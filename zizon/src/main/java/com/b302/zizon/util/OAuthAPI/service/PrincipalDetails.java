@@ -1,4 +1,4 @@
-package com.b302.zizon.util.kakaoAPI.service;
+package com.b302.zizon.util.OAuthAPI.service;
 
 import com.b302.zizon.domain.user.entity.User;
 import lombok.Getter;
@@ -76,5 +76,10 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
     @Override
     public String getName() {
         return null;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 }

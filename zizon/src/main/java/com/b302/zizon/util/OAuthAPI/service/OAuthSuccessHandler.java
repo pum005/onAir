@@ -1,4 +1,4 @@
-package com.b302.zizon.util.kakaoAPI.service;
+package com.b302.zizon.util.OAuthAPI.service;
 
 import com.b302.zizon.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;

@@ -36,5 +36,3 @@ spring:
 
 jwt:
   secret: sadfjodioi12jio3j21iojoifaiadhgsapdfiojsdifopjdif
-  access-time: 1200 # 20분
-  refresh-time: 1209600 # 2주
