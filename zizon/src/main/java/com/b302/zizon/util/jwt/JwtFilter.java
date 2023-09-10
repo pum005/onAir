@@ -57,7 +57,7 @@ public class JwtFilter extends OncePerRequestFilter { // 모든 요청에 대해
         }
 
         // userId 토큰에서 꺼냄.
-        Long userId = JwtUtil.getUserNo(token, secretKey);
+        Long userId = JwtUtil.getUserId(token, secretKey);
         log.info("userId:{}", userId);
 
         // 권한 부여

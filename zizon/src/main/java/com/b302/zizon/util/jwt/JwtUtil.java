@@ -22,9 +22,9 @@ public class JwtUtil {
 
 
     // 유저 pk 꺼내기
-    public static Long getUserNo(String token, String secretKey){
+    public static Long getUserId(String token, String secretKey){
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
-                .getBody().get("userNo", Long.class);
+                .getBody().get("userId", Long.class);
     }
 
     // 토큰 만료 체크
@@ -39,9 +39,9 @@ public class JwtUtil {
     }
 
     // 액세스 토큰 생성
-    public static String createAccessJwt(Long userNo, String secretKey){
+    public static String createAccessJwt(Long userId, String secretKey){
         Claims claims = Jwts.claims();
-        claims.put("userNo", userNo);
+        claims.put("userId", userId);
 
         return Jwts.builder() // 액세스 토큰을 생성
                 .setClaims(claims) // 유저의 pk값
