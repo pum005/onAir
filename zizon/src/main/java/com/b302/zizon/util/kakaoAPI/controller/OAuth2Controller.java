@@ -41,10 +41,11 @@ public class OAuth2Controller {
         User UserInfo = optionalUser.get();
 
         // 로그인 성공
-        String accessToken = JwtUtil.createAccessJwt(UserInfo.getUserNo(), secretKey); // 토큰 발급해서 넘김
+        String accessToken = JwtUtil.createAccessJwt(UserInfo.getUserId(), secretKey); // 토큰 발급해서 넘김
         String refreshToken = JwtUtil.createRefreshToken(secretKey); // 리프레시 토큰 발급해서 넘김
 
-        refreshTokenRepository.save(new RefreshToken(String.valueOf(UserInfo.getUserNo()), refreshToken, accessToken));
+
+//        refreshTokenRepository.save(new RefreshToken(String.valueOf(UserInfo.getUserId()), refreshToken, accessToken));
 
         Map<String, Object> result = new HashMap<>();
 
@@ -53,7 +54,7 @@ public class OAuth2Controller {
         result.put("accountType", UserInfo.getAccountType());
         result.put("nickname", UserInfo.getNickname());
         result.put("profileImage", UserInfo.getProfileImage());
-        result.put("userNo", UserInfo.getUserNo());
+        result.put("userId", UserInfo.getUserId());
 
 
 //        Optional<RefreshToken> byUserUserNo = refreshTokenRepository.findByUserUserNo(UserInfo.getUserNo());
@@ -84,7 +85,8 @@ public class OAuth2Controller {
         }else if(UserInfo.getAccountType().equals("naver")){
             response = new DataResponse<>(200, "네이버 로그인 성공");
         }
-       
+
+        System.out.println(response);
         response.setData(result);
 
         return response;
