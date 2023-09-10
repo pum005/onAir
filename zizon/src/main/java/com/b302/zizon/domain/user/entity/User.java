@@ -18,7 +18,7 @@
     public class User {
 
         @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long userNo;
+        private Long userId;
         @Column(nullable = false)
         private String accountType;
         @Column(nullable = false)
@@ -43,8 +43,8 @@
         public User() {
         }
 
-        public User(Long userNo, String accountType, String email, String nickname, String profileImage, String privateAccess, LocalDateTime registDate, LocalDateTime lastLoginDate, boolean deleteCheck, String accessToken) {
-            this.userNo = userNo;
+        public User(Long userId, String accountType, String email, String nickname, String profileImage, String privateAccess, LocalDateTime registDate, LocalDateTime lastLoginDate, boolean deleteCheck, String accessToken) {
+            this.userId = userId;
             this.accountType = accountType;
             this.email = email;
             this.nickname = nickname;
@@ -68,7 +68,7 @@
 
         public UserDTO toUserDTO(){
             return UserDTO.builder()
-                    .userNo(this.userNo)
+                    .userId(this.userId)
                     .accountType(this.accountType)
                     .email(this.email)
                     .nickname(this.nickname)
