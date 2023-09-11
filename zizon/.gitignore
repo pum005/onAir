@@ -35,3 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Custom files to ignore
+application.yml
+application-app.yml
+application-connection.yml
+application-oauth2.yml
