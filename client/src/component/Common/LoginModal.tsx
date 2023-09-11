@@ -1,25 +1,10 @@
 import React from "react";
-import styles from "./LoginModal.module.css";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 500,
-  height: 500,
-  bgcolor: "#222222",
-  borderRadius: "15px",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+import styles from "./LoginModal.module.css";
 
 const KAKAO_OAUTH_URL = `http://localhost:8080/oauth2/authorization/kakao`;
 
@@ -50,24 +35,29 @@ export default function LoginModal({ open, handleOpen, handleClose }: any) {
         }}
       >
         <Fade in={open}>
-          <Box
-            className={styles.modalContainer} // sx prop 대신 className을 사용하며 스타일을 참조합니다.
-          >
+          <Box className={styles.modalContent}>
             <img
               src="images/tempLogo.png"
               alt="tempLogo"
-              className={styles.logoImage} // style 대신 className을 사용하며 스타일을 참조합니다.
+              className={styles.tempLogo}
             />
-            <h2 className={styles.title}>나만의 플레이리스트 onAIr</h2>
+            <h2 className={styles.modalTitle}>나만의 플레이리스트 onAIr</h2>
             <Button
               variant="contained"
-              onClick={redirectToKakaoLogin}
-              className={styles.kakaoButton} // style 대신 className을 사용하며 스타일을 참조합니다.
+              onClick={redirectToKakaoLogin} // 카카오 로그인 함수 추가
+              style={{
+                backgroundColor: "#FEE500",
+                fontWeight: "bold",
+                padding: "10px 90px",
+                marginBottom: "20px",
+                color: "black",
+                fontSize: "large",
+              }}
               startIcon={
                 <img
                   src="/images/kakao.png"
                   alt="Kakao Icon"
-                  className={styles.kakaoIcon} // style 대신 className을 사용하며 스타일을 참조합니다.
+                  style={{ height: "40px", width: "auto" }}
                 />
               }
             >
@@ -75,13 +65,20 @@ export default function LoginModal({ open, handleOpen, handleClose }: any) {
             </Button>
             <Button
               variant="contained"
-              onClick={redirectToNaverLogin}
-              className={styles.naverButton} // style 대신 className을 사용하며 스타일을 참조합니다.
+              onClick={redirectToNaverLogin} // 카카오 로그인 함수 추가
+              style={{
+                backgroundColor: "#00C73C",
+                fontWeight: "bold",
+                padding: "10px 108px",
+                marginBottom: "20px",
+                color: "white",
+                fontSize: "large",
+              }}
               startIcon={
                 <img
                   src="/images/naver.png"
-                  alt="Naver Icon"
-                  className={styles.naverIcon} // style 대신 className을 사용하며 스타일을 참조합니다.
+                  alt="Kakao Icon"
+                  style={{ height: "40px", width: "auto" }}
                 />
               }
             >
