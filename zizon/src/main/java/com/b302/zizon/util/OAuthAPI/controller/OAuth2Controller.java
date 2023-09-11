@@ -42,7 +42,6 @@ public class OAuth2Controller {
             // 유저 정보가 저장되지 않음(에러처리)
         }
         User userInfo = optionalUser.get();
-        System.out.println(userInfo);
 
         // 로그인 성공
         String accessToken = jwtUtil.createAccessJwt(userInfo.getUserId(), secretKey); // 토큰 발급해서 넘김
