@@ -12,13 +12,10 @@ class ZizonApplicationTests {
 
 
 
-//	@Test
-//	void refreshTokenCheckTest() {
-//		//given
-//		RefreshTokenCheckDTO refreshTokenCheckDTO = new RefreshTokenCheckDTO();
-//		refreshTokenCheckDTO.setRefreshToken("asgsdafsdagasdfsdafd");
-//		refreshTokenCheckDTO.setUserId(1L);
-//
-//	}
+	@Test
+	void refreshTokenCheckTest() {
+		//given
+
+	}
 
 }
