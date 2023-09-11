@@ -16,7 +16,7 @@ public class Oncast {
     @Column(name = "oncast_id")
     private Long oncastId;
 
-    @ManyToOne(targetEntity = User.class)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

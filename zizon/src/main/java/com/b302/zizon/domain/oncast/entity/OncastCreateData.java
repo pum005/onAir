@@ -16,7 +16,7 @@ public class OncastCreateData {
     @Column(name = "oncast_create_data_id")
     private Long oncastCreateDateId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "oncast_id")
     private Oncast oncast;
 

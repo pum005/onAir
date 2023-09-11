@@ -17,7 +17,7 @@ public class MyPlaylistMeta {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long playlistMetaId;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
     @Column(nullable = false)
