@@ -1,7 +1,7 @@
 # Step 1: build 파일 옮기기
 FROM node:14 as build-stage
 WORKDIR /app
-COPY zizon/build .
+COPY client/build .
 
 # Step 2: Nginx이미지에 build파일 넣기
 FROM nginx:1.21
