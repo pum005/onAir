@@ -2,8 +2,8 @@ package com.b302.zizon.config;
 
 import com.b302.zizon.domain.user.service.UserService;
 import com.b302.zizon.util.jwt.JwtFilter;
-import com.b302.zizon.util.OAuthAPI.service.OAuthSuccessHandler;
-import com.b302.zizon.util.OAuthAPI.service.OAuthFailHandler;
+import com.b302.zizon.util.OAuthAPI.handler.OAuthSuccessHandler;
+import com.b302.zizon.util.OAuthAPI.handler.OAuthFailHandler;
 import com.b302.zizon.util.OAuthAPI.service.PrincipalOauth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

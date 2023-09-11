@@ -3,6 +3,10 @@ package com.b302.zizon.util.OAuthAPI.service;
 
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.repository.UserRepository;
+import com.b302.zizon.util.OAuthAPI.other.KakaoUserInfo;
+import com.b302.zizon.util.OAuthAPI.other.NaverUserInfo;
+import com.b302.zizon.util.OAuthAPI.other.OAuth2UserInfo;
+import com.b302.zizon.util.OAuthAPI.other.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

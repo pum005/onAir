@@ -44,7 +44,7 @@ public class JwtUtil {
     }
 
     // 액세스 토큰 생성
-    public static String createAccessJwt(Long userId, String secretKey){
+    public String createAccessJwt(Long userId, String secretKey){
         Claims claims = Jwts.claims();
         claims.put("userId", userId);
 

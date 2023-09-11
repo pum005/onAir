@@ -1,4 +1,4 @@
-package com.b302.zizon.util.OAuthAPI.service;
+package com.b302.zizon.util.OAuthAPI.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
