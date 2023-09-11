@@ -50,9 +50,6 @@ public class UserService {
             result.put("message", "네이버 로그인 성공");
         }
 
-
         return result;
-
     }
-
 }
