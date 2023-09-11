@@ -31,14 +31,14 @@ const Login: React.FC = () => {
     // 데이터를 Redux에 저장
     dispatch(
       setUserData({
-        nickname: data.data.nickname,
-        profileImage: data.data.profileImage,
-        userId: data.data.userId,
+        nickname: data.nickname,
+        profileImage: data.profileImage,
+        userId: data.userId,
       })
     );
 
     // 홈페이지로 리디렉션
-    navigate("/"); // useHistory의 push 대신 navigate를 사용합니다.
+    navigate("/");
   };
 
   return <div>소셜로그인 성공</div>;
