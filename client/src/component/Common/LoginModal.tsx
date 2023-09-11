@@ -26,6 +26,12 @@ const redirectToKakaoLogin = () => {
   window.location.href = KAKAO_OAUTH_URL;
 };
 
+const NAVER_OAUTH_URL = `http://localhost:8080/oauth2/authorization/naver`;
+
+const redirectToNaverLogin = () => {
+  window.location.href = NAVER_OAUTH_URL;
+};
+
 export default function LoginModal({ open, handleOpen, handleClose }: any) {
   return (
     <div>
@@ -78,6 +84,27 @@ export default function LoginModal({ open, handleOpen, handleClose }: any) {
               }
             >
               카카오톡으로 로그인하기
+            </Button>
+            <Button
+              variant="contained"
+              onClick={redirectToNaverLogin} // 카카오 로그인 함수 추가
+              style={{
+                backgroundColor: "#00C73C",
+                fontWeight: "bold",
+                padding: "10px 108px",
+                marginBottom: "20px",
+                color: "white",
+                fontSize: "large",
+              }}
+              startIcon={
+                <img
+                  src="/images/naver.png"
+                  alt="Kakao Icon"
+                  style={{ height: "40px", width: "auto" }}
+                />
+              }
+            >
+              네이버로 로그인하기
             </Button>
           </Box>
         </Fade>
