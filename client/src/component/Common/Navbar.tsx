@@ -19,6 +19,7 @@ import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LoginIcon from "@mui/icons-material/Login";
 import LoginModal from "./LoginModal";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 // 내비게이션 및 사용자 메뉴 항목에 대한 정적 데이터
 const pages = ["Products", "Pricing"];
@@ -58,6 +59,9 @@ function ResponsiveAppBar() {
   const [loginModalOpen, setLoginModalOpen] = React.useState(false);
   const handleLoginModalOpen = () => setLoginModalOpen(true);
   const handleLoginModalClose = () => setLoginModalOpen(false);
+
+  // 로그인 여부를 확인
+  const isLoggedIn = Boolean(localStorage.getItem("accessToken"));
 
   // 컴포넌트의 JSX
   return (
@@ -111,9 +115,23 @@ function ResponsiveAppBar() {
             <Button component={Link} to="/MyPage">
               <AccountCircleIcon style={{ fontSize: 35, color: "white" }} />
             </Button>
-            <Button onClick={handleLoginModalOpen}>
-              <LoginIcon style={{ fontSize: 35, color: "white" }} />
-            </Button>
+            {isLoggedIn ? (
+              <Button>
+                {" "}
+                <LogoutIcon style={{ fontSize: 35, color: "white" }} />
+              </Button>
+            ) : (
+              <>
+                <Button onClick={handleLoginModalOpen}>
+                  <LoginIcon style={{ fontSize: 35, color: "white" }} />
+                </Button>
+                <LoginModal
+                  open={loginModalOpen}
+                  handleOpen={handleLoginModalOpen}
+                  handleClose={handleLoginModalClose}
+                />
+              </>
+            )}
             <LoginModal
               open={loginModalOpen}
               handleOpen={handleLoginModalOpen}
