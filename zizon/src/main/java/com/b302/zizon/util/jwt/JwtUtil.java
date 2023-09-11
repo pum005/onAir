@@ -1,5 +1,6 @@
 package com.b302.zizon.util.jwt;
 
+import com.b302.zizon.domain.user.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -8,16 +9,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+@Component
+@RequiredArgsConstructor
 public class JwtUtil {
 
     private static Long acExpiredMs = 1000 * 60 * 60L; // 액세스 토큰의 만료 시간(60분)
     private static Long rfExpiredMs = 1000 * 60 * 60 * 24 * 14L; // 리프레쉬 토큰의 만료 시간(14일)
-    private static StringRedisTemplate redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
 
 
@@ -52,7 +57,7 @@ public class JwtUtil {
     }
 
     // 리프레쉬 토큰 생성
-    public static String createRefreshToken(String secretKey){
+    public String createRefreshToken(String secretKey, User userInfo){
         Claims claims = Jwts.claims();
 
         String refreshToken = Jwts.builder()
@@ -62,6 +67,13 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
+        // redis에 저장
+        redisTemplate.opsForValue().set(
+                String.valueOf(userInfo.getUserId()), // 사용자의 이름을 key로 사용
+                refreshToken,             // 리프레쉬 토큰을 value로 사용
+                rfExpiredMs,              // 리프레쉬 토큰의 만료 시간
+                TimeUnit.MILLISECONDS
+        );
 
         return refreshToken;
 
