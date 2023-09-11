@@ -8,6 +8,8 @@ import com.b302.zizon.util.response.DataResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -26,9 +28,11 @@ public class OAuth2Controller {
 
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("oauth/login")
     public DataResponse<Map<String, Object>> Login(@RequestBody Map<String, Object> data) throws IOException {
+
         // 암호화 시켜놓은 access를 받음
         String access = (String) data.get("access");
 
@@ -37,11 +41,11 @@ public class OAuth2Controller {
         if (optionalUser.isEmpty()) {
             // 유저 정보가 저장되지 않음(에러처리)
         }
-        User UserInfo = optionalUser.get();
+        User userInfo = optionalUser.get();
 
         // 로그인 성공
-        String accessToken = JwtUtil.createAccessJwt(UserInfo.getUserId(), secretKey); // 토큰 발급해서 넘김
-        String refreshToken = JwtUtil.createRefreshToken(secretKey); // 리프레시 토큰 발급해서 넘김
+        String accessToken = jwtUtil.createAccessJwt(userInfo.getUserId(), secretKey); // 토큰 발급해서 넘김
+        String refreshToken = jwtUtil.createRefreshToken(secretKey, userInfo); // 리프레시 토큰 발급해서 넘김
 
 
 //        refreshTokenRepository.save(new RefreshToken(String.valueOf(UserInfo.getUserId()), refreshToken, accessToken));
@@ -50,10 +54,10 @@ public class OAuth2Controller {
 
         result.put("accessToken", accessToken);
         result.put("refreshToken", refreshToken);
-        result.put("accountType", UserInfo.getAccountType());
-        result.put("nickname", UserInfo.getNickname());
-        result.put("profileImage", UserInfo.getProfileImage());
-        result.put("userId", UserInfo.getUserId());
+        result.put("accountType", userInfo.getAccountType());
+        result.put("nickname", userInfo.getNickname());
+        result.put("profileImage", userInfo.getProfileImage());
+        result.put("userId", userInfo.getUserId());
 
 
 //        Optional<RefreshToken> byUserUserNo = refreshTokenRepository.findByUserUserNo(UserInfo.getUserNo());
@@ -79,13 +83,12 @@ public class OAuth2Controller {
 
         DataResponse<Map<String, Object>> response = null;
 
-        if(UserInfo.getAccountType().equals("kakao")){
+        if(userInfo.getAccountType().equals("kakao")){
             response = new DataResponse<>(200, "카카오 로그인 성공");
-        }else if(UserInfo.getAccountType().equals("naver")){
+        }else if(userInfo.getAccountType().equals("naver")){
             response = new DataResponse<>(200, "네이버 로그인 성공");
         }
 
-        System.out.println(response);
         response.setData(result);
 
         return response;
