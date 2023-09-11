@@ -1,6 +1,7 @@
-package com.b302.zizon.util.OAuthAPI.service;
+package com.b302.zizon.util.OAuthAPI.handler;
 
 import com.b302.zizon.domain.user.entity.User;
+import com.b302.zizon.util.OAuthAPI.other.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

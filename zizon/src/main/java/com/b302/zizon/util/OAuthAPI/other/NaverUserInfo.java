@@ -1,4 +1,4 @@
-package com.b302.zizon.util.OAuthAPI.service;
+package com.b302.zizon.util.OAuthAPI.other;
 
 import java.util.Map;
 
