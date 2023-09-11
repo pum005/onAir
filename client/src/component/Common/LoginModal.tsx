@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -14,10 +14,22 @@ const style = {
   width: 500,
   height: 500,
   bgcolor: "#222222",
-  borderRadius: "15px", // 둥글게 하기 위한 속성
+  borderRadius: "15px",
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
+};
+
+const KAKAO_OAUTH_URL = `http://localhost:8080/oauth2/authorization/kakao`;
+
+const redirectToKakaoLogin = () => {
+  window.location.href = KAKAO_OAUTH_URL;
+};
+
+const NAVER_OAUTH_URL = `http://localhost:8080/oauth2/authorization/naver`;
+
+const redirectToNaverLogin = () => {
+  window.location.href = NAVER_OAUTH_URL;
 };
 
 export default function LoginModal({ open, handleOpen, handleClose }: any) {
@@ -40,10 +52,10 @@ export default function LoginModal({ open, handleOpen, handleClose }: any) {
           <Box
             sx={{
               ...style,
-              display: "flex", // Flexbox 레이아웃 설정
-              flexDirection: "column", // 방향을 열로 설정
-              justifyContent: "center", // 중앙에 내용을 정렬 (수직 중앙 정렬)
-              alignItems: "center", // 세로 중앙 정렬 (수평 중앙 정렬)
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <img
@@ -54,10 +66,11 @@ export default function LoginModal({ open, handleOpen, handleClose }: any) {
             <h2 style={{ color: "white" }}>나만의 플레이리스트 onAIr</h2>
             <Button
               variant="contained"
+              onClick={redirectToKakaoLogin} // 카카오 로그인 함수 추가
               style={{
-                backgroundColor: "#FEE500", // 이미지의 버튼 색상
-                fontWeight: "bold", // 굵은 텍스트
-                padding: "10px 90px", // 버튼 내부의 패딩
+                backgroundColor: "#FEE500",
+                fontWeight: "bold",
+                padding: "10px 90px",
                 marginBottom: "20px",
                 color: "black",
                 fontSize: "large",
@@ -68,9 +81,30 @@ export default function LoginModal({ open, handleOpen, handleClose }: any) {
                   alt="Kakao Icon"
                   style={{ height: "40px", width: "auto" }}
                 />
-              } // 카카오톡 아이콘 경로
+              }
             >
               카카오톡으로 로그인하기
+            </Button>
+            <Button
+              variant="contained"
+              onClick={redirectToNaverLogin} // 카카오 로그인 함수 추가
+              style={{
+                backgroundColor: "#00C73C",
+                fontWeight: "bold",
+                padding: "10px 108px",
+                marginBottom: "20px",
+                color: "white",
+                fontSize: "large",
+              }}
+              startIcon={
+                <img
+                  src="/images/naver.png"
+                  alt="Kakao Icon"
+                  style={{ height: "40px", width: "auto" }}
+                />
+              }
+            >
+              네이버로 로그인하기
             </Button>
           </Box>
         </Fade>
