@@ -36,7 +36,7 @@
         @Column(nullable = false)
         private LocalDateTime lastLoginDate;
         @Column(nullable = false)
-        private boolean deleteCheck = false;
+        private boolean deleteCheck;
         @Column(nullable = false)
         private String accessToken;
 
