@@ -10,8 +10,8 @@ import { setUserData } from "../../store";
 function InfoModify() {
   const userData = useSelector((state: RootState) => state.user); // 사용자 정보를 Redux store에서 가져옵니다.
   const [userImage, setUserImage] = useState<null | FileList>(null); // 사용자가 변경한 이미지를 저장합니다.
-  const [isImgModalOpen, setImgModalOpen] = useState<boolean>(false); // 이미지 모달을 엽니다.
-  const [isNickNameModalOpen, setNickNameModalOpen] = useState<boolean>(false); // 닉네임 모달을 엽니다.
+  const [isImgModalOpen, setImgModalOpen] = useState<boolean>(false); // 이미지 모달관리 변수
+  const [isNickNameModalOpen, setNickNameModalOpen] = useState<boolean>(false); // 닉네임 모달관리 변수
   const dispatch = useDispatch(); // useDispatch를 사용하여 Redux store를 업데이트합니다.
 
   // 이미지 변경 함수
