@@ -9,7 +9,7 @@ type ImgModalProps = {
   isOpen: boolean;
   onClose: () => void;
   profileImage: string;
-  userImage: FileList | null; // 이 부분을 추가
+  userImage: FileList | null;
   onImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onImageRemove: () => void;
   onImageConfirm: () => void;
