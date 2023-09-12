@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import NavBar from "../../component/Common/Navbar";
+import ImgUploader from "../../component/MyPage/ImgUploader";
 
 type MyPageProps = {};
 
@@ -9,13 +10,14 @@ export const MyPage = () => {
   const userData = useSelector((state: RootState) => state.user);
 
   // 2. 선택한 상태를 콘솔에 출력합니다.
-  console.log(userData);
+  // console.log(userData);
 
   return (
     <div
       style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
     >
       <NavBar />
+      <ImgUploader />
       <h2>마이페이지</h2>
     </div>
   );
