@@ -4,28 +4,17 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import styles from "./LoginModal.module.css";
 
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 500,
-  height: 500,
-  bgcolor: "#222222",
-  borderRadius: "15px",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
-
-const KAKAO_OAUTH_URL = `http://j9b302.p.ssafy.io:8080/oauth2/authorization/kakao`;
+//카카오 로그인으로 가게 해주는 url
+// const KAKAO_OAUTH_URL = `http://j9b302.p.ssafy.io:8080/oauth2/authorization/kakao`;
+const KAKAO_OAUTH_URL = `http://localhost:8080/oauth2/authorization/kakao`;
 
 const redirectToKakaoLogin = () => {
   window.location.href = KAKAO_OAUTH_URL;
 };
 
+//네이버 로그인으로 가게 해주는 url
 const NAVER_OAUTH_URL = `http://j9b302.p.ssafy.io:8080/oauth2/authorization/naver`;
 
 const redirectToNaverLogin = () => {
@@ -49,21 +38,13 @@ export default function LoginModal({ open, handleOpen, handleClose }: any) {
         }}
       >
         <Fade in={open}>
-          <Box
-            sx={{
-              ...style,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <Box className={styles.modalContent}>
             <img
               src="images/tempLogo.png"
               alt="tempLogo"
-              style={{ height: "120px", width: "auto", marginBottom: "20px" }}
+              className={styles.tempLogo}
             />
-            <h2 style={{ color: "white" }}>나만의 플레이리스트 onAIr</h2>
+            <h2 className={styles.modalTitle}>나만의 플레이리스트 onAIr</h2>
             <Button
               variant="contained"
               onClick={redirectToKakaoLogin} // 카카오 로그인 함수 추가
