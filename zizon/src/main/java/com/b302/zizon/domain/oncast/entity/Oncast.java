@@ -2,13 +2,20 @@ package com.b302.zizon.domain.oncast.entity;
 
 
 import com.b302.zizon.domain.user.entity.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "oncast")
 public class Oncast {
 
@@ -64,11 +71,6 @@ public class Oncast {
 
     @Column(name = "oncast_music_three")
     private String oncastMusicThree;
-
-
-
-
-
 
 
 }
