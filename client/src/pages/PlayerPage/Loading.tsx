@@ -10,7 +10,7 @@ export const Loading = () => {
     >
       <NavBar />
       <h2>로딩창 페이지</h2>
-      <Link to="/Player">
+      <Link to="/RadioPlayer">
         <button>라디오 들으러 가기</button>
       </Link>
     </div>
