@@ -48,6 +48,6 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         }
 
         */
-        response.sendRedirect("http://j9b302.p.ssafy.io:3000//success?access=" + assessToken);
+        response.sendRedirect("http://j9b302.p.ssafy.io:3000/success?access=" + assessToken);
     }
 }
