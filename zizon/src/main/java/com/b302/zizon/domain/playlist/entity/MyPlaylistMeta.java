@@ -26,6 +26,8 @@ public class MyPlaylistMeta {
     private LocalDateTime createDate;
     @Column(nullable = false)
     private int playlistCount;
+    @Column(nullable = false)
+    private String playlistImage;
 
     public MyPlaylistMeta() {
     }
