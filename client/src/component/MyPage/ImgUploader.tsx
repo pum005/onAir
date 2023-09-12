@@ -1,55 +1,61 @@
+// ImgUploader.tsx
+
 import React, { useState, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
-import Modal from "@mui/material/Modal"; // 모달 컴포넌트 import
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import ImgModal from "./ImgModal";
+import { setUserData } from "../../store"; // setUserData 액션을 import
 
 function ImgUploader() {
   const userData = useSelector((state: RootState) => state.user);
-
-  const [fileURL, setFileURL] = useState<string>("");
-  const [userImage, setUserImage] = useState<null | FileList>();
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // 모달 상태 추가
+  const [userImage, setUserImage] = useState<null | FileList>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const dispatch = useDispatch(); // useDispatch를 사용하여 액션 디스패치 가능
 
   const imgUploadInput = useRef<HTMLInputElement>(null);
 
   const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setUserImage(event.target.files);
-
-      const newFileURL = URL.createObjectURL(event.target.files[0]);
-      setFileURL(newFileURL);
     }
   };
 
   const onImageRemove = (): void => {
-    URL.revokeObjectURL(fileURL);
-    setFileURL("");
     setUserImage(null);
   };
 
   const handleUploadButtonClick = () => {
-    // 파일 업로드 input 엘리먼트를 열기 위해 모달을 엽니다.
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    // 모달을 닫습니다.
     setIsModalOpen(false);
+  };
+
+  const handleImageConfirm = () => {
+    if (userImage) {
+      // userImage가 존재할 때만 실행
+      const newProfileImage = URL.createObjectURL(userImage[0]);
+      // 프로필 이미지 변경을 위해 setUserData 액션을 디스패치
+      dispatch(
+        setUserData({
+          nickname: userData.nickname,
+          profileImage: newProfileImage,
+          userId: userData.userId,
+        })
+      );
+      closeModal(); // 모달 닫기
+    }
   };
 
   return (
     <div>
-      {/* 이미지를 클릭하면 모달을 엽니다. */}
       <img
-        src={fileURL || userData.profileImage}
+        src={userData.profileImage}
         alt="프로필 이미지"
         onClick={handleUploadButtonClick}
         style={{ cursor: "pointer" }}
       />
-      {/* 파일 업로드 input 엘리먼트 (display: none) */}
       <input
         type="file"
         accept="image/*"
@@ -58,37 +64,15 @@ function ImgUploader() {
         onChange={onImageChange}
       />
 
-      {/* 모달 컴포넌트 */}
-      <Modal open={isModalOpen} onClose={closeModal}>
-        {/* 모달 내용 */}
-        <Box
-          sx={{
-            position: "absolute",
-            width: 400,
-            backgroundColor: "white",
-            border: "2px solid #000",
-            boxShadow: 24,
-            p: 2,
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        >
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            이미지 변경
-          </Typography>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={onImageChange}
-            style={{ display: "block" }}
-          />
-          <button type="button" onClick={onImageRemove}>
-            이미지 제거
-          </button>
-          <Button onClick={closeModal}>닫기</Button>
-        </Box>
-      </Modal>
+      <ImgModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        profileImage={userData.profileImage}
+        userImage={userImage}
+        onImageChange={onImageChange}
+        onImageRemove={onImageRemove}
+        onImageConfirm={handleImageConfirm} // 이미지 확인 버튼 핸들러 추가
+      />
     </div>
   );
 }
