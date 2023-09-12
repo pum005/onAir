@@ -1,4 +1,5 @@
 import NavBar from "../../component/Common/Navbar";
+import { Music } from "../../component/PlayerPage/Music";
 
 type MusicPlayerProps = {};
 
@@ -8,7 +9,7 @@ export const MusicPlayer = () => {
       style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
     >
       <NavBar />
-      <h2>음악 플레이어 페이지</h2>
+      <Music />
     </div>
   );
 };
