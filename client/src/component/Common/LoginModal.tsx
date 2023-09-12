@@ -7,14 +7,14 @@ import Button from "@mui/material/Button";
 import styles from "./LoginModal.module.css";
 
 //카카오 로그인으로 가게 해주는 url
-const KAKAO_OAUTH_URL = `http://j9b302.p.ssafy.io:8080/oauth2/authorization/kakao`;
+const KAKAO_OAUTH_URL = `http://localhost:8080/oauth2/authorization/kakao`;
 
 const redirectToKakaoLogin = () => {
   window.location.href = KAKAO_OAUTH_URL;
 };
 
 //네이버 로그인으로 가게 해주는 url
-const NAVER_OAUTH_URL = `http://j9b302.p.ssafy.io:8080/oauth2/authorization/naver`;
+const NAVER_OAUTH_URL = `http://localhost:8080/oauth2/authorization/naver`;
 
 const redirectToNaverLogin = () => {
   window.location.href = NAVER_OAUTH_URL;

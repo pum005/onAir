@@ -1,4 +1,5 @@
 import NavBar from "../../component/Common/Navbar";
+import { Link } from "react-router-dom";
 
 type CreateRadioProps = {};
 
@@ -10,6 +11,9 @@ export const CreateRadio = () => {
     >
       <NavBar />
       <h2>라디오 만드는 페이지</h2>
+      <Link to="/Loading">
+        <button>생성</button>
+      </Link>
     </div>
   );
 };
