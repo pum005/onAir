@@ -5,7 +5,11 @@ import com.b302.zizon.domain.user.repository.UserRepository;
 import com.b302.zizon.util.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,8 +23,18 @@ public class UserService {
     private final JwtUtil jwtUtil;
     @Value("${jwt.secret}")
     private String secretKey;
+    private final RedisTemplate<String, String> redisTemplate;
+
+    public Long getUserId(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        Long userId = (Long) principal;
+
+        return userId;
+    }
 
 
+    @Transactional
     public Map<String, Object> oauthLogin(String privateAccess){
 
         Optional<User> byPrivateAccess = userRepository.findByPrivateAccess(privateAccess);
@@ -49,6 +63,18 @@ public class UserService {
         }else if(user.getAccountType().equals("naver")){
             result.put("message", "네이버 로그인 성공");
         }
+
+        return result;
+    }
+
+    @Transactional
+    public Map<String, Object> logout(){
+        Long userId = getUserId();
+
+        redisTemplate.delete(String.valueOf(userId));
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("message", "로그아웃 성공");
 
         return result;
     }
