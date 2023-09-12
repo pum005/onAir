@@ -1,4 +1,4 @@
-package com.b302.zizon.domain.user.entity;
+package com.b302.zizon.domain.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

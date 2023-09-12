@@ -20,13 +20,17 @@ const Login: React.FC = () => {
   // 서버에 로그인 요청을 보내는 함수입니다.
   const sendLoginRequest = async (token: string | null) => {
     // 서버에 POST 요청을 보냅니다.
-    const response = await fetch("http://localhost:8080/api/oauth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ access: token }), // access 토큰을 JSON 형태로 전송합니다.
-    });
+    const response = await fetch(
+      // "http://j9b302.p.ssafy.io:8080/api/oauth/login",
+      "http://localhost:8080/api/oauth/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ access: token }), // access 토큰을 JSON 형태로 전송합니다.
+      }
+    );
 
     const data = await response.json(); // 서버의 응답을 JSON 형태로 파싱합니다.
     console.log(data);
