@@ -1,17 +1,12 @@
 package com.b302.zizon.domain.refreshtoken.service;
 
 import com.b302.zizon.domain.refreshtoken.dto.RefreshTokenCheckDTO;
-import com.b302.zizon.domain.refreshtoken.entity.RefreshToken;
 import com.b302.zizon.domain.refreshtoken.repository.RefreshTokenRepository;
-import com.b302.zizon.util.exception.CommonException;
-import com.b302.zizon.util.exception.CustomExceptionStatus;
 import com.b302.zizon.util.jwt.JwtUtil;
-import com.b302.zizon.util.response.DataResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,17 +20,6 @@ public class RefreshTokenService {
     private final JwtUtil jwtUtil;
     @Value("${jwt.secret}")
     private String secretKey;
-
-    @Transactional
-    public void saveTokenInfo(Long employeeId, String refreshToken, String accessToken) {
-        refreshTokenRepository.save(new RefreshToken(String.valueOf(employeeId), refreshToken, accessToken));
-    }
-
-    @Transactional
-    public void removeRefreshToken(String accessToken) {
-        refreshTokenRepository.findByAccessToken(accessToken)
-                .ifPresent(refreshToken -> refreshTokenRepository.delete(refreshToken));
-    }
 
     public Map<String, Object> checkRefreshToken(RefreshTokenCheckDTO refreshTokenCheckDTO){
         String refreshToken = refreshTokenCheckDTO.getRefreshToken();

@@ -1,5 +1,6 @@
     package com.b302.zizon.domain.user.entity;
 
+    import com.b302.zizon.domain.user.dto.UserDTO;
     import lombok.Builder;
     import lombok.Getter;
     import lombok.ToString;
