@@ -1,7 +1,10 @@
 package com.b302.zizon.domain.user.service;
 
+import com.b302.zizon.domain.user.dto.UserCheckNicknameDTO;
+import com.b302.zizon.domain.user.dto.UserUpdateRequestDTO;
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.repository.UserRepository;
+import com.b302.zizon.util.S3.service.S3UploadService;
 import com.b302.zizon.util.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +28,7 @@ public class UserService {
     @Value("${jwt.secret}")
     private String secretKey;
     private final RedisTemplate<String, String> redisTemplate;
+    private final S3UploadService s3UploadService;
 
     public Long getUserId(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -34,6 +39,7 @@ public class UserService {
     }
 
 
+    // 소셜 로그인
     @Transactional
     public Map<String, Object> oauthLogin(String privateAccess){
 
@@ -67,6 +73,8 @@ public class UserService {
         return result;
     }
 
+
+    // 로그아웃
     @Transactional
     public Map<String, Object> logout(){
         Long userId = getUserId();
@@ -78,4 +86,38 @@ public class UserService {
 
         return result;
     }
+
+    // 유저 닉네임 변경
+    @Transactional
+    public Map<String, Object> userNicknameUpdate(UserUpdateRequestDTO userUpdateRequestDTO){
+        Long userId = getUserId();
+
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
+        user.updateNickname(userUpdateRequestDTO.getNickname());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("message", "닉네임 변경 성공");
+
+        return result;
+    }
+
+    // 유저 닉네임 중복체크
+    public boolean userCheckNickname(UserCheckNicknameDTO userCheckNicknameDTO){
+        Long userId = getUserId();
+
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
+        boolean flag = userRepository.existsByNickname(userCheckNicknameDTO.getNickname());
+
+        return flag;
+    }
+
+
 }
