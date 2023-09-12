@@ -62,6 +62,8 @@ dependencies {
 
 	//tts
 	implementation 'com.google.cloud:google-cloud-texttospeech:2.24.0'
+
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
 tasks.named('test') {

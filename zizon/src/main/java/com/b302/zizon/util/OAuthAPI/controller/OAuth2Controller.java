@@ -41,6 +41,14 @@ public class OAuth2Controller {
         return ResponseEntity.status(200).body(result);
     }
 
+    @PostMapping("oauth/logout")
+    public ResponseEntity<?> Logout(){
+
+        Map<String, Object> result = userService.logout();
+
+        return ResponseEntity.status(200).body(result);
+    }
+
 
 
 

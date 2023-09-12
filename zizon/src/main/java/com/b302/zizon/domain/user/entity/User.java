@@ -61,11 +61,9 @@
             this.nickname = newNickname;
         }
 
-
         public void updateprofileImage(String profileImage){
             this.profileImage = profileImage;
         }
-
 
         public UserDTO toUserDTO(){
             return UserDTO.builder()
