@@ -24,13 +24,13 @@ public class S3UploadService {
         String originalFilename = multipartFile.getOriginalFilename();
         String extension = originalFilename.substring(originalFilename.lastIndexOf(".")); // 파일 확장자
 
-//        // 사진 확장자가 맞지 않으면
-//        if (!isValidExtensionImage(extension)) {
-//            throw new CommonException(CustomExceptionStatus.EXTENSION_ERROR_IMAGE);
-//        }
+        // 사진 확장자가 맞지 않으면
+        if (!isValidExtensionImage(extension)) {
+            throw new IllegalArgumentException("사진 확장자가 아닙니다.");
+        }
 
         String randomName = UUID.randomUUID().toString(); // 랜덤한 문자열 생성
-        String newFilename = "user-profileImage/" + randomName + extension; // 랜덤한 문자열과 확장자를 합쳐서 새 파일명 생성
+        String newFilename = "user_profile/" + randomName + extension; // 랜덤한 문자열과 확장자를 합쳐서 새 파일명 생성
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());

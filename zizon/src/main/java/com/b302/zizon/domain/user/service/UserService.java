@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -117,6 +118,28 @@ public class UserService {
         boolean flag = userRepository.existsByNickname(userCheckNicknameDTO.getNickname());
 
         return flag;
+    }
+
+
+    // 유저 프로필사진 변경
+    @Transactional
+    public Map<String, Object> userProfileImage(MultipartFile multipartFile) throws IOException {
+        Long userId = getUserId();
+
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
+        String profileUrl = s3UploadService.profileSaveFile(multipartFile);
+
+        user.updateprofileImage(profileUrl);
+
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("message", "프로필 사진 변경 성공");
+
+        return result;
     }
 
 

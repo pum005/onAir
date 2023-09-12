@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -33,6 +34,13 @@ public class UserController {
         Map<String, Object> result = userService.userNicknameUpdate(userUpdateRequestDTO);
 
         return ResponseEntity.status(200).body(result);
+    }
 
+    // 프로필 사진 변경
+    @PutMapping("/user/profile/update")
+    public ResponseEntity<?> userProfileUpdate(@RequestParam("image") MultipartFile multipartFile) throws IOException {
+        Map<String, Object> result = userService.userProfileImage(multipartFile);
+
+        return ResponseEntity.status(200).body(result);
     }
 }
