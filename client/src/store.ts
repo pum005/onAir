@@ -24,6 +24,9 @@ export const setRadioDummyData = createAction<{
   oncast_music_three: string;
 }>("SET_RADIO_DUMMY_DATA");
 
+export const incrementTTSIndex = createAction("INCREMENT_TTS_INDEX");
+export const incrementMusicIndex = createAction("INCREMENT_MUSIC_INDEX");
+
 // 2. Reducer 생성
 
 // User를 type으로 정의합니다. Redux에서 사용자 데이터를 관리하기 위한 타입입니다.
@@ -45,6 +48,9 @@ export type RadioDummyData = {
   oncast_music_one: string;
   oncast_music_two: string;
   oncast_music_three: string;
+  currentTTSIndex: number;
+  currentMusicIndex: number;
+  [key: string]: string | number;
 };
 
 // 초기 상태값을 설정합니다. 애플리케이션 시작 시의 사용자 데이터 상태입니다.
@@ -66,10 +72,12 @@ const initialDummyState: RadioDummyData = {
   oncast_music_one: "",
   oncast_music_two: "",
   oncast_music_three: "",
+  currentTTSIndex: 0,
+  currentMusicIndex: 0,
 };
 
 // 리듀서를 정의합니다. 리듀서는 액션에 따라 상태를 변경하는 함수입니다.
-const userReducer = createReducer(initialState, (builder) => {
+const userReducer = createReducer(initialState, builder => {
   // setUserData 액션이 디스패치될 때 상태를 어떻게 변경할지 정의합니다.
   builder.addCase(setUserData, (state, action) => {
     state.nickname = action.payload.nickname;
@@ -79,19 +87,26 @@ const userReducer = createReducer(initialState, (builder) => {
 });
 
 const radiodummyReducer = createReducer(initialDummyState, builder => {
-  builder.addCase(setRadioDummyData, (state, action) => {
-    state.tts_one = action.payload.tts_one;
-    state.tts_two = action.payload.tts_two;
-    state.tts_three = action.payload.tts_three;
-    state.tts_four = action.payload.tts_four;
-    state.script_one = action.payload.script_one;
-    state.script_two = action.payload.script_two;
-    state.script_three = action.payload.script_three;
-    state.script_four = action.payload.script_four;
-    state.oncast_music_one = action.payload.oncast_music_one;
-    state.oncast_music_two = action.payload.oncast_music_two;
-    state.oncast_music_three = action.payload.oncast_music_three;
-  });
+  builder
+    .addCase(setRadioDummyData, (state, action) => {
+      state.tts_one = action.payload.tts_one;
+      state.tts_two = action.payload.tts_two;
+      state.tts_three = action.payload.tts_three;
+      state.tts_four = action.payload.tts_four;
+      state.script_one = action.payload.script_one;
+      state.script_two = action.payload.script_two;
+      state.script_three = action.payload.script_three;
+      state.script_four = action.payload.script_four;
+      state.oncast_music_one = action.payload.oncast_music_one;
+      state.oncast_music_two = action.payload.oncast_music_two;
+      state.oncast_music_three = action.payload.oncast_music_three;
+    })
+    .addCase(incrementTTSIndex, state => {
+      state.currentTTSIndex++;
+    })
+    .addCase(incrementMusicIndex, state => {
+      state.currentMusicIndex++;
+    });
 });
 
 // 3. Store 설정
