@@ -1,0 +1,52 @@
+/* LoginModal.module.css */
+
+.modalContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 500px;
+  background-color: #222222;
+  border-radius: 15px;
+  border: 2px solid #000;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.tempLogo {
+  height: 120px;
+  width: auto;
+  margin-bottom: 20px;
+}
+
+.modalTitle {
+  color: white;
+}
+
+.kakaoLogin {
+  background-color: #fee500;
+  font-weight: bold;
+  padding: 10px 90px;
+  margin-bottom: 20px;
+  color: black;
+  font-size: large;
+}
+
+.naverLogin {
+  background-color: #00c73c;
+  font-weight: bold;
+  padding: 10px 108px;
+  margin-bottom: 20px;
+  color: white;
+  font-size: large;
+}
+
+.icon {
+  height: 40px;
+  width: auto;
+}
