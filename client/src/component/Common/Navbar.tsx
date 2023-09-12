@@ -120,7 +120,7 @@ function ResponsiveAppBar() {
               <Button
                 component={Link}
                 to="/CreateRadio"
-                onClick={event => handleProtectedFeatureClick(event)} // 여기를 수정
+                onClick={(event) => handleProtectedFeatureClick(event)} // 여기를 수정
               >
                 <RadioIcon style={{ fontSize: 35, color: "white" }} />
               </Button>
@@ -134,7 +134,7 @@ function ResponsiveAppBar() {
               <Button
                 component={Link}
                 to="/MyPage"
-                onClick={event => handleProtectedFeatureClick(event)} // 여기를 수정
+                onClick={(event) => handleProtectedFeatureClick(event)} // 여기를 수정
               >
                 <AccountCircleIcon style={{ fontSize: 35, color: "white" }} />
               </Button>
@@ -178,7 +178,7 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map(setting => (
+                {settings.map((setting) => (
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
