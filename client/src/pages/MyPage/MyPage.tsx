@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import NavBar from "../../component/Common/Navbar";
-import ImgUploader from "../../component/MyPage/ImgUploader";
+import InfoModify from "../../component/MyPage/InfoModify";
 
 type MyPageProps = {};
 
@@ -17,7 +17,7 @@ export const MyPage = () => {
       style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
     >
       <NavBar />
-      <ImgUploader />
+      <InfoModify />
       <h2>마이페이지</h2>
     </div>
   );

@@ -16,6 +16,7 @@ function ImgUploader() {
 
   const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
+      console.log("사진 변경");
       setUserImage(event.target.files);
     }
   };
