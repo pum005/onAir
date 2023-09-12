@@ -20,13 +20,13 @@ const style = {
   p: 4,
 };
 
-const KAKAO_OAUTH_URL = `http://localhost:8080/oauth2/authorization/kakao`;
+const KAKAO_OAUTH_URL = `http://j9b302.p.ssafy.io:8080/oauth2/authorization/kakao`;
 
 const redirectToKakaoLogin = () => {
   window.location.href = KAKAO_OAUTH_URL;
 };
 
-const NAVER_OAUTH_URL = `http://localhost:8080/oauth2/authorization/naver`;
+const NAVER_OAUTH_URL = `http://j9b302.p.ssafy.io:8080/oauth2/authorization/naver`;
 
 const redirectToNaverLogin = () => {
   window.location.href = NAVER_OAUTH_URL;
