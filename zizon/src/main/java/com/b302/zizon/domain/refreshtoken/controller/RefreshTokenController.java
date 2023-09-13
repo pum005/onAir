@@ -7,6 +7,7 @@ import com.b302.zizon.util.response.DataResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +20,7 @@ public class RefreshTokenController {
 
     private final RefreshTokenService refreshTokenService;
 
-    @GetMapping("/token/refresh")
+    @PostMapping("/token/refresh")
     public ResponseEntity<?> refreshTokenCheck(@RequestBody RefreshTokenCheckDTO refreshTokenCheckDTO){
         Map<String, Object> result = refreshTokenService.checkRefreshToken(refreshTokenCheckDTO);
 

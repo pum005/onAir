@@ -1,6 +1,8 @@
 package com.b302.zizon.domain.music.service;
 
 import com.b302.zizon.domain.music.dto.*;
+import com.b302.zizon.domain.music.entity.Music;
+import com.b302.zizon.domain.music.repository.MusicRepository;
 import com.b302.zizon.util.ConvertTime;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
@@ -35,6 +37,7 @@ public class MusicService {
 
     private final YouTube youtubeApi;
     private final ConvertTime convertTime;
+    private final MusicRepository musicRepository;
 
 
     // 스포티파이 액세스 가져오기
@@ -121,7 +124,7 @@ public class MusicService {
     }
 
     // 유튜브 영상 찾기
-    public YoutubeSearchResultDTO findVideo(String title, String artist, long spotifyMusicDuration) {
+    public YoutubeSearchResultDTO findVideo(String title, String artist, long spotifyMusicDuration, String musicImageUrl) {
         YoutubeSearchResultDTO result = new YoutubeSearchResultDTO();
 
         String query = title + " " + artist;
@@ -165,10 +168,16 @@ public class MusicService {
                             convertTime.convertDurationToMillis(video.getContentDetails().getDuration()));
                 }
             }
+            Music build = Music.builder()
+                    .artist(artist)
+                    .duration((int) spotifyMusicDuration)
+                    .albumCoverUrl(musicImageUrl)
+                    .title(title).build();
+            
+            Music save = musicRepository.save(build);
 
             return result;
         } catch (Exception e) {
-
             throw new EntityNotFoundException("해당 영상 없음");
         }
     }
