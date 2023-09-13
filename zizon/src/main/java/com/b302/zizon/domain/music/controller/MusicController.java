@@ -2,6 +2,8 @@ package com.b302.zizon.domain.music.controller;
 
 import com.b302.zizon.domain.music.dto.MusicInfoResponseDTO;
 import com.b302.zizon.domain.music.dto.MyMusicBoxAddRequestDTO;
+import com.b302.zizon.domain.music.dto.SpotifySearchResultDTO;
+import com.b302.zizon.domain.music.service.MusicService;
 import com.b302.zizon.domain.music.service.MyMusicBoxService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +15,10 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class MyMusicBoxController {
+public class MusicController {
 
     private final MyMusicBoxService myMusicBoxService;
+    private final MusicService musicService;
 
     // 내 음악보관함, 플레이리스트 가져오기
     @GetMapping("/my-musicbox")
@@ -47,5 +50,18 @@ public class MyMusicBoxController {
         myMusicBoxService.deleteMusicMyMusicBox(myMusicBoxAddRequestDTO.getMusicId());
         
         return ResponseEntity.status(200).body("음악 삭제 완료");
+    }
+
+    // 스포티파이 음악 검색
+    @GetMapping("/search/spotify")
+    public List<SpotifySearchResultDTO> searchMusic(@RequestParam String title) {
+        return musicService.searchSpotifyMusicList(title);
+    }
+
+    // 유튜브 검색
+    @GetMapping("/search/youtube")
+    public ResponseEntity<?> searchMusicByYoutube(@RequestParam String musicTitle,
+                                                  @RequestParam String musicArtist, @RequestParam long spotifyMusicDuration) {
+        return ResponseEntity.ok(musicService.findVideo(musicTitle, musicArtist, spotifyMusicDuration));
     }
 }
