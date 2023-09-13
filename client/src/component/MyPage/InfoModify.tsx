@@ -5,7 +5,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import ImgModal from "./ImgModal";
 import NickNameModal from "./NicknameModal"; // NickNameModal을 import합니다.
-import { setUserData } from "../../store";
+import { setNickName } from "../../store";
+import { setImage } from "../../store";
+import axios from "axios";
 
 function InfoModify() {
   const userData = useSelector((state: RootState) => state.user); // 사용자 정보를 Redux store에서 가져옵니다.
@@ -53,10 +55,8 @@ function InfoModify() {
       const newProfileImage = URL.createObjectURL(userImage[0]);
       // 프로필 이미지 변경을 위해 setUserData 액션을 디스패치합니다.
       dispatch(
-        setUserData({
-          nickname: userData.nickname,
+        setImage({
           profileImage: newProfileImage,
-          userId: userData.userId,
         })
       );
       imgModalClose(); // 모달을 닫습니다.
@@ -67,10 +67,8 @@ function InfoModify() {
   const handleUpdateNickName = (newNickName: string) => {
     if (newNickName) {
       dispatch(
-        setUserData({
+        setNickName({
           nickname: newNickName,
-          profileImage: userData.profileImage,
-          userId: userData.userId,
         })
       );
       nickNameModalClose(); // 모달을 닫습니다.
