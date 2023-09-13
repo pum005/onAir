@@ -19,16 +19,32 @@ import styles from "./MusicList.module.css";
 function MusicList() {
   /** state */
   const userData = useSelector((state: RootState) => state.user); //리덕스에 있는 회원데이터
-  const [isMusicBoxModalOpen, setMusicBoxModalOpen] = useState<boolean>(false);
-  const [myMusicBox, setMyMusicBox] = useState(dummyData.my_music_box);
-  const [playlistData, setPlaylistData] = useState(dummyData.playlist_info);
+  const [isMusicBoxModalOpen, setMusicBoxModalOpen] = useState<boolean>(false); //보관함 추가 모달
+  const [myMusicBox, setMyMusicBox] = useState(dummyData.my_music_box); //전체 보관함 관리 state
+  const [playlistData, setPlaylistData] = useState(dummyData.playlist_info); //플레이리스트별 관리 state
+  const [newPlaylistTitle, setNewPlaylistTitle] = useState("");
 
+  /** function */
+  //보관함추가 실행 함수
   const MusicBoxModalOpen = () => {
     setMusicBoxModalOpen(true);
   };
 
+  //보관함추가 닫기 함수
   const MusicBoxModalClose = () => {
     setMusicBoxModalOpen(false);
+  };
+
+  //보관함 추가 함수
+  const addMusicBox = () => {
+    const newPlaylist = {
+      playlistName: newPlaylistTitle,
+      playlistCount: 0,
+      playlistImage: "https://icons8.com/icon/Xvnz23NvQSwk/shield",
+    };
+    setPlaylistData((prevData) => [...prevData, newPlaylist]);
+    setNewPlaylistTitle("");
+    MusicBoxModalClose();
   };
 
   return (
@@ -38,20 +54,23 @@ function MusicList() {
       <MusicBoxModal
         isOpen={isMusicBoxModalOpen}
         onClose={MusicBoxModalClose}
+        addMusicBox={addMusicBox}
+        title={newPlaylistTitle}
+        setTitle={setNewPlaylistTitle}
       ></MusicBoxModal>
-
       <List>
+        {/* 전체보관함 */}
         <ListItem alignItems="flex-start" className={styles.hoverableListItem}>
           <ListItemAvatar>
-            <AudiotrackIcon color="primary" style={{ fontSize: 40 }} />
+            <AudiotrackIcon color="primary" className={styles.audiotrackIcon} />
           </ListItemAvatar>
           <ListItemText
             primary={
-              <Typography style={{ color: "#FF69B4" }}>전체보관함</Typography>
+              <Typography className={styles.textPrimary}>전체보관함</Typography>
             }
             secondary={
               <Typography
-                style={{ color: "#FF69B4" }}
+                className={styles.textSecondary}
                 component="span"
                 variant="body2"
               >
@@ -63,7 +82,7 @@ function MusicList() {
             <PlayCircleOutlineIcon />
           </Button>
         </ListItem>
-
+        {/* 플레이리스트  */}
         {playlistData.map((playlist, index) => (
           <ListItem
             key={index}
@@ -79,13 +98,13 @@ function MusicList() {
             </ListItemAvatar>
             <ListItemText
               primary={
-                <Typography style={{ color: "#FF69B4" }}>
+                <Typography className={styles.textPrimary}>
                   {playlist.playlistName}
                 </Typography>
               }
               secondary={
                 <Typography
-                  style={{ color: "#FF69B4" }}
+                  className={styles.textSecondary}
                   component="span"
                   variant="body2"
                 >
