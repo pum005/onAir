@@ -43,6 +43,8 @@ public class Music {
     private float valence;
     @Column(nullable = false)
     private int popularity;
+    @Column(nullable = false)
+    private String albumCoverUrl;
 
     public Music() {
     }

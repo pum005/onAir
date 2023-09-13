@@ -1,5 +1,6 @@
 package com.b302.zizon.domain.music.controller;
 
+import com.b302.zizon.domain.music.dto.MusicInfoDTO;
 import com.b302.zizon.domain.music.service.MyMusicBoxService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,5 +24,12 @@ public class MyMusicBoxController {
         Map<String, Object> result = myMusicBoxService.getMyMusicBoxAndPlaylist();
 
         return ResponseEntity.status(200).body(result);
+    }
+
+    @GetMapping("/my-musicbox/info")
+    public ResponseEntity<?> getMyMusicBoxInfo(){
+        List<MusicInfoDTO> myMusicBoxInfo = myMusicBoxService.getMyMusicBoxInfo();
+
+        return ResponseEntity.status(200).body(myMusicBoxInfo);
     }
 }
