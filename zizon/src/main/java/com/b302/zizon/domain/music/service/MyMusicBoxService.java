@@ -1,10 +1,11 @@
 package com.b302.zizon.domain.music.service;
 
-import com.b302.zizon.domain.music.dto.MusicInfoDTO;
+import com.amazonaws.services.kms.model.NotFoundException;
+import com.b302.zizon.domain.music.dto.MusicInfoResponseDTO;
+import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.music.entity.MyMusicBox;
 import com.b302.zizon.domain.music.repository.MusicRepository;
 import com.b302.zizon.domain.music.repository.MyMusicBoxRepository;
-import com.b302.zizon.domain.playlist.entity.MyPlaylistMeta;
 import com.b302.zizon.domain.playlist.repository.MyPlaylistMetaRepository;
 import com.b302.zizon.domain.playlist.repository.MyPlaylistRepository;
 import com.b302.zizon.domain.user.entity.User;
@@ -12,7 +13,9 @@ import com.b302.zizon.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -85,7 +88,7 @@ public class MyMusicBoxService {
     }
 
     // 내 음악 보관함 상세정보 가져오기
-    public List<MusicInfoDTO> getMyMusicBoxInfo(){
+    public List<MusicInfoResponseDTO> getMyMusicBoxInfo(){
         Map<String, Object> result = new HashMap<>();
 
         Long userId = getUserId();
@@ -102,10 +105,10 @@ public class MyMusicBoxService {
         }
 
         // 노래 정보 가져오기
-        List<MusicInfoDTO> collect = getMyMusicBox.stream()
+        List<MusicInfoResponseDTO> collect = getMyMusicBox.stream()
                 .map(info -> {
                     String formattedDuration = convertSecondsToMinSec(info.getMusic().getDuration());
-                    return new MusicInfoDTO(  // 'return' 추가
+                    return new MusicInfoResponseDTO(  // 'return' 추가
                             info.getMusic().getMusicId(),
                             info.getMusic().getTitle(),
                             info.getMusic().getArtist(),
@@ -115,5 +118,37 @@ public class MyMusicBoxService {
                 .collect(Collectors.toList());
 
         return collect;
+    }
+
+    @Transactional
+    // 내 보관함에 음악 추가하기
+    public void addMusicMyMusicBox(Long musicId){
+        Map<String, Object> result = new HashMap<>();
+
+        Long userId = getUserId();
+
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
+        Optional<Music> byMusic = Optional.ofNullable(musicRepository.findById(musicId)
+                .orElseThrow(() -> new NotFoundException("음악을 찾을 수 없습니다.")));
+
+        Music music = byMusic.get();
+
+        Optional<MyMusicBox> byMusicMusicId = myMusicBoxRepository.findByMusicMusicIdAndUserUserId(musicId, userId);
+
+        if(byMusicMusicId.isPresent()){
+            throw new IllegalArgumentException("이미 보관함에 있는 음악입니다.");
+        }
+
+        MyMusicBox build = MyMusicBox.builder()
+                .user(user)
+                .music(music).build();
+
+
+        MyMusicBox save = myMusicBoxRepository.save(build);
+
     }
 }

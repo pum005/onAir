@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class MusicInfoDTO {
+public class MusicInfoResponseDTO {
 
     private Long musicId;
     private String title;
