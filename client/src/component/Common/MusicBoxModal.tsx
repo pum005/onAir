@@ -3,12 +3,12 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-type PlayListModalProps = {
+type MusicBoxModalProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
-function PlayListModal({ isOpen, onClose }: PlayListModalProps) {
+function MusicBoxModal({ isOpen, onClose }: MusicBoxModalProps) {
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box
@@ -25,15 +25,13 @@ function PlayListModal({ isOpen, onClose }: PlayListModalProps) {
         }}
       >
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          내 플레이리스트
+          보관함 추가
         </Typography>
         <Button onClick={onClose}>닫기</Button>
-
-        {/* 이 밑 자리에 플레이리스트 가져오고 거기에 + 버튼 */}
-        {/* <Button onClick={}>+</Button> */}
+        <button>추가버튼</button>
       </Box>
     </Modal>
   );
 }
 
-export default PlayListModal;
+export default MusicBoxModal;

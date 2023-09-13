@@ -17,6 +17,9 @@ import LoginIcon from "@mui/icons-material/Login";
 import LoginModal from "./LoginModal";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginAlertModal from "./NoLoginModal";
+import LogoutAlertModal from "./LogoutModal";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // 내비게이션 및 사용자 메뉴 항목에 대한 정적 데이터
 const pages = ["Products", "Pricing"];
@@ -24,6 +27,7 @@ const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 // 주요 컴포넌트: ResponsiveAppBar
 function ResponsiveAppBar() {
+  const navigate = useNavigate();
   // 내비게이션 메뉴 및 사용자 메뉴의 앵커 요소를 관리하기 위한 상태
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -61,6 +65,35 @@ function ResponsiveAppBar() {
   const [loginAlertModalOpen, setLoginAlertModalOpen] = React.useState(false);
   const handleLoginAlertModalOpen = () => setLoginAlertModalOpen(true);
   const handleLoginAlertModalClose = () => setLoginAlertModalOpen(false);
+
+  const [logoutAlertOpen, setLogoutAlertOpen] = React.useState(false);
+  const handleLogoutAlertOpen = () => setLogoutAlertOpen(true);
+  const handleLogoutAlertClose = () => setLogoutAlertOpen(false);
+
+  const handleConfirmLogout = () => {
+    const token = localStorage.getItem("accessToken"); // 토큰 가져오기
+
+    axios
+      .post(
+        "http://localhost:8080/api/oauth/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then(response => {
+        // 로그아웃 성공 시 로컬 스토리지에서 토큰 제거 또는 다른 처리
+        localStorage.removeItem("accessToken");
+        setLogoutAlertOpen(false);
+        navigate("/");
+      })
+      .catch(error => {
+        // 로그아웃 실패 시 에러 처리
+        console.error("로그아웃 실패:", error);
+      });
+  };
 
   // 로그인이 필요한 기능을 사용하려고 할 때의 핸들러
   const handleProtectedFeatureClick = (
@@ -120,7 +153,7 @@ function ResponsiveAppBar() {
               <Button
                 component={Link}
                 to="/CreateRadio"
-                onClick={(event) => handleProtectedFeatureClick(event)} // 여기를 수정
+                onClick={event => handleProtectedFeatureClick(event)} // 여기를 수정
               >
                 <RadioIcon style={{ fontSize: 35, color: "white" }} />
               </Button>
@@ -134,13 +167,13 @@ function ResponsiveAppBar() {
               <Button
                 component={Link}
                 to="/MyPage"
-                onClick={(event) => handleProtectedFeatureClick(event)} // 여기를 수정
+                onClick={event => handleProtectedFeatureClick(event)} // 여기를 수정
               >
                 <AccountCircleIcon style={{ fontSize: 35, color: "white" }} />
               </Button>
 
               {isLoggedIn ? (
-                <Button>
+                <Button onClick={handleLogoutAlertOpen}>
                   {" "}
                   <LogoutIcon style={{ fontSize: 35, color: "white" }} />
                 </Button>
@@ -178,7 +211,7 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
+                {settings.map(setting => (
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
@@ -191,6 +224,11 @@ function ResponsiveAppBar() {
       <LoginAlertModal
         open={loginAlertModalOpen}
         handleClose={handleLoginAlertModalClose}
+      />
+      <LogoutAlertModal
+        open={logoutAlertOpen}
+        handleClose={handleLogoutAlertClose}
+        handleConfirmLogout={handleConfirmLogout}
       />
     </>
   );
