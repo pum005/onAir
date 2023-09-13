@@ -5,18 +5,23 @@ import { User } from "../store";
 export const refreshToken = async (userId: number): Promise<string | null> => {
   const refreshToken = localStorage.getItem("refreshToken");
 
-  console.log("userId:", userId); // 값 출력
-  console.log("refreshToken:", refreshToken); // 값 출력
-
   if (!refreshToken) {
     return null; // refreshToken이 없으면 null 반환
   }
 
   try {
-    const response = await axios.post("http://localhost:8080/token/refresh", {
-      userId: userId, // 여기를 수정했습니다.
-      refreshToken: refreshToken,
-    });
+    const response = await axios.post(
+      "http://localhost:8080/token/refresh",
+      {
+        userId: userId,
+        refreshToken: refreshToken,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     const { data } = response;
 

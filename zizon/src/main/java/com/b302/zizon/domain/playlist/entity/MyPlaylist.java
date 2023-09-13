@@ -20,7 +20,7 @@ public class MyPlaylist {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long playlistId;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "myPlaylistMeta_id")
+    @JoinColumn(name = "my_playlist_meta_id")
     private MyPlaylistMeta myPlaylistMeta;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "music_id")

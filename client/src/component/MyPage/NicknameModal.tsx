@@ -1,9 +1,10 @@
+// nickNameModal.tsx
 import React, { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import instance from "../../utils/axiosInstance"; // 수정된 부분
+import axios from "axios";
 import { setNickName } from "../../store";
 
 type NickNameModalProps = {
@@ -32,9 +33,9 @@ function NickNameModal({
 
   useEffect(() => {
     if (submitClicked) {
-      instance // 수정된 부분: axios 대신 instance 사용
+      axios
         .put(
-          "/api/user/nickname/update",
+          "http://localhost:8080/api/user/nickname/update",
           {
             nickname: newNickName,
           },
