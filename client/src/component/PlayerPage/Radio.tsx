@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { useNavigate } from "react-router-dom";
 import Equalizer from "../Common/Equalizer";
+import { RadioScripts } from "../Common/RadioScript";
+import styles from "./Radio.module.css";
 
 export const Radio = () => {
   const dispatch = useDispatch();
@@ -31,17 +33,7 @@ export const Radio = () => {
   ][radioDummyData.currentTTSIndex];
 
   return (
-    <div
-      style={{
-        backgroundColor: "#000104",
-        height: "100vh",
-        color: "white",
-        display: "flex", // Flexbox 레이아웃 적용
-        flexDirection: "column", // 수직 정렬
-        alignItems: "center", // 수평 중앙 정렬
-        justifyContent: "center", // 수직 중앙 정렬
-      }}
-    >
+    <div className={styles.container}>
       {isAudioLoaded && <Equalizer audioElement={audioRef.current!} />}
       <audio
         ref={audioRef}
@@ -49,16 +41,13 @@ export const Radio = () => {
         autoPlay
         onEnded={handleAudioEnd}
         onLoadedMetadata={handleAudioLoaded}
-        style={{ display: "block", width: "20%", marginTop: "20px" }}
+        className={styles.audioStyle}
       >
         <source src={radioDummyData[currentTTS] as string} type="audio/mp3" />
         Your browser does not support the audio element.
       </audio>
-
-      <div style={{ marginTop: "20px" }}>
-        <h3>Script:</h3>
-        <p>{radioDummyData[currentScript]}</p>
-      </div>
+      <RadioScripts />
+      <div className={styles.marginTop}></div>
     </div>
   );
 };
