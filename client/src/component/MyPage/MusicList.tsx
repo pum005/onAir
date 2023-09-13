@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { useState } from "react";
 import MusicBoxModal from "../Common/MusicBoxModal";
+import MusicAddModal from "../Common/MusicAddModal";
 import dummyData from "./dummyData.json";
 import AudiotrackIcon from "@mui/icons-material/Audiotrack";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
@@ -23,6 +24,7 @@ function MusicList() {
   const [myMusicBox, setMyMusicBox] = useState(dummyData.my_music_box); //전체 보관함 관리 state
   const [playlistData, setPlaylistData] = useState(dummyData.playlist_info); //플레이리스트별 관리 state
   const [newPlaylistTitle, setNewPlaylistTitle] = useState("");
+  const [isMusicAddModalOpen, setMusicAddModalOpen] = useState<boolean>(false); //음악 더하기 변수
 
   /** function */
   //보관함추가 실행 함수
@@ -47,6 +49,15 @@ function MusicList() {
     MusicBoxModalClose();
   };
 
+  //음악검색 모달 열기 함수
+  const openMusicAddModal = () => {
+    setMusicAddModalOpen(true);
+  };
+  //음악검색 모달 닫기 함수
+  const closeMusicAddModal = () => {
+    setMusicAddModalOpen(false);
+  };
+
   return (
     <div>
       <div>뮤직리스트</div>
@@ -62,7 +73,11 @@ function MusicList() {
         {/* 전체보관함 */}
         <ListItem alignItems="flex-start" className={styles.hoverableListItem}>
           <ListItemAvatar>
-            <AudiotrackIcon color="primary" className={styles.audiotrackIcon} />
+            <AudiotrackIcon
+              color="primary"
+              className={styles.audiotrackIcon}
+              onClick={openMusicAddModal}
+            />
           </ListItemAvatar>
           <ListItemText
             primary={
@@ -78,10 +93,22 @@ function MusicList() {
               </Typography>
             }
           />
-          <Button className={styles.playButton}>
+          <Button
+            className={styles.playButton}
+            onClick={() => {
+              if (myMusicBox === 0) {
+                alert("재생할 노래가 없습니다!");
+              }
+            }}
+          >
             <PlayCircleOutlineIcon />
           </Button>
         </ListItem>
+        <MusicAddModal
+          isOpen={isMusicAddModalOpen}
+          onClose={closeMusicAddModal}
+          // onAdd={addSongToMusicBox}
+        />
         {/* 플레이리스트  */}
         {playlistData.map((playlist, index) => (
           <ListItem
@@ -94,6 +121,7 @@ function MusicList() {
                 variant="square"
                 src={playlist.playlistImage}
                 alt={playlist.playlistName}
+                onClick={openMusicAddModal}
               />
             </ListItemAvatar>
             <ListItemText
@@ -112,7 +140,14 @@ function MusicList() {
                 </Typography>
               }
             />
-            <Button className={styles.playButton}>
+            <Button
+              className={styles.playButton}
+              onClick={() => {
+                if (playlist.playlistCount === 0) {
+                  alert("재생할 노래가 없습니다!");
+                }
+              }}
+            >
               <PlayCircleOutlineIcon />
             </Button>
           </ListItem>
