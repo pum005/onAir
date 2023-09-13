@@ -40,4 +40,12 @@ public class MyMusicBoxController {
 
         return ResponseEntity.status(200).body("음악 추가 완료");
     }
+
+    // 내 보관함에 음악 삭제
+    @DeleteMapping("/my-musicbox")
+    public ResponseEntity<?> deleteMyMusicBoxMusic(@RequestBody MyMusicBoxAddRequestDTO myMusicBoxAddRequestDTO){
+        myMusicBoxService.deleteMusicMyMusicBox(myMusicBoxAddRequestDTO.getMusicId());
+        
+        return ResponseEntity.status(200).body("음악 삭제 완료");
+    }
 }
