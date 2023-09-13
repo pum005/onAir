@@ -107,7 +107,6 @@ function MusicList() {
         <MusicAddModal
           isOpen={isMusicAddModalOpen}
           onClose={closeMusicAddModal}
-          // onAdd={addSongToMusicBox}
         />
         {/* 플레이리스트  */}
         {playlistData.map((playlist, index) => (
