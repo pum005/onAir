@@ -9,7 +9,7 @@ type ImgModalProps = {
   isOpen: boolean;
   onClose: () => void;
   profileImage: string;
-  userImage: FileList | null; // 이 부분을 추가
+  userImage: FileList | null;
   onImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onImageRemove: () => void;
   onImageConfirm: () => void;
@@ -69,10 +69,9 @@ function ImgModal({
           style={{ display: "block" }}
         />
         <button type="button" onClick={onImageRemove}>
-          이미지 제거
+          대충 새로고침 버튼
         </button>
         <Button onClick={onImageConfirm}>확인</Button>{" "}
-        {/* 이미지 확인 버튼 추가 */}
         <Button onClick={onClose}>닫기</Button>
       </Box>
     </Modal>
