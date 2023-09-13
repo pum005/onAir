@@ -1,15 +1,16 @@
 import NavBar from "../../component/Common/Navbar";
-import { Music } from "../../component/PlayerPage/Music";
+import { Radio } from "../../component/PlayerPage/Radio";
 
-type MusicPlayerProps = {};
+type PlayerProps = {};
 
-export const MusicPlayer = () => {
+export const Player = () => {
   return (
     <div
       style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
     >
       <NavBar />
-      <Music />
+      <Radio />
     </div>
   );
 };
+// 일단 지금은 여기 안 씀
