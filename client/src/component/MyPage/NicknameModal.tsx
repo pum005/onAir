@@ -1,9 +1,11 @@
 // nickNameModal.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import axios from "axios";
+import { setNickName } from "../../store";
 
 type NickNameModalProps = {
   isOpen: boolean;
@@ -19,15 +21,40 @@ function NickNameModal({
   onUpdateNickName,
 }: NickNameModalProps) {
   const [newNickName, setNewNickName] = useState(currentNickName);
+  const [submitClicked, setSubmitClicked] = useState(false);
 
   const handleNickNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewNickName(event.target.value);
   };
 
   const handleUpdateNickName = () => {
-    onUpdateNickName(newNickName);
-    onClose();
+    setSubmitClicked(!submitClicked);
   };
+
+  useEffect(() => {
+    if (submitClicked) {
+      axios
+        .put(
+          "http://localhost:8080/api/user/nickname/update",
+          {
+            nickname: newNickName,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+          }
+        )
+        .then(() => {
+          setSubmitClicked(!submitClicked);
+          onUpdateNickName(newNickName);
+          onClose();
+        })
+        .catch(error => {
+          console.error("닉네임 변경 에러 발생", error);
+        });
+    }
+  }, [submitClicked]);
 
   return (
     <Modal open={isOpen} onClose={onClose}>
