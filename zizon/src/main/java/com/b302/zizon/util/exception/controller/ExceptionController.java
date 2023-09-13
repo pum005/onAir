@@ -1,5 +1,6 @@
 package com.b302.zizon.util.exception.controller;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,15 @@ public class ExceptionController {
             IllegalArgumentException.class
     })
     public ResponseEntity<Object> BadRequestException(final IllegalArgumentException ex) {
+        //log.warn("error", ex);
+
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler({
+            NotFoundException.class
+    })
+    public ResponseEntity<Object> NotFountException(final NotFoundException ex) {
         //log.warn("error", ex);
 
         return ResponseEntity.badRequest().body(ex.getMessage());
