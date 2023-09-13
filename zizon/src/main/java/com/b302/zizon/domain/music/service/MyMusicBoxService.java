@@ -6,6 +6,8 @@ import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.music.entity.MyMusicBox;
 import com.b302.zizon.domain.music.repository.MusicRepository;
 import com.b302.zizon.domain.music.repository.MyMusicBoxRepository;
+import com.b302.zizon.domain.playlist.entity.MyPlaylist;
+import com.b302.zizon.domain.playlist.entity.MyPlaylistMeta;
 import com.b302.zizon.domain.playlist.repository.MyPlaylistMetaRepository;
 import com.b302.zizon.domain.playlist.repository.MyPlaylistRepository;
 import com.b302.zizon.domain.user.entity.User;
@@ -123,8 +125,6 @@ public class MyMusicBoxService {
     @Transactional
     // 내 보관함에 음악 추가하기
     public void addMusicMyMusicBox(Long musicId){
-        Map<String, Object> result = new HashMap<>();
-
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
@@ -146,9 +146,38 @@ public class MyMusicBoxService {
         MyMusicBox build = MyMusicBox.builder()
                 .user(user)
                 .music(music).build();
-
-
+        
         MyMusicBox save = myMusicBoxRepository.save(build);
+    }
+    
+    // 내 보관함에 음악 삭제하기
+    @Transactional
+    public void deleteMusicMyMusicBox(Long musicId){
+        Long userId = getUserId();
 
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
+        Optional<MyMusicBox> fineMyMusicBox = Optional.ofNullable(myMusicBoxRepository.findByMusicMusicIdAndUserUserId(musicId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저에게 음악이 없습니다.")));
+
+        MyMusicBox myMusicBox = fineMyMusicBox.get();
+
+        myMusicBoxRepository.delete(myMusicBox);
+
+        List<MyPlaylistMeta> playlistMetas = myPlaylistMetaRepository.findByUserUserId(user.getUserId());
+
+        if(playlistMetas.size() == 0){
+            throw new IllegalArgumentException("해당 유저의 플레이리스트가 없습니다.");
+        }
+
+        for(MyPlaylistMeta pm : playlistMetas){
+            Optional<MyPlaylist> myPlaylist = myPlaylistRepository.findByMyPlaylistMetaMyPlaylistMetaIdAndMusicMusicId(pm.getMyPlaylistMetaId(), musicId);
+            if(myPlaylist.isPresent() && myPlaylist.get().getMusic().getMusicId().equals(musicId)){
+                myPlaylistRepository.delete(myPlaylist.get());
+            }
+        }
     }
 }
