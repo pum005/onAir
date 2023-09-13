@@ -61,7 +61,8 @@ public class MusicController {
     // 유튜브 검색
     @GetMapping("/search/youtube")
     public ResponseEntity<?> searchMusicByYoutube(@RequestParam String musicTitle,
-                                                  @RequestParam String musicArtist, @RequestParam long spotifyMusicDuration) {
-        return ResponseEntity.ok(musicService.findVideo(musicTitle, musicArtist, spotifyMusicDuration));
+                                                  @RequestParam String musicArtist, @RequestParam long spotifyMusicDuration,
+                                                  @RequestParam String musicImageUrl) {
+        return ResponseEntity.ok(musicService.findVideo(musicTitle, musicArtist, spotifyMusicDuration, musicImageUrl));
     }
 }

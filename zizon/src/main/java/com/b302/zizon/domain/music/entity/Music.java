@@ -23,25 +23,25 @@ public class Music {
     private int duration;
     @Column(nullable = false)
     private String musicUrl;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private float acousticness;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private float danceability;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private float energy;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private float instrumentalness;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private float liveness;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private float loudness;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private float speechiness;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private float tempo;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private float valence;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private int popularity;
     @Column(nullable = false)
     private String albumCoverUrl;
