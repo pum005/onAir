@@ -27,7 +27,7 @@ function NickNameModal({
   const handleNickNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewNickName(event.target.value);
   };
-
+  //아
   const handleUpdateNickName = () => {
     setSubmitClicked(!submitClicked);
   };
