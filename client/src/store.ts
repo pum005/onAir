@@ -4,6 +4,14 @@ import { configureStore, createAction, createReducer } from "@reduxjs/toolkit";
 
 // 액션 타입 및 페이로드를 정의하고, 액션 생성자 함수를 만듭니다.
 // 이 액션은 사용자 데이터를 설정하기 위한 것입니다.
+export const setNickName = createAction<{
+  nickname: string;
+}>("SET_NICKNAME");
+
+export const setImage = createAction<{
+  profileImage: string;
+}>("SET_IMAGE");
+
 export const setUserData = createAction<{
   nickname: string;
   profileImage: string;
@@ -79,6 +87,12 @@ const initialDummyState: RadioDummyData = {
 // 리듀서를 정의합니다. 리듀서는 액션에 따라 상태를 변경하는 함수입니다.
 const userReducer = createReducer(initialState, builder => {
   // setUserData 액션이 디스패치될 때 상태를 어떻게 변경할지 정의합니다.
+  builder.addCase(setNickName, (state, action) => {
+    state.nickname = action.payload.nickname;
+  });
+  builder.addCase(setImage, (state, action) => {
+    state.profileImage = action.payload.profileImage;
+  });
   builder.addCase(setUserData, (state, action) => {
     state.nickname = action.payload.nickname;
     state.profileImage = action.payload.profileImage;
