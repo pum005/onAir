@@ -7,18 +7,27 @@ import styles from "./MusicBoxModal.module.css";
 type MusicBoxModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  addMusicBox: () => void;
+  title: string;
+  setTitle: (title: string) => void;
 };
 
-function MusicBoxModal({ isOpen, onClose }: MusicBoxModalProps) {
+function MusicBoxModal({
+  isOpen,
+  onClose,
+  addMusicBox,
+  title,
+  setTitle,
+}: MusicBoxModalProps) {
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box className={styles.modalBox}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
           보관함 추가
         </Typography>
-        <input></input>
+        <input value={title} onChange={(e) => setTitle(e.target.value)} />
         <Button onClick={onClose}>닫기</Button>
-        <button>추가버튼</button>
+        <button onClick={addMusicBox}>추가버튼</button>
       </Box>
     </Modal>
   );
