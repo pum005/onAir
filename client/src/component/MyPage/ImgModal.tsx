@@ -38,6 +38,7 @@ function ImgModal({
   if (!isOpen) {
     return null;
   }
+  //이거 지울꺼야
 
   return (
     <Modal open={isOpen} onClose={onClose}>

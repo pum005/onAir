@@ -3,12 +3,12 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-type PlayListModalProps = {
+type DeleteModalProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
-function PlayListModal({ isOpen, onClose }: PlayListModalProps) {
+function DeleteModal({ isOpen, onClose }: DeleteModalProps) {
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box
@@ -25,7 +25,7 @@ function PlayListModal({ isOpen, onClose }: PlayListModalProps) {
         }}
       >
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          내 플레이리스트
+          삭제하시겠습니까 ?
         </Typography>
         <Button onClick={onClose}>닫기</Button>
 
@@ -36,4 +36,4 @@ function PlayListModal({ isOpen, onClose }: PlayListModalProps) {
   );
 }
 
-export default PlayListModal;
+export default DeleteModal;
