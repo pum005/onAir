@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class MyPlaylistMeta {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long playlistMetaId;
+    private Long myPlaylistMetaId;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
