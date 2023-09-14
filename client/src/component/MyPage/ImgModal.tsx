@@ -42,6 +42,7 @@ function ImgModal({
             "Content-Type": "multipart/form-data",
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
           },
+          withCredentials: true,
         })
         .then(() => {
           onImageConfirm();
