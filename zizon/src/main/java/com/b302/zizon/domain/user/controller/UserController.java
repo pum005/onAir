@@ -1,6 +1,5 @@
 package com.b302.zizon.domain.user.controller;
 
-import com.b302.zizon.domain.user.dto.UserCheckNicknameDTO;
 import com.b302.zizon.domain.user.dto.UserUpdateRequestDTO;
 import com.b302.zizon.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +19,9 @@ public class UserController {
 
     // 닉네임 중복 체크
     @GetMapping("/user/check-nickname")
-    public ResponseEntity<?> userCheckNickname(@RequestBody UserCheckNicknameDTO userCheckNicknameDTO){
+    public ResponseEntity<?> userCheckNickname(@RequestParam("nickName") String nickname){
 
-        boolean result = userService.userCheckNickname(userCheckNicknameDTO);
+        boolean result = userService.userCheckNickname(nickname);
 
         return ResponseEntity.status(200).body(result);
     }

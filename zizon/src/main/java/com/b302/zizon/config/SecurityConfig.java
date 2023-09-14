@@ -5,6 +5,7 @@ import com.b302.zizon.util.jwt.JwtFilter;
 import com.b302.zizon.util.OAuthAPI.handler.OAuthSuccessHandler;
 import com.b302.zizon.util.OAuthAPI.handler.OAuthFailHandler;
 import com.b302.zizon.util.OAuthAPI.service.PrincipalOauth2UserService;
+import com.b302.zizon.util.jwt.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,7 @@ public class SecurityConfig{
     @Value("${jwt.secret}")
     private String secretKey;
     private PrincipalOauth2UserService principalOauth2UserService;
+    private JwtUtil jwtUtil;
 
     @Autowired
     public SecurityConfig(UserService userService, PrincipalOauth2UserService principalOauth2UserService) {
@@ -44,7 +46,7 @@ public class SecurityConfig{
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 // jwt filter
-                .addFilterBefore(new JwtFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(userService, secretKey, jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 // request authorization
                 .authorizeRequests()
                 .antMatchers("/api/oauth/login", "/login/**", "/oauth2/**", "/chat-gpt/question").permitAll() // 회원가입과 로그인은 언제나 가능
