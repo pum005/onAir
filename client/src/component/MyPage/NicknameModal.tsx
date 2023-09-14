@@ -57,11 +57,10 @@ function NickNameModal({
                     Authorization:
                       "Bearer " + localStorage.getItem("accessToken"),
                   },
-                  withCredentials: true
                 }
               )
               .then(() => {
-                setSubmitClicked(false);
+                setSubmitClicked(!submitClicked);
                 onUpdateNickName(newNickName);
                 onClose();
               })
