@@ -128,6 +128,7 @@ function MusicList() {
             isOpen={isMusicDetailModalOpen}
             onClose={closeMusicDetailModal}
             title={selectedPlaylistTitle}
+            songCount={myMusicBox}
           />
         </ListItem>
         <MusicAddModal
@@ -178,6 +179,15 @@ function MusicList() {
             >
               <PlayCircleOutlineIcon />
             </Button>
+            <MusicDetailModal
+              isOpen={
+                isMusicDetailModalOpen &&
+                selectedPlaylistTitle === playlist.playlistName
+              }
+              onClose={closeMusicDetailModal}
+              title={playlist.playlistName}
+              songCount={playlist.playlistCount}
+            />
           </ListItem>
         ))}
       </List>
