@@ -43,6 +43,7 @@ function NickNameModal({
             headers: {
               Authorization: "Bearer " + localStorage.getItem("accessToken"),
             },
+            withCredentials: true
           }
         )
         .then(() => {
