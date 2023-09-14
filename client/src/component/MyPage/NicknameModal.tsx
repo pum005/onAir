@@ -57,11 +57,11 @@ function NickNameModal({
                     Authorization:
                       "Bearer " + localStorage.getItem("accessToken"),
                   },
-                  withCredentials: true
+                  withCredentials: true,
                 }
               )
               .then(() => {
-                setSubmitClicked(false);
+                setSubmitClicked(!submitClicked);
                 onUpdateNickName(newNickName);
                 onClose();
               })
@@ -70,6 +70,7 @@ function NickNameModal({
               });
           } else {
             alert("닉네임 중복이 발생했습니다.");
+            setSubmitClicked(false);
           }
         })
         .catch((error) => {
