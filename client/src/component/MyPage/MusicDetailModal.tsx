@@ -10,11 +10,7 @@ type MusicDetailModalProps = {
   title: string;
 };
 
-function MusicDetailModalProps({
-  isOpen,
-  onClose,
-  title,
-}: MusicDetailModalProps) {
+function MusicDetailModal({ isOpen, onClose, title }: MusicDetailModalProps) {
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box className={styles.modalBox}>
@@ -26,4 +22,4 @@ function MusicDetailModalProps({
     </Modal>
   );
 }
-export default MusicDetailModalProps;
+export default MusicDetailModal;

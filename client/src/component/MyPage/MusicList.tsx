@@ -3,7 +3,6 @@ import { RootState } from "../../store";
 import { useState } from "react";
 import MusicBoxModal from "../Common/MusicBoxModal";
 import MusicAddModal from "../Common/MusicAddModal";
-import AllMusicDetailModal from "./AllMusicDetailModal";
 import MusicDetailModal from "./MusicDetailModal";
 import dummyData from "./dummyData.json";
 import AudiotrackIcon from "@mui/icons-material/Audiotrack";
@@ -27,11 +26,10 @@ function MusicList() {
   const [playlistData, setPlaylistData] = useState(dummyData.playlist_info); //플레이리스트별 관리 state
   const [newPlaylistTitle, setNewPlaylistTitle] = useState(""); //새로운 플레이리스트 제목 관리 state
   const [isMusicAddModalOpen, setMusicAddModalOpen] = useState<boolean>(false); //음악 더하기 변수
-  const [isAllMusicDetailModalOpen, setAllMusicDetailModalOpen] =
-    useState<boolean>(false); //전체 보관함 음악 상세 보기 모달 state
   const [isMusicDetailModalOpen, setMusicDetailModalOpen] =
-    useState<boolean>(false); //플레이리스트 음악 상세 보기 모달 state
-  const [selectedPlaylistName, setSelectedPlaylistName] = useState<String>(""); //플레이리스트 이름 관리 state
+    useState<boolean>(false); //전체 보관함 음악 상세 보기 모달 state
+  const [selectedPlaylistTitle, setSelectedPlaylistTitle] =
+    useState<string>(""); //리스트 이름 관리 state
 
   /** function */
   //보관함추가 실행 함수
@@ -55,7 +53,6 @@ function MusicList() {
     setNewPlaylistTitle("");
     MusicBoxModalClose();
   };
-  // 예스맨
 
   //음악검색 모달 열기 함수
   const openMusicAddModal = () => {
@@ -66,22 +63,14 @@ function MusicList() {
     setMusicAddModalOpen(false);
   };
 
-  //전체 음악상세보기 모달 열기 함수
-  const openAllMusicDetailModal = () => {
-    setAllMusicDetailModalOpen(true);
-  };
-
-  //전체 음악상세보기 모달 닫기 함수
-  const closeAllMusicDetailModal = () => {
-    setAllMusicDetailModalOpen(false);
-  };
-
-  //플레이리스트 음악상세보기 모달 열기 함수
-  const openPlayListDetailModal = () => {
+  //플레이리스트 이름 보내기 함수
+  const openMusicDetailModal = (playlistName: string) => {
+    setSelectedPlaylistTitle(playlistName);
     setMusicDetailModalOpen(true);
   };
-  //플레이리스트 음악상세보기 모달 닫기 함수
-  const closePlayListDetailModal = () => {
+
+  // 음악 리스트상세보기 모달 닫기 함수
+  const closeMusicDetailModal = () => {
     setMusicDetailModalOpen(false);
   };
 
@@ -110,7 +99,7 @@ function MusicList() {
             primary={
               <Typography
                 className={styles.textPrimary}
-                onClick={openAllMusicDetailModal}
+                onClick={() => openMusicDetailModal("전체보관함")}
               >
                 전체보관함
               </Typography>
@@ -135,10 +124,10 @@ function MusicList() {
           >
             <PlayCircleOutlineIcon />
           </Button>
-          <AllMusicDetailModal
-            isOpen={isAllMusicDetailModalOpen}
-            onClose={closeAllMusicDetailModal}
-            title="전체보관함"
+          <MusicDetailModal
+            isOpen={isMusicDetailModalOpen}
+            onClose={closeMusicDetailModal}
+            title={selectedPlaylistTitle}
           />
         </ListItem>
         <MusicAddModal
@@ -164,7 +153,7 @@ function MusicList() {
               primary={
                 <Typography
                   className={styles.textPrimary}
-                  onClick={openPlayListDetailModal}
+                  onClick={() => openMusicDetailModal(playlist.playlistName)}
                 >
                   {playlist.playlistName}
                 </Typography>
