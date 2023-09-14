@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.lettuce.core.ScriptOutputType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class JwtUtil {
 
-    private static Long acExpiredMs = 1000L; // 액세스 토큰의 만료 시간(60분)
+    private static Long acExpiredMs = 1000L * 10; // 액세스 토큰의 만료 시간(60분)
     private static Long rfExpiredMs = 1000 * 60 * 60 * 24 * 14L; // 리프레쉬 토큰의 만료 시간(14일)
     private final RedisTemplate<String, String> redisTemplate;
 
@@ -49,13 +50,18 @@ public class JwtUtil {
     }
 
     public String checkRefreshToken(String refreshToken, Long userId){
-        String redisRefreshToken = redisTemplate.opsForValue().get(userId);
-        if(redisRefreshToken.isEmpty()){
-            return "리프레시 토큰 만료";
-        }else if(!redisRefreshToken.equals(refreshToken)){
-            return "리프레시 토큰 불일치";
-        }else{
-            return "리프레시 토큰 일치";
+        try {
+            String redisRefreshToken = redisTemplate.opsForValue().get(String.valueOf(userId));
+            if (redisRefreshToken.isEmpty()) {
+                return "리프레시 토큰 만료";
+            } else if (!redisRefreshToken.equals(refreshToken)) {
+                return "리프레시 토큰 불일치";
+            } else {
+                return "리프레시 토큰 일치";
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
         }
     }
 
@@ -75,7 +81,6 @@ public class JwtUtil {
     // 리프레쉬 토큰 생성
     public String createRefreshToken(String secretKey, User user){
 
-        System.out.println(user.toString());
         Claims claims = Jwts.claims();
 
         String refreshToken = Jwts.builder()
