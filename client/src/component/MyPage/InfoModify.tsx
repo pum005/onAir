@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import ImgModal from "./ImgModal";
-import NickNameModal from "./NicknameModal"; // NickNameModal을 import합니다.
+import NickNameModal from "./NicknameModal";
 import { setNickName } from "../../store";
 import { setImage } from "../../store";
 import axios from "axios";
