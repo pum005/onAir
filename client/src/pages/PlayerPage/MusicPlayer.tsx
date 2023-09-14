@@ -23,8 +23,8 @@ export const MusicPlayer = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="모달 타이틀" // 원하는 타이틀로 변경 가능
-        content="모달 내용" // 원하는 내용으로 변경 가능
+        title="음악 목록" // 원하는 타이틀로 변경 가능
+        content="음악들" // 원하는 내용으로 변경 가능
       />
     </div>
   );
