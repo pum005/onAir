@@ -30,7 +30,8 @@ export const Music = () => {
   return (
     <div
       style={{
-        backgroundImage: `url(${currentMusicCover})`, // 배경 이미지 설정
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(${currentMusicCover})`, // 수정된 부분
+        // backgroundImage: `url(${currentMusicCover})`, // 배경 이미지 설정
         backgroundSize: "cover", // 배경 이미지를 컨테이너 크기에 맞게 조절
         backgroundPosition: "center", // 배경 이미지의 위치를 중앙으로 설정
         backgroundColor: "rgba(0, 1, 4, 0.9)", // 투명도를 조절하는 배경색
