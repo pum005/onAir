@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,9 +35,9 @@ public class OAuth2Controller {
     private final UserService userService;
 
     @PostMapping("oauth/login")
-    public ResponseEntity<?> Login(@RequestBody Map<String, Object> data) throws IOException {
+    public ResponseEntity<?> Login(@RequestBody Map<String, Object> data, HttpServletResponse response) throws IOException {
 
-        Map<String, Object> result = userService.oauthLogin((String) data.get("access"));
+        Map<String, Object> result = userService.oauthLogin((String) data.get("access"), response);
 
         return ResponseEntity.status(200).body(result);
     }
