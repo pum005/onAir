@@ -29,9 +29,10 @@ public class SecurityConfig{
     private JwtUtil jwtUtil;
 
     @Autowired
-    public SecurityConfig(UserService userService, PrincipalOauth2UserService principalOauth2UserService) {
+    public SecurityConfig(UserService userService, PrincipalOauth2UserService principalOauth2UserService, JwtUtil jwtUtil) {
         this.userService = userService;
         this.principalOauth2UserService = principalOauth2UserService;
+        this.jwtUtil = jwtUtil;
     }
 
     // Single SecurityFilterChain that supports both standard and OAuth2 login

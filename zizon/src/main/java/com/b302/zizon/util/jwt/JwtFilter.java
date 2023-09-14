@@ -50,7 +50,6 @@ public class JwtFilter extends OncePerRequestFilter { // 모든 요청에 대해
         // 토큰 꺼내기(첫 번째가 토큰이다. bearer 제외)
         String token = authorization.split(" ")[1];
 
-
         // 토큰 만료됐는지 확인
         if(JwtUtil.isExpired(token, secretKey)){
             log.error("토큰이 만료되었습니다.");
@@ -76,11 +75,11 @@ public class JwtFilter extends OncePerRequestFilter { // 모든 요청에 대해
             String accessJwt = jwtUtil.createAccessJwt(userId, secretKey);
 
             String jsonResponse = "{\"accessToken\":\"" + accessJwt + "\"}";
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(jsonResponse);
 
-            System.out.println(accessJwt);
             return;
         }
 
