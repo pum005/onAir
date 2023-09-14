@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 
 type ImgModalProps = {
   isOpen: boolean;
@@ -36,14 +37,20 @@ function ImgModal({
     if (submitClicked && userImage) {
       const formData = new FormData();
       formData.append("image", userImage[0]);
-      axios
-        .put("http://localhost:8080/api/user/profile/update", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: "Bearer " + localStorage.getItem("accessToken"),
-          },
-          withCredentials: true,
-        })
+
+      requestWithTokenRefresh(() => {
+        return axios.put(
+          "http://localhost:8080/api/user/profile/update",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+            withCredentials: true,
+          }
+        );
+      })
         .then(() => {
           onImageConfirm();
           setSubmitClicked(false);
