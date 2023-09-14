@@ -55,7 +55,7 @@ function ImgModal({
           onImageConfirm();
           setSubmitClicked(false);
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("이미지 변경 실패:", error);
           setSubmitClicked(false);
         });
@@ -89,7 +89,15 @@ function ImgModal({
         <Typography id="modal-modal-title" variant="h6" component="h2">
           이미지 변경
         </Typography>
-        <img src={fileURL || profileImage} alt="프로필 이미지" />
+        <img
+          src={fileURL || profileImage}
+          alt="프로필 이미지"
+          style={{
+            width: "180px",
+            height: "180px",
+            objectFit: "cover",
+          }}
+        />
         <input
           type="file"
           accept="image/*"
