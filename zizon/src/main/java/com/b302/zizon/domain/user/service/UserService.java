@@ -1,6 +1,5 @@
 package com.b302.zizon.domain.user.service;
 
-import com.b302.zizon.domain.user.dto.UserCheckNicknameDTO;
 import com.b302.zizon.domain.user.dto.UserUpdateRequestDTO;
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.repository.UserRepository;
@@ -125,7 +124,7 @@ public class UserService {
     }
 
     // 유저 닉네임 중복체크
-    public boolean userCheckNickname(UserCheckNicknameDTO userCheckNicknameDTO){
+    public boolean userCheckNickname(String nickname){
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
@@ -133,7 +132,7 @@ public class UserService {
 
         User user = byUserId.get();
 
-        boolean flag = userRepository.existsByNickname(userCheckNicknameDTO.getNickname());
+        boolean flag = userRepository.existsByNickname(nickname);
 
         return flag;
     }
