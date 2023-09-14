@@ -3,6 +3,7 @@ package com.b302.zizon.util.jwt;
 import com.b302.zizon.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -22,7 +24,9 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter { // 모든 요청에 대해 토큰 유효성 검증을 진행
 
     private final UserService userService;
+    @Value("${jwt.secret}")
     private final String secretKey;
+    private final JwtUtil jwtUtil;
 
     @Override // 이 주소로 오는 건 토큰 없어도 됨.
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
@@ -50,7 +54,33 @@ public class JwtFilter extends OncePerRequestFilter { // 모든 요청에 대해
         // 토큰 만료됐는지 확인
         if(JwtUtil.isExpired(token, secretKey)){
             log.error("토큰이 만료되었습니다.");
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "토큰 만료");
+
+            Long userId = JwtUtil.getUserId(token, secretKey);
+
+            Cookie[] cookies = request.getCookies();
+            if(cookies != null){
+                for(Cookie cookie : cookies){
+                    if("refreshToken".equals(cookie.getName())){
+                        String refreshTokenCookie = cookie.getValue();
+                        String result = jwtUtil.checkRefreshToken(refreshTokenCookie, userId);
+                        if(result.equals("리프레시 토큰 만료")){
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "리프레시 토큰 만료");
+                            return;
+                        }else if(result.equals("리프레시 토큰 불일치")){
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "리프레시 토큰 불일치");
+                            return;
+                        }
+                    }
+                }
+            }
+            String accessJwt = jwtUtil.createAccessJwt(userId, secretKey);
+
+            String jsonResponse = "{\"accessToken\":\"" + accessJwt + "\"}";
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(jsonResponse);
+
+            System.out.println(accessJwt);
             return;
         }
 
