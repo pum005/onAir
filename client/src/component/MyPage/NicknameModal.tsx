@@ -29,7 +29,7 @@ function NickNameModal({
   };
   //아
   const handleUpdateNickName = () => {
-    setSubmitClicked(!submitClicked);
+    setSubmitClicked(true);
   };
 
   useEffect(() => {
@@ -42,7 +42,7 @@ function NickNameModal({
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
           },
-          withCredentials: true,
+          withCredentials: true
         })
         .then((Response) => {
           if (Response.data === false) {
@@ -74,7 +74,16 @@ function NickNameModal({
           }
         })
         .catch((error) => {
-          console.error("닉네임 변경 에러 발생", error);
+          if (error.response && error.response.data.accessToken) {
+            const newToken = error.response.data.accessToken;
+            localStorage.setItem("accessToken", newToken);
+            
+            // 재요청
+            handleUpdateNickName();
+          }
+          else{
+            setSubmitClicked(false);
+          }
         });
     }
   }, [submitClicked]);
