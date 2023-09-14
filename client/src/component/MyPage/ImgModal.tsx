@@ -4,6 +4,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import axios from "axios";
 
 type ImgModalProps = {
   isOpen: boolean;
@@ -25,6 +26,34 @@ function ImgModal({
   onImageConfirm, // 이미지 확인 버튼 핸들러 추가
 }: ImgModalProps) {
   const [fileURL, setFileURL] = useState<string>("");
+  const [submitClicked, setSubmitClicked] = useState(false);
+
+  const handleUpdateImg = () => {
+    setSubmitClicked(!submitClicked);
+  };
+
+  useEffect(() => {
+    if (submitClicked && userImage) {
+      const formData = new FormData();
+      formData.append("image", userImage[0]);
+      axios
+        .put("http://localhost:8080/api/user/profile/update", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        })
+        .then(() => {
+          onImageConfirm();
+          setSubmitClicked(false);
+        })
+        .catch((error) => {
+          console.error("이미지 변경 실패:", error);
+          setSubmitClicked(false);
+        });
+    }
+  }, [submitClicked, userImage, onImageConfirm]);
 
   useEffect(() => {
     if (userImage) {
@@ -34,11 +63,6 @@ function ImgModal({
       setFileURL("");
     }
   }, [userImage]);
-
-  if (!isOpen) {
-    return null;
-  }
-  //이거 지울꺼야
 
   return (
     <Modal open={isOpen} onClose={onClose}>
@@ -58,22 +82,18 @@ function ImgModal({
         <Typography id="modal-modal-title" variant="h6" component="h2">
           이미지 변경
         </Typography>
-        <img
-          src={fileURL || profileImage}
-          alt="프로필 이미지"
-          style={{ cursor: "pointer" }}
-        />
+        <img src={fileURL || profileImage} alt="프로필 이미지" />
         <input
           type="file"
           accept="image/*"
           onChange={onImageChange}
           style={{ display: "block" }}
         />
-        <button type="button" onClick={onImageRemove}>
-          대충 새로고침 버튼
-        </button>
-        <Button onClick={onImageConfirm}>확인</Button>{" "}
-        <Button onClick={onClose}>닫기</Button>
+        <Button type="button" onClick={onImageRemove}>
+          이미지 삭제
+        </Button>
+        <Button onClick={handleUpdateImg}>변경</Button>{" "}
+        <Button onClick={onClose}>x</Button>
       </Box>
     </Modal>
   );
