@@ -1,7 +1,7 @@
 import NavBar from "../../component/Common/Navbar";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setMusicInfo, setRadioDummyData } from "../../store";
+import { resetIndices, setMusicInfo, setRadioDummyData } from "../../store";
 
 type CreateRadioProps = {};
 
@@ -39,6 +39,8 @@ export const CreateRadio = () => {
         ],
       })
     );
+
+    dispatch(resetIndices());
   };
 
   return (

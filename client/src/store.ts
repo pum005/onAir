@@ -41,6 +41,7 @@ export const setMusicInfo = createAction<{
 
 export const incrementTTSIndex = createAction("INCREMENT_TTS_INDEX");
 export const incrementMusicIndex = createAction("INCREMENT_MUSIC_INDEX");
+export const resetIndices = createAction("RESET_INDICES");
 
 // 2. Reducer 생성
 
@@ -147,6 +148,10 @@ const radiodummyReducer = createReducer(initialDummyState, builder => {
     .addCase(incrementMusicIndex, state => {
       state.currentMusicIndex++;
     });
+  builder.addCase(resetIndices, state => {
+    state.currentTTSIndex = 0;
+    state.currentMusicIndex = 0;
+  });
 });
 
 // 3. Store 설정
