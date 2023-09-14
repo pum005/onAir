@@ -173,7 +173,7 @@ public class MusicService {
                     .duration((int) spotifyMusicDuration)
                     .albumCoverUrl(musicImageUrl)
                     .title(title).build();
-            
+
             Music save = musicRepository.save(build);
 
             return result;
