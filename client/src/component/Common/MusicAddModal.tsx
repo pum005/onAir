@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
+import styles from "./MusicAddModal.module.css";
 
 type MusicAddModalProps = {
   isOpen: boolean;
@@ -16,7 +17,7 @@ function MusicAddModal({ isOpen, onClose }: MusicAddModalProps) {
 
   return (
     <Modal open={isOpen} onClose={onClose}>
-      <Box>
+      <Box className={styles.modalBox}>
         <Typography variant="h6" component="h2">
           노래 추가
         </Typography>
