@@ -23,10 +23,6 @@ export const RadioPlayer = () => {
       <NavBar />
       <div style={{ position: "absolute", top: "120px", right: "100px" }}>
         {/* QueueMusicIcon 클릭 시 모달 열기 */}
-        <QueueMusicIcon
-          style={{ fontSize: "2.5rem", color: "white", cursor: "pointer" }}
-          onClick={() => setIsModalOpen(true)}
-        />
       </div>
       <Radio />
 
