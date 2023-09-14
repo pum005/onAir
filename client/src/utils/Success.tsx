@@ -38,6 +38,7 @@ const Login: React.FC = () => {
 
     // accessToken을 localStorage에 저장
     localStorage.setItem("accessToken", data.accessToken);
+    localStorage.setItem("refreshToken", data.refreshToken);
 
     // 데이터를 Redux에 저장
     dispatch(

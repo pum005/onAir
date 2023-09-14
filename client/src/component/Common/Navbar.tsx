@@ -84,8 +84,8 @@ function ResponsiveAppBar() {
         }
       )
       .then(response => {
-        // 로그아웃 성공 시 로컬 스토리지에서 토큰 제거 또는 다른 처리
         localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         setLogoutAlertOpen(false);
         navigate("/");
       })
