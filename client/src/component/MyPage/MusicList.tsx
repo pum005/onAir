@@ -55,6 +55,7 @@ function MusicList() {
     setNewPlaylistTitle("");
     MusicBoxModalClose();
   };
+  // 예스맨
 
   //음악검색 모달 열기 함수
   const openMusicAddModal = () => {
