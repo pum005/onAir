@@ -32,8 +32,16 @@ export const setRadioDummyData = createAction<{
   oncast_music_three: string;
 }>("SET_RADIO_DUMMY_DATA");
 
+export const setMusicInfo = createAction<{
+  musicTitle: string[];
+  musicArtist: string[];
+  musicLength: number[];
+  musicCover: string[];
+}>("SET_MUSIC_INFO");
+
 export const incrementTTSIndex = createAction("INCREMENT_TTS_INDEX");
 export const incrementMusicIndex = createAction("INCREMENT_MUSIC_INDEX");
+export const resetIndices = createAction("RESET_INDICES");
 
 // 2. Reducer 생성
 
@@ -58,7 +66,11 @@ export type RadioDummyData = {
   oncast_music_three: string;
   currentTTSIndex: number;
   currentMusicIndex: number;
-  [key: string]: string | number;
+  musicTitle: string[];
+  musicArtist: string[];
+  musicLength: number[];
+  musicCover: string[];
+  [key: string]: string | number | string[] | number[];
 };
 
 // 초기 상태값을 설정합니다. 애플리케이션 시작 시의 사용자 데이터 상태입니다.
@@ -82,6 +94,10 @@ const initialDummyState: RadioDummyData = {
   oncast_music_three: "",
   currentTTSIndex: 0,
   currentMusicIndex: 0,
+  musicTitle: [],
+  musicArtist: [],
+  musicLength: [],
+  musicCover: [],
 };
 
 // 리듀서를 정의합니다. 리듀서는 액션에 따라 상태를 변경하는 함수입니다.
@@ -115,12 +131,27 @@ const radiodummyReducer = createReducer(initialDummyState, builder => {
       state.oncast_music_two = action.payload.oncast_music_two;
       state.oncast_music_three = action.payload.oncast_music_three;
     })
+    .addCase(setMusicInfo, (state, action) => {
+      state.musicTitle = action.payload.musicTitle;
+      state.musicArtist = action.payload.musicArtist;
+
+      // 밀리초를 초로 변환하여 저장
+      state.musicLength = action.payload.musicLength.map(length =>
+        Math.round(length / 1000)
+      );
+
+      state.musicCover = action.payload.musicCover;
+    })
     .addCase(incrementTTSIndex, state => {
       state.currentTTSIndex++;
     })
     .addCase(incrementMusicIndex, state => {
       state.currentMusicIndex++;
     });
+  builder.addCase(resetIndices, state => {
+    state.currentTTSIndex = 0;
+    state.currentMusicIndex = 0;
+  });
 });
 
 // 3. Store 설정
