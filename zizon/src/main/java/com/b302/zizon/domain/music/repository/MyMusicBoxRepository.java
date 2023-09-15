@@ -11,8 +11,9 @@ import java.util.Optional;
 public interface MyMusicBoxRepository extends JpaRepository<MyMusicBox, Long> {
 
     List<MyMusicBox> findByUserUserId(Long userId);
-
     Optional<MyMusicBox> findByMusicMusicIdAndUserUserId(Long musicId, Long userId);
+
+    Optional<MyMusicBox> findByMusicMusicId(Long musicId);
 
 
 }
