@@ -22,7 +22,7 @@ public class Music {
     @Column(nullable = false)
     private int duration;
     @Column(nullable = false)
-    private String musicUrl;
+    private String youtubeVideoId;
     @Column(nullable = true)
     private float acousticness;
     @Column(nullable = true)
