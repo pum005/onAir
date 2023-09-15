@@ -62,7 +62,7 @@ public class UserService {
         Cookie cookie = new Cookie("refreshToken",refreshToken);
 
         // expires in 7 days
-        cookie.setMaxAge(7 * 24 * 60 * 60);
+        cookie.setMaxAge(14 * 24 * 60 * 60);
 
         // optional properties
         cookie.setSecure(false);
