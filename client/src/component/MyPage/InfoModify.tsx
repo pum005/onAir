@@ -81,10 +81,27 @@ function InfoModify() {
         src={userData.profileImage}
         alt="프로필 이미지"
         onClick={imgModalOpen}
-        style={{ cursor: "pointer" }}
+        style={{
+          cursor: "pointer",
+          width: "180px",
+          height: "180px",
+          objectFit: "cover",
+        }}
       />
-      <div>{userData.nickname}</div>
-      <button onClick={nickNameModalOpen}>닉네임 변경</button>{" "}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <h3 style={{ marginRight: "15px" }}>{userData.nickname}</h3>
+        <h5 onClick={nickNameModalOpen} style={{ cursor: "pointer" }}>
+          변경
+        </h5>
+      </div>
+
       {/* 닉네임 변경 버튼 클릭 시 모달 열기 */}
       <ImgModal
         isOpen={isImgModalOpen}
