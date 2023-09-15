@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import { setNickName } from "../../store";
 import { error } from "console";
 
@@ -29,24 +30,25 @@ function NickNameModal({
   };
   //아
   const handleUpdateNickName = () => {
-    setSubmitClicked(true);
+    setSubmitClicked(!submitClicked);
   };
 
   useEffect(() => {
     if (submitClicked) {
-      axios
-        .get("http://localhost:8080/api/user/check-nickname", {
+      requestWithTokenRefresh(() => {
+        return axios.get("http://localhost:8080/api/user/check-nickname", {
           params: {
             nickName: newNickName,
           },
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
           },
-          withCredentials: true
-        })
+          withCredentials: true,
+        });
+      })
         .then((Response) => {
           if (Response.data === false) {
-            axios
+            return axios
               .put(
                 "http://localhost:8080/api/user/nickname/update",
                 {
@@ -61,12 +63,9 @@ function NickNameModal({
                 }
               )
               .then(() => {
-                setSubmitClicked(!submitClicked);
+                setSubmitClicked(false);
                 onUpdateNickName(newNickName);
                 onClose();
-              })
-              .catch((error) => {
-                console.error("닉네임 변경 에러 발생", error);
               });
           } else {
             alert("닉네임 중복이 발생했습니다.");
@@ -74,16 +73,8 @@ function NickNameModal({
           }
         })
         .catch((error) => {
-          if (error.response && error.response.data.accessToken) {
-            const newToken = error.response.data.accessToken;
-            localStorage.setItem("accessToken", newToken);
-            
-            // 재요청
-            handleUpdateNickName();
-          }
-          else{
-            setSubmitClicked(false);
-          }
+          console.error("닉네임 변경 에러 발생", error);
+          setSubmitClicked(false);
         });
     }
   }, [submitClicked]);

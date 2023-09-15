@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 
 type ImgModalProps = {
   isOpen: boolean;
@@ -36,19 +37,25 @@ function ImgModal({
     if (submitClicked && userImage) {
       const formData = new FormData();
       formData.append("image", userImage[0]);
-      axios
-        .put("http://localhost:8080/api/user/profile/update", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: "Bearer " + localStorage.getItem("accessToken"),
-          },
-          withCredentials: true,
-        })
+
+      requestWithTokenRefresh(() => {
+        return axios.put(
+          "http://localhost:8080/api/user/profile/update",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+            withCredentials: true,
+          }
+        );
+      })
         .then(() => {
           onImageConfirm();
           setSubmitClicked(false);
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("이미지 변경 실패:", error);
           setSubmitClicked(false);
         });
@@ -82,7 +89,15 @@ function ImgModal({
         <Typography id="modal-modal-title" variant="h6" component="h2">
           이미지 변경
         </Typography>
-        <img src={fileURL || profileImage} alt="프로필 이미지" />
+        <img
+          src={fileURL || profileImage}
+          alt="프로필 이미지"
+          style={{
+            width: "180px",
+            height: "180px",
+            objectFit: "cover",
+          }}
+        />
         <input
           type="file"
           accept="image/*"
