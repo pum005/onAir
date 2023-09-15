@@ -2,7 +2,11 @@ package com.b302.zizon.domain.music.service;
 
 import com.b302.zizon.domain.music.dto.*;
 import com.b302.zizon.domain.music.entity.Music;
+import com.b302.zizon.domain.music.entity.MyMusicBox;
 import com.b302.zizon.domain.music.repository.MusicRepository;
+import com.b302.zizon.domain.music.repository.MyMusicBoxRepository;
+import com.b302.zizon.domain.user.entity.User;
+import com.b302.zizon.domain.user.repository.UserRepository;
 import com.b302.zizon.util.ConvertTime;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
@@ -12,6 +16,9 @@ import com.google.api.services.youtube.model.SearchResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -24,6 +31,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +46,16 @@ public class MusicService {
     private final YouTube youtubeApi;
     private final ConvertTime convertTime;
     private final MusicRepository musicRepository;
+    private final MyMusicBoxRepository myMusicBoxRepository;
+    private final UserRepository userRepository;
+
+    public Long getUserId(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        Long userId = (Long) principal;
+
+        return userId;
+    }
 
 
     // 스포티파이 액세스 가져오기
@@ -125,6 +143,14 @@ public class MusicService {
 
     // 유튜브 영상 찾기
     public YoutubeSearchResultDTO findVideo(String title, String artist, long spotifyMusicDuration, String musicImageUrl) {
+
+        Long userId = getUserId();
+
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
         YoutubeSearchResultDTO result = new YoutubeSearchResultDTO();
 
         String query = title + " " + artist;
@@ -168,13 +194,42 @@ public class MusicService {
                             convertTime.convertDurationToMillis(video.getContentDetails().getDuration()));
                 }
             }
+
             Music build = Music.builder()
                     .artist(artist)
                     .duration((int) spotifyMusicDuration)
                     .albumCoverUrl(musicImageUrl)
+                    .youtubeVideoId(result.getMusicYoutubeId())
                     .title(title).build();
-            
-            Music save = musicRepository.save(build);
+
+            Long musicId = 0L;
+            // 기존에 음악이 있는지 검사
+            Optional<Music> byYoutubeVideoId = musicRepository.findByYoutubeVideoId(result.getMusicYoutubeId());
+
+            Music music = null;
+
+            // 기존에 음악이 없으면
+            if(byYoutubeVideoId.isEmpty()){
+                // 음악 저장
+                music = musicRepository.save(build);
+                musicId = music.getMusicId();
+            }
+            if(byYoutubeVideoId.isPresent()){
+                music = byYoutubeVideoId.get();
+            }
+
+            musicId = music.getMusicId();
+
+            Optional<MyMusicBox> byMusicMusicId = myMusicBoxRepository.findByMusicMusicId(musicId);
+
+            MyMusicBox myMusicBox = MyMusicBox.builder()
+                    .music(music)
+                    .user(user)
+                    .build();
+
+            if(byMusicMusicId.isEmpty()){
+                MyMusicBox save = myMusicBoxRepository.save(myMusicBox);
+            }
 
             return result;
         } catch (Exception e) {

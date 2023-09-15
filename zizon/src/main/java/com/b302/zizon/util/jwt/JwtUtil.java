@@ -6,12 +6,8 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -28,8 +24,13 @@ public class JwtUtil {
 
     // 유저 pk 꺼내기
     public static Long getUserId(String token, String secretKey){
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
-                .getBody().get("userId", Long.class);
+        try {
+            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
+                    .getBody().get("userId", Long.class);
+        } catch (ExpiredJwtException e) {
+            // 만료된 JWT에서도 claims를 가져올 수 있습니다.
+            return e.getClaims().get("userId", Long.class);
+        }
     }
 
     // 토큰 만료 체크
@@ -40,6 +41,22 @@ public class JwtUtil {
         } catch (ExpiredJwtException e) {
             // 만료된 토큰으로 인해 예외가 발생하면, 만료된 것으로 간주하고 true를 반환.
             return true;
+        }
+    }
+
+    public String checkRefreshToken(String refreshToken, Long userId){
+        try {
+            String redisRefreshToken = redisTemplate.opsForValue().get(String.valueOf(userId));
+            if (redisRefreshToken.isEmpty()) {
+                return "리프레시 토큰 만료";
+            } else if (!redisRefreshToken.equals(refreshToken)) {
+                return "리프레시 토큰 불일치";
+            } else {
+                return "리프레시 토큰 일치";
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return e.getMessage();
         }
     }
 
@@ -59,7 +76,6 @@ public class JwtUtil {
     // 리프레쉬 토큰 생성
     public String createRefreshToken(String secretKey, User user){
 
-        System.out.println(user.toString());
         Claims claims = Jwts.claims();
 
         String refreshToken = Jwts.builder()

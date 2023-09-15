@@ -8,12 +8,15 @@ import com.b302.zizon.util.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +44,7 @@ public class UserService {
 
     // 소셜 로그인
     @Transactional
-    public Map<String, Object> oauthLogin(String privateAccess){
+    public Map<String, Object> oauthLogin(String privateAccess, HttpServletResponse response){
 
         Optional<User> byPrivateAccess = userRepository.findByPrivateAccess(privateAccess);
 
@@ -54,6 +57,21 @@ public class UserService {
         // 로그인 성공
         String accessToken = jwtUtil.createAccessJwt(user.getUserId(), secretKey); // 토큰 발급해서 넘김
         String refreshToken = jwtUtil.createRefreshToken(secretKey, user); // 리프레시 토큰 발급해서 넘김
+
+        // create a cookie
+        Cookie cookie = new Cookie("refreshToken",refreshToken);
+
+        // expires in 7 days
+        cookie.setMaxAge(14 * 24 * 60 * 60);
+
+        // optional properties
+        cookie.setSecure(false);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+
+        // add cookie to response
+        response.addCookie(cookie);
+
 
         Map<String, Object> result = new HashMap<>();
 

@@ -4,14 +4,14 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import ImgModal from "./ImgModal";
-import NickNameModal from "./NicknameModal"; // NickNameModal을 import합니다.
+import NickNameModal from "./NicknameModal";
 import { setNickName } from "../../store";
 import { setImage } from "../../store";
 import axios from "axios";
 
 function InfoModify() {
   const userData = useSelector((state: RootState) => state.user); // 사용자 정보를 Redux store에서 가져옵니다.
-  const [userImage, setUserImage] = useState<null | FileList>(null); // 사용자가 변경한 이미지를 저장합니다.
+  const [userImage, setUserImage] = useState<null | FileList>(null); // 사용자가 업로드한 이미지
   const [isImgModalOpen, setImgModalOpen] = useState<boolean>(false); // 이미지 모달관리 변수
   const [isNickNameModalOpen, setNickNameModalOpen] = useState<boolean>(false); // 닉네임 모달관리 변수
   const dispatch = useDispatch(); // useDispatch를 사용하여 Redux store를 업데이트합니다.
@@ -81,19 +81,36 @@ function InfoModify() {
         src={userData.profileImage}
         alt="프로필 이미지"
         onClick={imgModalOpen}
-        style={{ cursor: "pointer" }}
+        style={{
+          cursor: "pointer",
+          width: "180px",
+          height: "180px",
+          objectFit: "cover",
+        }}
       />
-      <div>{userData.nickname}</div>
-      <button onClick={nickNameModalOpen}>닉네임 변경</button>{" "}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <h3 style={{ marginRight: "15px" }}>{userData.nickname}</h3>
+        <h5 onClick={nickNameModalOpen} style={{ cursor: "pointer" }}>
+          변경
+        </h5>
+      </div>
+
       {/* 닉네임 변경 버튼 클릭 시 모달 열기 */}
       <ImgModal
         isOpen={isImgModalOpen}
         onClose={imgModalClose}
         profileImage={userData.profileImage}
         userImage={userImage}
+        onImageConfirm={handleImageConfirm}
         onImageChange={onImageChange}
         onImageRemove={onImageRemove}
-        onImageConfirm={handleImageConfirm}
       />
       <NickNameModal
         isOpen={isNickNameModalOpen}
