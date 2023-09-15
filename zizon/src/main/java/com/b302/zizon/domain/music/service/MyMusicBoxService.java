@@ -6,16 +6,15 @@ import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.music.entity.MyMusicBox;
 import com.b302.zizon.domain.music.repository.MusicRepository;
 import com.b302.zizon.domain.music.repository.MyMusicBoxRepository;
-import com.b302.zizon.domain.playlist.entity.MyPlaylist;
-import com.b302.zizon.domain.playlist.entity.MyPlaylistMeta;
-import com.b302.zizon.domain.playlist.repository.MyPlaylistMetaRepository;
-import com.b302.zizon.domain.playlist.repository.MyPlaylistRepository;
+import com.b302.zizon.domain.playlist.entity.Playlist;
+import com.b302.zizon.domain.playlist.entity.PlaylistMeta;
+import com.b302.zizon.domain.playlist.repository.PlaylistMetaRepository;
+import com.b302.zizon.domain.playlist.repository.PlaylistRepository;
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +30,8 @@ public class MyMusicBoxService {
 
     private final UserRepository userRepository;
     private final MyMusicBoxRepository myMusicBoxRepository;
-    private final MyPlaylistRepository myPlaylistRepository;
-    private final MyPlaylistMetaRepository myPlaylistMetaRepository;
+    private final PlaylistRepository playlistRepository;
+    private final PlaylistMetaRepository playlistMetaRepository;
     private final MusicRepository musicRepository;
 
     public Long getUserId(){
@@ -74,7 +73,7 @@ public class MyMusicBoxService {
         result.put("my_music_box", byUserUserId.size());
 
         // 재생목록 정보 가져오기
-        List<Map<String, Object>> playlistInfo = myPlaylistMetaRepository.findByUserUserId(user.getUserId()).stream()
+        List<Map<String, Object>> playlistInfo = playlistMetaRepository.findByUserUserId(user.getUserId()).stream()
                 .map(meta -> {
                     Map<String, Object> info = new HashMap<>();
                     info.put("playlistName", meta.getPlaylistName());
@@ -167,16 +166,16 @@ public class MyMusicBoxService {
 
         myMusicBoxRepository.delete(myMusicBox);
 
-        List<MyPlaylistMeta> playlistMetas = myPlaylistMetaRepository.findByUserUserId(user.getUserId());
+        List<PlaylistMeta> playlistMetas = playlistMetaRepository.findByUserUserId(user.getUserId());
 
         if(playlistMetas.size() == 0){
             throw new IllegalArgumentException("해당 유저의 플레이리스트가 없습니다.");
         }
 
-        for(MyPlaylistMeta pm : playlistMetas){
-            Optional<MyPlaylist> myPlaylist = myPlaylistRepository.findByMyPlaylistMetaMyPlaylistMetaIdAndMusicMusicId(pm.getMyPlaylistMetaId(), musicId);
-            if(myPlaylist.isPresent() && myPlaylist.get().getMusic().getMusicId().equals(musicId)){
-                myPlaylistRepository.delete(myPlaylist.get());
+        for(PlaylistMeta pm : playlistMetas){
+            Optional<Playlist> Playlist = playlistRepository.findByPlaylistMetaPlaylistMetaIdAndMusicMusicId(pm.getPlaylistMetaId(), musicId);
+            if(Playlist.isPresent() && Playlist.get().getMusic().getMusicId().equals(musicId)){
+                playlistRepository.delete(Playlist.get());
             }
         }
     }
