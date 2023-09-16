@@ -34,31 +34,37 @@ function DJSelector({ onSelect }: DJSelectorProps) {
   };
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      height="100%"
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
     >
-      <Grid container spacing={2}>
-        <Button variant="contained" color="primary" onClick={handlePrev}>
-          이전
-        </Button>
-        {DJData.slice(visibleStartIndex, visibleStartIndex + 5).map(
-          (DJ, index) => (
-            <Grid item key={index} xs={2}>
-              <button onClick={() => onSelect(DJ.name)}>
-                <img src={DJ.imgSrc} alt={`DJ${DJ.name}`} width="100%" />
-              </button>
-              <span>{`DJ ${DJ.name}`}</span>
-            </Grid>
-          )
-        )}
-        <Button variant="contained" color="primary" onClick={handleNext}>
-          다음
-        </Button>
-      </Grid>
-    </Box>
+      <div>
+        <h2>DJ</h2>
+      </div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <button onClick={handlePrev}>이전</button>
+        <div style={{ display: "flex", flexWrap: "wrap" }}>
+          {DJData.slice(visibleStartIndex, visibleStartIndex + 5).map(
+            (DJ, index) => (
+              <div key={index} style={{ margin: "0 10px" }}>
+                <button onClick={() => onSelect(DJ.name)}>
+                  <img
+                    src={DJ.imgSrc}
+                    alt={`DJ${DJ.name}`}
+                    style={{ height: "10px" }}
+                  />
+                </button>
+                <span>{`DJ ${DJ.name}`}</span>
+              </div>
+            )
+          )}
+        </div>
+        <button onClick={handleNext}>다음</button>
+      </div>
+    </div>
   );
 }
 
