@@ -38,6 +38,7 @@ public class PlaylistService {
     private final MyMusicBoxRepository myMusicBoxRepository;
     private final MusicRepository musicRepository;
 
+    // 플리에 음악 추가
     @Transactional
     public void addPlaylistMusic(AddPlaylistMusicDTO addPlaylistMusicDTO){
         Long userId = getUserId();
@@ -84,7 +85,7 @@ public class PlaylistService {
         if(playlistMeta.getPlaylistImage() == null){
             playlistMeta.registPlaylistImage(music.getAlbumCoverUrl());
         }
-        playlistMeta.addCountPlaylistCount();
+        playlistMeta.plusCountPlaylistCount();
 
     }
     

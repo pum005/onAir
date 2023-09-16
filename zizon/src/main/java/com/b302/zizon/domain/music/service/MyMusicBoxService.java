@@ -159,23 +159,45 @@ public class MyMusicBoxService {
 
         User user = byUserId.get();
 
+        Optional<Music> byMusicId = musicRepository.findById(musicId);
+        if(byMusicId.isEmpty()){
+            throw new IllegalArgumentException("해당 음악이 존재하지 않습니다.");
+        }
+
+        Music music = byMusicId.get();
+
         Optional<MyMusicBox> fineMyMusicBox = Optional.ofNullable(myMusicBoxRepository.findByMusicMusicIdAndUserUserId(musicId, userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저에게 음악이 없습니다.")));
 
         MyMusicBox myMusicBox = fineMyMusicBox.get();
 
+        // 내 보관함에서 음악 삭제
         myMusicBoxRepository.delete(myMusicBox);
 
+        // ---- 내 플레이리스트에 있는 음악 삭제 로직 ----
         List<PlaylistMeta> playlistMetas = playlistMetaRepository.findByUserUserId(user.getUserId());
 
         if(playlistMetas.size() == 0){
-            throw new IllegalArgumentException("해당 유저의 플레이리스트가 없습니다.");
+            return;
         }
 
         for(PlaylistMeta pm : playlistMetas){
-            Optional<Playlist> Playlist = playlistRepository.findByPlaylistMetaPlaylistMetaIdAndMusicMusicId(pm.getPlaylistMetaId(), musicId);
-            if(Playlist.isPresent() && Playlist.get().getMusic().getMusicId().equals(musicId)){
-                playlistRepository.delete(Playlist.get());
+            Optional<Playlist> playlist = playlistRepository.findByPlaylistMetaPlaylistMetaIdAndMusicMusicId(pm.getPlaylistMetaId(), musicId);
+            if(playlist.isPresent() && playlist.get().getMusic().getMusicId().equals(musicId)){
+                playlistRepository.delete(playlist.get());
+                pm.minusCountPlaylistCount();
+                // 플리의 대표 이미지가 지운 음악의 이미지와 같으면 안에 존재하는 다른 음악으로 바꿔야함.
+                if(pm.getPlaylistImage().equals(music.getAlbumCoverUrl())){
+                    List<Playlist> byPlaylistMeta = playlistRepository.findByPlaylistMetaPlaylistMetaId(pm.getPlaylistMetaId());
+                    // 사이즈 0이면 대표이미지 널로 바꿈
+                    if(byPlaylistMeta.size() == 0){
+                        pm.changePlaylistImageNull();
+                    }
+                    // 사이즈 널이 아니면 0번째 리스트 이미지로 바꿈
+                    else{
+                        pm.registPlaylistImage(byPlaylistMeta.get(0).getMusic().getAlbumCoverUrl());
+                    }
+                }
             }
         }
     }
