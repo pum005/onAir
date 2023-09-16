@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface OncastRepository extends JpaRepository<Oncast, Long> {
 
-    List<Oncast> findByUserUserId(Long userId);
+    List<Oncast> findByUserUserIdAndDeleteCheckFalse(Long userId);
 }
