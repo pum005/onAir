@@ -1,7 +1,12 @@
 package com.b302.zizon.domain.oncast.service;
 
+import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.oncast.dto.request.OncastRequestDto;
+import com.b302.zizon.domain.oncast.dto.response.GetMusicDTO;
+import com.b302.zizon.domain.oncast.dto.response.GetOncastDTO;
 import com.b302.zizon.domain.oncast.entity.Oncast;
+import com.b302.zizon.domain.oncast.entity.OncastCreateData;
+import com.b302.zizon.domain.oncast.repository.OncastCreateDataRepository;
 import com.b302.zizon.domain.oncast.repository.OncastRepository;
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.repository.UserRepository;
@@ -17,8 +22,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Optional;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,12 +35,18 @@ public class OncastService {
     private final OncastRepository oncastRepository;
     private final ChatGptService chatGptService ;
     private final UserRepository userRepository;
+    private final OncastCreateDataRepository oncastCreateDataRepository;
     public Long getUserId(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
         Long userId = (Long) principal;
 
         return userId;
+    }
+    // 시간 변환 포맷
+    public String convertToFormattedString(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일 (E) HH:mm", Locale.KOREAN);
+        return dateTime.format(formatter);
     }
 
     public Oncast saveOncast(OncastRequestDto request, String[] oncastMusic){
@@ -114,14 +126,66 @@ public class OncastService {
                 .ttsTwo(ts2tmp)
                 .ttsThree(ts3tmp)
                 .ttsFour(ts4tmp)
-                .oncastMusicOne(om1tmp)
-                .oncastMusicTwo(om2tmp)
-                .oncastMusicThree(om3tmp).build();
+//                .oncastMusicOne(om1tmp)
+//                .oncastMusicTwo(om2tmp)
+//                .oncastMusicThree(om3tmp)
+                .build();
 
         oncastRepository.save(oncast);
 
 
         return oncast;
     }
+
+    public Map<String, Object> getOncast(){
+
+        Long userId = getUserId();
+
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
+        Map<String, Object> result = new HashMap<>();
+        List<Oncast> oncastList = oncastRepository.findByUserUserId(userId);
+        if(oncastList.isEmpty()){
+            result.put("message", "온캐스트 없음");
+            return result;
+        }
+
+        List<GetOncastDTO> oncastDTOs = oncastList.stream().map(oncast -> {
+
+            Optional<OncastCreateData> byId = oncastCreateDataRepository.findById(oncast.getOncastCreateData().getOncastCreateDateId());
+            OncastCreateData oncastCreateData = byId.get();
+
+            String createTime = convertToFormattedString(oncast.getCreateTime());
+
+            GetOncastDTO oncastDTO = new GetOncastDTO();
+            oncastDTO.setCreateTime(createTime);
+            oncastDTO.setTitle(oncastCreateData.getTitle());
+
+            List<GetMusicDTO> musicDTOs = new ArrayList<>();
+            musicDTOs.add(convertToDTO(oncast.getMusic1()));
+            musicDTOs.add(convertToDTO(oncast.getMusic2()));
+            musicDTOs.add(convertToDTO(oncast.getMusic3()));
+
+            oncastDTO.setMusicList(musicDTOs);
+            return oncastDTO;
+        }).collect(Collectors.toList());
+
+        result.put("oncasts", oncastDTOs);
+        return result;
+    }
+
+    private GetMusicDTO convertToDTO(Music music){
+            GetMusicDTO musicDTO = new GetMusicDTO();
+            musicDTO.setMusicId(music.getMusicId());
+            musicDTO.setTitle(music.getTitle());
+            musicDTO.setArtist(music.getArtist());
+            musicDTO.setAlbumCoverUrl(music.getAlbumCoverUrl());
+            musicDTO.setDuration(music.getDuration());
+            return musicDTO;
+        }
+
 }
 
