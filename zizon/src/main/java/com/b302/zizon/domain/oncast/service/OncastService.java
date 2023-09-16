@@ -45,7 +45,7 @@ public class OncastService {
     }
     // 시간 변환 포맷
     public String convertToFormattedString(LocalDateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일 (E) HH:mm", Locale.KOREAN);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일 (E) HH:mm");
         return dateTime.format(formatter);
     }
 
@@ -147,7 +147,7 @@ public class OncastService {
         User user = byUserId.get();
 
         Map<String, Object> result = new HashMap<>();
-        List<Oncast> oncastList = oncastRepository.findByUserUserId(userId);
+        List<Oncast> oncastList = oncastRepository.findByUserUserIdAndDeleteCheckFalse(userId);
         if(oncastList.isEmpty()){
             result.put("message", "온캐스트 없음");
             return result;
@@ -163,6 +163,8 @@ public class OncastService {
             GetOncastDTO oncastDTO = new GetOncastDTO();
             oncastDTO.setCreateTime(createTime);
             oncastDTO.setTitle(oncastCreateData.getTitle());
+            oncastDTO.setShareCheck(oncast.isShareCheck());
+            oncastDTO.setSelectCheck(oncast.isSelectCheck());
 
             List<GetMusicDTO> musicDTOs = new ArrayList<>();
             musicDTOs.add(convertToDTO(oncast.getMusic1()));
