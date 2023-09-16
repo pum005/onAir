@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Table(name = "oncast_create_date")
+@Table(name = "oncast_create_data")
 public class OncastCreateData {
 
     @Id
@@ -16,24 +16,18 @@ public class OncastCreateData {
     @Column(name = "oncast_create_data_id")
     private Long oncastCreateDateId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "oncast_id")
-    private Oncast oncast;
+    @Column(nullable = false)
+    private String title;
 
     @Column(name = "theme")
+    @Enumerated(EnumType.STRING)
     private ThemeEnum theme;
 
     @Column(name = "story")
     private String story;
 
-    @Column(name = "request_music_one")
-    private String requestMusicOne;
-
-    @Column(name = "request_music_two")
-    private String requestMusicTwo;
-
-    @Column(name = "request_music_three")
-    private String requestMusicThree;
+    @Column(nullable = false)
+    private String djName;
 
 
 
