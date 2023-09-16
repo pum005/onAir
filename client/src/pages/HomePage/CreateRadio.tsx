@@ -66,7 +66,7 @@ const CreateRadio = () => {
   };
 
   /**AXIOS */
-  //여기서 POST매핑하면 끝
+  //여기서 POST매핑하면 끝.
 
   return (
     <div style={{ backgroundColor: "#000104", height: "100%", color: "white" }}>
