@@ -15,19 +15,19 @@ import javax.persistence.*;
 @EntityListeners(AuditingEntityListener.class)
 @Builder
 @AllArgsConstructor
-public class MyPlaylist {
+public class Playlist {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long playlistId;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "my_playlist_meta_id")
-    private MyPlaylistMeta myPlaylistMeta;
+    @JoinColumn(name = "playlist_meta_id")
+    private PlaylistMeta playlistMeta;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "music_id")
     private Music music;
 
 
-    public MyPlaylist() {
+    public Playlist() {
 
     }
 }
