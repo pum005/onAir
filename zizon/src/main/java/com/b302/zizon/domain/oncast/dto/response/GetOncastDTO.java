@@ -10,5 +10,7 @@ import java.util.List;
 public class GetOncastDTO {
     private String createTime;
     private String title;
+    private boolean shareCheck;
+    private boolean selectCheck;
     private List<GetMusicDTO> musicList = new ArrayList<>();
 }
