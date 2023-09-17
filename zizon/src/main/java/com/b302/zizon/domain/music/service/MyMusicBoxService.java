@@ -6,16 +6,15 @@ import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.music.entity.MyMusicBox;
 import com.b302.zizon.domain.music.repository.MusicRepository;
 import com.b302.zizon.domain.music.repository.MyMusicBoxRepository;
-import com.b302.zizon.domain.playlist.entity.MyPlaylist;
-import com.b302.zizon.domain.playlist.entity.MyPlaylistMeta;
-import com.b302.zizon.domain.playlist.repository.MyPlaylistMetaRepository;
-import com.b302.zizon.domain.playlist.repository.MyPlaylistRepository;
+import com.b302.zizon.domain.playlist.entity.Playlist;
+import com.b302.zizon.domain.playlist.entity.PlaylistMeta;
+import com.b302.zizon.domain.playlist.repository.PlaylistMetaRepository;
+import com.b302.zizon.domain.playlist.repository.PlaylistRepository;
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +30,8 @@ public class MyMusicBoxService {
 
     private final UserRepository userRepository;
     private final MyMusicBoxRepository myMusicBoxRepository;
-    private final MyPlaylistRepository myPlaylistRepository;
-    private final MyPlaylistMetaRepository myPlaylistMetaRepository;
+    private final PlaylistRepository playlistRepository;
+    private final PlaylistMetaRepository playlistMetaRepository;
     private final MusicRepository musicRepository;
 
     public Long getUserId(){
@@ -44,10 +43,11 @@ public class MyMusicBoxService {
     }
 
     // 재생시간 포맷
-    public static String convertSecondsToMinSec(int seconds) {
-        int minutes = seconds / 60;
-        int remainingSeconds = seconds % 60;
-        return String.format("%d:%02d", minutes, remainingSeconds);
+    public static String convertMillisToMinSec(int millis) {
+        int totalSeconds = millis / 1000;
+        int minutes = totalSeconds / 60;
+        int remainingSeconds = totalSeconds % 60;
+        return String.format("%02d:%02d", minutes, remainingSeconds);
     }
 
     
@@ -74,7 +74,7 @@ public class MyMusicBoxService {
         result.put("my_music_box", byUserUserId.size());
 
         // 재생목록 정보 가져오기
-        List<Map<String, Object>> playlistInfo = myPlaylistMetaRepository.findByUserUserId(user.getUserId()).stream()
+        List<Map<String, Object>> playlistInfo = playlistMetaRepository.findByUserUserId(user.getUserId()).stream()
                 .map(meta -> {
                     Map<String, Object> info = new HashMap<>();
                     info.put("playlistName", meta.getPlaylistName());
@@ -109,7 +109,7 @@ public class MyMusicBoxService {
         // 노래 정보 가져오기
         List<MusicInfoResponseDTO> collect = getMyMusicBox.stream()
                 .map(info -> {
-                    String formattedDuration = convertSecondsToMinSec(info.getMusic().getDuration());
+                    String formattedDuration = convertMillisToMinSec(info.getMusic().getDuration());
                     return new MusicInfoResponseDTO(  // 'return' 추가
                             info.getMusic().getMusicId(),
                             info.getMusic().getTitle(),
@@ -160,23 +160,45 @@ public class MyMusicBoxService {
 
         User user = byUserId.get();
 
+        Optional<Music> byMusicId = musicRepository.findById(musicId);
+        if(byMusicId.isEmpty()){
+            throw new IllegalArgumentException("해당 음악이 존재하지 않습니다.");
+        }
+
+        Music music = byMusicId.get();
+
         Optional<MyMusicBox> fineMyMusicBox = Optional.ofNullable(myMusicBoxRepository.findByMusicMusicIdAndUserUserId(musicId, userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저에게 음악이 없습니다.")));
 
         MyMusicBox myMusicBox = fineMyMusicBox.get();
 
+        // 내 보관함에서 음악 삭제
         myMusicBoxRepository.delete(myMusicBox);
 
-        List<MyPlaylistMeta> playlistMetas = myPlaylistMetaRepository.findByUserUserId(user.getUserId());
+        // ---- 내 플레이리스트에 있는 음악 삭제 로직 ----
+        List<PlaylistMeta> playlistMetas = playlistMetaRepository.findByUserUserId(user.getUserId());
 
         if(playlistMetas.size() == 0){
-            throw new IllegalArgumentException("해당 유저의 플레이리스트가 없습니다.");
+            return;
         }
 
-        for(MyPlaylistMeta pm : playlistMetas){
-            Optional<MyPlaylist> myPlaylist = myPlaylistRepository.findByMyPlaylistMetaMyPlaylistMetaIdAndMusicMusicId(pm.getMyPlaylistMetaId(), musicId);
-            if(myPlaylist.isPresent() && myPlaylist.get().getMusic().getMusicId().equals(musicId)){
-                myPlaylistRepository.delete(myPlaylist.get());
+        for(PlaylistMeta pm : playlistMetas){
+            Optional<Playlist> playlist = playlistRepository.findByPlaylistMetaPlaylistMetaIdAndMusicMusicId(pm.getPlaylistMetaId(), musicId);
+            if(playlist.isPresent() && playlist.get().getMusic().getMusicId().equals(musicId)){
+                playlistRepository.delete(playlist.get());
+                pm.minusCountPlaylistCount();
+                // 플리의 대표 이미지가 지운 음악의 이미지와 같으면 안에 존재하는 다른 음악으로 바꿔야함.
+                if(pm.getPlaylistImage().equals(music.getAlbumCoverUrl())){
+                    List<Playlist> byPlaylistMeta = playlistRepository.findByPlaylistMetaPlaylistMetaId(pm.getPlaylistMetaId());
+                    // 사이즈 0이면 대표이미지 널로 바꿈
+                    if(byPlaylistMeta.size() == 0){
+                        pm.changePlaylistImageNull();
+                    }
+                    // 사이즈 널이 아니면 0번째 리스트 이미지로 바꿈
+                    else{
+                        pm.registPlaylistImage(byPlaylistMeta.get(0).getMusic().getAlbumCoverUrl());
+                    }
+                }
             }
         }
     }

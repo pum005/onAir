@@ -48,8 +48,8 @@ function NickNameModal({
       })
         .then(Response => {
           if (Response.data === false) {
-            return requestWithTokenRefresh(() => {
-              return axios.put(
+            return axios
+              .put(
                 "http://localhost:8080/api/user/nickname/update",
                 {
                   nickname: newNickName,
@@ -61,12 +61,12 @@ function NickNameModal({
                   },
                   withCredentials: true,
                 }
-              );
-            }).then(() => {
-              setSubmitClicked(false);
-              onUpdateNickName(newNickName);
-              onClose();
-            });
+              )
+              .then(() => {
+                setSubmitClicked(false);
+                onUpdateNickName(newNickName);
+                onClose();
+              });
           } else {
             alert("닉네임 중복이 발생했습니다.");
             setSubmitClicked(false);

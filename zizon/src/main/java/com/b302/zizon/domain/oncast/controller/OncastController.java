@@ -10,13 +10,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -30,8 +28,6 @@ public class OncastController {
     @Transactional
     @PostMapping("/oncast/create")
     public ResponseEntity<?> registOncast(@RequestBody OncastRequestDto request) {
-
-
         // request를 가지고 음악 추천받는 로직 - 테마 + 사연(감성 분석 후)
 
         String[] oncastMusic = new String[3];
@@ -59,11 +55,27 @@ public class OncastController {
                 .ttsTwo(oncast.getTtsTwo())
                 .ttsThree(oncast.getTtsThree())
                 .ttsFour(oncast.getTtsFour())
-                .oncastMusicOne(oncast.getOncastMusicOne())
-                .oncastMusicTwo(oncast.getOncastMusicTwo())
-                .oncastMusicThree(oncast.getOncastMusicThree())
+//                .oncastMusicOne(oncast.getOncastMusicOne())
+//                .oncastMusicTwo(oncast.getOncastMusicTwo())
+//                .oncastMusicThree(oncast.getOncastMusicThree())
                 .build(), HttpStatus.CREATED);
 
+    }
+
+    // oncast 정보 가져오기
+    @GetMapping("oncast")
+    public ResponseEntity<?> getOncast(){
+        Map<String, Object> oncast = oncastService.getOncast();
+
+        return ResponseEntity.status(HttpStatus.OK).body(oncast);
+    }
+
+    // oncast 공유하기
+    @PatchMapping("oncast/shares/{oncast_id}")
+    public ResponseEntity<?> shareOncast(@PathVariable Long oncast_id){
+        oncastService.shareOncast(oncast_id);
+
+        return ResponseEntity.status(HttpStatus.OK).body("공유하기 성공");
     }
 
 }

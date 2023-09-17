@@ -1,12 +1,15 @@
 package com.b302.zizon.domain.oncast.entity;
 
 
+import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -17,6 +20,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "oncast")
+@EntityListeners(AuditingEntityListener.class)
 public class Oncast {
 
     @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +31,12 @@ public class Oncast {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "oncast_create_data_id")
+    private OncastCreateData oncastCreateData;
+
     @Column(name = "created_date")
+    @CreatedDate
     private LocalDateTime createTime;
 
     @Column(name = "share_check")
@@ -63,14 +72,26 @@ public class Oncast {
     @Column(name = "tts_four")
     private String ttsFour;
 
-    @Column(name = "oncast_music_one")
-    private String oncastMusicOne;
+    @JoinColumn(name = "music_id1")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Music music1;
 
-    @Column(name = "oncast_music_two")
-    private String oncastMusicTwo;
+    @JoinColumn(name = "music_id2")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Music music2;
 
-    @Column(name = "oncast_music_three")
-    private String oncastMusicThree;
+    @JoinColumn(name = "music_id3")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Music music3;
 
 
+    // 공유하기 눌렀을 경우 상태 업데이트
+    public void updateShareOncast(){
+        this.shareCheck = true;
+    }
+
+    // 채택이 됐을 경우 상태 업데이트
+    public void updateSeletedOncast(){
+        this.selectCheck = true;
+    }
 }

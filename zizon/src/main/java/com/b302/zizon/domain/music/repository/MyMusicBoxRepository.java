@@ -14,5 +14,7 @@ public interface MyMusicBoxRepository extends JpaRepository<MyMusicBox, Long> {
 
     Optional<MyMusicBox> findByMusicMusicIdAndUserUserId(Long musicId, Long userId);
 
+    Optional<MyMusicBox> findByMusicMusicId(Long musicId);
+
 
 }
