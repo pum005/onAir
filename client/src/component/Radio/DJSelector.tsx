@@ -49,12 +49,12 @@ function DJSelector({ onSelect }: DJSelectorProps) {
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           {DJData.slice(visibleStartIndex, visibleStartIndex + 5).map(
             (DJ, index) => (
-              <div key={index} style={{ margin: "0 10px" }}>
+              <div key={index} style={{ margin: "5px" }}>
                 <button onClick={() => onSelect(DJ.name)}>
                   <img
                     src={DJ.imgSrc}
                     alt={`DJ${DJ.name}`}
-                    style={{ height: "10px" }}
+                    style={{ height: "50px", width: "50px" }}
                   />
                 </button>
                 <span>{`DJ ${DJ.name}`}</span>
