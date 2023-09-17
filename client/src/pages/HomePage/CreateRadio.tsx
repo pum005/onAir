@@ -81,7 +81,7 @@ const CreateRadio = () => {
           maxWidth: "1000px",
           margin: "3rem auto",
           border: "1px solid #626262",
-          borderRadius: "10px",
+          borderRadius: "20px",
           backgroundColor: "rgba(34, 34, 34, 0.7)",
         }}
       >
@@ -92,10 +92,12 @@ const CreateRadio = () => {
             justifyContent: "space-between",
           }}
         >
+          <div></div>
           <div style={{ textAlign: "center" }}>
             <h2>TITLE</h2>
           </div>
-          <input type="text" ref={titleRef} />
+          <input type="text" ref={titleRef} style={{ width: "80%" }} />
+          <div></div>
         </div>
         <div
           style={{
@@ -127,7 +129,7 @@ const CreateRadio = () => {
               DRAMATIC
             </button>
             <button onClick={() => handleThemeSelect("FUNKY")}>FUNKY</button>
-            <button onClick={() => handleThemeSelect("EXOTIC")}>EXOTIC</button>
+            {/* <button onClick={() => handleThemeSelect("EXOTIC")}>EXOTIC</button>
             <button onClick={() => handleThemeSelect("ELECTRIC")}>
               ELECTRIC
             </button>
@@ -137,7 +139,7 @@ const CreateRadio = () => {
             <button onClick={() => handleThemeSelect("NOSTALGIC")}>
               NOSTALGIC
             </button>
-            <button onClick={() => handleThemeSelect("DREAMY")}>DREAMY</button>
+            <button onClick={() => handleThemeSelect("DREAMY")}>DREAMY</button> */}
           </div>
         </div>
         <div
@@ -161,9 +163,22 @@ const CreateRadio = () => {
 
         <DJSelector onSelect={handlDJSelect}></DJSelector>
 
-        <Link to="/Loading">
-          <button onClick={handleCreate}>생성</button>
-        </Link>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end", // this will push the buttons to the right
+            marginTop: "20px", // you can adjust this for spacing
+          }}
+        >
+          <Link to="/Loading">
+            <button onClick={handleCreate} style={{ marginRight: "10px" }}>
+              생성
+            </button>
+          </Link>
+          <Link to="/">
+            <button>취소</button>
+          </Link>
+        </div>
       </div>
     </div>
   );
