@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./store";
 
-import { CreateRadio } from "./pages/HomePage/CreateRadio";
+import CreateRadio from "./pages/HomePage/CreateRadio";
 import { Home } from "./pages/HomePage/Home";
 
 import { MyPage } from "./pages/MyPage/MyPage";

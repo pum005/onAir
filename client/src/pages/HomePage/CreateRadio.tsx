@@ -1,57 +1,172 @@
+import React, { useState, useRef } from "react";
 import NavBar from "../../component/Common/Navbar";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { resetIndices, setMusicInfo, setRadioDummyData } from "../../store";
+import DJSelector from "../../component/Radio/DJSelector";
 
-type CreateRadioProps = {};
+const CreateRadio = () => {
+  /** state,ref */
+  const titleRef = useRef<HTMLInputElement>(null); //제목 REF
+  const [selectedTheme, setSelectedTheme] = useState(""); // 선택된 테마 상태
+  const contentRef = useRef<HTMLTextAreaElement>(null); //내용 REF
+  const [contentLength, setContentLength] = useState(0);
+  const [selectedDJ, setSelectedDJ] = useState(""); // 선택한 DJ 이름
 
-export const CreateRadio = () => {
+  /** dummyData */
   const dispatch = useDispatch();
+  dispatch(
+    setRadioDummyData({
+      tts_one: "dummyRadio/radio1.mp3",
+      tts_two: "dummyRadio/radio2.mp3",
+      tts_three: "dummyRadio/radio3.mp3",
+      tts_four: "dummyRadio/radio4.mp3",
+      script_one: "첫번째 라디오 스크립트입니다",
+      script_two: "두번째 라디오 스크립트입니다",
+      script_three: "세번째 라디오 스크립트입니다",
+      script_four: "네번째 라디오 스크립트입니다",
+      oncast_music_one: "dummyMusic/1.mp3",
+      oncast_music_two: "dummyMusic/2.mp3",
+      oncast_music_three: "dummyMusic/3.mp3",
+    })
+  );
 
+  // 음악 정보 더미 데이터를 디스패치합니다.
+  dispatch(
+    setMusicInfo({
+      musicTitle: ["결을(Feat. Ash ISLAND)", "작별인사", "혜화"],
+      musicArtist: ["Cloudybay", "Ash ISLAND", "유토"],
+      musicLength: [162000, 167000, 243000],
+      musicCover: [
+        "https://cdnimg.melon.co.kr/cm2/album/images/113/13/701/11313701_20230824151914_500.jpg?028e06e5f0ce0b0760e290fa61831224/melon/optimize/90",
+        "https://image.bugsm.co.kr/album/images/500/205636/20563609.jpg",
+      ],
+    })
+  );
+
+  dispatch(resetIndices());
+
+  /** action */
   const handleCreate = () => {
-    // 더미 데이터를 디스패치
-    dispatch(
-      setRadioDummyData({
-        tts_one: "dummyRadio/radio1.mp3",
-        tts_two: "dummyRadio/radio2.mp3",
-        tts_three: "dummyRadio/radio3.mp3",
-        tts_four: "dummyRadio/radio4.mp3",
-        script_one: "첫번째 라디오 스크립트입니다",
-        script_two: "두번째 라디오 스크립트입니다",
-        script_three: "세번째 라디오 스크립트입니다",
-        script_four: "네번째 라디오 스크립트입니다",
-        oncast_music_one: "dummyMusic/1.mp3",
-        oncast_music_two: "dummyMusic/2.mp3",
-        oncast_music_three: "dummyMusic/3.mp3",
-      })
-    );
-
-    // 음악 정보 더미 데이터를 디스패치합니다.
-    dispatch(
-      setMusicInfo({
-        musicTitle: ["결을(Feat. Ash ISLAND)", "작별인사", "혜화"],
-        musicArtist: ["Cloudybay", "Ash ISLAND", "유토"],
-        musicLength: [162000, 167000, 243000],
-        musicCover: [
-          "https://cdnimg.melon.co.kr/cm2/album/images/113/13/701/11313701_20230824151914_500.jpg?028e06e5f0ce0b0760e290fa61831224/melon/optimize/90",
-          "https://image.bugsm.co.kr/album/images/500/205636/20563609.jpg",
-          "data:image/jpeg;base64,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",
-        ],
-      })
-    );
-
-    dispatch(resetIndices());
+    const inputTitle = titleRef.current ? titleRef.current.value : "";
+    const inputContent = contentRef.current ? contentRef.current.value : "";
+    const inputTheme = selectedTheme;
+    const inputDJ = selectedDJ;
+    console.log("Title:", inputTitle);
+    console.log("Content:", inputContent);
+    console.log("inputTheme", inputTheme);
+    console.log("inputDJ", inputDJ);
   };
 
+  const handleThemeSelect = (theme: string) => {
+    setSelectedTheme(theme);
+  };
+
+  const handlDJSelect = (DJ: string) => {
+    setSelectedDJ(DJ);
+  };
+
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContentLength(e.target.value.length);
+  };
+
+  /**AXIOS */
+  //여기서 POST매핑하면 끝.
+
   return (
-    <div
-      style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
-    >
+    <div style={{ backgroundColor: "#000104", color: "white" }}>
       <NavBar />
-      <h2>라디오 만드는 페이지</h2>
-      <Link to="/Loading">
-        <button onClick={handleCreate}>생성</button>
-      </Link>
+      <div
+        style={{
+          maxWidth: "1000px",
+          margin: "3rem auto",
+          border: "1px solid #626262",
+          borderRadius: "10px",
+          backgroundColor: "rgba(34, 34, 34, 0.7)",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ textAlign: "center" }}>
+            <h2>TITLE</h2>
+          </div>
+          <input type="text" ref={titleRef} />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div>
+            <h2>THEME</h2>
+          </div>
+          <div>
+            <button onClick={() => handleThemeSelect("JOYFUL")}>JOYFUL</button>
+            <button onClick={() => handleThemeSelect("SENSITIVE")}>
+              SENSITIVE
+            </button>
+            <button onClick={() => handleThemeSelect("HOPEFUL")}>
+              HOPEFUL
+            </button>
+            <button onClick={() => handleThemeSelect("CHILL")}>CHILL</button>
+            <button onClick={() => handleThemeSelect("AGGRESSIVE")}>
+              AGGRESSIVE
+            </button>
+            <button onClick={() => handleThemeSelect("ROMANTIC")}>
+              ROMANTIC
+            </button>
+            <button onClick={() => handleThemeSelect("RETRO")}>RETRO</button>
+            <button onClick={() => handleThemeSelect("DRAMATIC")}>
+              DRAMATIC
+            </button>
+            <button onClick={() => handleThemeSelect("FUNKY")}>FUNKY</button>
+            <button onClick={() => handleThemeSelect("EXOTIC")}>EXOTIC</button>
+            <button onClick={() => handleThemeSelect("ELECTRIC")}>
+              ELECTRIC
+            </button>
+            <button onClick={() => handleThemeSelect("ACOUSTIC")}>
+              ACOUSTIC
+            </button>
+            <button onClick={() => handleThemeSelect("NOSTALGIC")}>
+              NOSTALGIC
+            </button>
+            <button onClick={() => handleThemeSelect("DREAMY")}>DREAMY</button>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div>
+            <h2>STORY</h2>
+            {`${contentLength}/1000`}
+          </div>
+          <textarea
+            ref={contentRef}
+            onChange={handleContentChange}
+            maxLength={1000}
+            style={{ width: "80%", height: "100px" }}
+          ></textarea>
+        </div>
+
+        <DJSelector onSelect={handlDJSelect}></DJSelector>
+
+        <Link to="/Loading">
+          <button onClick={handleCreate}>생성</button>
+        </Link>
+      </div>
     </div>
   );
 };
+
+export default CreateRadio;
