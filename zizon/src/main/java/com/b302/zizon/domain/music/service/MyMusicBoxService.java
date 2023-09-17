@@ -43,10 +43,11 @@ public class MyMusicBoxService {
     }
 
     // 재생시간 포맷
-    public static String convertSecondsToMinSec(int seconds) {
-        int minutes = seconds / 60;
-        int remainingSeconds = seconds % 60;
-        return String.format("%d:%02d", minutes, remainingSeconds);
+    public static String convertMillisToMinSec(int millis) {
+        int totalSeconds = millis / 1000;
+        int minutes = totalSeconds / 60;
+        int remainingSeconds = totalSeconds % 60;
+        return String.format("%02d:%02d", minutes, remainingSeconds);
     }
 
     
@@ -108,7 +109,7 @@ public class MyMusicBoxService {
         // 노래 정보 가져오기
         List<MusicInfoResponseDTO> collect = getMyMusicBox.stream()
                 .map(info -> {
-                    String formattedDuration = convertSecondsToMinSec(info.getMusic().getDuration());
+                    String formattedDuration = convertMillisToMinSec(info.getMusic().getDuration());
                     return new MusicInfoResponseDTO(  // 'return' 추가
                             info.getMusic().getMusicId(),
                             info.getMusic().getTitle(),

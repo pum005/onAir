@@ -85,4 +85,7 @@ public class Oncast {
     private Music music3;
 
 
+    public void updateShareOncast(){
+        this.shareCheck = true;
+    }
 }
