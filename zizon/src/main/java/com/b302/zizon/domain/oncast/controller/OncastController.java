@@ -62,12 +62,20 @@ public class OncastController {
 
     }
 
-    // oncase 정보 가져오기
+    // oncast 정보 가져오기
     @GetMapping("oncast")
     public ResponseEntity<?> getOncast(){
         Map<String, Object> oncast = oncastService.getOncast();
 
         return ResponseEntity.status(HttpStatus.OK).body(oncast);
+    }
+
+    // oncast 공유하기
+    @PatchMapping("oncast/shares/{oncast_id}")
+    public ResponseEntity<?> shareOncast(@PathVariable Long oncast_id){
+        oncastService.shareOncast(oncast_id);
+
+        return ResponseEntity.status(HttpStatus.OK).body("공유하기 성공");
     }
 
 }
