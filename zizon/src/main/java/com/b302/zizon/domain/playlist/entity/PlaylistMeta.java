@@ -40,8 +40,17 @@ public class PlaylistMeta {
     }
 
     // 플레이리스트 개수 +1
-    public void addCountPlaylistCount(){
+    public void plusCountPlaylistCount(){
         this.playlistCount += 1;
     }
 
+    // 플레이리스트 개수 -1
+    public void minusCountPlaylistCount(){
+        this.playlistCount -= 1;
+    }
+
+    // 플레이리스트 사진 null로 변경
+    public void changePlaylistImageNull(){
+        this.playlistImage = null;
+    }
 }
