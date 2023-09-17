@@ -10,4 +10,6 @@ import java.util.List;
 public interface OncastRepository extends JpaRepository<Oncast, Long> {
 
     List<Oncast> findByUserUserIdAndDeleteCheckFalse(Long userId);
+
+    List<Oncast> findByDeleteCheckFalseAndSelectCheckFalseAndShareCheckTrue();
 }

@@ -85,7 +85,13 @@ public class Oncast {
     private Music music3;
 
 
+    // 공유하기 눌렀을 경우 상태 업데이트
     public void updateShareOncast(){
         this.shareCheck = true;
+    }
+
+    // 채택이 됐을 경우 상태 업데이트
+    public void updateSeletedOncast(){
+        this.selectCheck = true;
     }
 }
