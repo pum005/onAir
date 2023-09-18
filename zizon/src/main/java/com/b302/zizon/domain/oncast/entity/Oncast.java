@@ -94,4 +94,9 @@ public class Oncast {
     public void updateSeletedOncast(){
         this.selectCheck = true;
     }
+
+    // 삭제 상태로 변경
+    public void updateDeleteOncast(){
+        this.deleteCheck = true;
+    }
 }

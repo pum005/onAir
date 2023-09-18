@@ -78,4 +78,12 @@ public class OncastController {
         return ResponseEntity.status(HttpStatus.OK).body("공유하기 성공");
     }
 
+    // oncast 삭제하기
+    @PatchMapping("oncast/{oncast_id}")
+    public ResponseEntity<?> deleteOncast(@PathVariable Long oncast_id){
+        oncastService.deleteOncast(oncast_id);
+
+        return ResponseEntity.status(HttpStatus.OK).body("온캐스트 삭제 성공");
+    }
+
 }
