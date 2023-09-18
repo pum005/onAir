@@ -9,14 +9,9 @@ import Button from "@mui/material/Button";
 type AlertDialogProps = {
   open: boolean;
   handleClose: () => void;
-  playlistName?: string; // 추가한 코드
 };
 
-const AlertDialog: React.FC<AlertDialogProps> = ({
-  open,
-  handleClose,
-  playlistName,
-}) => {
+const AlertDialog: React.FC<AlertDialogProps> = ({ open, handleClose }) => {
   return (
     <Dialog
       open={open}
@@ -27,9 +22,7 @@ const AlertDialog: React.FC<AlertDialogProps> = ({
       <DialogTitle id="alert-dialog-title">알림</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          {playlistName
-            ? `${playlistName} 플레이리스트에 추가되었습니다.`
-            : "전체 플레이리스트에 추가되었습니다."}{" "}
+          전체 플레이리스트에 추가되었습니다.
         </DialogContentText>
       </DialogContent>
       <DialogActions>

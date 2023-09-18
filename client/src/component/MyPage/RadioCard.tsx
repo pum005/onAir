@@ -7,8 +7,11 @@ import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CardMedia from "@mui/material/CardMedia";
 import AddIcon from "@mui/icons-material/Add";
-import AlertDialog from "../Common/AddPlayList";
+import AlertDialog from "../Common/AddFullList";
 import { Button } from "@mui/material";
+import PlayListModal from "../Common/PlayListModal";
+import DeleteModal from "./DeleteModal";
+import ShareModal from "./ShareModal";
 
 type RecipeReviewCardProps = {
   title: string;
@@ -32,6 +35,7 @@ export default function RecipeReviewCard({
   image,
 }: RecipeReviewCardProps & { songs?: SongDataType }) {
   const [open, setOpen] = React.useState(false);
+  const [playListModalOpen, setPlayListModalOpen] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -39,6 +43,32 @@ export default function RecipeReviewCard({
 
   const handleClose = () => {
     setOpen(false);
+    // 알림 모달이 닫히면 플레이리스트 모달을 연다.
+    setPlayListModalOpen(true);
+  };
+
+  const handlePlayListModalClose = () => {
+    setPlayListModalOpen(false);
+  };
+
+  const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
+
+  const handleDeleteClick = () => {
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteModalClose = () => {
+    setDeleteModalOpen(false);
+  };
+
+  const [shareModalOpen, setShareModalOpen] = React.useState(false);
+
+  const handleShareClick = () => {
+    setShareModalOpen(true);
+  };
+
+  const handleShareModalClose = () => {
+    setShareModalOpen(false);
   };
 
   return (
@@ -117,10 +147,14 @@ export default function RecipeReviewCard({
             justifyContent: "center",
           }}
         >
-          <Button variant="outlined" color="secondary">
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleDeleteClick}
+          >
             삭제하기
           </Button>
-          <Button variant="outlined" color="primary">
+          <Button variant="outlined" color="primary" onClick={handleShareClick}>
             공유하기
           </Button>
         </div>
@@ -136,6 +170,12 @@ export default function RecipeReviewCard({
         ></IconButton>
       </CardContent>
       <AlertDialog open={open} handleClose={handleClose} />
+      <PlayListModal
+        isOpen={playListModalOpen}
+        onClose={handlePlayListModalClose}
+      />
+      <DeleteModal isOpen={deleteModalOpen} onClose={handleDeleteModalClose} />
+      <ShareModal isOpen={shareModalOpen} onClose={handleShareModalClose} />
     </Card>
   );
 }

@@ -1,40 +1,70 @@
-// PlayListModal.tsx
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { ShareConfirm } from "./ShareConfirmModal";
+import React from "react";
+
 type ShareModalProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
 function ShareModal({ isOpen, onClose }: ShareModalProps) {
-  return (
-    <Modal open={isOpen} onClose={onClose}>
-      <Box
-        sx={{
-          position: "absolute",
-          width: 400,
-          backgroundColor: "white",
-          border: "2px solid #000",
-          boxShadow: 24,
-          p: 2,
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-        }}
-      >
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          공유하시겠습니까?
-        </Typography>
-        {/* 이 밑 공유 확인 누르면 실시간에 저장 */}
-        {/* <Button onClick={onClose}>확인</Button> */}
-        <Button onClick={onClose}>닫기</Button>
+  const [showConfirm, setShowConfirm] = React.useState(false); // 상태 추가
 
-        {/* 이 밑 자리에 플레이리스트 가져오고 거기에 + 버튼 */}
-        {/* <Button onClick={}>+</Button> */}
-      </Box>
-    </Modal>
+  const handleDelete = () => {
+    onClose();
+    setShowConfirm(true);
+  };
+
+  const handleConfirmClose = () => {
+    setShowConfirm(false); // 알림 모달 닫기
+  };
+
+  return (
+    <>
+      <Modal open={isOpen} onClose={onClose}>
+        <Box
+          sx={{
+            position: "absolute",
+            width: 400,
+            backgroundColor: "white",
+            borderRadius: 2, // 모서리 둥글게
+            boxShadow: 3, // 그림자 효과
+            p: 3,
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        >
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+            marginBottom={2}
+          >
+            공유하시겠습니까?
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: 2,
+            }}
+          >
+            {/* 아래의 버튼에 스타일을 추가하였습니다. */}
+            <Button variant="outlined" color="primary" onClick={onClose}>
+              취소
+            </Button>
+            <Button variant="contained" color="primary" onClick={handleDelete}>
+              공유
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+      <ShareConfirm show={showConfirm} onClose={handleConfirmClose} />
+    </>
   );
 }
 

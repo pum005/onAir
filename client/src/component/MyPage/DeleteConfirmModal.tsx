@@ -6,39 +6,33 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 
-type AlertDialogProps = {
-  open: boolean;
-  handleClose: () => void;
-  playlistName?: string; // 추가한 코드
+type DeleteConfirmProps = {
+  show: boolean;
+  onClose: () => void;
 };
 
-const AlertDialog: React.FC<AlertDialogProps> = ({
-  open,
-  handleClose,
-  playlistName,
+export const DeleteConfirm: React.FC<DeleteConfirmProps> = ({
+  show,
+  onClose,
 }) => {
   return (
     <Dialog
-      open={open}
-      onClose={handleClose}
+      open={show}
+      onClose={onClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">알림</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{"삭제 완료"}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          {playlistName
-            ? `${playlistName} 플레이리스트에 추가되었습니다.`
-            : "전체 플레이리스트에 추가되었습니다."}{" "}
+          라디오 삭제가 완료되었습니다!
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={onClose} color="primary">
           확인
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
-
-export default AlertDialog;
