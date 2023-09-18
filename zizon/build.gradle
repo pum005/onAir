@@ -35,6 +35,11 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 
+	// s3에 file to multipartFile
+	implementation 'commons-io:commons-io:2.6'
+	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+	implementation group: 'commons-io', name: 'commons-io', version: '2.4'
+
 	// junit5
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
