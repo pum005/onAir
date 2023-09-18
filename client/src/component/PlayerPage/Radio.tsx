@@ -37,12 +37,6 @@ export const Radio = () => {
       navigate("/MusicPlayer");
     }
   };
-  // const currentScript = [
-  //   `script_one`,
-  //   `script_two`,
-  //   `script_three`,
-  //   `tts_four`,
-  // ][radioDummyData.currentTTSIndex];
 
   return (
     <div className={styles.container}>
