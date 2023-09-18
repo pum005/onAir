@@ -7,7 +7,7 @@ import { RadioScripts } from "../Common/RadioScript";
 import styles from "./Radio.module.css";
 import { FinishModal } from "./FinishModal";
 
-export const Radio = () => {
+export const LiveRadio = () => {
   const dispatch = useDispatch();
   const radioDummyData = useSelector((state: RootState) => state.radioDummy);
   const navigate = useNavigate();
