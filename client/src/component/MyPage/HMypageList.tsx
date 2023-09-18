@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import RadioCard from "./RadioCard";
 import RecipeReviewCard from "./RadioCard";
 import cardData from "./cardData";
+import MusicList from "./MusicCard";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -26,7 +27,7 @@ function CustomTabPanel(props: TabPanelProps) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <Typography component="div">{children}</Typography>
         </Box>
       )}
     </div>
@@ -70,12 +71,12 @@ export default function BasicTabs() {
         >
           <Tab
             label="라디오"
-            style={{ fontSize: "large", font: "bolder" }}
+            style={{ fontSize: "larger", font: "bolder" }}
             {...a11yProps(0)}
           />
           <Tab
             label="음악 보관함"
-            style={{ fontSize: "large", font: "bolder" }}
+            style={{ fontSize: "larger", font: "bolder" }}
             {...a11yProps(1)}
           />
         </Tabs>
@@ -100,7 +101,7 @@ export default function BasicTabs() {
         </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Item Two
+        <MusicList />
       </CustomTabPanel>
     </Box>
   );
