@@ -2,11 +2,13 @@ import { useNavigate } from "react-router";
 import NavBar from "../../component/Common/Navbar";
 import styles from "./Home.module.css";
 import React, { useState, useEffect } from "react";
+import LoginAlertModal from "../../component/Common/NoLoginModal";
 
 export const Home = () => {
   /** state 관리 */
   const [showText, setShowText] = useState(true);
   const [showRadioButton, setShowRadioButton] = useState(false);
+  const [loginAlertModalOpen, setLoginAlertModalOpen] = useState(false);
 
   //페이지 이동 함수 생성.
   const navigate = useNavigate();
@@ -20,7 +22,12 @@ export const Home = () => {
   }, []);
 
   const navigateToCreateRadio = () => {
-    navigate("./CreateRadio");
+    const isLoggedIn = Boolean(localStorage.getItem("accessToken"));
+    if (isLoggedIn) {
+      navigate("./CreateRadio");
+    } else {
+      setLoginAlertModalOpen(true);
+    }
   };
 
   return (
@@ -36,6 +43,10 @@ export const Home = () => {
       {showRadioButton && (
         <button onClick={navigateToCreateRadio}>사연 작성하기</button>
       )}
+      <LoginAlertModal
+        open={loginAlertModalOpen}
+        handleClose={() => setLoginAlertModalOpen(false)}
+      />
     </div>
   );
 };
