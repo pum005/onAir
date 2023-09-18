@@ -3,12 +3,15 @@ package com.b302.zizon.util.S3.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.b302.zizon.util.exception.CommonException;
+import com.b302.zizon.util.exception.CustomExceptionStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Service
@@ -41,29 +44,28 @@ public class S3UploadService {
     }
 
 
-//    public String fileSaveFile(MultipartFile multipartFile, Long timecapsuleNo) throws IOException {
-//        String originalFilename = multipartFile.getOriginalFilename();
-//        String extension = originalFilename.substring(originalFilename.lastIndexOf(".")); // 파일 확장자
-//
-//        // 파일 확장자가 맞지 않으면
-//        if (!isValidExtensionFile(extension)) {
+    public String fileSaveFile(MultipartFile multipartFile) throws IOException {
+        String originalFilename = multipartFile.getOriginalFilename();
+        String extension = originalFilename.substring(originalFilename.lastIndexOf(".")); // 파일 확장자
+
+        // 파일 확장자가 맞지 않으면
+        if (!isValidExtensionFile(extension)) {
 //            throw new CommonException(CustomExceptionStatus.EXTENSION_ERROR_FILE);
-//        }
-//
-//        LocalDateTime current = LocalDateTime.now();
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-//        String formatted = current.format(formatter);
-//
-//
-//        String newFilename = "timecapsule/" + timecapsuleNo + "/file/" + formatted + multipartFile.getOriginalFilename(); // 랜덤한 문자열과 확장자를 합쳐서 새 파일명 생성
-//
-//        ObjectMetadata metadata = new ObjectMetadata();
-//        metadata.setContentLength(multipartFile.getSize());
-//        metadata.setContentType(multipartFile.getContentType());
-//
-//        amazonS3.putObject(bucket, newFilename, multipartFile.getInputStream(), metadata);
-//        return amazonS3.getUrl(bucket, newFilename).toString();
-//    }
+        }
+
+        LocalDateTime current = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+        String formatted = current.format(formatter);
+
+
+        String newFilename = "oncast/tts/" + formatted + multipartFile.getOriginalFilename(); // 랜덤한 문자열과 확장자를 합쳐서 새 파일
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(multipartFile.getSize());
+        metadata.setContentType(multipartFile.getContentType());
+
+        amazonS3.putObject(bucket, newFilename, multipartFile.getInputStream(), metadata);
+        return amazonS3.getUrl(bucket, newFilename).toString();
+    }
 
     // 사진 확장자 검사
     private boolean isValidExtensionImage(String extension) {

@@ -13,6 +13,7 @@ import com.b302.zizon.domain.user.repository.UserRepository;
 import com.b302.zizon.util.gpt.dto.ChatGptResponse;
 import com.b302.zizon.util.gpt.dto.QuestionRequest;
 import com.b302.zizon.util.gpt.service.ChatGptService;
+import com.b302.zizon.util.tts.service.NaverTTSService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -32,13 +35,14 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OncastService {
 
+    private final NaverTTSService naverTTSService;
     private final OncastRepository oncastRepository;
-    private final ChatGptService chatGptService ;
+    private final ChatGptService chatGptService;
     private final UserRepository userRepository;
     private final OncastCreateDataRepository oncastCreateDataRepository;
 
     // 음악dto 변환
-    private GetMusicDTO convertToDTO(Music music){
+    private GetMusicDTO convertToDTO(Music music) {
         GetMusicDTO musicDTO = new GetMusicDTO();
         musicDTO.setMusicId(music.getMusicId());
         musicDTO.setTitle(music.getTitle());
@@ -47,8 +51,8 @@ public class OncastService {
         musicDTO.setDuration(music.getDuration());
         return musicDTO;
     }
-    
-    public Long getUserId(){
+
+    public Long getUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
         Long userId = (Long) principal;
@@ -63,7 +67,7 @@ public class OncastService {
     }
 
     // 온캐스트 저장
-    public Oncast saveOncast(OncastRequestDto request, String[] oncastMusic){
+    public Oncast saveOncast(OncastRequestDto request, String[] oncastMusic) {
 
         Long userId = getUserId();
 
@@ -98,19 +102,35 @@ public class OncastService {
                         "\n" +
                         "- 사연: \n" +
                         exstory + // story
-                        "- 음악1: "+ exmusic1 +
-                        "- 음악2: "+ exmusic2 +
-                        "- 음악3: "+ exmusic3
+                        "- 음악1: " + exmusic1 +
+                        "- 음악2: " + exmusic2 +
+                        "- 음악3: " + exmusic3
         );
 
 
-
         ChatGptResponse chatGptResponse = chatGptService.askQuestion(questionRequest);
-        String fullScript  = chatGptResponse.getChoices().get(0).getMessage().getContent();
+        String fullScript = chatGptResponse.getChoices().get(0).getMessage().getContent();
 
-        if(fullScript!=null){
+        if (fullScript != null) {
             script = fullScript.split("//");
         }
+
+        List<String> f = new ArrayList<>();
+
+        for (String s : script) {
+            try {
+                String str = naverTTSService.generateTTS(s, request.getDjName());
+
+                f.add(str);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+
+
+
+
+        // f 리스트 s3에 저장해서 tts 배열에 싹 넣기
 
         String sc1tmp = script[0]; // 사연 가져온거 잘라서 넣어야함
         String sc2tmp = script[1];
@@ -132,14 +152,14 @@ public class OncastService {
                 .shareCheck(false)
                 .deleteCheck(false)
                 .selectCheck(false)
-                .scriptOne(sc1tmp)
-                .scriptTwo(sc2tmp)
-                .scriptThree(sc3tmp)
-                .scriptFour(sc4tmp)
-                .ttsOne(ts1tmp)
-                .ttsTwo(ts2tmp)
-                .ttsThree(ts3tmp)
-                .ttsFour(ts4tmp)
+                .scriptOne(script[0])
+                .scriptTwo(script[1])
+                .scriptThree(script[2])
+                .scriptFour(script[3])
+                .ttsOne(f.get(0))
+                .ttsTwo(f.get(1))
+                .ttsThree(f.get(2))
+                .ttsFour(f.get(3))
 //                .oncastMusicOne(om1tmp)
 //                .oncastMusicTwo(om2tmp)
 //                .oncastMusicThree(om3tmp)
@@ -152,7 +172,7 @@ public class OncastService {
     }
 
     // 온캐스트 정보 가져오기
-    public Map<String, Object> getOncast(){
+    public Map<String, Object> getOncast() {
 
         Long userId = getUserId();
 
@@ -163,7 +183,7 @@ public class OncastService {
 
         Map<String, Object> result = new HashMap<>();
         List<Oncast> oncastList = oncastRepository.findByUserUserIdAndDeleteCheckFalse(userId);
-        if(oncastList.isEmpty()){
+        if (oncastList.isEmpty()) {
             result.put("message", "온캐스트 없음");
             return result;
         }
@@ -196,7 +216,7 @@ public class OncastService {
 
     // 온캐스트 공유하기
     @Transactional
-    public void shareOncast(Long oncastId){
+    public void shareOncast(Long oncastId) {
 
         Long userId = getUserId();
 
@@ -206,19 +226,19 @@ public class OncastService {
         User user = byUserId.get();
 
         Optional<Oncast> byOncast = oncastRepository.findById(oncastId);
-        
-        if(byOncast.isEmpty()){
+
+        if (byOncast.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 온캐스트입니다.");
         }
-        
+
         Oncast oncast = byOncast.get();
-        if(oncast.isDeleteCheck()){
+        if (oncast.isDeleteCheck()) {
             throw new IllegalArgumentException("이미 삭제된 온캐스트입니다.");
         }
-        if(oncast.isSelectCheck()){
+        if (oncast.isSelectCheck()) {
             throw new IllegalArgumentException("이미 채택된 온캐스트입니다.");
         }
-        if(oncast.isShareCheck()){
+        if (oncast.isShareCheck()) {
             throw new IllegalArgumentException("이미 공유된 온캐스트입니다.");
         }
 
@@ -226,7 +246,7 @@ public class OncastService {
     }
 
     // 온캐스트 삭제하기
-    public void deleteOncast(Long oncastId){
+    public void deleteOncast(Long oncastId) {
 
         Long userId = getUserId();
 
@@ -236,12 +256,12 @@ public class OncastService {
         User user = byUserId.get();
 
         Optional<Oncast> byOncast = oncastRepository.findByOncastIdAndUserUserId(oncastId, userId);
-        if(byOncast.isEmpty()){
+        if (byOncast.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 온캐스트입니다.");
         }
 
         Oncast oncast = byOncast.get();
-        if(oncast.isDeleteCheck()){
+        if (oncast.isDeleteCheck()) {
             throw new IllegalArgumentException("이미 삭제된 온캐스트입니다.");
         }
 

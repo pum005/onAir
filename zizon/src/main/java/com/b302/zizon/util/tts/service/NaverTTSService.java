@@ -1,20 +1,36 @@
 package com.b302.zizon.util.tts.service;
 
+import com.b302.zizon.util.S3.service.S3UploadService;
+import lombok.RequiredArgsConstructor;
+
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.file.Files;
 import java.util.Date;
+import org.apache.commons.fileupload.FileItem;
 
 
+@Service
+@RequiredArgsConstructor
 public class NaverTTSService {
 
 
+    private final S3UploadService s3UploadService;
     private static final String CLIENT_ID = "0u1rkuoto7";
     private static final String CLIENT_SECRET = "1PkYCPatyIVR0FVZifbnLrPDL5dknQVCE5svhn0E";
     private static final String API_URL = "https://naveropenapi.apigw.ntruss.com/tts-premium/v1/tts";
 
-    public File generateTTS(String text, String speaker) {
+    public String generateTTS(String text, String speaker) throws IOException {
+
+
 
         // 일단 볼륨, 스피드, 피치 고정
         File generatedFile = null;
@@ -35,7 +51,24 @@ public class NaverTTSService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return generatedFile;
+
+        FileItem fileItem = (FileItem) new DiskFileItem("file", Files.probeContentType(generatedFile.toPath()), false, generatedFile.getName(), (int) generatedFile.length() , generatedFile.getParentFile());
+
+        try {
+
+            InputStream input = new FileInputStream(generatedFile);
+            OutputStream os = fileItem.getOutputStream();
+            IOUtils.copy(input, os);
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        MultipartFile  generatedFileConverted = new CommonsMultipartFile(fileItem);
+
+        String savedFileURL= s3UploadService.fileSaveFile(generatedFileConverted);
+        return savedFileURL;
+
+
     }
 
     private HttpURLConnection setupConnection(String apiURL) throws IOException {
