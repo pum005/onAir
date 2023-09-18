@@ -40,6 +40,9 @@ dependencies {
 	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
 	implementation group: 'commons-io', name: 'commons-io', version: '2.4'
 
+	// 크롤링
+	implementation 'org.jsoup:jsoup:1.13.1'
+
 	// junit5
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
