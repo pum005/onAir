@@ -6,6 +6,7 @@ import com.b302.zizon.domain.music.repository.MusicRepository;
 import com.b302.zizon.domain.music.repository.MyMusicBoxRepository;
 import com.b302.zizon.domain.playlist.dto.AddPlaylistMusicDTO;
 import com.b302.zizon.domain.playlist.dto.MakePlaylistRequestDTO;
+import com.b302.zizon.domain.playlist.dto.PlaylistInfoResponseDTO;
 import com.b302.zizon.domain.playlist.entity.Playlist;
 import com.b302.zizon.domain.playlist.entity.PlaylistMeta;
 import com.b302.zizon.domain.playlist.repository.PlaylistMetaRepository;
@@ -18,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -106,6 +108,30 @@ public class PlaylistService {
                 .build();
         
         playlistMetaRepository.save(build);
+    }
+
+    // 플레이리스트 정보 가져오기
+    public List<PlaylistInfoResponseDTO> getPlaylist(){
+        Long userId = getUserId();
+
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
+        List<PlaylistMeta> byUserUserId = playlistMetaRepository.findByUserUserId(userId);
+        int index = 1;
+        List<PlaylistInfoResponseDTO> list = new ArrayList<>();
+        for(PlaylistMeta pm : byUserUserId){
+            list.add(PlaylistInfoResponseDTO.builder()
+                    .playlistImage(pm.getPlaylistImage())
+                    .playlistName(pm.getPlaylistName())
+                    .playlistCount(pm.getPlaylistCount())
+                    .playlistMetaId(pm.getPlaylistMetaId())
+                    .index(index).build());
+            index += 1;
+        }
+        return list;
     }
     
 }
