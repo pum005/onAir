@@ -5,6 +5,7 @@ import com.b302.zizon.domain.music.entity.MyMusicBox;
 import com.b302.zizon.domain.music.repository.MusicRepository;
 import com.b302.zizon.domain.music.repository.MyMusicBoxRepository;
 import com.b302.zizon.domain.playlist.dto.AddPlaylistMusicDTO;
+import com.b302.zizon.domain.playlist.dto.MakePlaylistRequestDTO;
 import com.b302.zizon.domain.playlist.entity.Playlist;
 import com.b302.zizon.domain.playlist.entity.PlaylistMeta;
 import com.b302.zizon.domain.playlist.repository.PlaylistMetaRepository;
@@ -86,6 +87,25 @@ public class PlaylistService {
             playlistMeta.registPlaylistImage(music.getAlbumCoverUrl());
         }
         playlistMeta.plusCountPlaylistCount();
+    }
+    
+    // 플레이리스트 생성
+    @Transactional
+    public void MakePlaylist(MakePlaylistRequestDTO makePlaylistRequestDTO){
+        Long userId = getUserId();
+
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
+        PlaylistMeta build = PlaylistMeta.builder()
+                .playlistName(makePlaylistRequestDTO.getPlaylistName())
+                .user(user)
+                .playlistCount(0)
+                .build();
+        
+        playlistMetaRepository.save(build);
     }
     
 }

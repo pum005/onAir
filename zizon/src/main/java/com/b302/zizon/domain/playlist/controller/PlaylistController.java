@@ -2,6 +2,7 @@ package com.b302.zizon.domain.playlist.controller;
 
 import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.playlist.dto.AddPlaylistMusicDTO;
+import com.b302.zizon.domain.playlist.dto.MakePlaylistRequestDTO;
 import com.b302.zizon.domain.playlist.service.PlaylistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,5 +25,14 @@ public class PlaylistController {
         playlistService.addPlaylistMusic(addPlaylistMusicDTO);
 
         return ResponseEntity.status(HttpStatus.OK).body("플레이리스트 음악 추가 성공");
+    }
+
+    // 플레이리스트 생성하기
+    @PostMapping("playlist")
+    public ResponseEntity<?> makePlaylist(@RequestBody MakePlaylistRequestDTO makePlaylistRequestDTO){
+        System.out.println(makePlaylistRequestDTO.getPlaylistName());
+        playlistService.MakePlaylist(makePlaylistRequestDTO);
+
+        return ResponseEntity.status(HttpStatus.OK).body("플레이리스트 생성 성공");
     }
 }
