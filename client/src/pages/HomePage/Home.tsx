@@ -8,7 +8,7 @@ export const Home = () => {
   const [showText, setShowText] = useState(true);
   const [showRadioButton, setShowRadioButton] = useState(false);
 
-  //페이지 이동 함수 생성
+  //페이지 이동 함수 생성.
   const navigate = useNavigate();
 
   /** action 관리 */
