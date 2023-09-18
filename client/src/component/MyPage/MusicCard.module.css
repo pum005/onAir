@@ -1,0 +1,31 @@
+/* MusicList.module.css */
+.hoverableListItem {
+  width: 85%; /* 원하는 폭 값으로 조절 */
+  margin: 0 auto; /* 중앙 정렬을 위한 스타일 */
+  /* 기존의 다른 스타일 속성들 */
+}
+
+.hoverableListItem .playButton {
+  display: none;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ffffff; /* 재생 버튼 아이콘 색상을 흰색으로 변경 */
+}
+
+.hoverableListItem:hover .playButton {
+  display: block;
+}
+
+.audiotrackIcon {
+  font-size: 40px;
+}
+
+.textPrimary {
+  color: #ffffff; /* 흰색으로 변경 */
+}
+
+.textSecondary {
+  color: #ffffff; /* 흰색으로 변경 */
+}

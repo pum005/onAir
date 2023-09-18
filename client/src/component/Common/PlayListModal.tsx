@@ -4,7 +4,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import AddIcon from "@mui/icons-material/Add";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AlertDialog from "./AddPlayList";
 import React from "react";
 
@@ -87,7 +87,7 @@ function PlayListModal({ isOpen, onClose }: PlayListModalProps) {
               <Box sx={{ marginLeft: "auto" }}>
                 <Button
                   onClick={() => handleAddClick(playlist.name)}
-                  startIcon={<AddIcon />}
+                  startIcon={<AddCircleOutlineIcon />}
                   variant="outlined"
                   size="small"
                   color="primary"

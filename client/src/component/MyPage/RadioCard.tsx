@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CardMedia from "@mui/material/CardMedia";
-import AddIcon from "@mui/icons-material/Add";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AlertDialog from "../Common/AddFullList";
 import { Button } from "@mui/material";
 import PlayListModal from "../Common/PlayListModal";
@@ -133,7 +133,7 @@ export default function RecipeReviewCard({
               </div>
             </div>
             <div style={{ flex: 1, textAlign: "right" }}>{song.duration}</div>
-            <AddIcon
+            <AddCircleOutlineIcon
               style={{ marginLeft: "8px" }}
               onClick={handleClickOpen}
               cursor="pointer"

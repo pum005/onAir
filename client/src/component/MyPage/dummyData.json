@@ -4,27 +4,12 @@
     {
       "playlistImage": "http://imageurl1.com",
       "playlistCount": 10,
-      "playlistName": "Playlist 1"
+      "playlistName": "신나는"
     },
     {
       "playlistImage": "http://imageurl2.com",
       "playlistCount": 15,
-      "playlistName": "Playlist 2"
-    },
-    {
-      "playlistImage": "http://imageurl3.com",
-      "playlistCount": 20,
-      "playlistName": "Playlist 3"
-    },
-    {
-      "playlistImage": "http://imageurl4.com",
-      "playlistCount": 25,
-      "playlistName": "Playlist 4"
-    },
-    {
-      "playlistImage": "http://imageurl5.com",
-      "playlistCount": 30,
-      "playlistName": "Playlist 5"
+      "playlistName": "힐링"
     }
   ]
 }
