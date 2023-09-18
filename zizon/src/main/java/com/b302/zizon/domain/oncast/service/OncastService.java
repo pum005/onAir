@@ -55,12 +55,14 @@ public class OncastService {
 
         return userId;
     }
+
     // 시간 변환 포맷
     public String convertToFormattedString(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일 (E) HH:mm");
         return dateTime.format(formatter);
     }
 
+    // 온캐스트 저장
     public Oncast saveOncast(OncastRequestDto request, String[] oncastMusic){
 
         Long userId = getUserId();
@@ -192,6 +194,7 @@ public class OncastService {
         return result;
     }
 
+    // 온캐스트 공유하기
     @Transactional
     public void shareOncast(Long oncastId){
 
@@ -221,7 +224,28 @@ public class OncastService {
 
         oncast.updateShareOncast();
     }
-    
 
+    // 온캐스트 삭제하기
+    public void deleteOncast(Long oncastId){
+
+        Long userId = getUserId();
+
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
+        Optional<Oncast> byOncast = oncastRepository.findByOncastIdAndUserUserId(oncastId, userId);
+        if(byOncast.isEmpty()){
+            throw new IllegalArgumentException("존재하지 않는 온캐스트입니다.");
+        }
+
+        Oncast oncast = byOncast.get();
+        if(oncast.isDeleteCheck()){
+            throw new IllegalArgumentException("이미 삭제된 온캐스트입니다.");
+        }
+
+        oncast.updateDeleteOncast();
+    }
 }
 

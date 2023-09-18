@@ -1,5 +1,6 @@
-package com.b302.zizon.domain.music.dto;
+package com.b302.zizon.domain.music.dto.response;
 
+import com.b302.zizon.domain.music.dto.Tracks;
 import lombok.*;
 
 @Getter
