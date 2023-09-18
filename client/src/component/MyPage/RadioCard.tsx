@@ -101,7 +101,7 @@ export default function RecipeReviewCard({
           </Typography>
         </div>
         <Typography
-          variant="body2"
+          variant="h5"
           color="text.secondary"
           style={{ textAlign: "center" }}
           component="div"

@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import styles from "./MusicCard.module.css";
+import MusicBoxAddModal from "../Common/CreatePlayList";
 
 function MusicList() {
   /** state */
@@ -76,14 +77,15 @@ function MusicList() {
   };
 
   return (
-    <div>
+    <div style={{ width: "70%", margin: "0 auto" }}>
       <List>
         <ListItem alignItems="flex-start" className={styles.hoverableListItem}>
           <ListItemAvatar>
             <AddIcon
               color="primary"
               className={styles.audiotrackIcon}
-              onClick={openMusicAddModal}
+              onClick={MusicBoxModalOpen} // 'MusicBoxModalOpen' 함수를 호출하여 모달창을 열기
+              style={{ cursor: "pointer" }}
             />
           </ListItemAvatar>
           <ListItemText
@@ -91,7 +93,8 @@ function MusicList() {
           >
             <Typography
               className={styles.textPrimary}
-              style={{ marginTop: "13px" }}
+              onClick={MusicBoxModalOpen}
+              style={{ marginTop: "8px" }}
             >
               플레이리스트 추가
             </Typography>
@@ -99,7 +102,11 @@ function MusicList() {
         </ListItem>
 
         {/* 전체보관함 */}
-        <ListItem alignItems="flex-start" className={styles.hoverableListItem}>
+        <ListItem
+          alignItems="flex-start"
+          className={styles.hoverableListItem}
+          style={{ display: "flex", alignItems: "center" }}
+        >
           <ListItemAvatar>
             <AudiotrackIcon color="primary" className={styles.audiotrackIcon} />
           </ListItemAvatar>
@@ -113,16 +120,15 @@ function MusicList() {
                 전체보관함
               </Typography>
             }
-            secondary={
-              <Typography
-                className={styles.textSecondary}
-                component="span"
-                variant="body2"
-              >
-                {myMusicBox} 곡
-              </Typography>
-            }
           />
+          <Typography
+            className={styles.textSecondary}
+            component="span"
+            variant="body2"
+            style={{ marginRight: "30%", marginLeft: "auto" }} // 여기에서 스타일을 조절하여 곡 수를 원하는 위치에 배치합니다.
+          >
+            {myMusicBox} 곡
+          </Typography>
           <Button
             className={styles.playButton}
             onClick={() => {
@@ -140,6 +146,7 @@ function MusicList() {
             songCount={myMusicBox}
           />
         </ListItem>
+
         <MusicAddModal
           isOpen={isMusicAddModalOpen}
           onClose={closeMusicAddModal}
@@ -150,7 +157,7 @@ function MusicList() {
             key={index}
             alignItems="flex-start"
             className={styles.hoverableListItem}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
           >
             <ListItemAvatar>
               <Avatar
@@ -169,16 +176,15 @@ function MusicList() {
                   {playlist.playlistName}
                 </Typography>
               }
-              secondary={
-                <Typography
-                  className={styles.textSecondary}
-                  component="span"
-                  variant="body2"
-                >
-                  {playlist.playlistCount} 곡
-                </Typography>
-              }
             />
+            <Typography
+              className={styles.textSecondary}
+              component="span"
+              variant="body2"
+              style={{ marginRight: "30%", marginLeft: "auto" }} // 여기에서 스타일을 조절하여 곡 수를 원하는 위치에 배치합니다.
+            >
+              {playlist.playlistCount} 곡
+            </Typography>
             <Button
               className={styles.playButton}
               onClick={() => {
@@ -201,6 +207,13 @@ function MusicList() {
           </ListItem>
         ))}
       </List>
+      <MusicBoxAddModal
+        isOpen={isMusicBoxModalOpen}
+        onClose={MusicBoxModalClose}
+        onConfirm={playlistName => {
+          // addMusicBox(); // 기존의 'addMusicBox' 함수를 호출하여 플레이리스트를 추가
+        }}
+      />
     </div>
   );
 }
