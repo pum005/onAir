@@ -1,4 +1,4 @@
-package com.b302.zizon.domain.music.dto;
+package com.b302.zizon.domain.music.dto.request;
 
 import lombok.Data;
 

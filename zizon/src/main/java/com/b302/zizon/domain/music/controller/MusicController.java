@@ -1,11 +1,12 @@
 package com.b302.zizon.domain.music.controller;
 
-import com.b302.zizon.domain.music.dto.MusicInfoResponseDTO;
-import com.b302.zizon.domain.music.dto.MyMusicBoxAddRequestDTO;
-import com.b302.zizon.domain.music.dto.SpotifySearchResultDTO;
+import com.b302.zizon.domain.music.dto.response.MusicInfoResponseDTO;
+import com.b302.zizon.domain.music.dto.request.MyMusicBoxAddRequestDTO;
+import com.b302.zizon.domain.music.dto.response.SpotifySearchResultDTO;
 import com.b302.zizon.domain.music.service.MusicService;
 import com.b302.zizon.domain.music.service.MyMusicBoxService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,5 +65,13 @@ public class MusicController {
                                                   @RequestParam String musicArtist, @RequestParam long spotifyMusicDuration,
                                                   @RequestParam String musicImageUrl) {
         return ResponseEntity.ok(musicService.findVideo(musicTitle, musicArtist, spotifyMusicDuration, musicImageUrl));
+    }
+
+    // 음악 상세정보 가져오기
+    @GetMapping("music/{music_id}")
+    public ResponseEntity<?> getMusicInfo(@PathVariable Long music_id){
+        MusicInfoResponseDTO musicInfoResponseDTO = musicService.musicInfo(music_id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(musicInfoResponseDTO);
     }
 }
