@@ -13,4 +13,6 @@ public class OncastRequestDto {
     private ThemeEnum theme; // 선택한 테마
 
     private String story; // 사연
+
+    private String djName; // dj
 }
