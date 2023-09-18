@@ -19,7 +19,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import LoginAlertModal from "./NoLoginModal";
 import LogoutAlertModal from "./LogoutModal";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 // 내비게이션 및 사용자 메뉴 항목에 대한 정적 데이터
 const pages = ["Products", "Pricing"];
@@ -83,13 +84,13 @@ function ResponsiveAppBar() {
           },
         }
       )
-      .then(response => {
+      .then((response) => {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         setLogoutAlertOpen(false);
         navigate("/");
       })
-      .catch(error => {
+      .catch((error) => {
         // 로그아웃 실패 시 에러 처리
         console.error("로그아웃 실패:", error);
       });
@@ -103,6 +104,34 @@ function ResponsiveAppBar() {
       event.preventDefault(); // 기본 동작 중지
       handleLoginAlertModalOpen();
     }
+  };
+
+  const handleImageClick = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    if (!isLoggedIn) {
+      event.preventDefault();
+      handleLoginAlertModalOpen();
+      return;
+    }
+
+    Swal.fire({
+      title: "라이브에 참여하시겠습니까?",
+      text: "흥앵홍?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "승인",
+      cancelButtonText: "취소",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate("/LivePlayer"); // 사용자가 승인을 선택하면 페이지 이동
+      } else {
+        navigate("/");
+      }
+    });
   };
 
   // 로그인 여부를 확인
@@ -143,7 +172,7 @@ function ResponsiveAppBar() {
             <Box
               sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}
             >
-              <Button onClick={handleCloseNavMenu}>
+              <Button onClick={handleImageClick}>
                 <img
                   src="images/unlive.png"
                   alt="unlive"
@@ -153,7 +182,7 @@ function ResponsiveAppBar() {
               <Button
                 component={Link}
                 to="/CreateRadio"
-                onClick={event => handleProtectedFeatureClick(event)} // 여기를 수정
+                onClick={(event) => handleProtectedFeatureClick(event)} // 여기를 수정
               >
                 <RadioIcon style={{ fontSize: 35, color: "white" }} />
               </Button>
@@ -167,7 +196,7 @@ function ResponsiveAppBar() {
               <Button
                 component={Link}
                 to="/MyPage"
-                onClick={event => handleProtectedFeatureClick(event)} // 여기를 수정
+                onClick={(event) => handleProtectedFeatureClick(event)} // 여기를 수정
               >
                 <AccountCircleIcon style={{ fontSize: 35, color: "white" }} />
               </Button>
@@ -211,7 +240,7 @@ function ResponsiveAppBar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map(setting => (
+                {settings.map((setting) => (
                   <MenuItem key={setting} onClick={handleCloseUserMenu}>
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
