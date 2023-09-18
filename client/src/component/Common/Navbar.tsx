@@ -149,18 +149,18 @@ function ResponsiveAppBar() {
             {/* 왼쪽 아이콘 및 로고 */}
             <Box
               sx={{ display: { xs: "none", md: "flex" }, alignItems: "center" }}
+              component={Link}
+              to="/"
             >
               <AdbIcon sx={{ mr: 1 }} />
               <Typography
                 variant="h6"
                 noWrap
-                component="a"
-                href="/"
                 sx={{
                   fontFamily: "monospace",
                   fontWeight: 700,
                   letterSpacing: ".3rem",
-                  color: "inherit",
+                  color: "white",
                   textDecoration: "none",
                 }}
               >
