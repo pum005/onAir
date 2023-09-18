@@ -6,7 +6,15 @@ import BasicTabs from "../../component/MyPage/HMypageList";
 export const MyPage = () => {
   return (
     <div
-      style={{ backgroundColor: "#000104", minHeight: "100vh", color: "white" }}
+      style={{
+        backgroundColor: "#000104",
+        minHeight: "100vh",
+        color: "white",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center", // 중앙 정렬
+      }}
     >
       <NavBar />
       <InfoModify />
