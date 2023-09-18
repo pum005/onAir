@@ -104,8 +104,9 @@ export default function RecipeReviewCard({
           variant="body2"
           color="text.secondary"
           style={{ textAlign: "center" }}
+          component="div"
         >
-          <h1>{subheader}</h1>
+          {subheader}
         </Typography>
         <hr />
         {songs.map((song, idx) => (
