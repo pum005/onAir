@@ -3,6 +3,10 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import RadioCard from "./RadioCard";
+import RecipeReviewCard from "./RadioCard";
+import cardData from "./cardData";
+import MusicList from "./MusicCard";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -23,7 +27,7 @@ function CustomTabPanel(props: TabPanelProps) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <Typography component="div">{children}</Typography>
         </Box>
       )}
     </div>
@@ -52,7 +56,7 @@ export default function BasicTabs() {
           onChange={handleChange}
           aria-label="basic tabs example"
           sx={{
-            backgroundColor: "#ffffff",
+            paddingLeft: "70px",
             ".Mui-selected": {
               // 활성 Tab 스타일
               color: "#000",
@@ -65,18 +69,39 @@ export default function BasicTabs() {
             },
           }}
         >
-          <Tab label="라디오" {...a11yProps(0)} />
-          <Tab label="음악 보관함" {...a11yProps(1)} />
+          <Tab
+            label="라디오"
+            style={{ fontSize: "larger", font: "bolder" }}
+            {...a11yProps(0)}
+          />
+          <Tab
+            label="음악 보관함"
+            style={{ fontSize: "larger", font: "bolder" }}
+            {...a11yProps(1)}
+          />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        Item One
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            overflowY: "auto",
+            maxHeight: "500px",
+          }}
+        >
+          {cardData.map((data, idx) => (
+            <div
+              key={idx}
+              style={{ margin: "10px", width: "calc(25% - 20px)" }}
+            >
+              <RecipeReviewCard {...data} />
+            </div>
+          ))}
+        </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        Item Two
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        Item Three
+        <MusicList />
       </CustomTabPanel>
     </Box>
   );
