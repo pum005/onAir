@@ -10,10 +10,9 @@ import java.util.Date;
 public class NaverTTSService {
 
 
-    private static final String CLIENT_ID = "YOUR_CLIENT_ID";
-    private static final String CLIENT_SECRET = "YOUR_CLIENT_SECRET";
+    private static final String CLIENT_ID = "0u1rkuoto7";
+    private static final String CLIENT_SECRET = "1PkYCPatyIVR0FVZifbnLrPDL5dknQVCE5svhn0E";
     private static final String API_URL = "https://naveropenapi.apigw.ntruss.com/tts-premium/v1/tts";
-
 
     public File generateTTS(String text, String speaker) {
 
