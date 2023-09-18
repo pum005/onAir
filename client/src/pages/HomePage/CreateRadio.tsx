@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import NavBar from "../../component/Common/Navbar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { resetIndices, setMusicInfo, setRadioDummyData } from "../../store";
 import DJSelector from "../../component/Radio/DJSelector";
@@ -10,7 +10,7 @@ const CreateRadio = () => {
   const titleRef = useRef<HTMLInputElement>(null); //제목 REF
   const [selectedTheme, setSelectedTheme] = useState(""); // 선택된 테마 상태
   const contentRef = useRef<HTMLTextAreaElement>(null); //내용 REF
-  const [contentLength, setContentLength] = useState(0);
+  const [contentLength, setContentLength] = useState(0); //내용 count
   const [selectedDJ, setSelectedDJ] = useState(""); // 선택한 DJ 이름
 
   /** dummyData */
@@ -47,6 +47,8 @@ const CreateRadio = () => {
   dispatch(resetIndices());
 
   /** action */
+  const navigate = useNavigate(); //페이지 이동 함수
+
   const handleCreate = () => {
     const inputTitle = titleRef.current ? titleRef.current.value : "";
     const inputContent = contentRef.current ? contentRef.current.value : "";
@@ -56,6 +58,24 @@ const CreateRadio = () => {
     console.log("Content:", inputContent);
     console.log("inputTheme", inputTheme);
     console.log("inputDJ", inputDJ);
+
+    if (!inputTitle.trim()) {
+      alert("제목을 입력해주세요!");
+      return;
+    }
+    if (!inputContent.trim()) {
+      alert("내용을 입력해주세요");
+      return;
+    }
+    if (!inputTheme.trim()) {
+      alert("테마를 선택해주세요");
+      return;
+    }
+    if (!inputDJ.trim()) {
+      alert("DJ를 선택해주세요");
+      return;
+    }
+    navigate("/Loading");
   };
 
   const handleThemeSelect = (theme: string) => {
@@ -166,15 +186,13 @@ const CreateRadio = () => {
         <div
           style={{
             display: "flex",
-            justifyContent: "flex-end", // this will push the buttons to the right
-            marginTop: "20px", // you can adjust this for spacing
+            justifyContent: "flex-end",
+            marginTop: "20px",
           }}
         >
-          <Link to="/Loading">
-            <button onClick={handleCreate} style={{ marginRight: "10px" }}>
-              생성
-            </button>
-          </Link>
+          <button onClick={handleCreate} style={{ marginRight: "10px" }}>
+            생성
+          </button>
           <Link to="/">
             <button>취소</button>
           </Link>
