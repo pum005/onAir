@@ -16,7 +16,8 @@ import {
   Typography,
   Button,
 } from "@mui/material";
-import styles from "./MusicList.module.css";
+import AddIcon from "@mui/icons-material/Add";
+import styles from "./MusicCard.module.css";
 
 function MusicList() {
   /** state */
@@ -76,28 +77,38 @@ function MusicList() {
 
   return (
     <div>
-      <MusicBoxModal
-        isOpen={isMusicBoxModalOpen}
-        onClose={MusicBoxModalClose}
-        addMusicBox={addMusicBox}
-        title={newPlaylistTitle}
-        setTitle={setNewPlaylistTitle}
-      ></MusicBoxModal>
       <List>
-        {/* 전체보관함 */}
         <ListItem alignItems="flex-start" className={styles.hoverableListItem}>
           <ListItemAvatar>
-            <AudiotrackIcon
+            <AddIcon
               color="primary"
               className={styles.audiotrackIcon}
               onClick={openMusicAddModal}
             />
           </ListItemAvatar>
           <ListItemText
+            style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+          >
+            <Typography
+              className={styles.textPrimary}
+              style={{ marginTop: "13px" }}
+            >
+              플레이리스트 추가
+            </Typography>
+          </ListItemText>
+        </ListItem>
+
+        {/* 전체보관함 */}
+        <ListItem alignItems="flex-start" className={styles.hoverableListItem}>
+          <ListItemAvatar>
+            <AudiotrackIcon color="primary" className={styles.audiotrackIcon} />
+          </ListItemAvatar>
+          <ListItemText
             primary={
               <Typography
                 className={styles.textPrimary}
                 onClick={() => openMusicDetailModal("전체보관함")}
+                style={{ cursor: "pointer" }}
               >
                 전체보관함
               </Typography>
@@ -139,13 +150,14 @@ function MusicList() {
             key={index}
             alignItems="flex-start"
             className={styles.hoverableListItem}
+            style={{ cursor: "pointer" }}
           >
             <ListItemAvatar>
               <Avatar
                 variant="square"
                 src={playlist.playlistImage}
                 alt={playlist.playlistName}
-                onClick={openMusicAddModal}
+                onClick={() => openMusicDetailModal(playlist.playlistName)}
               />
             </ListItemAvatar>
             <ListItemText
