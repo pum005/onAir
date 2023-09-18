@@ -29,6 +29,4 @@ public class OncastCreateData {
     @Column(nullable = false)
     private String djName;
 
-
-
 }

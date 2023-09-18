@@ -14,7 +14,11 @@ import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.SearchResult;
+import io.lettuce.core.ScriptOutputType;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
@@ -192,11 +196,14 @@ public class MusicService {
                 }
             }
 
+            String lyricsFromMelon = getLyricsFromMelon(title, artist);
+
             Music build = Music.builder()
                     .artist(artist)
                     .duration((int) spotifyMusicDuration)
                     .albumCoverUrl(musicImageUrl)
                     .youtubeVideoId(result.getMusicYoutubeId())
+                    .lylics(lyricsFromMelon)
                     .title(title).build();
 
             Long musicId = 0L;
@@ -260,5 +267,29 @@ public class MusicService {
                 .albumCoverUrl(music.getAlbumCoverUrl()).build();
 
         return build;
+    }
+
+    // 크롤링
+    private String getLyricsFromMelon(String title, String artist) {
+        try {
+            // 1. 멜론 검색 페이지로 이동
+            String searchUrl = "https://www.melon.com/search/song/index.htm?q=" + URLEncoder.encode(title + " " + artist, "UTF-8") + "&section=song";
+            Document document = Jsoup.connect(searchUrl).get();
+
+            Elements elements = document.select("div#wrap.search div#cont_wrap.clfix div#conts_section div#conts div.section_song div#pageList form#frm_defaultList div.tb_list table tbody tr td.t_left div.wrap.pd_none div.ellipsis button.btn_icon.play");
+            System.out.println(elements.toString());
+            // 2. 검색 결과 중 첫 번째 곡의 링크 획득
+            String songLink = document.select("div.ellipsis.rank01 a").attr("href");
+            if (songLink.isEmpty()) return null; // 링크가 없다면 가사를 찾을 수 없음
+            System.out.println(songLink);
+
+            // 3. 곡의 상세 페이지로 이동하여 가사 크롤링
+            Document songDetailDoc = Jsoup.connect("https://www.melon.com" + songLink).get();
+            return songDetailDoc.select("div.lyric").text(); // 가사 반환
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null; // 크롤링 실패 시 null 반환
+        }
     }
 }
