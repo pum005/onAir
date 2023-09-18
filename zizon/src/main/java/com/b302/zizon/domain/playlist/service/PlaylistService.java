@@ -86,7 +86,6 @@ public class PlaylistService {
             playlistMeta.registPlaylistImage(music.getAlbumCoverUrl());
         }
         playlistMeta.plusCountPlaylistCount();
-
     }
     
 }

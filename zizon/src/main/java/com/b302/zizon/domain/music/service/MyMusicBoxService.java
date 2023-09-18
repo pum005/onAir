@@ -1,7 +1,7 @@
 package com.b302.zizon.domain.music.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
-import com.b302.zizon.domain.music.dto.MusicInfoResponseDTO;
+import com.b302.zizon.domain.music.dto.response.MusicInfoResponseDTO;
 import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.music.entity.MyMusicBox;
 import com.b302.zizon.domain.music.repository.MusicRepository;
@@ -42,15 +42,6 @@ public class MyMusicBoxService {
         return userId;
     }
 
-    // 재생시간 포맷
-    public static String convertMillisToMinSec(int millis) {
-        int totalSeconds = millis / 1000;
-        int minutes = totalSeconds / 60;
-        int remainingSeconds = totalSeconds % 60;
-        return String.format("%02d:%02d", minutes, remainingSeconds);
-    }
-
-    
     // 내 음악 보관함, 플리 전부 가져오기
     public Map<String, Object> getMyMusicBoxAndPlaylist(){
         Map<String, Object> result = new HashMap<>();
@@ -109,12 +100,12 @@ public class MyMusicBoxService {
         // 노래 정보 가져오기
         List<MusicInfoResponseDTO> collect = getMyMusicBox.stream()
                 .map(info -> {
-                    String formattedDuration = convertMillisToMinSec(info.getMusic().getDuration());
                     return new MusicInfoResponseDTO(  // 'return' 추가
                             info.getMusic().getMusicId(),
                             info.getMusic().getTitle(),
                             info.getMusic().getArtist(),
-                            formattedDuration,
+                            info.getMusic().getDuration(),
+                            info.getMusic().getYoutubeVideoId(),
                             info.getMusic().getAlbumCoverUrl());
                 })
                 .collect(Collectors.toList());
