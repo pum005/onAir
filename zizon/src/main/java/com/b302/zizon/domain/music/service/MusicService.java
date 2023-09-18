@@ -1,6 +1,7 @@
 package com.b302.zizon.domain.music.service;
 
 import com.b302.zizon.domain.music.dto.*;
+import com.b302.zizon.domain.music.dto.response.*;
 import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.music.entity.MyMusicBox;
 import com.b302.zizon.domain.music.repository.MusicRepository;
@@ -18,7 +19,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -28,10 +28,7 @@ import javax.persistence.EntityNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -236,6 +233,32 @@ public class MusicService {
             throw new EntityNotFoundException("해당 영상 없음");
         }
     }
+    
+    // 해당 음악 상세정보 가져오기
+    public MusicInfoResponseDTO musicInfo(Long musicId){
 
+        Long userId = getUserId();
 
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
+        Optional<Music> byMusic = musicRepository.findById(musicId);
+        if(byMusic.isEmpty()){
+            throw new IllegalArgumentException("해당 음악의 정보가 없습니다.");
+        }
+
+        Music music = byMusic.get();
+
+        MusicInfoResponseDTO build = MusicInfoResponseDTO.builder()
+                .musicId(musicId)
+                .title(music.getTitle())
+                .artist(music.getArtist())
+                .duration(music.getDuration())
+                .youtubeVideoId(music.getYoutubeVideoId())
+                .albumCoverUrl(music.getAlbumCoverUrl()).build();
+
+        return build;
+    }
 }
