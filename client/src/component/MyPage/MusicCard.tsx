@@ -21,7 +21,7 @@ import styles from "./MusicCard.module.css";
 import MusicBoxAddModal from "../Common/CreatePlayList";
 import { Link } from "react-router-dom";
 
-function MusicList() {
+function MusicCard() {
   /** state */
   const userData = useSelector((state: RootState) => state.user); //리덕스에 있는 회원데이터
   const [isMusicBoxModalOpen, setMusicBoxModalOpen] = useState<boolean>(false); //보관함 추가 모달
@@ -227,4 +227,4 @@ function MusicList() {
   );
 }
 
-export default MusicList;
+export default MusicCard;

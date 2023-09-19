@@ -8,7 +8,7 @@ type Props = {
   onConfirm: (playlistName: string) => void;
 };
 
-const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, onConfirm }) => {
+const CreatePlayList: React.FC<Props> = ({ isOpen, onClose, onConfirm }) => {
   const [playlistName, setPlaylistName] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false); // 알림 모달창 상태 관리
 
@@ -66,4 +66,4 @@ const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, onConfirm }) => {
   );
 };
 
-export default MusicBoxAddModal;
+export default CreatePlayList;
