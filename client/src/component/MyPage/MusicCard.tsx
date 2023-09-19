@@ -52,7 +52,7 @@ function MusicList() {
       playlistCount: 0,
       playlistImage: "https://icons8.com/icon/Xvnz23NvQSwk/shield",
     };
-    setPlaylistData(prevData => [...prevData, newPlaylist]);
+    setPlaylistData((prevData) => [...prevData, newPlaylist]);
     setNewPlaylistTitle("");
     MusicBoxModalClose();
   };
@@ -76,6 +76,9 @@ function MusicList() {
   const closeMusicDetailModal = () => {
     setMusicDetailModalOpen(false);
   };
+
+  /** axios */
+  //음악 보관함리스트 가져오기
 
   return (
     <div style={{ width: "70%", margin: "0 auto" }}>
@@ -219,7 +222,7 @@ function MusicList() {
       <MusicBoxAddModal
         isOpen={isMusicBoxModalOpen}
         onClose={MusicBoxModalClose}
-        onConfirm={playlistName => {
+        onConfirm={(playlistName) => {
           // addMusicBox(); // 기존의 'addMusicBox' 함수를 호출하여 플레이리스트를 추가
         }}
       />
