@@ -3,16 +3,29 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import RadioCard from "./RadioCard";
 import RecipeReviewCard from "./RadioCard";
-import cardData from "./cardData";
 import MusicList from "./MusicCard";
+import axios from "axios";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
 }
+type OncastType = {
+  createTime: string;
+  title: string;
+  shareCheck: boolean;
+  selectCheck: boolean;
+  musicList: {
+    musicId: number;
+    albumCoverUrl: string;
+    title: string;
+    artist: string;
+    duration: number;
+  }[];
+}[];
 
 function CustomTabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -43,6 +56,31 @@ function a11yProps(index: number) {
 
 export default function BasicTabs() {
   const [value, setValue] = React.useState(0);
+  const [oncasts, setOncasts] = React.useState<OncastType>([]);
+  const [message, setMessage] = React.useState<string | null>(null);
+
+  //라디오 list axios
+  React.useEffect(() => {
+    requestWithTokenRefresh(() => {
+      return axios.get("http://localhost:8080/api/oncast", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+        withCredentials: true,
+      });
+    })
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.message) {
+          setMessage(response.data.message);
+        } else {
+          setOncasts(response.data.oncasts);
+        }
+      })
+      .catch((error) => {
+        console.error("통신에러 발생", error);
+      });
+  }, []);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -82,23 +120,41 @@ export default function BasicTabs() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            overflowY: "auto",
-            maxHeight: "500px",
-          }}
-        >
-          {cardData.map((data, idx) => (
-            <div
-              key={idx}
-              style={{ margin: "10px", width: "calc(25% - 20px)" }}
-            >
-              <RecipeReviewCard {...data} />
-            </div>
-          ))}
-        </div>
+        {message ? (
+          <div>생성된 라디오가 없습니다.</div>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              overflowY: "auto",
+              maxHeight: "500px",
+            }}
+          >
+            {oncasts.map((data, idx) => (
+              <div
+                key={idx}
+                style={{ margin: "10px", width: "calc(25% - 20px)" }}
+              >
+                <RecipeReviewCard
+                  title={data.createTime}
+                  subheader={data.title}
+                  shareCheck={data.shareCheck}
+                  selectCheck={data.selectCheck}
+                  songs={data.musicList.map((song) => ({
+                    musicId: song.musicId,
+                    songTitle: song.title,
+                    artist: song.artist,
+                    duration: new Date(song.duration)
+                      .toISOString()
+                      .substr(14, 5),
+                    albumCover: song.albumCoverUrl,
+                  }))}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <MusicList />
