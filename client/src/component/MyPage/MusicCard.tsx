@@ -211,7 +211,7 @@ function MusicCard() {
                   if (Playlist.playlistCount === 0) {
                     Swal.fire({
                       icon: "error",
-                      title: "재생할 노래가 없습니다!",
+                      title: "보관함에 노래가 없습니다!",
                       showConfirmButton: false,
                       timer: 1500,
                     });
