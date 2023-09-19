@@ -130,13 +130,40 @@ function MusicList() {
           style={{ display: "flex", alignItems: "center" }}
         >
           <ListItemAvatar>
-            <AudiotrackIcon color="primary" className={styles.audiotrackIcon} />
+            <AudiotrackIcon
+              color="primary"
+              className={styles.audiotrackIcon}
+              onClick={() => {
+                if (data?.my_music_box === 0) {
+                  Swal.fire({
+                    icon: "error",
+                    title: "보관함에 노래가 없습니다!",
+                    showConfirmButton: false,
+                    timer: 1500,
+                  });
+                } else {
+                  openMusicDetailModal("전체보관함");
+                }
+              }}
+              style={{ cursor: "pointer" }}
+            />
           </ListItemAvatar>
           <ListItemText
             primary={
               <Typography
                 className={styles.textPrimary}
-                onClick={() => openMusicDetailModal("전체보관함")}
+                onClick={() => {
+                  if (data?.my_music_box === 0) {
+                    Swal.fire({
+                      icon: "error",
+                      title: "보관함에 노래가 없습니다!",
+                      showConfirmButton: false,
+                      timer: 1500,
+                    });
+                  } else {
+                    openMusicDetailModal("전체보관함");
+                  }
+                }}
                 style={{ cursor: "pointer" }}
               >
                 전체보관함
@@ -180,14 +207,36 @@ function MusicList() {
                 variant="square"
                 src={Playlist.playlistImage || picture}
                 alt={Playlist.playlistName}
-                onClick={() => openMusicDetailModal(Playlist.playlistName)}
+                onClick={() => {
+                  if (Playlist.playlistCount === 0) {
+                    Swal.fire({
+                      icon: "error",
+                      title: "재생할 노래가 없습니다!",
+                      showConfirmButton: false,
+                      timer: 1500,
+                    });
+                  } else {
+                    openMusicDetailModal(Playlist.playlistName);
+                  }
+                }}
               />
             </ListItemAvatar>
             <ListItemText
               primary={
                 <Typography
                   className={styles.textPrimary}
-                  onClick={() => openMusicDetailModal(Playlist.playlistName)}
+                  onClick={() => {
+                    if (Playlist.playlistCount === 0) {
+                      Swal.fire({
+                        icon: "error",
+                        title: "재생할 노래가 없습니다!",
+                        showConfirmButton: false,
+                        timer: 1500,
+                      });
+                    } else {
+                      openMusicDetailModal(Playlist.playlistName);
+                    }
+                  }}
                 >
                   {Playlist.playlistName}
                 </Typography>
