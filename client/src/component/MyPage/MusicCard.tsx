@@ -19,6 +19,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import styles from "./MusicCard.module.css";
 import MusicBoxAddModal from "../Common/CreatePlayList";
+import { Link } from "react-router-dom";
 
 function MusicList() {
   /** state */
@@ -137,7 +138,11 @@ function MusicList() {
               }
             }}
           >
-            <PlayCircleOutlineIcon />
+            <Link to="/MyMusicPlayer">
+              <Button className={styles.playButton}>
+                <PlayCircleOutlineIcon />
+              </Button>
+            </Link>
           </Button>
           <MusicDetailModal
             isOpen={isMusicDetailModalOpen}
@@ -193,7 +198,11 @@ function MusicList() {
                 }
               }}
             >
-              <PlayCircleOutlineIcon />
+              <Link to="/MyMusicPlayer">
+                <Button className={styles.playButton}>
+                  <PlayCircleOutlineIcon />
+                </Button>
+              </Link>
             </Button>
             <MusicDetailModal
               isOpen={
