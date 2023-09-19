@@ -38,11 +38,15 @@ export default function RecipeReviewCard({
   const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
   const [shareModalOpen, setShareModalOpen] = React.useState(false);
   const [selectedMusicId, setSelectedMusicId] = React.useState(0);
+  //이건 토글로 두어야 계속 불러볼 수 있음.
+  const [isPulsButtonClicked, setIsPlusButtonClicked] = React.useState(false);
 
   /** action */
+
+  //음악 보관함에 추가
   const handleClickOpen = (musicId: number) => {
     setSelectedMusicId(musicId);
-    // setOpen(true);
+    setIsPlusButtonClicked(!isPulsButtonClicked);
   };
 
   const handleClose = () => {
@@ -89,18 +93,20 @@ export default function RecipeReviewCard({
         );
       })
         .then((response) => {
-          if (response.data === "성공") {
+          console.log(response.data);
+          if (response.data.message === "음악 추가 완료") {
             setOpen(true);
           }
-          if (response.data === "이미 보관함에 있는 음악입니다.") {
+          if (response.data.message === "이미 보관함에 있는 음악입니다.") {
             setOpen(false);
+            alert("이미 보관함에 있는 음악입니다.");
           }
         })
         .catch((error) => {
           console.error("에러발생", error);
         });
     }
-  }, [selectedMusicId, open]);
+  }, [selectedMusicId, isPulsButtonClicked]);
   //일단 여기 대기
 
   React.useEffect(() => {});
