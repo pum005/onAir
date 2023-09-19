@@ -71,14 +71,14 @@ export default function BasicTabs() {
         withCredentials: true,
       });
     })
-      .then((response) => {
+      .then(response => {
         if (response.data.message) {
           setMessage(response.data.message);
         } else {
           setOncasts(response.data.oncasts);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("통신에러 발생", error);
       });
   }, []);
@@ -166,7 +166,7 @@ export default function BasicTabs() {
                   subheader={data.title}
                   shareCheck={data.shareCheck}
                   selectCheck={data.selectCheck}
-                  songs={data.musicList.map((song) => ({
+                  songs={data.musicList.map(song => ({
                     musicId: song.musicId,
                     songTitle: song.title,
                     artist: song.artist,

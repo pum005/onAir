@@ -30,7 +30,7 @@ type ApiResponseType = {
   }>;
 };
 
-function MusicList() {
+function MusicCard() {
   /** state */
   const [isMusicBoxModalOpen, setMusicBoxModalOpen] = useState<boolean>(false); //보관함 추가 모달
   // const [myMusicBox, setMyMusicBox] = useState(0); //전체 보관함 관리 state
@@ -288,4 +288,4 @@ function MusicList() {
   );
 }
 
-export default MusicList;
+export default MusicCard;

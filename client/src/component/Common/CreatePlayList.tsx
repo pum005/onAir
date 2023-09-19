@@ -36,14 +36,14 @@ const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
           }
         );
       })
-        .then((response) => {
+        .then(response => {
           console.log(response);
           refresh();
 
           setPlaylistName(""); // Reset the input
           setShowConfirmModal(true); // 알림 모달창 띄우기
         })
-        .catch((error) => {
+        .catch(error => {
           console.log("통신에러 발생", error);
         });
     }
@@ -75,7 +75,7 @@ const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
             variant="outlined"
             fullWidth
             value={playlistName}
-            onChange={(e) => setPlaylistName(e.target.value)}
+            onChange={e => setPlaylistName(e.target.value)}
           />
           <Box mt={2}>
             <Button
