@@ -12,6 +12,7 @@ import { Loading } from "./pages/PlayerPage/Loading";
 import { LivePlayer } from "./pages/PlayerPage/LivePlayer";
 import { MusicPlayer } from "./pages/PlayerPage/MusicPlayer";
 import { RadioPlayer } from "./pages/PlayerPage/RadioPlayer";
+import { MyMusicPlayer } from "./pages/PlayerPage/MyMusicPlayer";
 
 import Success from "./utils/Success";
 function App() {
@@ -29,6 +30,7 @@ function App() {
             <Route path="/LivePlayer" element={<LivePlayer />} />
             <Route path="/MusicPlayer" element={<MusicPlayer />} />
             <Route path="/RadioPlayer" element={<RadioPlayer />} />
+            <Route path="/MyMusicPlayer" element={<MyMusicPlayer />} />
 
             <Route path="/Success" element={<Success />} />
           </Routes>

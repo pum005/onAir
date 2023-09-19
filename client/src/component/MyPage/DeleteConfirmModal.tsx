@@ -25,7 +25,7 @@ export const DeleteConfirm: React.FC<DeleteConfirmProps> = ({
       <DialogTitle id="alert-dialog-title">{"삭제 완료"}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          라디오 삭제가 완료되었습니다!
+          삭제가 완료되었습니다!
         </DialogContentText>
       </DialogContent>
       <DialogActions>
