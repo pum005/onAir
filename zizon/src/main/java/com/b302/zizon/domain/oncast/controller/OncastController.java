@@ -86,4 +86,12 @@ public class OncastController {
         return ResponseEntity.status(HttpStatus.OK).body("온캐스트 삭제 성공");
     }
 
+    // oncast 재생하기
+    @GetMapping("oncast/play/{oncast_id}")
+    public ResponseEntity<?> playOncast(@PathVariable Long oncast_id){
+        Map<String, Object> result = oncastService.playOncast(oncast_id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
 }

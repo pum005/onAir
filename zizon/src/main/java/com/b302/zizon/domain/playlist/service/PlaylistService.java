@@ -6,6 +6,7 @@ import com.b302.zizon.domain.music.repository.MusicRepository;
 import com.b302.zizon.domain.music.repository.MyMusicBoxRepository;
 import com.b302.zizon.domain.playlist.dto.AddPlaylistMusicDTO;
 import com.b302.zizon.domain.playlist.dto.MakePlaylistRequestDTO;
+import com.b302.zizon.domain.playlist.dto.PlayPlaylistResponseDTO;
 import com.b302.zizon.domain.playlist.dto.PlaylistInfoResponseDTO;
 import com.b302.zizon.domain.playlist.entity.Playlist;
 import com.b302.zizon.domain.playlist.entity.PlaylistMeta;
@@ -19,9 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +42,9 @@ public class PlaylistService {
 
     // 플리에 음악 추가
     @Transactional
-    public void addPlaylistMusic(AddPlaylistMusicDTO addPlaylistMusicDTO){
+    public Map<String, Object> addPlaylistMusic(AddPlaylistMusicDTO addPlaylistMusicDTO){
+        Map<String, Object> result = new HashMap<>();
+
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
@@ -75,7 +76,8 @@ public class PlaylistService {
 
         Optional<Playlist> byPlaylistMetaPlaylistMetaIdAndMusicMusicId = playlistRepository.findByPlaylistMetaPlaylistMetaIdAndMusicMusicId(playlistMetaId, musicId);
         if(byPlaylistMetaPlaylistMetaIdAndMusicMusicId.isPresent()){
-            throw new IllegalArgumentException("이미 플레이리스트에 추가된 음악입니다.");
+            result.put("message", "이미 플레이리스트에 추가된 음악입니다.");
+            return result;
         }
 
         // 플리 데이터 생성 후 저장
@@ -89,11 +91,15 @@ public class PlaylistService {
             playlistMeta.registPlaylistImage(music.getAlbumCoverUrl());
         }
         playlistMeta.plusCountPlaylistCount();
+
+        result.put("message", "플레이리스트 음악 추가 성공.");
+        return result;
     }
     
     // 플레이리스트 생성
     @Transactional
-    public void MakePlaylist(MakePlaylistRequestDTO makePlaylistRequestDTO){
+    public Map<String, Object> MakePlaylist(MakePlaylistRequestDTO makePlaylistRequestDTO){
+        Map<String, Object> result = new HashMap<>();
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
@@ -108,6 +114,9 @@ public class PlaylistService {
                 .build();
         
         playlistMetaRepository.save(build);
+
+        result.put("message", "플레이리스트 생성 성공.");
+        return result;
     }
 
     // 플레이리스트 정보 가져오기
@@ -132,6 +141,44 @@ public class PlaylistService {
             index += 1;
         }
         return list;
+    }
+
+    // 플레이리스트 재생하기
+    public List<PlayPlaylistResponseDTO> playPlaylist(Long playlistMetaId){
+        Long userId = getUserId();
+
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
+        Optional<PlaylistMeta> byPlaylistMeta = playlistMetaRepository.findById(playlistMetaId);
+        if(byPlaylistMeta.isEmpty()){
+            throw new IllegalArgumentException("해당 플레이리스트가 없습니다.");
+        }
+
+        PlaylistMeta playlistMeta = byPlaylistMeta.get();
+        if(!playlistMeta.getUser().getUserId().equals(userId)){
+            throw new IllegalArgumentException("해당 유저의 플레이리스트가 아닙니다.");
+        }
+
+        List<Playlist> byPlaylist = playlistRepository.findByPlaylistMetaPlaylistMetaId(playlistMetaId);
+
+        List<PlayPlaylistResponseDTO> music = new ArrayList<>();
+
+        for(Playlist p : byPlaylist){
+            PlayPlaylistResponseDTO build = PlayPlaylistResponseDTO.builder()
+                    .musicId(p.getMusic().getMusicId())
+                    .title(p.getMusic().getTitle())
+                    .artist(p.getMusic().getArtist())
+                    .duration(p.getMusic().getDuration())
+                    .albumCoverUrl(p.getMusic().getAlbumCoverUrl())
+                    .youtubeVideoId(p.getMusic().getYoutubeVideoId())
+                    .build();
+            music.add(build);
+        }
+
+        return music;
     }
     
 }

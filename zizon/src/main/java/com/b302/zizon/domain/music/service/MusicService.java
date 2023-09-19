@@ -16,9 +16,12 @@ import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import io.lettuce.core.ScriptOutputType;
 import lombok.RequiredArgsConstructor;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
@@ -32,6 +35,7 @@ import javax.persistence.EntityNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URLEncoder;
+import java.time.Duration;
 import java.util.*;
 
 @Service
@@ -196,7 +200,9 @@ public class MusicService {
                 }
             }
 
+            System.out.println("시작");
             String lyricsFromMelon = getLyricsFromMelon(title, artist);
+            System.out.println("끝");
 
             Music build = Music.builder()
                     .artist(artist)
@@ -270,26 +276,34 @@ public class MusicService {
     }
 
     // 크롤링
-    private String getLyricsFromMelon(String title, String artist) {
-        try {
-            // 1. 멜론 검색 페이지로 이동
-            String searchUrl = "https://www.melon.com/search/song/index.htm?q=" + URLEncoder.encode(title + " " + artist, "UTF-8") + "&section=song";
-            Document document = Jsoup.connect(searchUrl).get();
+    private String getLyricsFromMelon(String title, String artist) throws InterruptedException {
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\SSAFY\\Desktop\\chromedriver-win32\\chromedriver.exe");
 
-            Elements elements = document.select("div#wrap.search div#cont_wrap.clfix div#conts_section div#conts div.section_song div#pageList form#frm_defaultList div.tb_list table tbody tr td.t_left div.wrap.pd_none div.ellipsis button.btn_icon.play");
-            System.out.println(elements.toString());
-            // 2. 검색 결과 중 첫 번째 곡의 링크 획득
-            String songLink = document.select("div.ellipsis.rank01 a").attr("href");
-            if (songLink.isEmpty()) return null; // 링크가 없다면 가사를 찾을 수 없음
-            System.out.println(songLink);
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
+        options.addArguments("--disable-popup-blocking");
+        options.addArguments("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
 
-            // 3. 곡의 상세 페이지로 이동하여 가사 크롤링
-            Document songDetailDoc = Jsoup.connect("https://www.melon.com" + songLink).get();
-            return songDetailDoc.select("div.lyric").text(); // 가사 반환
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null; // 크롤링 실패 시 null 반환
-        }
+        WebDriver driver = new ChromeDriver(options);
+        driver.get("https://www.melon.com/");
+
+        // 검색창에 노래 제목 입력
+        driver.findElement(By.id("top_search")).sendKeys(title + " " + artist);
+
+        // 검색 버튼 클릭
+        driver.findElement(By.className("btn_icon.search_m")).click();
+
+        // TODO: 검색 결과에서 해당 노래를 찾아 클릭.
+        driver.findElement(By.xpath("//a[@title='곡정보 보기' and contains(., '" + title + "')]")).click();
+
+        // 가사 가져오기
+        WebElement lyricsElement = driver.findElement(By.className("lyric"));
+        String lyrics = lyricsElement.getText();
+        System.out.println(lyrics);
+
+        driver.quit();
+
+        return lyrics;
     }
 }
