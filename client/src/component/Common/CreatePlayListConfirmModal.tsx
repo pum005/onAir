@@ -6,39 +6,33 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 
-type AlertDialogProps = {
-  open: boolean;
-  handleClose: () => void;
-  playlistName?: string; // 추가한 코드
+type CreatePlayListConfirmProps = {
+  show: boolean;
+  onClose: () => void;
 };
 
-const AlertDialog: React.FC<AlertDialogProps> = ({
-  open,
-  handleClose,
-  playlistName,
+export const CreatePlayListConfirm: React.FC<CreatePlayListConfirmProps> = ({
+  show,
+  onClose,
 }) => {
   return (
     <Dialog
-      open={open}
-      onClose={handleClose}
+      open={show}
+      onClose={onClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">추가 완료</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{"생성 완료"}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          {playlistName
-            ? `${playlistName} 플레이리스트에 추가되었습니다.`
-            : "전체 플레이리스트에 추가되었습니다."}{" "}
+          새로운 보관함이 생성되었습니다!
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={onClose} color="primary">
           확인
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
-
-export default AlertDialog;
