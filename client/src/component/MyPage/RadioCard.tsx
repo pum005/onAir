@@ -1,26 +1,26 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import CardMedia from "@mui/material/CardMedia";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AlertDialog from "../Common/AddFullList";
 import { Button } from "@mui/material";
 import PlayListModal from "../Common/PlayListModal";
 import DeleteModal from "./DeleteModal";
 import ShareModal from "./ShareModal";
+import axios from "axios";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 
 type RecipeReviewCardProps = {
   title: string;
   subheader: string;
-  feeling: string;
-  image: string;
+  shareCheck: boolean;
+  selectCheck: boolean;
 };
 
 type SongDataType = {
+  musicId: number;
   songTitle: string;
   artist: string;
   duration: string;
@@ -31,14 +31,18 @@ export default function RecipeReviewCard({
   title,
   subheader,
   songs = [],
-  feeling,
-  image,
 }: RecipeReviewCardProps & { songs?: SongDataType }) {
+  /** state */
   const [open, setOpen] = React.useState(false);
   const [playListModalOpen, setPlayListModalOpen] = React.useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
+  const [shareModalOpen, setShareModalOpen] = React.useState(false);
+  const [selectedMusicId, setSelectedMusicId] = React.useState(0);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  /** action */
+  const handleClickOpen = (musicId: number) => {
+    setSelectedMusicId(musicId);
+    // setOpen(true);
   };
 
   const handleClose = () => {
@@ -51,8 +55,6 @@ export default function RecipeReviewCard({
     setPlayListModalOpen(false);
   };
 
-  const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
-
   const handleDeleteClick = () => {
     setDeleteModalOpen(true);
   };
@@ -61,8 +63,6 @@ export default function RecipeReviewCard({
     setDeleteModalOpen(false);
   };
 
-  const [shareModalOpen, setShareModalOpen] = React.useState(false);
-
   const handleShareClick = () => {
     setShareModalOpen(true);
   };
@@ -70,6 +70,40 @@ export default function RecipeReviewCard({
   const handleShareModalClose = () => {
     setShareModalOpen(false);
   };
+
+  /**axios */
+  //AddCircleOutlineIcon 이거 눌렀을때 전체 보관함 추가하고 나의 플레이리스트 열기
+  React.useEffect(() => {
+    if (selectedMusicId) {
+      // selectedMusicId가 설정되었을 때만 API 호출
+      requestWithTokenRefresh(() => {
+        return axios.post(
+          "http://localhost:8080/api/my-musicbox",
+          { musicId: selectedMusicId },
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+            withCredentials: true,
+          }
+        );
+      })
+        .then((response) => {
+          if (response.data === "성공") {
+            setOpen(true);
+          }
+          if (response.data === "이미 보관함에 있는 음악입니다.") {
+            setOpen(false);
+          }
+        })
+        .catch((error) => {
+          console.error("에러발생", error);
+        });
+    }
+  }, [selectedMusicId, open]);
+  //일단 여기 대기
+
+  React.useEffect(() => {});
 
   return (
     <Card
@@ -135,7 +169,7 @@ export default function RecipeReviewCard({
             <div style={{ flex: 1, textAlign: "right" }}>{song.duration}</div>
             <AddCircleOutlineIcon
               style={{ marginLeft: "8px" }}
-              onClick={handleClickOpen}
+              onClick={() => handleClickOpen(song.musicId)}
               cursor="pointer"
             />
           </div>
