@@ -6,7 +6,9 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AlertDialog from "./AddPlayList";
-import React from "react";
+import React, { useEffect } from "react";
+import axios from "axios";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 
 type PlayListModalProps = {
   isOpen: boolean;
@@ -42,6 +44,22 @@ function PlayListModal({ isOpen, onClose }: PlayListModalProps) {
   const handleAlertClose = () => {
     setAlertOpen(false);
   };
+
+  //내 보관함 불러오기 아직
+  // useEffect(() => {
+  //   if (isOpen) {
+  //     requestWithTokenRefresh(() => {
+  //       return axios.get("http://localhost:8080/api/playlist", {
+  //         headers: {
+  //           Authorization: "Bearer " + localStorage.getItem("accessToken"),
+  //         },
+  //         withCredentials: true,
+  //       });
+  //     }).then((response) => {
+  //       console.log(response.data);
+  //     });
+  //   }
+  // });
 
   return (
     <>
