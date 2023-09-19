@@ -1,12 +1,9 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
-import { useState } from "react";
-import MusicBoxModal from "../Common/MusicBoxModal";
+import React, { useState } from "react";
 import MusicAddModal from "../Common/MusicAddModal";
 import MusicDetailModal from "./MusicDetailModal";
-import dummyData from "./dummyData.json";
 import AudiotrackIcon from "@mui/icons-material/Audiotrack";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import picture from "../../resources/흥애.png";
 import {
   List,
   ListItem,
@@ -20,19 +17,31 @@ import AddIcon from "@mui/icons-material/Add";
 import styles from "./MusicCard.module.css";
 import MusicBoxAddModal from "../Common/CreatePlayList";
 import { Link } from "react-router-dom";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import axios from "axios";
+import Swal from "sweetalert2";
+
+type ApiResponseType = {
+  my_music_box: number;
+  playlist_info: Array<{
+    playlistImage: string;
+    playlistCount: number;
+    playlistName: string;
+  }>;
+};
 
 function MusicCard() {
   /** state */
-  const userData = useSelector((state: RootState) => state.user); //리덕스에 있는 회원데이터
   const [isMusicBoxModalOpen, setMusicBoxModalOpen] = useState<boolean>(false); //보관함 추가 모달
-  const [myMusicBox, setMyMusicBox] = useState(dummyData.my_music_box); //전체 보관함 관리 state
-  const [playlistData, setPlaylistData] = useState(dummyData.playlist_info); //플레이리스트별 관리 state
-  const [newPlaylistTitle, setNewPlaylistTitle] = useState(""); //새로운 플레이리스트 제목 관리 state
+  // const [myMusicBox, setMyMusicBox] = useState(0); //전체 보관함 관리 state
+  const [data, setData] = useState<ApiResponseType | null>(null); //데이터 관리
   const [isMusicAddModalOpen, setMusicAddModalOpen] = useState<boolean>(false); //음악 더하기 변수
   const [isMusicDetailModalOpen, setMusicDetailModalOpen] =
     useState<boolean>(false); //전체 보관함 음악 상세 보기 모달 state
   const [selectedPlaylistTitle, setSelectedPlaylistTitle] =
     useState<string>(""); //리스트 이름 관리 state
+
+  const [refreshPlaylist, setRefreshPlaylist] = useState(false); //리 렌더링 할 state(보관함 전체 불러오기)
 
   /** function */
   //보관함추가 실행 함수
@@ -43,18 +52,6 @@ function MusicCard() {
   //보관함추가 닫기 함수
   const MusicBoxModalClose = () => {
     setMusicBoxModalOpen(false);
-  };
-
-  //보관함 추가 함수
-  const addMusicBox = () => {
-    const newPlaylist = {
-      playlistName: newPlaylistTitle,
-      playlistCount: 0,
-      playlistImage: "https://icons8.com/icon/Xvnz23NvQSwk/shield",
-    };
-    setPlaylistData((prevData) => [...prevData, newPlaylist]);
-    setNewPlaylistTitle("");
-    MusicBoxModalClose();
   };
 
   //음악검색 모달 열기 함수
@@ -79,6 +76,27 @@ function MusicCard() {
 
   /** axios */
   //음악 보관함리스트 가져오기
+  React.useEffect(() => {
+    requestWithTokenRefresh(() => {
+      return axios.get("http://localhost:8080/api/my-musicbox", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("accessToken"),
+        },
+        withCredentials: true,
+      });
+    })
+      .then((response) => {
+        // 데이터 정규화
+        const normalizedData: ApiResponseType = {
+          my_music_box: response.data.my_music_box,
+          playlist_info: response.data.playlist_info || [],
+        };
+        setData(normalizedData);
+      })
+      .catch((error) => {
+        console.error("데이터 가져오기 오류:", error);
+      });
+  }, [refreshPlaylist]);
 
   return (
     <div style={{ width: "70%", margin: "0 auto" }}>
@@ -112,13 +130,40 @@ function MusicCard() {
           style={{ display: "flex", alignItems: "center" }}
         >
           <ListItemAvatar>
-            <AudiotrackIcon color="primary" className={styles.audiotrackIcon} />
+            <AudiotrackIcon
+              color="primary"
+              className={styles.audiotrackIcon}
+              onClick={() => {
+                if (data?.my_music_box === 0) {
+                  Swal.fire({
+                    icon: "error",
+                    title: "보관함에 노래가 없습니다!",
+                    showConfirmButton: false,
+                    timer: 1500,
+                  });
+                } else {
+                  openMusicDetailModal("전체보관함");
+                }
+              }}
+              style={{ cursor: "pointer" }}
+            />
           </ListItemAvatar>
           <ListItemText
             primary={
               <Typography
                 className={styles.textPrimary}
-                onClick={() => openMusicDetailModal("전체보관함")}
+                onClick={() => {
+                  if (data?.my_music_box === 0) {
+                    Swal.fire({
+                      icon: "error",
+                      title: "보관함에 노래가 없습니다!",
+                      showConfirmButton: false,
+                      timer: 1500,
+                    });
+                  } else {
+                    openMusicDetailModal("전체보관함");
+                  }
+                }}
                 style={{ cursor: "pointer" }}
               >
                 전체보관함
@@ -131,27 +176,17 @@ function MusicCard() {
             variant="body2"
             style={{ marginRight: "30%", marginLeft: "auto" }} // 여기에서 스타일을 조절하여 곡 수를 원하는 위치에 배치합니다.
           >
-            {myMusicBox} 곡
+            {data?.my_music_box} 곡
           </Typography>
-          <Button
-            className={styles.playButton}
-            onClick={() => {
-              if (myMusicBox === 0) {
-                alert("재생할 노래가 없습니다!");
-              }
-            }}
-          >
-            <Link to="/MyMusicPlayer">
-              <Button className={styles.playButton}>
-                <PlayCircleOutlineIcon />
-              </Button>
-            </Link>
-          </Button>
+          <Link to="/MyMusicPlayer">
+            <Button className={styles.playButton}>
+              <PlayCircleOutlineIcon />
+            </Button>
+          </Link>
           <MusicDetailModal
             isOpen={isMusicDetailModalOpen}
             onClose={closeMusicDetailModal}
             title={selectedPlaylistTitle}
-            songCount={myMusicBox}
           />
         </ListItem>
 
@@ -160,7 +195,7 @@ function MusicCard() {
           onClose={closeMusicAddModal}
         />
         {/* 플레이리스트  */}
-        {playlistData.map((playlist, index) => (
+        {data?.playlist_info.map((Playlist, index) => (
           <ListItem
             key={index}
             alignItems="flex-start"
@@ -170,18 +205,40 @@ function MusicCard() {
             <ListItemAvatar>
               <Avatar
                 variant="square"
-                src={playlist.playlistImage}
-                alt={playlist.playlistName}
-                onClick={() => openMusicDetailModal(playlist.playlistName)}
+                src={Playlist.playlistImage || picture}
+                alt={Playlist.playlistName}
+                onClick={() => {
+                  if (Playlist.playlistCount === 0) {
+                    Swal.fire({
+                      icon: "error",
+                      title: "재생할 노래가 없습니다!",
+                      showConfirmButton: false,
+                      timer: 1500,
+                    });
+                  } else {
+                    openMusicDetailModal(Playlist.playlistName);
+                  }
+                }}
               />
             </ListItemAvatar>
             <ListItemText
               primary={
                 <Typography
                   className={styles.textPrimary}
-                  onClick={() => openMusicDetailModal(playlist.playlistName)}
+                  onClick={() => {
+                    if (Playlist.playlistCount === 0) {
+                      Swal.fire({
+                        icon: "error",
+                        title: "재생할 노래가 없습니다!",
+                        showConfirmButton: false,
+                        timer: 1500,
+                      });
+                    } else {
+                      openMusicDetailModal(Playlist.playlistName);
+                    }
+                  }}
                 >
-                  {playlist.playlistName}
+                  {Playlist.playlistName}
                 </Typography>
               }
             />
@@ -191,30 +248,33 @@ function MusicCard() {
               variant="body2"
               style={{ marginRight: "30%", marginLeft: "auto" }} // 여기에서 스타일을 조절하여 곡 수를 원하는 위치에 배치합니다.
             >
-              {playlist.playlistCount} 곡
+              {Playlist.playlistCount} 곡
             </Typography>
             <Button
+              component={Link}
+              to="/MyMusicPlayer"
               className={styles.playButton}
-              onClick={() => {
-                if (playlist.playlistCount === 0) {
-                  alert("재생할 노래가 없습니다!");
+              onClick={(event) => {
+                if (Playlist.playlistCount === 0) {
+                  Swal.fire({
+                    icon: "error",
+                    title: "재생할 노래가 없습니다!",
+                    showConfirmButton: false,
+                    timer: 1500,
+                  });
+                  event.preventDefault();
                 }
               }}
             >
-              <Link to="/MyMusicPlayer">
-                <Button className={styles.playButton}>
-                  <PlayCircleOutlineIcon />
-                </Button>
-              </Link>
+              <PlayCircleOutlineIcon />
             </Button>
             <MusicDetailModal
               isOpen={
                 isMusicDetailModalOpen &&
-                selectedPlaylistTitle === playlist.playlistName
+                selectedPlaylistTitle === Playlist.playlistName
               }
               onClose={closeMusicDetailModal}
-              title={playlist.playlistName}
-              songCount={playlist.playlistCount}
+              title={Playlist.playlistName}
             />
           </ListItem>
         ))}
@@ -222,9 +282,7 @@ function MusicCard() {
       <MusicBoxAddModal
         isOpen={isMusicBoxModalOpen}
         onClose={MusicBoxModalClose}
-        onConfirm={(playlistName) => {
-          // addMusicBox(); // 기존의 'addMusicBox' 함수를 호출하여 플레이리스트를 추가
-        }}
+        refresh={() => setRefreshPlaylist(!refreshPlaylist)}
       />
     </div>
   );

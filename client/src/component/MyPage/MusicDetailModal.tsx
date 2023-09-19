@@ -10,18 +10,25 @@ import { useState } from "react";
 import PlayListModal from "../Common/PlayListModal";
 import DeleteModal from "./DeleteModal";
 
+type MusicInfoType = {
+  musicId: number;
+  title: string;
+  artist: string;
+  duration: number;
+  albumCoverUrl: string;
+  youtubeVideoId: string;
+};
+
 type MusicDetailModalProps = {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  songCount: number;
 };
 
 const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
   isOpen,
   onClose,
   title,
-  songCount,
 }) => {
   const dummySongs = [
     // 여기에 더미 데이터를 추가합니다.
@@ -113,7 +120,7 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
                 {formatTime(song.length)}
                 <MoreVertIcon
                   style={{ marginLeft: "8px", cursor: "pointer" }}
-                  onClick={event => handleMenuOpen(event, index)}
+                  onClick={(event) => handleMenuOpen(event, index)}
                 />
               </div>
             </div>
