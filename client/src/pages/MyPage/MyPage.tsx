@@ -1,6 +1,6 @@
 import NavBar from "../../component/Common/Navbar";
 import InfoModify from "../../component/MyPage/InfoModify";
-import MyPageList from "../../component/MyPage/MyPageList";
+// import MyPageList from "../../component/MyPage/MyPageList";
 import BasicTabs from "../../component/MyPage/HMypageList";
 
 export const MyPage = () => {
