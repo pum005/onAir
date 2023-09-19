@@ -40,9 +40,6 @@ dependencies {
 	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
 	implementation group: 'commons-io', name: 'commons-io', version: '2.4'
 
-	// 크롤링
-	implementation 'org.jsoup:jsoup:1.13.1'
-
 	// junit5
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
@@ -75,6 +72,10 @@ dependencies {
 
 	// 유튜브
 	implementation 'com.google.apis:google-api-services-youtube:v3-rev20230123-2.0.0'
+
+	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
+	implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.12.1'
+
 }
 
 tasks.named('test') {

@@ -8,6 +8,7 @@ import java.util.List;
 
 @Data
 public class GetOncastDTO {
+    private Long oncastId;
     private String createTime;
     private String title;
     private boolean shareCheck;

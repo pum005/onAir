@@ -19,9 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +41,9 @@ public class PlaylistService {
 
     // 플리에 음악 추가
     @Transactional
-    public void addPlaylistMusic(AddPlaylistMusicDTO addPlaylistMusicDTO){
+    public Map<String, Object> addPlaylistMusic(AddPlaylistMusicDTO addPlaylistMusicDTO){
+        Map<String, Object> result = new HashMap<>();
+
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
@@ -75,7 +75,8 @@ public class PlaylistService {
 
         Optional<Playlist> byPlaylistMetaPlaylistMetaIdAndMusicMusicId = playlistRepository.findByPlaylistMetaPlaylistMetaIdAndMusicMusicId(playlistMetaId, musicId);
         if(byPlaylistMetaPlaylistMetaIdAndMusicMusicId.isPresent()){
-            throw new IllegalArgumentException("이미 플레이리스트에 추가된 음악입니다.");
+            result.put("message", "이미 플레이리스트에 추가된 음악입니다.");
+            return result;
         }
 
         // 플리 데이터 생성 후 저장
@@ -89,11 +90,15 @@ public class PlaylistService {
             playlistMeta.registPlaylistImage(music.getAlbumCoverUrl());
         }
         playlistMeta.plusCountPlaylistCount();
+
+        result.put("message", "플레이리스트 음악 추가 성공.");
+        return result;
     }
     
     // 플레이리스트 생성
     @Transactional
-    public void MakePlaylist(MakePlaylistRequestDTO makePlaylistRequestDTO){
+    public Map<String, Object> MakePlaylist(MakePlaylistRequestDTO makePlaylistRequestDTO){
+        Map<String, Object> result = new HashMap<>();
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
@@ -108,6 +113,9 @@ public class PlaylistService {
                 .build();
         
         playlistMetaRepository.save(build);
+
+        result.put("message", "플레이리스트 생성 성공.");
+        return result;
     }
 
     // 플레이리스트 정보 가져오기
