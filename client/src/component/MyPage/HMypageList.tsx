@@ -72,7 +72,6 @@ export default function BasicTabs() {
       });
     })
       .then((response) => {
-        console.log(response.data);
         if (response.data.message) {
           setMessage(response.data.message);
         } else {
