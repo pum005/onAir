@@ -10,6 +10,7 @@ import java.util.List;
 @Builder
 public class OncastPlayResponseDTO {
 
+    private Long oncastId;
     private String scriptOne;
     private String scriptTwo;
     private String scriptThree;
@@ -18,7 +19,5 @@ public class OncastPlayResponseDTO {
     private String ttsTwo;
     private String ttsThree;
     private String ttsFour;
-    private List<Music> music;
-
-
+    private List<GetMusicDTO> music;
 }

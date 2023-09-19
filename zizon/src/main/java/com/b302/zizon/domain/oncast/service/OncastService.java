@@ -230,7 +230,7 @@ public class OncastService {
 
         Optional<Oncast> byOncast = oncastRepository.findById(oncastId);
 
-        if (byOncast.isEmpty()) {
+        if(byOncast.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 온캐스트입니다.");
         }
 
@@ -281,35 +281,70 @@ public class OncastService {
         return result;
     }
 
-//    // 온캐스트 재생하기(정보 제공)
-//    public void playOncast(Long oncastId){
-//        Long userId = getUserId();
-//
-//        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-//                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
-//
-//        User user = byUserId.get();
-//
-//        Optional<Oncast> byOncast = oncastRepository.findById(oncastId);
-//        if(byOncast.isEmpty()){
-//            throw new IllegalArgumentException("온캐스트 정보가 없습니다.");
-//        }
-//
-//        Oncast oncast = byOncast.get();
-//
-//        List<GetMusicDTO> getMusicDTOS = new ArrayList<>();
-//        for()
-//
-//        OncastPlayResponseDTO.builder()
-//                .ttsOne(oncast.getTtsOne())
-//                .ttsTwo(oncast.getTtsTwo())
-//                .ttsThree(oncast.getTtsThree())
-//                .ttsFour(oncast.getTtsFour())
-//                .scriptOne(oncast.getScriptOne())
-//                .scriptTwo(oncast.getScriptTwo())
-//                .scriptThree(oncast.getScriptThree())
-//                .scriptFour(oncast.getTtsFour())
-//                .
-//    }
+    // 온캐스트 재생하기(정보 제공)
+    public Map<String, Object> playOncast(Long oncastId){
+        Map<String, Object> result = new HashMap<>();
+        Long userId = getUserId();
+
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
+        Optional<Oncast> byOncast = oncastRepository.findById(oncastId);
+        if(byOncast.isEmpty()){
+            throw new IllegalArgumentException("온캐스트 정보가 없습니다.");
+        }
+
+        if(!byOncast.get().getUser().getUserId().equals(userId)){
+            throw new IllegalArgumentException("해당 유저의 온캐스트가 아닙니다.");
+        }
+
+        Oncast oncast = byOncast.get();
+
+        List<GetMusicDTO> getMusicDTOS = new ArrayList<>();
+
+        GetMusicDTO build1 = GetMusicDTO.builder()
+                .title(oncast.getMusic1().getTitle())
+                .artist(oncast.getMusic1().getArtist())
+                .duration(oncast.getMusic1().getDuration())
+                .albumCoverUrl(oncast.getMusic1().getAlbumCoverUrl())
+                .musicId(oncast.getMusic1().getMusicId())
+                .youtubeId(oncast.getMusic1().getYoutubeVideoId()).build();
+
+        GetMusicDTO build2 = GetMusicDTO.builder()
+                .title(oncast.getMusic2().getTitle())
+                .artist(oncast.getMusic2().getArtist())
+                .duration(oncast.getMusic2().getDuration())
+                .albumCoverUrl(oncast.getMusic2().getAlbumCoverUrl())
+                .musicId(oncast.getMusic2().getMusicId())
+                .youtubeId(oncast.getMusic2().getYoutubeVideoId()).build();
+
+        GetMusicDTO build3 = GetMusicDTO.builder()
+                .title(oncast.getMusic3().getTitle())
+                .artist(oncast.getMusic3().getArtist())
+                .duration(oncast.getMusic3().getDuration())
+                .albumCoverUrl(oncast.getMusic3().getAlbumCoverUrl())
+                .musicId(oncast.getMusic3().getMusicId())
+                .youtubeId(oncast.getMusic3().getYoutubeVideoId()).build();
+        getMusicDTOS.add(build1);
+        getMusicDTOS.add(build2);
+        getMusicDTOS.add(build3);
+
+        OncastPlayResponseDTO build = OncastPlayResponseDTO.builder()
+                .oncastId(oncast.getOncastId())
+                .ttsOne(oncast.getTtsOne())
+                .ttsTwo(oncast.getTtsTwo())
+                .ttsThree(oncast.getTtsThree())
+                .ttsFour(oncast.getTtsFour())
+                .scriptOne(oncast.getScriptOne())
+                .scriptTwo(oncast.getScriptTwo())
+                .scriptThree(oncast.getScriptThree())
+                .scriptFour(oncast.getTtsFour())
+                .music(getMusicDTOS).build();
+
+        result.put("oncast", build);
+        return result;
+    }
 }
 
