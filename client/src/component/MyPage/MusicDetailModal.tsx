@@ -10,6 +10,15 @@ import { useState } from "react";
 import PlayListModal from "../Common/PlayListModal";
 import DeleteModal from "./DeleteModal";
 
+type MusicInfoType = {
+  musicId: number;
+  title: string;
+  artist: string;
+  duration: number;
+  albumCoverUrl: string;
+  youtubeVideoId: string;
+};
+
 type MusicDetailModalProps = {
   isOpen: boolean;
   onClose: () => void;
