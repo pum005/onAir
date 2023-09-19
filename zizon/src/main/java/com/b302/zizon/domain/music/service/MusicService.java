@@ -170,6 +170,7 @@ public class MusicService {
 
             SearchListResponse searchResponse = searchRequest.execute();
             List<SearchResult> searchResults = searchResponse.getItems();
+            long playTimeYoutube = 0L;
 
             BigInteger maxViews = BigInteger.ZERO;
 
@@ -188,6 +189,7 @@ public class MusicService {
                 if (Math.abs(spotifyMusicDuration - playTime) > 5000) {
                     continue;
                 }
+                playTimeYoutube = playTime;
 
                 // 조회수 가장 많은 동영상 1개 리턴
                 BigInteger viewCount = video.getStatistics().getViewCount();
@@ -195,21 +197,17 @@ public class MusicService {
                         && viewCount.compareTo(BigInteger.valueOf(100000)) > 0) {
                     maxViews = viewCount;
                     result.setMusicYoutubeId(musicYoutubeId);
-                    result.setMusicLength(
-                            convertTime.convertDurationToMillis(video.getContentDetails().getDuration()));
+                    result.setMusicLength(playTimeYoutube);
                 }
             }
 
-            System.out.println("시작");
-            String lyricsFromMelon = getLyricsFromMelon(title, artist);
-            System.out.println("끝");
+            System.out.println(playTimeYoutube);
 
             Music build = Music.builder()
                     .artist(artist)
-                    .duration((int) spotifyMusicDuration)
+                    .duration(playTimeYoutube)
                     .albumCoverUrl(musicImageUrl)
                     .youtubeVideoId(result.getMusicYoutubeId())
-                    .lylics(lyricsFromMelon)
                     .title(title).build();
 
             Long musicId = 0L;
@@ -275,35 +273,35 @@ public class MusicService {
         return build;
     }
 
-    // 크롤링
-    private String getLyricsFromMelon(String title, String artist) throws InterruptedException {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\SSAFY\\Desktop\\chromedriver-win32\\chromedriver.exe");
-
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
-        options.addArguments("--disable-popup-blocking");
-        options.addArguments("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
-
-
-        WebDriver driver = new ChromeDriver(options);
-        driver.get("https://www.melon.com/");
-
-        // 검색창에 노래 제목 입력
-        driver.findElement(By.id("top_search")).sendKeys(title + " " + artist);
-
-        // 검색 버튼 클릭
-        driver.findElement(By.className("btn_icon.search_m")).click();
-
-        // TODO: 검색 결과에서 해당 노래를 찾아 클릭.
-        driver.findElement(By.xpath("//a[@title='곡정보 보기' and contains(., '" + title + "')]")).click();
-
-        // 가사 가져오기
-        WebElement lyricsElement = driver.findElement(By.className("lyric"));
-        String lyrics = lyricsElement.getText();
-        System.out.println(lyrics);
-
-        driver.quit();
-
-        return lyrics;
-    }
+//    // 크롤링
+//    private String getLyricsFromMelon(String title, String artist) throws InterruptedException {
+//        System.setProperty("webdriver.chrome.driver", "C:\\Users\\SSAFY\\Desktop\\chromedriver-win32\\chromedriver.exe");
+//
+//        ChromeOptions options = new ChromeOptions();
+//        options.addArguments("--headless");
+//        options.addArguments("--disable-popup-blocking");
+//        options.addArguments("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
+//
+//
+//        WebDriver driver = new ChromeDriver(options);
+//        driver.get("https://www.melon.com/");
+//
+//        // 검색창에 노래 제목 입력
+//        driver.findElement(By.id("top_search")).sendKeys(title + " " + artist);
+//
+//        // 검색 버튼 클릭
+//        driver.findElement(By.className("btn_icon.search_m")).click();
+//
+//        // TODO: 검색 결과에서 해당 노래를 찾아 클릭.
+//        driver.findElement(By.xpath("//a[@title='곡정보 보기' and contains(., '" + title + "')]")).click();
+//
+//        // 가사 가져오기
+//        WebElement lyricsElement = driver.findElement(By.className("lyric"));
+//        String lyrics = lyricsElement.getText();
+//        System.out.println(lyrics);
+//
+//        driver.quit();
+//
+//        return lyrics;
+//    }
 }
