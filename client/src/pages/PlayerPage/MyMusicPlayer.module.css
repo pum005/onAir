@@ -1,0 +1,102 @@
+.playlistItem {
+  display: flex;
+  justifycontent: space-between;
+  alignitems: center;
+  padding: 10px;
+  marginbottom: 10px;
+  cursor: pointer;
+  borderradius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.playlistItem:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.playlistItemActive {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 기존 스타일에 추가 */
+.playlistItem .deleteIcon {
+  display: none; /* 기본적으로 아이콘을 숨깁니다. */
+  margin-right: 10px;
+}
+
+.playlistItem:hover .deleteIcon {
+  display: block; /* 마우스 호버 시 아이콘을 표시합니다. */
+}
+
+.root {
+  background-color: #000104;
+  min-height: 100vh;
+  color: white;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 60px);
+}
+
+.songDisplayContainer {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5%;
+  margin-right: 5%;
+}
+
+.coverImageContainer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.coverImage {
+  width: 500px;
+  height: 500px;
+}
+
+.songListContainer {
+  flex: 0.5;
+  padding-right: 20px;
+  margin-left: 20%;
+}
+
+.songListHeader {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px 0;
+}
+
+.songList {
+  overflow-y: auto;
+  max-height: 80vh;
+}
+
+.albumImage {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.songLength {
+  display: flex;
+  align-items: center;
+}
+
+.audioContainer {
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+}
