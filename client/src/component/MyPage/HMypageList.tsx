@@ -4,7 +4,7 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import RecipeReviewCard from "./RadioCard";
-import MusicList from "./MusicCard";
+import MusicCard from "./MusicCard";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import AddIcon from "@mui/icons-material/Add";
@@ -183,7 +183,7 @@ export default function BasicTabs() {
         )}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <MusicList />
+        <MusicCard />
       </CustomTabPanel>
       <SearchModal
         isOpen={isSearchModalOpen}

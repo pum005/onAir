@@ -49,7 +49,7 @@ function MusicList() {
       playlistCount: 0,
       playlistImage: "https://icons8.com/icon/Xvnz23NvQSwk/shield",
     };
-    setPlaylistData(prevData => [...prevData, newPlaylist]);
+    setPlaylistData((prevData) => [...prevData, newPlaylist]);
     setNewPlaylistTitle("");
     MusicBoxModalClose();
   };

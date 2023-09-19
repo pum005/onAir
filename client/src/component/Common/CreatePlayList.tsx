@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Modal, TextField, Button, Box } from "@mui/material";
 import { CreatePlayListConfirm } from "./CreatePlayListConfirmModal";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import axios from "axios";
+import { error } from "console";
 
 type Props = {
   isOpen: boolean;
@@ -8,14 +11,45 @@ type Props = {
   onConfirm: (playlistName: string) => void;
 };
 
+<<<<<<< HEAD
 const CreatePlayList: React.FC<Props> = ({ isOpen, onClose, onConfirm }) => {
+=======
+const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, onConfirm }) => {
+  /** state */
+>>>>>>> 0405f48b221ca4c9f191b133738e141ee4c29e59
   const [playlistName, setPlaylistName] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false); // 알림 모달창 상태 관리
 
+  /** action */
   const handleConfirm = () => {
-    onConfirm(playlistName);
-    setPlaylistName(""); // Reset the input
-    setShowConfirmModal(true); // 알림 모달창 띄우기
+    if (playlistName === "") {
+      alert("제목을 작성해주세요.");
+      return;
+    } else {
+      requestWithTokenRefresh(() => {
+        return axios.post(
+          "http://localhost:8080/api/playlist",
+          {
+            playlistName: playlistName,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+            withCredentials: true,
+          }
+        );
+      })
+        .then((response) => {
+          // console.log(response);
+          // onConfirm(playlistName);
+          setPlaylistName(""); // Reset the input
+          setShowConfirmModal(true); // 알림 모달창 띄우기
+        })
+        .catch((error) => {
+          console.log("통신에러 발생", error);
+        });
+    }
   };
 
   const handleCloseConfirmModal = () => {
@@ -44,7 +78,7 @@ const CreatePlayList: React.FC<Props> = ({ isOpen, onClose, onConfirm }) => {
             variant="outlined"
             fullWidth
             value={playlistName}
-            onChange={e => setPlaylistName(e.target.value)}
+            onChange={(e) => setPlaylistName(e.target.value)}
           />
           <Box mt={2}>
             <Button
