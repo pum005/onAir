@@ -8,10 +8,10 @@ import { error } from "console";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (playlistName: string) => void;
+  refresh: () => void;
 };
 
-const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, onConfirm }) => {
+const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
   /** state */
   const [playlistName, setPlaylistName] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false); // 알림 모달창 상태 관리
@@ -37,8 +37,9 @@ const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, onConfirm }) => {
         );
       })
         .then((response) => {
-          // console.log(response);
-          // onConfirm(playlistName);
+          console.log(response);
+          refresh();
+
           setPlaylistName(""); // Reset the input
           setShowConfirmModal(true); // 알림 모달창 띄우기
         })
