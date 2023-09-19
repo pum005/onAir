@@ -13,7 +13,6 @@ export const MyPage = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center", // 중앙 정렬
       }}
     >
       <NavBar />

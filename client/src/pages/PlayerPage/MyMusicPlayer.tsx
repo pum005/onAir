@@ -1,34 +1,50 @@
-import { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import NavBar from "../../component/Common/Navbar";
+import { musicDummyData } from "./MusicDummy";
 
-type MyMusicPlayerProps = {
-  playlistData?: any[]; // 추후에 더 구체적인 타입으로 변경해주세요.
-};
+type MyMusicPlayerProps = {};
 
-export const MyMusicPlayer: React.FC<MyMusicPlayerProps> = ({
-  playlistData,
-}) => {
-  const [songs, setSongs] = useState<any[]>([]); // 추후에 더 구체적인 타입으로 변경해주세요.
+export const MyMusicPlayer = () => {
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
-    // 플레이리스트 데이터가 props로 전달되면 해당 데이터를 사용합니다.
-    if (playlistData) {
-      setSongs(playlistData);
+    if (audioRef.current) {
+      audioRef.current.src = musicDummyData[currentTrackIndex].musicSrc; // 노래 소스 업데이트
+      audioRef.current.play();
     }
-  }, [playlistData]);
+  }, [currentTrackIndex]);
+
+  const handleSongEnd = () => {
+    if (currentTrackIndex < musicDummyData.length - 1) {
+      setCurrentTrackIndex(prevIndex => prevIndex + 1);
+    } else {
+      setCurrentTrackIndex(0);
+    }
+  };
 
   return (
     <div
       style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
     >
       <NavBar />
-      {/* 이제 여기에 노래 데이터를 출력하는 로직을 추가할 수 있습니다. */}
-      {songs.map(song => (
-        <div key={song.title}>
-          {/* 각 노래의 정보를 출력합니다. */}
-          {/* 예: <p>{song.title} - {song.artist}</p> */}
+      <div style={{ padding: "20px", textAlign: "center" }}>
+        <img
+          src={musicDummyData[currentTrackIndex].cover}
+          alt={musicDummyData[currentTrackIndex].title}
+          style={{ width: "250px", height: "250px" }}
+        />
+        <div>
+          <strong>Title:</strong> {musicDummyData[currentTrackIndex].title}
         </div>
-      ))}
+        <div>
+          <strong>Artist:</strong> {musicDummyData[currentTrackIndex].artist}
+        </div>
+        <audio ref={audioRef} onEnded={handleSongEnd} controls>
+          <source type="audio/mp3" />
+        </audio>
+      </div>
     </div>
   );
 };
