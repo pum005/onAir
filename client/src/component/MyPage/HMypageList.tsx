@@ -7,6 +7,8 @@ import RecipeReviewCard from "./RadioCard";
 import MusicList from "./MusicCard";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import AddIcon from "@mui/icons-material/Add";
+import SearchModal from "../Common/SearchMusicModal";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -81,14 +83,31 @@ export default function BasicTabs() {
         console.error("통신에러 발생", error);
       });
   }, []);
+  const [isSearchModalOpen, setIsSearchModalOpen] = React.useState(false); // 모달의 열림/닫힘 상태를 관리하는 상태 변수
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
+  const handleSearchModalOpen = () => {
+    setIsSearchModalOpen(true);
+  };
+
+  const handleSearchModalClose = () => {
+    setIsSearchModalOpen(false);
+  };
+
   return (
     <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Box
+        sx={{
+          borderBottom: 1,
+          borderColor: "divider",
+          display: "flex", // flexbox 레이아웃 설정
+          justifyContent: "space-between", // 컨텐츠 사이의 공간을 균등하게 분배
+          alignItems: "center", // 컨텐츠를 세로 중앙 정렬
+        }}
+      >
         <Tabs
           value={value}
           onChange={handleChange}
@@ -118,6 +137,13 @@ export default function BasicTabs() {
             {...a11yProps(1)}
           />
         </Tabs>
+        {/* "+" 아이콘 추가 */}
+        {value === 1 && ( // value가 1일 때만 "+" 버튼을 표시합니다.
+          <AddIcon
+            style={{ marginRight: "18%", cursor: "pointer" }}
+            onClick={handleSearchModalOpen}
+          />
+        )}
       </Box>
       <CustomTabPanel value={value} index={0}>
         {message ? (
@@ -159,6 +185,10 @@ export default function BasicTabs() {
       <CustomTabPanel value={value} index={1}>
         <MusicList />
       </CustomTabPanel>
+      <SearchModal
+        isOpen={isSearchModalOpen}
+        onClose={handleSearchModalClose} // 모달 바깥쪽을 클릭하면 모달을 닫는다.
+      />
     </Box>
   );
 }
