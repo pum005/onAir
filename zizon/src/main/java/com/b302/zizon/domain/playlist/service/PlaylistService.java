@@ -6,6 +6,7 @@ import com.b302.zizon.domain.music.repository.MusicRepository;
 import com.b302.zizon.domain.music.repository.MyMusicBoxRepository;
 import com.b302.zizon.domain.playlist.dto.AddPlaylistMusicDTO;
 import com.b302.zizon.domain.playlist.dto.MakePlaylistRequestDTO;
+import com.b302.zizon.domain.playlist.dto.PlayPlaylistResponseDTO;
 import com.b302.zizon.domain.playlist.dto.PlaylistInfoResponseDTO;
 import com.b302.zizon.domain.playlist.entity.Playlist;
 import com.b302.zizon.domain.playlist.entity.PlaylistMeta;
@@ -140,6 +141,44 @@ public class PlaylistService {
             index += 1;
         }
         return list;
+    }
+
+    // 플레이리스트 재생하기
+    public List<PlayPlaylistResponseDTO> playPlaylist(Long playlistMetaId){
+        Long userId = getUserId();
+
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
+        Optional<PlaylistMeta> byPlaylistMeta = playlistMetaRepository.findById(playlistMetaId);
+        if(byPlaylistMeta.isEmpty()){
+            throw new IllegalArgumentException("해당 플레이리스트가 없습니다.");
+        }
+
+        PlaylistMeta playlistMeta = byPlaylistMeta.get();
+        if(!playlistMeta.getUser().getUserId().equals(userId)){
+            throw new IllegalArgumentException("해당 유저의 플레이리스트가 아닙니다.");
+        }
+
+        List<Playlist> byPlaylist = playlistRepository.findByPlaylistMetaPlaylistMetaId(playlistMetaId);
+
+        List<PlayPlaylistResponseDTO> music = new ArrayList<>();
+
+        for(Playlist p : byPlaylist){
+            PlayPlaylistResponseDTO build = PlayPlaylistResponseDTO.builder()
+                    .musicId(p.getMusic().getMusicId())
+                    .title(p.getMusic().getTitle())
+                    .artist(p.getMusic().getArtist())
+                    .duration(p.getMusic().getDuration())
+                    .albumCoverUrl(p.getMusic().getAlbumCoverUrl())
+                    .youtubeVideoId(p.getMusic().getYoutubeVideoId())
+                    .build();
+            music.add(build);
+        }
+
+        return music;
     }
     
 }
