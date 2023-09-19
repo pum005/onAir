@@ -81,7 +81,7 @@ public class MyMusicBoxService {
     }
 
     // 내 음악 보관함 상세정보 가져오기
-    public List<MusicInfoResponseDTO> getMyMusicBoxInfo(){
+    public Map<String, Object> getMyMusicBoxInfo(){
         Map<String, Object> result = new HashMap<>();
 
         Long userId = getUserId();
@@ -94,7 +94,8 @@ public class MyMusicBoxService {
         List<MyMusicBox> getMyMusicBox = myMusicBoxRepository.findByUserUserId(user.getUserId());
 
         if(getMyMusicBox.size() == 0){
-            throw new IllegalArgumentException("보관함에 노래가 없습니다.");
+            result.put("message", "보관함에 노래가 없습니다.");
+            return result;
         }
 
         // 노래 정보 가져오기
@@ -110,12 +111,14 @@ public class MyMusicBoxService {
                 })
                 .collect(Collectors.toList());
 
-        return collect;
+        result.put("musicInfo", collect);
+        return result;
     }
 
     @Transactional
     // 내 보관함에 음악 추가하기
-    public void addMusicMyMusicBox(Long musicId){
+    public Map<String, Object> addMusicMyMusicBox(Long musicId){
+        Map<String, Object> result = new HashMap<>();
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
@@ -131,7 +134,8 @@ public class MyMusicBoxService {
         Optional<MyMusicBox> byMusicMusicId = myMusicBoxRepository.findByMusicMusicIdAndUserUserId(musicId, userId);
 
         if(byMusicMusicId.isPresent()){
-            throw new IllegalArgumentException("이미 보관함에 있는 음악입니다.");
+            result.put("message", "이미 보관함에 있는 음악입니다.");
+            return result;
         }
 
         MyMusicBox build = MyMusicBox.builder()
@@ -139,11 +143,14 @@ public class MyMusicBoxService {
                 .music(music).build();
         
         MyMusicBox save = myMusicBoxRepository.save(build);
+        result.put("message", "음악 추가 완료");
+        return result;
     }
     
     // 내 보관함에 음악 삭제하기
     @Transactional
-    public void deleteMusicMyMusicBox(Long musicId){
+    public Map<String, Object> deleteMusicMyMusicBox(Long musicId){
+        Map<String, Object> result = new HashMap<>();
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
@@ -167,10 +174,11 @@ public class MyMusicBoxService {
         myMusicBoxRepository.delete(myMusicBox);
 
         // ---- 내 플레이리스트에 있는 음악 삭제 로직 ----
+        result.put("message", "음악 삭제 완료");
         List<PlaylistMeta> playlistMetas = playlistMetaRepository.findByUserUserId(user.getUserId());
 
         if(playlistMetas.size() == 0){
-            return;
+            return result;
         }
 
         for(PlaylistMeta pm : playlistMetas){
@@ -192,5 +200,6 @@ public class MyMusicBoxService {
                 }
             }
         }
+        return result;
     }
 }
