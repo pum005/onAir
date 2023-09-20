@@ -79,10 +79,13 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
   const [deleteListModalOpen, setDeleteListModalOpen] = useState(false);
 
   const handleMoveToOtherBox = () => {
-    // 다른 보관함으로 이동하는 로직을 여기에 추가
     console.log(`Moving song index ${selectedSong}`);
     handleMenuClose();
-    setPlayListModalOpen(true);
+    setSelectedSong(selectedSong);
+    // 여기서 상태 변경 후 모달 열기
+    setTimeout(() => {
+      setPlayListModalOpen(true);
+    }, 0);
   };
 
   const handleDeleteSong = () => {
@@ -146,6 +149,7 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
         </Box>
       </Modal>
       <PlayListModal
+        musicId={selectedSong !== null ? songs[selectedSong].musicId : null}
         isOpen={playListModalOpen}
         onClose={() => setPlayListModalOpen(false)}
       />
