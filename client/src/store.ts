@@ -30,6 +30,7 @@ export const setRadioDummyData = createAction<{
   oncast_music_one: string;
   oncast_music_two: string;
   oncast_music_three: string;
+  djName: string;
 }>("SET_RADIO_DUMMY_DATA");
 
 export const setMusicInfo = createAction<{
@@ -53,6 +54,7 @@ export type User = {
 };
 
 export type RadioDummyData = {
+  djName: string;
   tts_one: string;
   tts_two: string;
   tts_three: string;
@@ -81,6 +83,7 @@ const initialState: User = {
 };
 
 const initialDummyState: RadioDummyData = {
+  djName: "",
   tts_one: "",
   tts_two: "",
   tts_three: "",
@@ -103,7 +106,7 @@ const initialDummyState: RadioDummyData = {
 const initialLiveRadioDummyState: RadioDummyData[] = [];
 
 // 리듀서를 정의합니다. 리듀서는 액션에 따라 상태를 변경하는 함수입니다.
-const userReducer = createReducer(initialState, (builder) => {
+const userReducer = createReducer(initialState, builder => {
   // setUserData 액션이 디스패치될 때 상태를 어떻게 변경할지 정의합니다.
   builder.addCase(setNickName, (state, action) => {
     state.nickname = action.payload.nickname;
@@ -118,7 +121,7 @@ const userReducer = createReducer(initialState, (builder) => {
   });
 });
 
-const radiodummyReducer = createReducer(initialDummyState, (builder) => {
+const radiodummyReducer = createReducer(initialDummyState, builder => {
   builder
     .addCase(setRadioDummyData, (state, action) => {
       state.tts_one = action.payload.tts_one;
@@ -132,25 +135,26 @@ const radiodummyReducer = createReducer(initialDummyState, (builder) => {
       state.oncast_music_one = action.payload.oncast_music_one;
       state.oncast_music_two = action.payload.oncast_music_two;
       state.oncast_music_three = action.payload.oncast_music_three;
+      state.djName = action.payload.djName;
     })
     .addCase(setMusicInfo, (state, action) => {
       state.musicTitle = action.payload.musicTitle;
       state.musicArtist = action.payload.musicArtist;
 
       // 밀리초를 초로 변환하여 저장
-      state.musicLength = action.payload.musicLength.map((length) =>
+      state.musicLength = action.payload.musicLength.map(length =>
         Math.round(length / 1000)
       );
 
       state.musicCover = action.payload.musicCover;
     })
-    .addCase(incrementTTSIndex, (state) => {
+    .addCase(incrementTTSIndex, state => {
       state.currentTTSIndex++;
     })
-    .addCase(incrementMusicIndex, (state) => {
+    .addCase(incrementMusicIndex, state => {
       state.currentMusicIndex++;
     });
-  builder.addCase(resetIndices, (state) => {
+  builder.addCase(resetIndices, state => {
     state.currentTTSIndex = 0;
     state.currentMusicIndex = 0;
   });
@@ -158,10 +162,11 @@ const radiodummyReducer = createReducer(initialDummyState, (builder) => {
 //수정필요
 const liveRadioDummyReducer = createReducer(
   initialLiveRadioDummyState,
-  (builder) => {
+  builder => {
     builder
       .addCase(setRadioDummyData, (state, action) => {
         state.push({
+          djName: action.payload.djName,
           tts_one: action.payload.tts_one,
           tts_two: action.payload.tts_two,
           tts_three: action.payload.tts_three,
@@ -186,22 +191,22 @@ const liveRadioDummyReducer = createReducer(
         const lastItem = state[state.length - 1];
         lastItem.musicTitle = action.payload.musicTitle;
         lastItem.musicArtist = action.payload.musicArtist;
-        lastItem.musicLength = action.payload.musicLength.map((length) =>
+        lastItem.musicLength = action.payload.musicLength.map(length =>
           Math.round(length / 1000)
         );
         lastItem.musicCover = action.payload.musicCover;
       })
-      .addCase(incrementTTSIndex, (state) => {
+      .addCase(incrementTTSIndex, state => {
         // 마지막 원소의 TTS 인덱스 증가 (또는 원하는 인덱스의 TTS 인덱스 증가)
         const lastItem = state[state.length - 1];
         lastItem.currentTTSIndex++;
       })
-      .addCase(incrementMusicIndex, (state) => {
+      .addCase(incrementMusicIndex, state => {
         // 마지막 원소의 음악 인덱스 증가 (또는 원하는 인덱스의 음악 인덱스 증가)
         const lastItem = state[state.length - 1];
         lastItem.currentMusicIndex++;
       })
-      .addCase(resetIndices, (state) => {
+      .addCase(resetIndices, state => {
         // 마지막 원소의 인덱스 리셋 (또는 원하는 인덱스의 인덱스 리셋)
         const lastItem = state[state.length - 1];
         lastItem.currentTTSIndex = 0;
