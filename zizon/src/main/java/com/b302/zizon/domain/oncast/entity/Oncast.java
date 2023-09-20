@@ -29,6 +29,7 @@ public class Oncast {
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @CreatedDate
     private User user;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -48,16 +49,16 @@ public class Oncast {
     @Column(name = "select_check")
     private boolean selectCheck;
 
-    @Column(name = "script_one")
+    @Column(name = "script_one", length = 10000)
     private String scriptOne;
 
-    @Column(name = "script_two")
+    @Column(name = "script_two", length = 10000)
     private String scriptTwo;
 
-    @Column(name = "script_three")
+    @Column(name = "script_three", length = 10000)
     private String scriptThree;
 
-    @Column(name = "script_four")
+    @Column(name = "script_four", length = 10000)
     private String scriptFour;
 
     @Column(name = "tts_one")
