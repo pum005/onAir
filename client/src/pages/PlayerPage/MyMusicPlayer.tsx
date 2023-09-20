@@ -74,14 +74,16 @@ export const MyMusicPlayer = () => {
                   className={`${styles.playlistItem} ${
                     currentTrackIndex === index ? styles.playlistItemActive : ""
                   }`}
-                  onClick={() => setCurrentTrackIndex(index)}
                 >
                   <img
                     src={song.cover}
                     alt={song.title}
                     className={styles.albumImage}
                   />
-                  <div style={{ flex: 1 }}>
+                  <div
+                    style={{ flex: 1 }}
+                    onClick={() => setCurrentTrackIndex(index)}
+                  >
                     <strong>{song.title}</strong>
                     <br />
                     {song.artist}
@@ -89,7 +91,10 @@ export const MyMusicPlayer = () => {
                   <div className={styles.songLength}>
                     <DeleteOutlineIcon
                       className={styles.deleteIcon}
-                      onClick={handleDeleteModalOpen}
+                      onClick={event => {
+                        event.stopPropagation(); // 이 줄을 추가하세요
+                        handleDeleteModalOpen();
+                      }}
                     />
                     {Math.floor(song.length / 60000)}:
                     {String((song.length % 60000) / 1000).padStart(2, "0")}
