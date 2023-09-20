@@ -41,7 +41,8 @@ function MusicCard() {
   const [selectedPlaylistTitle, setSelectedPlaylistTitle] =
     useState<string>(""); //리스트 이름 관리 state
 
-  const [refreshPlaylist, setRefreshPlaylist] = useState(false); //리 렌더링 할 state(보관함 전체 불러오기)
+  const [refreshPlaylist, setRefreshPlaylist] = useState(false); //플리추가 렌더링 할 state(보관함 전체 불러오기)
+  const [refreshKey, setRefreshKey] = useState(false); //닫기눌렀을때도 리렌더링
 
   /** function */
   //보관함추가 실행 함수
@@ -71,6 +72,7 @@ function MusicCard() {
 
   // 음악 리스트상세보기 모달 닫기 함수
   const closeMusicDetailModal = () => {
+    setRefreshKey((prevKey) => !prevKey);
     setMusicDetailModalOpen(false);
   };
 
@@ -96,7 +98,7 @@ function MusicCard() {
       .catch((error) => {
         console.error("데이터 가져오기 오류:", error);
       });
-  }, [refreshPlaylist]);
+  }, [refreshPlaylist, refreshKey]);
 
   return (
     <div style={{ width: "70%", margin: "0 auto" }}>
