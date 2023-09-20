@@ -31,11 +31,11 @@ export const Music = () => {
   const currentMusicCover =
     radioDummyData.musicCover[radioDummyData.currentMusicIndex];
 
-  const onPlayerReady: YouTubeProps["onReady"] = event => {};
+  const onPlayerReady: YouTubeProps["onReady"] = (event) => {};
 
   const handleVideoEnd = () => {
     dispatch({ type: "INCREMENT_MUSIC_INDEX" }); // 인덱스 증가
-    navigate("/RadioPlayer"); // Radio.tsx로의 경로를 설정합니다.
+    navigate("/RadioPlayer"); // Radio.tsx로의 경로를 설정합니다
   };
 
   const opts: YouTubeProps["opts"] = {
