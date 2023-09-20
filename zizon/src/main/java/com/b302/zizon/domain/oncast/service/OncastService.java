@@ -155,7 +155,7 @@ public class OncastService {
 ////            System.out.println("--------------------------------------------------------");
 //            System.out.println(s);
 //        }
-        System.out.println(fullScript);
+//        System.out.println(fullScript);
         for (String s : script) {
             try {
                 String str = naverTTSService.generateTTS(s, request.getDjName());
@@ -165,6 +165,11 @@ public class OncastService {
                 e.printStackTrace();
             }
         }
+        System.out.println("tts완료");
+        for(String s : f){
+            System.out.println(s);
+        }
+        System.out.println("<<여기까지 tts 파일");
 
         f.add("");
         f.add("");
