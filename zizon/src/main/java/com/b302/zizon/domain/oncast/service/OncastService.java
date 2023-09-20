@@ -4,6 +4,7 @@ import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.oncast.dto.request.OncastRequestDto;
 import com.b302.zizon.domain.oncast.dto.response.GetMusicDTO;
 import com.b302.zizon.domain.oncast.dto.response.GetOncastDTO;
+import com.b302.zizon.domain.oncast.dto.response.OncastPlayResponseDTO;
 import com.b302.zizon.domain.oncast.entity.Oncast;
 import com.b302.zizon.domain.oncast.entity.OncastCreateData;
 import com.b302.zizon.domain.oncast.repository.OncastCreateDataRepository;
@@ -219,6 +220,7 @@ public class OncastService {
             String createTime = convertToFormattedString(oncast.getCreateTime());
 
             GetOncastDTO oncastDTO = new GetOncastDTO();
+            oncastDTO.setOncastId(oncast.getOncastId());
             oncastDTO.setCreateTime(createTime);
             oncastDTO.setTitle(oncastCreateData.getTitle());
             oncastDTO.setShareCheck(oncast.isShareCheck());
@@ -239,7 +241,8 @@ public class OncastService {
 
     // 온캐스트 공유하기
     @Transactional
-    public void shareOncast(Long oncastId) {
+    public Map<String, Object> shareOncast(Long oncastId) {
+        Map<String, Object> result = new HashMap<>();
 
         Long userId = getUserId();
 
@@ -250,26 +253,33 @@ public class OncastService {
 
         Optional<Oncast> byOncast = oncastRepository.findById(oncastId);
 
-        if (byOncast.isEmpty()) {
+        if(byOncast.isEmpty()) {
             throw new IllegalArgumentException("존재하지 않는 온캐스트입니다.");
         }
 
         Oncast oncast = byOncast.get();
         if (oncast.isDeleteCheck()) {
-            throw new IllegalArgumentException("이미 삭제된 온캐스트입니다.");
+            result.put("message", "이미 삭제된 온캐스트입니다.");
+            return result;
         }
         if (oncast.isSelectCheck()) {
-            throw new IllegalArgumentException("이미 채택된 온캐스트입니다.");
+            result.put("message", "이미 채택된 온캐스트입니다.");
+            return result;
         }
         if (oncast.isShareCheck()) {
-            throw new IllegalArgumentException("이미 공유된 온캐스트입니다.");
+            result.put("message", "이미 공유된 온캐스트입니다.");
+            return result;
         }
 
         oncast.updateShareOncast();
+        result.put("message", "공유하기 성공.");
+
+        return result;
     }
 
     // 온캐스트 삭제하기
-    public void deleteOncast(Long oncastId) {
+    public Map<String, Object> deleteOncast(Long oncastId) {
+        Map<String, Object> result = new HashMap<>();
 
         Long userId = getUserId();
 
@@ -285,10 +295,79 @@ public class OncastService {
 
         Oncast oncast = byOncast.get();
         if (oncast.isDeleteCheck()) {
-            throw new IllegalArgumentException("이미 삭제된 온캐스트입니다.");
+            result.put("message", "이미 삭제된 온캐스트입니다.");
+            return result;
         }
 
         oncast.updateDeleteOncast();
+        result.put("message", "온캐스트 삭제 성공.");
+        return result;
+    }
+
+    // 온캐스트 재생하기(정보 제공)
+    public Map<String, Object> playOncast(Long oncastId){
+        Map<String, Object> result = new HashMap<>();
+        Long userId = getUserId();
+
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
+        Optional<Oncast> byOncast = oncastRepository.findById(oncastId);
+        if(byOncast.isEmpty()){
+            throw new IllegalArgumentException("온캐스트 정보가 없습니다.");
+        }
+
+        if(!byOncast.get().getUser().getUserId().equals(userId)){
+            throw new IllegalArgumentException("해당 유저의 온캐스트가 아닙니다.");
+        }
+
+        Oncast oncast = byOncast.get();
+
+        List<GetMusicDTO> getMusicDTOS = new ArrayList<>();
+
+        GetMusicDTO build1 = GetMusicDTO.builder()
+                .title(oncast.getMusic1().getTitle())
+                .artist(oncast.getMusic1().getArtist())
+                .duration(oncast.getMusic1().getDuration())
+                .albumCoverUrl(oncast.getMusic1().getAlbumCoverUrl())
+                .musicId(oncast.getMusic1().getMusicId())
+                .youtubeId(oncast.getMusic1().getYoutubeVideoId()).build();
+
+        GetMusicDTO build2 = GetMusicDTO.builder()
+                .title(oncast.getMusic2().getTitle())
+                .artist(oncast.getMusic2().getArtist())
+                .duration(oncast.getMusic2().getDuration())
+                .albumCoverUrl(oncast.getMusic2().getAlbumCoverUrl())
+                .musicId(oncast.getMusic2().getMusicId())
+                .youtubeId(oncast.getMusic2().getYoutubeVideoId()).build();
+
+        GetMusicDTO build3 = GetMusicDTO.builder()
+                .title(oncast.getMusic3().getTitle())
+                .artist(oncast.getMusic3().getArtist())
+                .duration(oncast.getMusic3().getDuration())
+                .albumCoverUrl(oncast.getMusic3().getAlbumCoverUrl())
+                .musicId(oncast.getMusic3().getMusicId())
+                .youtubeId(oncast.getMusic3().getYoutubeVideoId()).build();
+        getMusicDTOS.add(build1);
+        getMusicDTOS.add(build2);
+        getMusicDTOS.add(build3);
+
+        OncastPlayResponseDTO build = OncastPlayResponseDTO.builder()
+                .oncastId(oncast.getOncastId())
+                .ttsOne(oncast.getTtsOne())
+                .ttsTwo(oncast.getTtsTwo())
+                .ttsThree(oncast.getTtsThree())
+                .ttsFour(oncast.getTtsFour())
+                .scriptOne(oncast.getScriptOne())
+                .scriptTwo(oncast.getScriptTwo())
+                .scriptThree(oncast.getScriptThree())
+                .scriptFour(oncast.getTtsFour())
+                .music(getMusicDTOS).build();
+
+        result.put("oncast", build);
+        return result;
     }
 }
 

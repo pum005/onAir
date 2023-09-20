@@ -49,7 +49,7 @@ function MusicList() {
       playlistCount: 0,
       playlistImage: "https://icons8.com/icon/Xvnz23NvQSwk/shield",
     };
-    setPlaylistData((prevData) => [...prevData, newPlaylist]);
+    setPlaylistData(prevData => [...prevData, newPlaylist]);
     setNewPlaylistTitle("");
     MusicBoxModalClose();
   };
@@ -76,8 +76,6 @@ function MusicList() {
 
   return (
     <div>
-      <div>뮤직리스트</div>
-      <button onClick={MusicBoxModalOpen}>보관함추가</button>
       <MusicBoxModal
         isOpen={isMusicBoxModalOpen}
         onClose={MusicBoxModalClose}

@@ -1,0 +1,24 @@
+.hoverableListItem .playButton {
+  display: none;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ffffff; /* 재생 버튼 아이콘 색상을 흰색으로 변경 */
+}
+
+.hoverableListItem:hover .playButton {
+  display: block;
+}
+
+.audiotrackIcon {
+  font-size: 40px;
+}
+
+.textPrimary {
+  color: #ffffff; /* 흰색으로 변경 */
+}
+
+.textSecondary {
+  color: #ffffff; /* 흰색으로 변경 */
+}

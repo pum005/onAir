@@ -72,6 +72,10 @@ dependencies {
 
 	// 유튜브
 	implementation 'com.google.apis:google-api-services-youtube:v3-rev20230123-2.0.0'
+
+	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
+	implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.12.1'
+
 }
 
 tasks.named('test') {

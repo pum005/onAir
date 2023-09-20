@@ -32,7 +32,7 @@ public class MusicController {
     // 내 음악보관함의 노래 상세정보 가져오기
     @GetMapping("/my-musicbox/info")
     public ResponseEntity<?> getMyMusicBoxInfo(){
-        List<MusicInfoResponseDTO> myMusicBoxInfo = myMusicBoxService.getMyMusicBoxInfo();
+        Map<String, Object> myMusicBoxInfo = myMusicBoxService.getMyMusicBoxInfo();
 
         return ResponseEntity.status(200).body(myMusicBoxInfo);
     }
@@ -40,9 +40,9 @@ public class MusicController {
     // 내 보관함에 음악 추가
     @PostMapping("/my-musicbox")
     public ResponseEntity<?> addMyMusicBoxMusic(@RequestBody MyMusicBoxAddRequestDTO myMusicBoxAddRequestDTO){
-        myMusicBoxService.addMusicMyMusicBox(myMusicBoxAddRequestDTO.getMusicId());
+        Map<String, Object> result = myMusicBoxService.addMusicMyMusicBox(myMusicBoxAddRequestDTO.getMusicId());
 
-        return ResponseEntity.status(200).body("음악 추가 완료");
+        return ResponseEntity.status(200).body(result);
     }
 
     // 내 보관함에 음악 삭제

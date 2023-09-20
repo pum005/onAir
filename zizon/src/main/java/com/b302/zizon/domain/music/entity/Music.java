@@ -20,7 +20,7 @@ public class Music {
     @Column(nullable = false)
     private String artist;
     @Column(nullable = false)
-    private int duration;
+    private Long duration;
     @Column(nullable = false)
     private String youtubeVideoId;
     @Column(nullable = true)
@@ -45,6 +45,8 @@ public class Music {
     private int popularity;
     @Column(nullable = false)
     private String albumCoverUrl;
+    @Column(nullable = true, length = 2000)
+    private String lylics;
 
     public Music() {
     }
