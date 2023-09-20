@@ -112,7 +112,7 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
               }}
             >
               <img
-                src={song.youtubeVideoId}
+                src={song.albumCoverUrl}
                 alt="Album Cover"
                 style={{ width: "40px", height: "40px", marginRight: "10px" }}
               />
