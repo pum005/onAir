@@ -1,0 +1,305 @@
+package com.toy.kafka.websocket.radio;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.toy.kafka.Kafka.KafkaProducerService;
+import com.toy.kafka.dto.playList.Data;
+import com.toy.kafka.dto.playList.PlayListDto;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+@Service
+@RequiredArgsConstructor
+public class RadioService {
+
+    private final KafkaProducerService kafkaProducerService;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private String currentState = "idle";
+
+    private static final Logger logger = LoggerFactory.getLogger(RadioService.class);
+
+    private long logTimer = 0L;
+
+    private String type = "none";
+    private String path = "";
+    private long length = 0L;
+    private String title = "";
+    private String artist = "";
+    private String image = "";
+    private long typeStartTime = System.currentTimeMillis();
+    private long startTime = System.currentTimeMillis();
+    private Queue<PlayListDto> playlist = new LinkedList<PlayListDto>();
+
+    //
+    private long seq = 0L;
+    private long idleTimer = 0L;
+    private long chatTimer = 0L;
+
+
+    /**
+     * kafka로부터 현재 라디오 상태와 재생할 음원들의 정보를 불러옵니다. 받아온 데이터는 파싱하고 저장합니다.
+     *
+     * @param message
+     */
+    @KafkaListener(topics = "radioState")
+    public void getRadioState(String message) throws JsonProcessingException {
+        if (message != null) {
+            String tempState = currentState;
+            logger.info("수신한 라디오 상태 데이터 : " + message);
+
+            parseJsonMessageAndSetState(message);
+//            if (!tempState.equals(currentState)) {
+//                typeStartTime = System.currentTimeMillis();
+//                if (currentState.equals("chat")) {
+//                    resetInfo();
+//                    sendCurrentSound(true);
+//                }
+//            }
+        }
+    }
+
+    /**
+     * kafka로부터 받아온 메세지를 파싱하여 라디오 상태에 저장합니다.
+     *
+     * @param message
+     */
+    private void parseJsonMessageAndSetState(String message) {
+        logger.info("parseJson message : " + message);
+        try {
+            // 문자열을 Data 객체로 변환
+            JsonNode jsonNode = objectMapper.readTree(message);
+
+            updateState(jsonNode);
+            updateSeq(jsonNode);
+            updatePlaylist(jsonNode);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void updateSeq(JsonNode jsonNode) {
+        seq = 0L;
+        if (jsonNode.has("seq")) {
+            JsonNode currentSeqNode = jsonNode.get("seq");
+            seq = currentSeqNode.asLong();
+        }
+    }
+
+    /**
+     * 받아온 radioState에서 playlist가 존재하는지 확인하고 업데이트
+     *
+     * @param jsonNode
+     */
+    private void updatePlaylist(JsonNode jsonNode) {
+        if (jsonNode.has("playListDto")) {
+
+            JsonNode playlistNode = jsonNode.get("playListDto");
+
+            for (JsonNode itemNode : playlistNode) {
+
+                String type = itemNode.get("type").asText();
+                String path = itemNode.get("path").asText();
+                String title = "";
+                String artist = "";
+                String image = "";
+                if (itemNode.has("title")) {
+                    title = itemNode.get("title").asText();
+                    artist = itemNode.get("artist").asText();
+                    image = itemNode.get("image").asText();
+                }
+                playlist.add(PlayListDto.builder()
+                        .type(type)
+                        .path(path)
+                        .title(title)
+                        .artist(artist)
+                        .image(image)
+                        .build());
+            }
+
+//            for (PlayListDto playListDto : playlist) {
+//                logger.info("playlist!!!");
+//                logger.info("type : " + playListDto.getType());
+//                logger.info("path : " + playListDto.getPath());
+//                logger.info("title : " + playListDto.getTitle());
+//                logger.info("artist : " + playListDto.getArtist());
+//                logger.info("image : " + playListDto.getImage());
+//            }
+        }
+    }
+
+    /**
+     * 받아온 radioState에서 state가 존재하는지 확인하고 업데이트
+     *
+     * @param jsonNode
+     */
+    private void updateState(JsonNode jsonNode) {
+        if (jsonNode.has("state")) {
+            JsonNode currentStateNode = jsonNode.get("state");
+            String tempState = currentStateNode.asText();
+            if (!tempState.equals(currentState)) {
+                playlist.clear();
+            }
+            currentState = tempState;
+            logger.info("currentState : " + currentState);
+        }
+    }
+
+    /**
+     * 1초마다 라디오 상태를 갱신하는 로직입니다. idle 상태가 지속되면 강제로 finishState에 메세지를 보냅니다.
+     */
+    @Scheduled(fixedRate = 1000)
+    public void checkAndPlayNextItem() {
+        logRadioStatus();
+        logger.info(currentState);
+        for (PlayListDto playListDto : playlist) {
+            logger.info("path : " + playListDto.getPath());
+        }
+        switch (currentState) {
+            case "idle":
+                idleProcess();
+                break;
+            case "chat":
+                chatProcess();
+                break;
+            default:
+                radioProcess();
+        }
+    }
+
+    /**
+     * idle 상태가 얼마나 지속되었는지 체크하는 로직입니다. 30초 이상 idle 상태가 지속된다면 라디오 서버에 강제로 finishState 이벤트를 보냅니다.
+     */
+    public void idleProcess() {
+        logger.info("idle Process !");
+        logger.info(Long.toString(idleTimer));
+        if (idleTimer == 0) {
+            logger.info("서버에서 상태를 받아올 수 없습니다. 서버에 요청을 보냅니다.");
+            try {
+                resetTimer();
+                logger.info("kafka finishState 에 idle 보냄!");
+                kafkaProducerService.send("finishState", "idle");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            --idleTimer;
+        }
+    }
+
+    /**
+     * 채팅 관련 프로세스
+     */
+    public void chatProcess() {
+        logger.info("chat Process !");
+        long currentTime = System.currentTimeMillis();
+        if (checkSoundChange() && currentTime - startTime < length) {
+//            sendCurrentSound(true);
+            System.out.println("cliend에게 메시지 보내야함!");
+        }
+        if (chatTimer > 0) {
+            --chatTimer;
+        } else if (chatTimer == 0) {
+            logger.info("채팅 응답 시간 초과로 채팅 응답 생성을 종료합니다.");
+//            kafkaProducerService.send("finishChat", "finish");
+            --chatTimer;
+        } else {
+            if (currentTime - startTime > length && playlist.isEmpty()) {
+//                kafkaProducerService.send("finishState", "chat");
+                resetState();
+                resetTimer();
+            }
+        }
+    }
+
+    /**
+     * 라디오 진행 로직입니다. 현재 재생중인 음원의 길이를 초과하면 음원을 다음 음원으로 바꿉니다. 만약 playlist가 비어있다면 다음 상태를 요청하는 메세지를
+     * fastAPI로 보냅니다.
+     */
+    public void radioProcess() {
+        logger.info("radio Process !");
+        resetTimer();
+        long currentTime = System.currentTimeMillis();
+        if (checkSoundChange()) {
+            if (playlist.isEmpty() && currentTime - startTime > length) {
+//                kafkaProducerService.send("finishState", currentState);
+                resetState();
+            }
+            System.out.println("현재 재생목록을 cliet에게 보내야해!");
+//            sendCurrentSound(true);
+        }
+    }
+
+    /**
+     * 음원이 바뀌어야하는지 확인하는 로직입니다.
+     *
+     * @return
+     */
+    public boolean checkSoundChange() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - startTime > length) {
+            logger.info("재생 시간 초과~~");
+            if (!playlist.isEmpty()) {
+                logger.info("음원 파일 있어서 바꾼대...");
+                PlayListDto sound = playlist.poll();
+                type = sound.getType();
+                path = sound.getPath();
+                length = sound.getLength();
+                title = sound.getTitle();
+                artist = sound.getArtist();
+                image = sound.getImage();
+                startTime = currentTime;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Springboot App의 라디오 상태를 지우는 함수.
+     */
+    private void resetState() {
+        currentState = "idle";
+        resetInfo();
+    }
+
+    private void resetInfo() {
+        seq = 0L;
+        type = "none";
+        path = "";
+        title = "";
+        artist = "";
+        image = "";
+        startTime = System.currentTimeMillis();
+        length = 0L;
+        playlist.clear();
+    }
+
+    private void resetTimer() {
+        idleTimer = 5;
+        chatTimer = 60;
+    }
+
+    /**
+     * 라디오의 현재 상태를 로그로 출력하는 함수
+     */
+    private void logRadioStatus() {
+        logTimer++;
+        if (logTimer % 1 == 0) {
+            logger.info(
+                    "라디오 상태: {} | 음원 타입: {} | 음원 경로: {} | 경과 시간: {} | 음원 길이: {} | 현재 큐에 들어있는 음원 수: {}",
+                    currentState, type, path, System.currentTimeMillis() - startTime, length,
+                    playlist.size());
+        }
+    }
+}
