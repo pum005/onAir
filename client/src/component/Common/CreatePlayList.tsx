@@ -1,21 +1,52 @@
 import React, { useState } from "react";
 import { Modal, TextField, Button, Box } from "@mui/material";
 import { CreatePlayListConfirm } from "./CreatePlayListConfirmModal";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import axios from "axios";
+import { error } from "console";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (playlistName: string) => void;
+  refresh: () => void;
 };
 
-const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, onConfirm }) => {
+const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
+  /** state */
   const [playlistName, setPlaylistName] = useState("");
   const [showConfirmModal, setShowConfirmModal] = useState(false); // 알림 모달창 상태 관리
 
+  /** action */
   const handleConfirm = () => {
-    onConfirm(playlistName);
-    setPlaylistName(""); // Reset the input
-    setShowConfirmModal(true); // 알림 모달창 띄우기
+    if (playlistName === "") {
+      alert("제목을 작성해주세요.");
+      return;
+    } else {
+      requestWithTokenRefresh(() => {
+        return axios.post(
+          "http://localhost:8080/api/playlist",
+          {
+            playlistName: playlistName,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+            withCredentials: true,
+          }
+        );
+      })
+        .then(response => {
+          console.log(response);
+          refresh();
+
+          setPlaylistName(""); // Reset the input
+          setShowConfirmModal(true); // 알림 모달창 띄우기
+        })
+        .catch(error => {
+          console.log("통신에러 발생", error);
+        });
+    }
   };
 
   const handleCloseConfirmModal = () => {

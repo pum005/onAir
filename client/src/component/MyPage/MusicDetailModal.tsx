@@ -9,41 +9,54 @@ import styles from "./MusicDetailModal.module.css";
 import { useState } from "react";
 import PlayListModal from "../Common/PlayListModal";
 import DeleteModal from "./DeleteModal";
+import { useEffect } from "react";
+import axios from "axios";
+
+type MusicInfoType = {
+  musicId: number;
+  title: string;
+  artist: string;
+  duration: number;
+  albumCoverUrl: string;
+  youtubeVideoId: string;
+};
 
 type MusicDetailModalProps = {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  songCount: number;
 };
 
 const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
   isOpen,
   onClose,
   title,
-  songCount,
 }) => {
-  const dummySongs = [
-    // 여기에 더미 데이터를 추가합니다.
-    {
-      title: "사라지나요",
-      artist: "PATEKO",
-      length: 210,
-      cover: "/images/사라지나요.jpg",
-    },
-    {
-      title: "결을",
-      artist: "Cloudybay",
-      length: 240,
-      cover: "/images/결을.jpg",
-    },
-    // ... 더 많은 노래들
-  ];
+  const [songs, setSongs] = useState<MusicInfoType[]>([]);
 
-  const formatTime = (seconds: number) => {
-    const min = Math.floor(seconds / 60);
-    const sec = seconds % 60;
-    return `${min}:${sec < 10 ? "0" : ""}${sec}`;
+  useEffect(() => {
+    if (isOpen) {
+      axios
+        .get("http://localhost:8080/api/my-musicbox/info", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        })
+        .then((response) => {
+          setSongs(response.data.musicInfo);
+        })
+        .catch((error) => {
+          console.error("데이터 가져오기 오류", error);
+        });
+    }
+  }, [isOpen]);
+
+  const formatTime = (milliseconds: number) => {
+    const totalSeconds = Math.round(milliseconds / 1000);
+    const min = Math.floor(totalSeconds / 60);
+    const sec = totalSeconds % 60;
+    return `${min < 10 ? "0" : ""}${min}:${sec < 10 ? "0" : ""}${sec}`;
   };
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -86,7 +99,7 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
           <Typography id="modal-modal-title" variant="h6" component="h2">
             {title} 노래 목록
           </Typography>
-          {dummySongs.map((song, index) => (
+          {songs.map((song, index) => (
             <div
               key={index}
               style={{
@@ -99,7 +112,7 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
               }}
             >
               <img
-                src={song.cover}
+                src={song.youtubeVideoId}
                 alt="Album Cover"
                 style={{ width: "40px", height: "40px", marginRight: "10px" }}
               />
@@ -110,10 +123,10 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
                 </div>
               </div>
               <div style={{ flex: 1, textAlign: "right" }}>
-                {formatTime(song.length)}
+                {formatTime(song.duration)}
                 <MoreVertIcon
                   style={{ marginLeft: "8px", cursor: "pointer" }}
-                  onClick={event => handleMenuOpen(event, index)}
+                  onClick={(event) => handleMenuOpen(event, index)}
                 />
               </div>
             </div>
