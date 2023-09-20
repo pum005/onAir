@@ -9,11 +9,11 @@ public class PlayPlaylistResponseDTO {
     private Long musicId;
     private String title;
     private String artist;
-    private int duration;
+    private Long duration;
     private String youtubeVideoId;
     private String albumCoverUrl;
 
-    public PlayPlaylistResponseDTO(Long musicId, String title, String artist, int duration, String youtubeVideoId, String albumCoverUrl) {
+    public PlayPlaylistResponseDTO(Long musicId, String title, String artist, Long duration, String youtubeVideoId, String albumCoverUrl) {
         this.musicId = musicId;
         this.title = title;
         this.artist = artist;
