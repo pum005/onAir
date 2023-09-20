@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,9 +24,9 @@ public class PlaylistController {
     // 플레이리스트에 음악 추가
     @PostMapping("playlist/music")
     public ResponseEntity<?> addPlaylistMusic(@RequestBody AddPlaylistMusicDTO addPlaylistMusicDTO){
-        playlistService.addPlaylistMusic(addPlaylistMusicDTO);
+        Map<String, Object> result = playlistService.addPlaylistMusic(addPlaylistMusicDTO);
 
-        return ResponseEntity.status(HttpStatus.OK).body("플레이리스트 음악 추가 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     // 플레이리스트 생성하기
@@ -50,6 +51,14 @@ public class PlaylistController {
         List<PlayPlaylistResponseDTO> music = playlistService.playPlaylist(playlistMeta_id);
 
         return ResponseEntity.status(HttpStatus.OK).body(music);
+    }
+
+    // 플레이리스트 삭제하기
+    @DeleteMapping("playlist/{playlistMeta_id}")
+    public ResponseEntity<?> deletePlaylist(@PathVariable Long playlistMeta_id){
+        Map<String, Object> result = playlistService.deletePlaylist(playlistMeta_id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
 }

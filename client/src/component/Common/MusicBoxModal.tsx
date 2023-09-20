@@ -1,9 +1,14 @@
 // PlayListModal.tsx
+import * as React from "react";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import styles from "./MusicBoxModal.module.css";
+import axios from "axios";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import { error } from "console";
+
 type MusicBoxModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -19,6 +24,30 @@ function MusicBoxModal({
   title,
   setTitle,
 }: MusicBoxModalProps) {
+  /**axios */
+  React.useEffect(() => {
+    if (title) {
+      requestWithTokenRefresh(() => {
+        return axios.post(
+          "http://localhost:8080/api/playlist",
+          { playlistName: title },
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+            withCredentials: true,
+          }
+        );
+      })
+        .then((response) => {
+          console.log(response.data.message);
+        })
+        .catch((error) => {
+          console.log("통신에러발생", error);
+        });
+    }
+  }, [title]);
+
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box className={styles.modalBox}>

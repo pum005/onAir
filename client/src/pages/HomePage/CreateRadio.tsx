@@ -27,19 +27,20 @@ const CreateRadio = () => {
       script_four: "네번째 라디오 스크립트입니다",
       oncast_music_one: "dummyMusic/1.mp3",
       oncast_music_two: "dummyMusic/2.mp3",
-      oncast_music_three: "dummyMusic/3.mp3",
+      oncast_music_three: "dummyMusic/사라지나요.mp3",
     })
   );
 
   // 음악 정보 더미 데이터를 디스패치합니다.
   dispatch(
     setMusicInfo({
-      musicTitle: ["결을(Feat. Ash ISLAND)", "작별인사", "혜화"],
-      musicArtist: ["Cloudybay", "Ash ISLAND", "유토"],
+      musicTitle: ["결을(Feat. Ash ISLAND)", "작별인사", "사라지나요"],
+      musicArtist: ["Cloudybay", "Ash ISLAND", "PATEKO"],
       musicLength: [162000, 167000, 243000],
       musicCover: [
         "https://cdnimg.melon.co.kr/cm2/album/images/113/13/701/11313701_20230824151914_500.jpg?028e06e5f0ce0b0760e290fa61831224/melon/optimize/90",
         "https://image.bugsm.co.kr/album/images/500/205636/20563609.jpg",
+        "https://image.bugsm.co.kr/album/images/500/40581/4058181.jpg",
       ],
     })
   );

@@ -1,6 +1,5 @@
 package com.b302.zizon.domain.oncast.dto.response;
 
-import com.b302.zizon.domain.music.entity.Music;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,5 +18,6 @@ public class OncastPlayResponseDTO {
     private String ttsTwo;
     private String ttsThree;
     private String ttsFour;
+    private String djName;
     private List<GetMusicDTO> music;
 }

@@ -78,22 +78,22 @@ public class PlaylistService {
         if(byPlaylistMetaPlaylistMetaIdAndMusicMusicId.isPresent()){
             result.put("message", "이미 플레이리스트에 추가된 음악입니다.");
             return result;
+        }else {
+            // 플리 데이터 생성 후 저장
+            Playlist playlist = Playlist.builder()
+                    .playlistMeta(playlistMeta)
+                    .music(music)
+                    .build();
+            playlistRepository.save(playlist);
+
+            if (playlistMeta.getPlaylistImage() == null) {
+                playlistMeta.registPlaylistImage(music.getAlbumCoverUrl());
+            }
+            playlistMeta.plusCountPlaylistCount();
+
+            result.put("message", "플레이리스트 음악 추가 성공.");
+            return result;
         }
-
-        // 플리 데이터 생성 후 저장
-        Playlist playlist = Playlist.builder()
-                .playlistMeta(playlistMeta)
-                .music(music)
-                .build();
-        playlistRepository.save(playlist);
-
-        if(playlistMeta.getPlaylistImage() == null){
-            playlistMeta.registPlaylistImage(music.getAlbumCoverUrl());
-        }
-        playlistMeta.plusCountPlaylistCount();
-
-        result.put("message", "플레이리스트 음악 추가 성공.");
-        return result;
     }
     
     // 플레이리스트 생성
@@ -179,6 +179,38 @@ public class PlaylistService {
         }
 
         return music;
+    }
+
+    // 플레이리스트 삭제하기
+    @Transactional
+    public Map<String, Object> deletePlaylist(Long playlistMetaId){
+        Map<String, Object> result = new HashMap<>();
+        Long userId = getUserId();
+
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
+        Optional<PlaylistMeta> byPlaylistMeta = playlistMetaRepository.findById(playlistMetaId);
+        if(byPlaylistMeta.isEmpty()){
+            throw new IllegalArgumentException("플레이리스트 정보가 없습니다.");
+        }
+
+        PlaylistMeta playlistMeta = byPlaylistMeta.get();
+        if(!playlistMeta.getUser().getUserId().equals(userId)){
+            throw new IllegalArgumentException("해당 유저의 플레이리스트가 아닙니다.");
+        }
+
+        List<Playlist> byPlaylist = playlistRepository.findByPlaylistMetaPlaylistMetaId(playlistMetaId);
+        for(Playlist p : byPlaylist){
+            playlistRepository.delete(p);
+        }
+        playlistMetaRepository.delete(playlistMeta);
+
+        result.put("message", "플레이리스트 삭제 성공.");
+
+        return result;
     }
     
 }
