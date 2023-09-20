@@ -106,8 +106,8 @@ public class MyMusicBoxService {
                             info.getMusic().getTitle(),
                             info.getMusic().getArtist(),
                             info.getMusic().getDuration(),
-                            info.getMusic().getYoutubeVideoId(),
-                            info.getMusic().getAlbumCoverUrl());
+                            info.getMusic().getAlbumCoverUrl(),
+                            info.getMusic().getYoutubeVideoId());
                 })
                 .collect(Collectors.toList());
 
