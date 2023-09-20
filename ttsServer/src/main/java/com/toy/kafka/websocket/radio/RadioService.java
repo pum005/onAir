@@ -37,6 +37,9 @@ public class RadioService {
 
     private String currentState = "";
 
+    public int millisecondsToRoundedSeconds(Long milliseconds) {
+        return (int) Math.ceil((double) milliseconds / 1000);
+    }
 
     /**
      * kafka로부터 현재 라디오 상태와 재생할 음원들의 정보를 불러옵니다. 받아온 데이터는 파싱하고 저장합니다.
@@ -50,15 +53,15 @@ public class RadioService {
         if (message != null) {
 //            logger.info(currentState);
 //            if (currentState.equals("music")) {
-                logger.info("radio Process 실행 !");
-                radioProcess();
+            logger.info("radio Process 실행 !");
+            radioProcess();
 //            }
         }
 
     }
 
     public void radioProcess() throws JsonProcessingException {
-        Queue<String> queue = new ArrayDeque<>(List.of("story", "chat", "story", "chat", "music", "chat", "music", "chat", "music", "chat"));
+        Queue<String> queue = new ArrayDeque<>(List.of("oncast", "chat", "story", "chat", "music", "chat", "music", "chat", "music", "chat"));
 
         logger.info("[Radio] : 현재 라디오 상태 : " +  currentState);
 
@@ -67,7 +70,7 @@ public class RadioService {
 
         RadioStateDto radioState = new RadioStateDto("idle");
         Data data = null;
-        if (currentState.equals("story")) {
+        if (currentState.equals("oncast")) {
             logger.info("storyProcess !");
             data = storyProcess();
             radioState.setState(data.getState());
@@ -97,7 +100,7 @@ public class RadioService {
 
         if (liveQueue.isEmpty()) {
             logger.info("live empty!!!");
-            return new Data("empty", 1234, null);
+            return new Data("idle", 1234, null);
 
         }
 
@@ -137,9 +140,17 @@ public class RadioService {
         String ttsTwo = findOnCast.getTtsTwo();
         String ttsThree = findOnCast.getTtsThree();
         String ttsFour = findOnCast.getTtsFour();
+        int ttsOneLength = 10;
+        int ttsTwoLength = 10;
+        int ttsThreeLength = 10;
+        int ttsFourLength = 10;
         String musicOne = findOnCast.getMusic1().getYoutubeVideoId();
         String musicTwo = findOnCast.getMusic2().getYoutubeVideoId();
         String musicThree = findOnCast.getMusic3().getYoutubeVideoId();
+        int musicOneLength = millisecondsToRoundedSeconds(findOnCast.getMusic1().getDuration());
+        int musicTwoLength = millisecondsToRoundedSeconds(findOnCast.getMusic2().getDuration());
+        int musicThreeLength = millisecondsToRoundedSeconds(findOnCast.getMusic3().getDuration());
+
 
         // tts 생성
 
@@ -156,15 +167,15 @@ public class RadioService {
         // playlist path : intro_url 로 바꾸기
 
 
-        TTSDto ttsOneDto = new TTSDto("tts", ttsOne);
-        TTSDto ttsTwoDto = new TTSDto("tts", ttsTwo);
-        TTSDto ttsThreeDto = new TTSDto("tts", ttsThree);
-        TTSDto ttsFourDto = new TTSDto("tts", ttsFour);
-        MusicDto musicOneDto = new MusicDto("youtube", musicOne, "artist", "title", "image");
-        MusicDto musicTwoDto = new MusicDto("youtube", musicTwo, "artist", "title", "image");
-        MusicDto musicThreeDto = new MusicDto("youtube", musicThree, "artist", "title", "image");
+        TTSDto ttsOneDto = new TTSDto("tts", ttsOne, ttsOneLength);
+        TTSDto ttsTwoDto = new TTSDto("tts", ttsTwo,ttsTwoLength);
+        TTSDto ttsThreeDto = new TTSDto("tts", ttsThree, ttsThreeLength);
+        TTSDto ttsFourDto = new TTSDto("tts", ttsFour, ttsFourLength);
+        MusicDto musicOneDto = new MusicDto("youtube", musicOne, musicOneLength, "artist", "title", "image");
+        MusicDto musicTwoDto = new MusicDto("youtube", musicTwo, musicTwoLength,"artist", "title", "image");
+        MusicDto musicThreeDto = new MusicDto("youtube", musicThree, musicThreeLength, "artist", "title", "image");
 
-        PlayListDto playListDto = new PlayListDto(ttsOneDto, ttsTwoDto, ttsThreeDto, ttsFourDto, musicOneDto, musicTwoDto, musicThreeDto);
+        PlayListDto playListDto = new PlayListDto(ttsOneDto, musicOneDto, ttsTwoDto, musicTwoDto, ttsThreeDto, musicThreeDto, ttsFourDto);
 
         Data data = new Data("oncast", findLiveQueue.getLiveQueueId().intValue(), playListDto);
 
