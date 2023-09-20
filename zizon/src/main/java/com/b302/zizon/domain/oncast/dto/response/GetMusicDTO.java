@@ -11,12 +11,12 @@ public class GetMusicDTO {
     private String albumCoverUrl;
     private String title;
     private String artist;
-    private int duration;
+    private Long duration;
     private String youtubeId;
 
     @Builder
 
-    public GetMusicDTO(Long musicId, String albumCoverUrl, String title, String artist, int duration, String youtubeId) {
+    public GetMusicDTO(Long musicId, String albumCoverUrl, String title, String artist, Long duration, String youtubeId) {
         this.musicId = musicId;
         this.albumCoverUrl = albumCoverUrl;
         this.title = title;
