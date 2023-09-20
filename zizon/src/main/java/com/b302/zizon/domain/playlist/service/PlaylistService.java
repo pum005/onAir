@@ -180,5 +180,37 @@ public class PlaylistService {
 
         return music;
     }
+
+    // 플레이리스트 삭제하기
+    @Transactional
+    public Map<String, Object> deletePlaylist(Long playlistMetaId){
+        Map<String, Object> result = new HashMap<>();
+        Long userId = getUserId();
+
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
+        Optional<PlaylistMeta> byPlaylistMeta = playlistMetaRepository.findById(playlistMetaId);
+        if(byPlaylistMeta.isEmpty()){
+            throw new IllegalArgumentException("플레이리스트 정보가 없습니다.");
+        }
+
+        PlaylistMeta playlistMeta = byPlaylistMeta.get();
+        if(!playlistMeta.getUser().getUserId().equals(userId)){
+            throw new IllegalArgumentException("해당 유저의 플레이리스트가 아닙니다.");
+        }
+
+        List<Playlist> byPlaylist = playlistRepository.findByPlaylistMetaPlaylistMetaId(playlistMetaId);
+        for(Playlist p : byPlaylist){
+            playlistRepository.delete(p);
+        }
+        playlistMetaRepository.delete(playlistMeta);
+
+        result.put("message", "플레이리스트 삭제 성공.");
+
+        return result;
+    }
     
 }
