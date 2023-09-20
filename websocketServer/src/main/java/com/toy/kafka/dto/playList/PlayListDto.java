@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class PlayListDto implements Serializable {
     private String type;
     private String path;
-    private int length;
+    private Long length;
     private String title;
     private String artist;
     private String image;

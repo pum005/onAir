@@ -27,7 +27,7 @@ public class ChatController {
 
 //		logger.debug("접속자 수 : {}", userCounter.getCount());
 		System.out.println(message + " ++ " + sessionId);
-		template.convertAndSend("/topic", "chat"); // 전체 전송
+		template.convertAndSend("/topic", message); // 전체 전송
 	}
 
 }

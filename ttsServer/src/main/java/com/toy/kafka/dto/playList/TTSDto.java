@@ -8,5 +8,5 @@ import lombok.Data;
 public class TTSDto {
     private String type;
     private String path;
-//    private int length;
+    private int length;
 }

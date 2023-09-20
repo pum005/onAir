@@ -8,10 +8,10 @@ import lombok.Data;
 public class PlayListDto {
 
     private TTSDto ttsOne;
-    private TTSDto ttsTwo;
-    private TTSDto ttsThree;
-    private TTSDto ttsFour;
     private MusicDto musicOne;
+    private TTSDto ttsTwo;
     private MusicDto musicTwo;
+    private TTSDto ttsThree;
     private MusicDto musicThree;
+    private TTSDto ttsFour;
 }
