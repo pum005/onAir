@@ -16,6 +16,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import RadioPlayModal from "../PlayerPage/RadioPlayModal";
 
 type RecipeReviewCardProps = {
+  oncastId: number;
   title: string;
   subheader: string;
   shareCheck: boolean;
@@ -31,8 +32,10 @@ type SongDataType = {
 }[];
 
 export default function RecipeReviewCard({
+  oncastId,
   title,
   subheader,
+  shareCheck,
   songs = [],
 }: RecipeReviewCardProps & { songs?: SongDataType }) {
   /** state */
@@ -104,7 +107,7 @@ export default function RecipeReviewCard({
           }
         );
       })
-        .then(response => {
+        .then((response) => {
           console.log(response.data);
           if (response.data.message === "음악 추가 완료") {
             setOpen(true);
@@ -114,7 +117,7 @@ export default function RecipeReviewCard({
             alert("이미 보관함에 있는 음악입니다.");
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("에러발생", error);
         });
     }
@@ -232,11 +235,17 @@ export default function RecipeReviewCard({
       </CardContent>
       <AlertDialog open={open} handleClose={handleClose} />
       <PlayListModal
+        musicId={selectedMusicId}
         isOpen={playListModalOpen}
         onClose={handlePlayListModalClose}
       />
       <DeleteModal isOpen={deleteModalOpen} onClose={handleDeleteModalClose} />
-      <ShareModal isOpen={shareModalOpen} onClose={handleShareModalClose} />
+      <ShareModal
+        isOpen={shareModalOpen}
+        onClose={handleShareModalClose}
+        oncastId={oncastId}
+      />
+
       <RadioPlayModal
         open={radioplayModalOpen}
         handleClose={handlePlayModalClose}
