@@ -1,34 +1,123 @@
-import { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import NavBar from "../../component/Common/Navbar";
+import { musicDummyData } from "./MusicDummy";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import AddCircleOutline from "@mui/icons-material/AddCircleOutline";
+import styles from "./MyMusicPlayer.module.css";
+import SearchModal from "../../component/Common/SearchMusicModal";
+import DeleteModal from "../../component/MyPage/DeleteModal";
 
-type MyMusicPlayerProps = {
-  playlistData?: any[]; // 추후에 더 구체적인 타입으로 변경해주세요.
-};
+type MyMusicPlayerProps = {};
 
-export const MyMusicPlayer: React.FC<MyMusicPlayerProps> = ({
-  playlistData,
-}) => {
-  const [songs, setSongs] = useState<any[]>([]); // 추후에 더 구체적인 타입으로 변경해주세요.
+export const MyMusicPlayer = () => {
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
-    // 플레이리스트 데이터가 props로 전달되면 해당 데이터를 사용합니다.
-    if (playlistData) {
-      setSongs(playlistData);
+    if (audioRef.current) {
+      audioRef.current.src = musicDummyData[currentTrackIndex].musicSrc; // 노래 소스 업데이트
+      audioRef.current.play();
     }
-  }, [playlistData]);
+  }, [currentTrackIndex]);
+
+  const handleSongEnd = () => {
+    if (currentTrackIndex < musicDummyData.length - 1) {
+      setCurrentTrackIndex(prevIndex => prevIndex + 1);
+    } else {
+      setCurrentTrackIndex(0);
+    }
+  };
+
+  const [isSearchModalOpen, setIsSearchModalOpen] = React.useState(false); // 모달의 열림/닫힘 상태를 관리하는 상태 변수
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+  const handleSearchModalOpen = () => {
+    setIsSearchModalOpen(true);
+  };
+
+  const handleSearchModalClose = () => {
+    setIsSearchModalOpen(false);
+  };
+
+  const handleDeleteModalOpen = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteModalClose = () => {
+    setIsDeleteModalOpen(false);
+  };
 
   return (
-    <div
-      style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
-    >
+    <div className={styles.root}>
       <NavBar />
-      {/* 이제 여기에 노래 데이터를 출력하는 로직을 추가할 수 있습니다. */}
-      {songs.map(song => (
-        <div key={song.title}>
-          {/* 각 노래의 정보를 출력합니다. */}
-          {/* 예: <p>{song.title} - {song.artist}</p> */}
+      <div className={styles.container}>
+        <div className={styles.songDisplayContainer}>
+          <div className={styles.coverImageContainer}>
+            <img
+              src={musicDummyData[currentTrackIndex].cover}
+              alt={musicDummyData[currentTrackIndex].title}
+              className={styles.coverImage}
+            />
+          </div>
+          <div className={styles.songListContainer}>
+            <div className={styles.songListHeader}>
+              <div>현재 재생 목록</div>
+              <AddCircleOutline
+                onClick={handleSearchModalOpen}
+                style={{ cursor: "pointer" }}
+              />
+            </div>
+            <div className={styles.songList}>
+              {musicDummyData.map((song, index) => (
+                <div
+                  key={index}
+                  className={`${styles.playlistItem} ${
+                    currentTrackIndex === index ? styles.playlistItemActive : ""
+                  }`}
+                >
+                  <img
+                    src={song.cover}
+                    alt={song.title}
+                    className={styles.albumImage}
+                  />
+                  <div
+                    style={{ flex: 1 }}
+                    onClick={() => setCurrentTrackIndex(index)}
+                  >
+                    <strong>{song.title}</strong>
+                    <br />
+                    {song.artist}
+                  </div>
+                  <div className={styles.songLength}>
+                    <DeleteOutlineIcon
+                      className={styles.deleteIcon}
+                      onClick={event => {
+                        event.stopPropagation(); // 이 줄을 추가하세요
+                        handleDeleteModalOpen();
+                      }}
+                    />
+                    {Math.floor(song.length / 60000)}:
+                    {String((song.length % 60000) / 1000).padStart(2, "0")}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      ))}
+        <div className={styles.audioContainer}>
+          <audio ref={audioRef} onEnded={handleSongEnd} controls>
+            <source type="audio/mp3" />
+          </audio>
+        </div>
+      </div>
+      <SearchModal
+        isOpen={isSearchModalOpen}
+        onClose={handleSearchModalClose} // 모달 바깥쪽을 클릭하면 모달을 닫는다.
+      />
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={handleDeleteModalClose} // 모달 바깥쪽을 클릭하면 모달을 닫는다.
+      />
     </div>
   );
 };

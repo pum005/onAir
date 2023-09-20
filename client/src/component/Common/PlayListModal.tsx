@@ -9,32 +9,27 @@ import AlertDialog from "./AddPlayList";
 import React, { useEffect } from "react";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import 흥애 from "../../resources/흥애.png";
 
 type PlayListModalProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
-// 더미 데이터
-const playLists = [
-  {
-    cover: "/images/run.jpg", // 이미지 경로
-    name: "신나는",
-    songsCount: 12,
-  },
-  {
-    cover: "/images/주저하는.jpg", // 이미지 경로
-    name: "힐링",
-    songsCount: 8,
-  },
-  // ... 다른 플레이리스트 데이터
-];
+type Playlist = {
+  playlistMetaId: number;
+  index: number;
+  playlistImage: string | null;
+  playlistName: string;
+  playlistCount: number;
+};
 
 function PlayListModal({ isOpen, onClose }: PlayListModalProps) {
   const [alertOpen, setAlertOpen] = React.useState(false);
   const [selectedPlaylistName, setSelectedPlaylistName] = React.useState<
     string | undefined
   >();
+  const [playlists, setPlaylists] = React.useState<Playlist[]>([]);
 
   const handleAddClick = (name: string) => {
     setSelectedPlaylistName(name);
@@ -46,20 +41,24 @@ function PlayListModal({ isOpen, onClose }: PlayListModalProps) {
   };
 
   //내 보관함 불러오기 아직
-  // useEffect(() => {
-  //   if (isOpen) {
-  //     requestWithTokenRefresh(() => {
-  //       return axios.get("http://localhost:8080/api/playlist", {
-  //         headers: {
-  //           Authorization: "Bearer " + localStorage.getItem("accessToken"),
-  //         },
-  //         withCredentials: true,
-  //       });
-  //     }).then((response) => {
-  //       console.log(response.data);
-  //     });
-  //   }
-  // });
+  useEffect(() => {
+    if (isOpen) {
+      requestWithTokenRefresh(() => {
+        return axios.get("http://localhost:8080/api/playlist", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        });
+      })
+        .then((response) => {
+          setPlaylists(response.data);
+        })
+        .catch((error) => {
+          console.log("통신에러", error);
+        });
+    }
+  }, [isOpen]);
 
   return (
     <>
@@ -81,9 +80,9 @@ function PlayListModal({ isOpen, onClose }: PlayListModalProps) {
             내 플레이리스트
           </Typography>
 
-          {playLists.map((playlist, idx) => (
+          {playlists.map((playlist) => (
             <Box
-              key={idx}
+              key={playlist.playlistMetaId}
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -92,19 +91,21 @@ function PlayListModal({ isOpen, onClose }: PlayListModalProps) {
               }}
             >
               <img
-                src={playlist.cover}
-                alt={playlist.name}
+                src={playlist.playlistImage || 흥애}
+                alt={playlist.playlistName}
                 style={{ width: "40px", height: "40px" }}
               />
               <div>
-                <Typography variant="subtitle1">{playlist.name}</Typography>
+                <Typography variant="subtitle1">
+                  {playlist.playlistName}
+                </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  {playlist.songsCount}곡
+                  {playlist.playlistCount}곡
                 </Typography>
               </div>
               <Box sx={{ marginLeft: "auto" }}>
                 <Button
-                  onClick={() => handleAddClick(playlist.name)}
+                  onClick={() => handleAddClick(playlist.playlistName)}
                   startIcon={<AddCircleOutlineIcon />}
                   variant="outlined"
                   size="small"

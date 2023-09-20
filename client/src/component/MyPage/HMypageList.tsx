@@ -4,7 +4,7 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import RecipeReviewCard from "./RadioCard";
-import MusicList from "./MusicCard";
+import MusicCard from "./MusicCard";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import AddIcon from "@mui/icons-material/Add";
@@ -71,15 +71,14 @@ export default function BasicTabs() {
         withCredentials: true,
       });
     })
-      .then((response) => {
-        console.log(response.data);
+      .then(response => {
         if (response.data.message) {
           setMessage(response.data.message);
         } else {
           setOncasts(response.data.oncasts);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("통신에러 발생", error);
       });
   }, []);
@@ -167,7 +166,7 @@ export default function BasicTabs() {
                   subheader={data.title}
                   shareCheck={data.shareCheck}
                   selectCheck={data.selectCheck}
-                  songs={data.musicList.map((song) => ({
+                  songs={data.musicList.map(song => ({
                     musicId: song.musicId,
                     songTitle: song.title,
                     artist: song.artist,
@@ -183,7 +182,7 @@ export default function BasicTabs() {
         )}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <MusicList />
+        <MusicCard />
       </CustomTabPanel>
       <SearchModal
         isOpen={isSearchModalOpen}
