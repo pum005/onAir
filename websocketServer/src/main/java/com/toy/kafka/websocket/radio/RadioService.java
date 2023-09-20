@@ -6,11 +6,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toy.kafka.Kafka.KafkaProducerService;
 import com.toy.kafka.dto.playList.Data;
 import com.toy.kafka.dto.playList.PlayListDto;
+import com.toy.kafka.dto.radio.CurrentSoundDto;
+import com.toy.kafka.dto.socket.SocketBaseDto;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +47,10 @@ public class RadioService {
     private long seq = 0L;
     private long idleTimer = 0L;
     private long chatTimer = 0L;
+
+    // socket
+
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
 
     /**
@@ -110,6 +117,7 @@ public class RadioService {
 
                 String type = itemNode.get("type").asText();
                 String path = itemNode.get("path").asText();
+                long length = itemNode.get("length").asLong() + 3000L;
                 String title = "";
                 String artist = "";
                 String image = "";
@@ -121,6 +129,7 @@ public class RadioService {
                 playlist.add(PlayListDto.builder()
                         .type(type)
                         .path(path)
+                        .length(length)
                         .title(title)
                         .artist(artist)
                         .image(image)
@@ -169,12 +178,50 @@ public class RadioService {
             case "idle":
                 idleProcess();
                 break;
-            case "chat":
-                chatProcess();
-                break;
+//            case "chat":
+//                chatProcess();
+//                break;
             default:
                 radioProcess();
         }
+    }
+
+    /**
+     * 현재 재생해야 하는 Sound를 사용자에게 보내는 로직입니다.
+     */
+    private void sendCurrentSound(boolean isChanged) {
+        CurrentSoundDto currentSound = getCurrentSound();
+        if (isChanged) {
+            currentSound.setTypePlayedTime(0L);
+            currentSound.setPlayedTime(0L);
+        }
+        SocketBaseDto<CurrentSoundDto> socketBaseDto = SocketBaseDto.<CurrentSoundDto>builder()
+                .type("RADIO")
+                .operation(currentState.toUpperCase())
+                .data(currentSound)
+                .build();
+        simpMessagingTemplate.convertAndSend("/topic", socketBaseDto);
+    }
+
+    /**
+     * 현재 재생해야 하는 Sound를 반환하는 로직입니다.
+     *
+     * @return
+     */
+    public CurrentSoundDto getCurrentSound() {
+        long currentTime = System.currentTimeMillis();
+        CurrentSoundDto currentSound = CurrentSoundDto.builder()
+                .type(type)
+                .typePlayedTime(currentTime - typeStartTime)
+                .path(path)
+                .startTime(startTime)
+                .playedTime(currentTime - startTime)
+                .length(length)
+                .title(title)
+                .artist(artist)
+                .image(image)
+                .build();
+        return currentSound;
     }
 
     /**
@@ -232,12 +279,16 @@ public class RadioService {
         long currentTime = System.currentTimeMillis();
         if (checkSoundChange()) {
             if (playlist.isEmpty() && currentTime - startTime > length) {
-//                kafkaProducerService.send("finishState", currentState);
+                kafkaProducerService.send("finishState", currentState);
                 resetState();
             }
-            System.out.println("현재 재생목록을 cliet에게 보내야해!");
-//            sendCurrentSound(true);
+            System.out.println("현재 재생목록을 cliet에게 보냄!!");
+            sendCurrentSound(true);
         }
+    }
+
+    public int millisecondsToRoundedSeconds(int milliseconds) {
+        return (int) Math.ceil((double) milliseconds / 1000);
     }
 
     /**
@@ -247,6 +298,10 @@ public class RadioService {
      */
     public boolean checkSoundChange() {
         long currentTime = System.currentTimeMillis();
+        logger.info("플레이 리스트 남은 곡 : " + playlist.size());
+        logger.info("현재 플레이리스트 순서 : " + (7 - playlist.size() + 1));
+        logger.info("현재 재생 시간 : " + millisecondsToRoundedSeconds((int)(currentTime - startTime)));
+        logger.info("음악의 길이 : " + millisecondsToRoundedSeconds((int) length));
         if (currentTime - startTime > length) {
             logger.info("재생 시간 초과~~");
             if (!playlist.isEmpty()) {
@@ -301,5 +356,14 @@ public class RadioService {
                     currentState, type, path, System.currentTimeMillis() - startTime, length,
                     playlist.size());
         }
+    }
+
+    /**
+     * 현재 상태를 반환하는 로직입니다.
+     *
+     * @return
+     */
+    public String getCurrentState() {
+        return currentState;
     }
 }
