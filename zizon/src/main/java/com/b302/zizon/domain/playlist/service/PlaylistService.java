@@ -75,26 +75,25 @@ public class PlaylistService {
         PlaylistMeta playlistMeta = byPlaylistMetaIdAndUserUserId.get();
 
         Optional<Playlist> byPlaylistMetaPlaylistMetaIdAndMusicMusicId = playlistRepository.findByPlaylistMetaPlaylistMetaIdAndMusicMusicId(playlistMetaId, musicId);
-        System.out.println(byPlaylistMetaPlaylistMetaIdAndMusicMusicId.get());
         if(byPlaylistMetaPlaylistMetaIdAndMusicMusicId.isPresent()){
             result.put("message", "이미 플레이리스트에 추가된 음악입니다.");
             return result;
+        }else {
+            // 플리 데이터 생성 후 저장
+            Playlist playlist = Playlist.builder()
+                    .playlistMeta(playlistMeta)
+                    .music(music)
+                    .build();
+            playlistRepository.save(playlist);
+
+            if (playlistMeta.getPlaylistImage() == null) {
+                playlistMeta.registPlaylistImage(music.getAlbumCoverUrl());
+            }
+            playlistMeta.plusCountPlaylistCount();
+
+            result.put("message", "플레이리스트 음악 추가 성공.");
+            return result;
         }
-
-        // 플리 데이터 생성 후 저장
-        Playlist playlist = Playlist.builder()
-                .playlistMeta(playlistMeta)
-                .music(music)
-                .build();
-        playlistRepository.save(playlist);
-
-        if(playlistMeta.getPlaylistImage() == null){
-            playlistMeta.registPlaylistImage(music.getAlbumCoverUrl());
-        }
-        playlistMeta.plusCountPlaylistCount();
-
-        result.put("message", "플레이리스트 음악 추가 성공.");
-        return result;
     }
     
     // 플레이리스트 생성
