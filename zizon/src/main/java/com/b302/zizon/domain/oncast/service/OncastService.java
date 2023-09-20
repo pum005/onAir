@@ -1,6 +1,7 @@
 package com.b302.zizon.domain.oncast.service;
 
 import com.b302.zizon.domain.music.entity.Music;
+import com.b302.zizon.domain.music.entity.ThemeEnum;
 import com.b302.zizon.domain.oncast.dto.request.OncastRequestDto;
 import com.b302.zizon.domain.oncast.dto.response.GetMusicDTO;
 import com.b302.zizon.domain.oncast.dto.response.GetOncastDTO;
@@ -36,7 +37,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OncastService {
 
-//    private final NaverTTSService naverTTSService;
+    private final NaverTTSService naverTTSService;
     private final OncastRepository oncastRepository;
     private final ChatGptService chatGptService;
     private final UserRepository userRepository;
@@ -78,6 +79,17 @@ public class OncastService {
 
         User user = byUserId.get();
 
+//        String exstory = "오늘 하루종일 비가 와서 너무 힘들었습니다. 비가 오는날마다 너무 습하고 밖을 못돌아다녀서요. " +
+//                "저는 밖에서 산책하고 사람들을 만나는걸 좋아하기 때문이에요.\n" +
+//                "비오는날에도 행복할 수 있게 비를 맘껏 즐길 수 있는 하루가 되었으면 좋겠어요!";
+
+        OncastCreateData ocd = OncastCreateData.builder()
+                .title(request.getTitle())
+                .theme(request.getTheme())
+                .story(request.getStory())
+                .djName(request.getDjName())
+                .build();
+
 
         // 음악 추천받는 로직
         Music[] oncastMusic = new Music[3];
@@ -87,9 +99,7 @@ public class OncastService {
         String story = request.getStory();
         String[] script = new String[4];
 
-        String exstory = "오늘 하루종일 비가 와서 너무 힘들었습니다. 비가 오는날마다 너무 습하고 밖을 못돌아다녀서요. " +
-                "저는 밖에서 산책하고 사람들을 만나는걸 좋아하기 때문이에요.\n" +
-                "비오는날에도 행복할 수 있게 비를 맘껏 즐길 수 있는 하루가 되었으면 좋겠어요!";
+
 
         oncastMusic[0] = Music.builder()
                 .artist("잔나비")
@@ -146,15 +156,15 @@ public class OncastService {
 //            System.out.println(s);
 //        }
         System.out.println(fullScript);
-//        for (String s : script) {
-//            try {
-//                String str = naverTTSService.generateTTS(s, request.getDjName());
-//
-//                f.add(str);
-//            }catch (IOException e){
-//                e.printStackTrace();
-//            }
-//        }
+        for (String s : script) {
+            try {
+                String str = naverTTSService.generateTTS(s, request.getDjName());
+
+                f.add(str);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
 
         f.add("");
         f.add("");
@@ -165,6 +175,7 @@ public class OncastService {
 
         Oncast oncast = Oncast.builder()
                 .user(user)
+                .oncastCreateData(ocd)
                 .shareCheck(false)
                 .deleteCheck(false)
                 .selectCheck(false)
@@ -180,16 +191,10 @@ public class OncastService {
                 .music2(oncastMusic[1])
                 .music3(oncastMusic[2])
                 .build();
-        System.out.println("온캐스트");
-//        System.out.println(oncast.getOncastId());
-//        System.out.println(oncast.getCreateTime());
-//        System.out.println(oncast.getUser());
-//        System.out.println(oncast.getMusic1());
-//        System.out.println(oncast.getMusic2());
-//        System.out.println(oncast.getMusic3());
-//        System.out.println(oncast.getScriptOne());
-        System.out.println(oncast.getClass());
+
+        System.out.println("온캐스트 빌드 끝");
         oncastRepository.save(oncast);
+        System.out.println("db에 온캐스트 저장 완료");
 
 
         return oncast;

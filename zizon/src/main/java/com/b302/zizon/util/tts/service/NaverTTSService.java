@@ -3,8 +3,9 @@ package com.b302.zizon.util.tts.service;
 import com.b302.zizon.util.S3.service.S3UploadService;
 import lombok.RequiredArgsConstructor;
 
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -51,9 +52,16 @@ public class NaverTTSService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("ㅎㅇㅋㅋ  "+generatedFile.toString());
 
-        FileItem fileItem = (FileItem) new DiskFileItem("file", Files.probeContentType(generatedFile.toPath()), false, generatedFile.getName(), (int) generatedFile.length() , generatedFile.getParentFile());
+        System.out.println("Files.probeContentType(generatedFile.toPath()) : "+generatedFile.toPath());
+        System.out.println("generatedFile.getName() : "+generatedFile.getName());
+        System.out.println("generatedFile.getParentFile() : "+generatedFile.getParentFile());
 
+
+        FileItem fileItem = new DiskFileItem("file", Files.probeContentType(generatedFile.toPath()), false, generatedFile.getName(), (int) generatedFile.length() , generatedFile.getParentFile());
+        System.out.println("file까진 문제없음" + fileItem.toString());
+        
         try {
 
             InputStream input = new FileInputStream(generatedFile);
@@ -61,10 +69,13 @@ public class NaverTTSService {
             IOUtils.copy(input, os);
 
         }catch (IOException e){
+            System.out.println("IO문제");
             e.printStackTrace();
         }
-        MultipartFile  generatedFileConverted = new CommonsMultipartFile(fileItem);
 
+        System.out.println("s3업로드 전 : "+fileItem);
+        MultipartFile  generatedFileConverted = new CommonsMultipartFile(fileItem);
+        System.out.println("s3업로드 전 : "+generatedFileConverted);
         String savedFileURL= s3UploadService.fileSaveFile(generatedFileConverted);
         return savedFileURL;
 

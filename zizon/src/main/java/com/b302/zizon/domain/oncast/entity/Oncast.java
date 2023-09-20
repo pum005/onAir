@@ -29,7 +29,6 @@ public class Oncast {
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @CreatedDate
     private User user;
 
     @OneToOne(fetch = FetchType.LAZY)
