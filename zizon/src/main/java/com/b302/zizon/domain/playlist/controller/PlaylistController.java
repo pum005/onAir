@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -50,6 +51,14 @@ public class PlaylistController {
         List<PlayPlaylistResponseDTO> music = playlistService.playPlaylist(playlistMeta_id);
 
         return ResponseEntity.status(HttpStatus.OK).body(music);
+    }
+
+    // 플레이리스트 삭제하기
+    @DeleteMapping("playlist/{playlistMeta_id}")
+    public ResponseEntity<?> deletePlaylist(@PathVariable Long playlistMeta_id){
+        Map<String, Object> result = playlistService.deletePlaylist(playlistMeta_id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
 }
