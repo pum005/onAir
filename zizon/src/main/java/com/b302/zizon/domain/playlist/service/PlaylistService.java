@@ -75,6 +75,7 @@ public class PlaylistService {
         PlaylistMeta playlistMeta = byPlaylistMetaIdAndUserUserId.get();
 
         Optional<Playlist> byPlaylistMetaPlaylistMetaIdAndMusicMusicId = playlistRepository.findByPlaylistMetaPlaylistMetaIdAndMusicMusicId(playlistMetaId, musicId);
+        System.out.println(byPlaylistMetaPlaylistMetaIdAndMusicMusicId.get());
         if(byPlaylistMetaPlaylistMetaIdAndMusicMusicId.isPresent()){
             result.put("message", "이미 플레이리스트에 추가된 음악입니다.");
             return result;
