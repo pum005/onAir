@@ -43,10 +43,10 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
           },
           withCredentials: true,
         })
-        .then((response) => {
+        .then(response => {
           setSongs(response.data.musicInfo);
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("데이터 가져오기 오류", error);
         });
     }
@@ -112,7 +112,7 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
               }}
             >
               <img
-                src={song.youtubeVideoId}
+                src={song.albumCoverUrl}
                 alt="Album Cover"
                 style={{ width: "40px", height: "40px", marginRight: "10px" }}
               />
@@ -126,7 +126,7 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
                 {formatTime(song.duration)}
                 <MoreVertIcon
                   style={{ marginLeft: "8px", cursor: "pointer" }}
-                  onClick={(event) => handleMenuOpen(event, index)}
+                  onClick={event => handleMenuOpen(event, index)}
                 />
               </div>
             </div>
