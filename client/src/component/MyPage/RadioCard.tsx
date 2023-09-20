@@ -5,12 +5,15 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AlertDialog from "../Common/AddFullList";
-import { Button } from "@mui/material";
 import PlayListModal from "../Common/PlayListModal";
 import DeleteModal from "./DeleteModal";
 import ShareModal from "./ShareModal";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import ShareIcon from "@mui/icons-material/Share";
+import DeleteIcon from "@mui/icons-material/Delete";
+import RadioPlayModal from "../PlayerPage/RadioPlayModal";
 
 type RecipeReviewCardProps = {
   title: string;
@@ -37,6 +40,7 @@ export default function RecipeReviewCard({
   const [playListModalOpen, setPlayListModalOpen] = React.useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
   const [shareModalOpen, setShareModalOpen] = React.useState(false);
+  const [radioplayModalOpen, setRadioplayModalOpen] = React.useState(false);
   const [selectedMusicId, setSelectedMusicId] = React.useState(0);
   //이건 토글로 두어야 계속 불러볼 수 있음.
   const [isPulsButtonClicked, setIsPlusButtonClicked] = React.useState(false);
@@ -73,6 +77,14 @@ export default function RecipeReviewCard({
 
   const handleShareModalClose = () => {
     setShareModalOpen(false);
+  };
+
+  const handlePlayModalClick = () => {
+    setRadioplayModalOpen(true);
+  };
+
+  const handlePlayModalClose = () => {
+    setRadioplayModalOpen(false);
   };
 
   /**axios */
@@ -184,20 +196,28 @@ export default function RecipeReviewCard({
           style={{
             marginTop: "10px",
             display: "flex",
-            gap: "10px",
-            justifyContent: "center",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={handleDeleteClick}
-          >
-            삭제하기
-          </Button>
-          <Button variant="outlined" color="primary" onClick={handleShareClick}>
-            공유하기
-          </Button>
+          <div>
+            <ShareIcon
+              onClick={handleShareClick}
+              style={{ cursor: "pointer" }}
+            />
+          </div>
+          <div>
+            <PlayCircleIcon
+              onClick={handlePlayModalClick}
+              style={{ cursor: "pointer" }}
+            />
+          </div>
+          <div>
+            <DeleteIcon
+              onClick={handleDeleteClick}
+              style={{ cursor: "pointer" }}
+            />
+          </div>
         </div>
 
         <IconButton
@@ -217,6 +237,11 @@ export default function RecipeReviewCard({
       />
       <DeleteModal isOpen={deleteModalOpen} onClose={handleDeleteModalClose} />
       <ShareModal isOpen={shareModalOpen} onClose={handleShareModalClose} />
+      <RadioPlayModal
+        open={radioplayModalOpen}
+        handleClose={handlePlayModalClose}
+        radioName={subheader}
+      />
     </Card>
   );
 }
