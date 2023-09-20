@@ -10,10 +10,12 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import 흥애 from "../../resources/흥애.png";
+import Swal from "sweetalert2";
 
 type PlayListModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  musicId?: number | null;
 };
 
 type Playlist = {
@@ -24,16 +26,48 @@ type Playlist = {
   playlistCount: number;
 };
 
-function PlayListModal({ isOpen, onClose }: PlayListModalProps) {
+function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
   const [alertOpen, setAlertOpen] = React.useState(false);
   const [selectedPlaylistName, setSelectedPlaylistName] = React.useState<
     string | undefined
   >();
   const [playlists, setPlaylists] = React.useState<Playlist[]>([]);
 
-  const handleAddClick = (name: string) => {
+  const handleAddClick = (name: string, playlistMetaId: number) => {
     setSelectedPlaylistName(name);
-    setAlertOpen(true);
+    if (!musicId) {
+      console.error("No musicId provided!");
+      return;
+    }
+    axios
+      .post(
+        "http://localhost:8080/api/playlist/music",
+        {
+          playlistMetaId: playlistMetaId,
+          musicId: musicId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        if (response.data === "이미 플레이리스트에 추가된 음악입니다.") {
+          Swal.fire({
+            icon: "error",
+            title: "이미 플레이리스트에 추가된 음악입니다.",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        } else {
+          setAlertOpen(true);
+        }
+      })
+      .catch((error) => {
+        console.error("Error adding music to playlist", error);
+      });
   };
 
   const handleAlertClose = () => {
@@ -105,7 +139,12 @@ function PlayListModal({ isOpen, onClose }: PlayListModalProps) {
               </div>
               <Box sx={{ marginLeft: "auto" }}>
                 <Button
-                  onClick={() => handleAddClick(playlist.playlistName)}
+                  onClick={() =>
+                    handleAddClick(
+                      playlist.playlistName,
+                      playlist.playlistMetaId
+                    )
+                  }
                   startIcon={<AddCircleOutlineIcon />}
                   variant="outlined"
                   size="small"
