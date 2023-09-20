@@ -56,12 +56,6 @@ public class MyMusicBoxService {
         // 내 음악 전부 가져오기
         List<MyMusicBox> byUserUserId = myMusicBoxRepository.findByUserUserId(user.getUserId());
 
-        // 만약에 보관한 음악이 없으면
-        if(byUserUserId.size() == 0){
-            result.put("my_music_box", 0);
-            return result;
-        }
-
         result.put("my_music_box", byUserUserId.size());
 
         // 재생목록 정보 가져오기
