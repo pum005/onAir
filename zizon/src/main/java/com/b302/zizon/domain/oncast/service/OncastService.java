@@ -302,6 +302,10 @@ public class OncastService {
 
         Oncast oncast = byOncast.get();
 
+        Optional<OncastCreateData> byOncastCreateData = oncastCreateDataRepository.findById(oncast.getOncastCreateData().getOncastCreateDateId());
+        OncastCreateData oncastCreateData = byOncastCreateData.get();
+
+
         List<GetMusicDTO> getMusicDTOS = new ArrayList<>();
 
         GetMusicDTO build1 = GetMusicDTO.builder()
@@ -341,7 +345,8 @@ public class OncastService {
                 .scriptTwo(oncast.getScriptTwo())
                 .scriptThree(oncast.getScriptThree())
                 .scriptFour(oncast.getTtsFour())
-                .music(getMusicDTOS).build();
+                .music(getMusicDTOS)
+                .djName(oncastCreateData.getDjName()).build();
 
         result.put("oncast", build);
         return result;
