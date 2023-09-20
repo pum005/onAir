@@ -11,6 +11,21 @@
   display: block;
 }
 
+/* 쓰레기통 아이콘의 기본 상태 (숨김) */
+.hoverableListItem .DeleteOutlineIcon {
+  display: none;
+  position: absolute;
+  right: 10%; /* 재생 아이콘의 오른쪽에 위치 */
+  top: 45%;
+  transform: translateY(-50%);
+  color: #ffffff; /* 쓰레기통 아이콘 색상을 흰색으로 변경 */
+}
+
+/* 항목에 마우스를 올렸을 때 쓰레기통 아이콘 보이게 설정 */
+.hoverableListItem:hover .DeleteOutlineIcon {
+  display: block;
+}
+
 .audiotrackIcon {
   font-size: 40px;
 }
