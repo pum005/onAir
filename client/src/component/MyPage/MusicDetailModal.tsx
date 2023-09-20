@@ -11,6 +11,7 @@ import PlayListModal from "../Common/PlayListModal";
 import DeleteModal from "./DeleteModal";
 import { useEffect } from "react";
 import axios from "axios";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 
 type MusicInfoType = {
   musicId: number;
@@ -33,24 +34,30 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
   title,
 }) => {
   const [songs, setSongs] = useState<MusicInfoType[]>([]);
+  const [refreshKey, setRefreshKey] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      axios
-        .get("http://localhost:8080/api/my-musicbox/info", {
+      requestWithTokenRefresh(() => {
+        return axios.get("http://localhost:8080/api/my-musicbox/info", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
           },
           withCredentials: true,
-        })
+        });
+      })
         .then((response) => {
-          setSongs(response.data.musicInfo);
+          if (response.data.message || !response.data.musicInfo) {
+            setSongs([]);
+          } else {
+            setSongs(response.data.musicInfo);
+          }
         })
         .catch((error) => {
           console.error("데이터 가져오기 오류", error);
         });
     }
-  }, [isOpen]);
+  }, [isOpen, refreshKey]);
 
   const formatTime = (milliseconds: number) => {
     const totalSeconds = Math.round(milliseconds / 1000);
@@ -92,7 +99,10 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
     // 노래를 삭제하는 로직을 여기에 추가
     console.log(`Deleting song index ${selectedSong}`);
     handleMenuClose();
-    setDeleteListModalOpen(true);
+    setSelectedSong(selectedSong);
+    setTimeout(() => {
+      setDeleteListModalOpen(true);
+    }, 0);
   };
 
   return (
@@ -102,38 +112,46 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
           <Typography id="modal-modal-title" variant="h6" component="h2">
             {title} 노래 목록
           </Typography>
-          {songs.map((song, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginTop: "10px",
-                borderBottom: "1px solid #e5e5e5",
-                paddingBottom: "5px",
-              }}
-            >
-              <img
-                src={song.albumCoverUrl}
-                alt="Album Cover"
-                style={{ width: "40px", height: "40px", marginRight: "10px" }}
-              />
-              <div style={{ flex: 2 }}>
-                <div>{song.title}</div>
-                <div style={{ color: "#888", fontSize: "0.9em" }}>
-                  {song.artist}
+          {songs.length > 0 ? (
+            songs.map((song, index) => (
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginTop: "10px",
+                  borderBottom: "1px solid #e5e5e5",
+                  paddingBottom: "5px",
+                }}
+              >
+                <img
+                  src={song.albumCoverUrl}
+                  alt="Album Cover"
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    marginRight: "10px",
+                  }}
+                />
+                <div style={{ flex: 2 }}>
+                  <div>{song.title}</div>
+                  <div style={{ color: "#888", fontSize: "0.9em" }}>
+                    {song.artist}
+                  </div>
+                </div>
+                <div style={{ flex: 1, textAlign: "right" }}>
+                  {formatTime(song.duration)}
+                  <MoreVertIcon
+                    style={{ marginLeft: "8px", cursor: "pointer" }}
+                    onClick={(event) => handleMenuOpen(event, index)}
+                  />
                 </div>
               </div>
-              <div style={{ flex: 1, textAlign: "right" }}>
-                {formatTime(song.duration)}
-                <MoreVertIcon
-                  style={{ marginLeft: "8px", cursor: "pointer" }}
-                  onClick={(event) => handleMenuOpen(event, index)}
-                />
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div>노래가 없습니다.</div>
+          )}
           <Menu
             anchorEl={anchorEl}
             keepMounted
@@ -149,13 +167,18 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
         </Box>
       </Modal>
       <PlayListModal
-        musicId={selectedSong !== null ? songs[selectedSong].musicId : null}
+        musicId={selectedSong !== null ? songs[selectedSong]?.musicId : null}
         isOpen={playListModalOpen}
         onClose={() => setPlayListModalOpen(false)}
       />
       <DeleteModal
+        musicId={selectedSong !== null ? songs[selectedSong].musicId : null}
         isOpen={deleteListModalOpen}
-        onClose={() => setDeleteListModalOpen(false)}
+        onClose={() => {
+          setDeleteListModalOpen(false);
+          setSelectedSong(null);
+        }}
+        setRefreshKey={() => setRefreshKey((prev) => !prev)}
       />
     </>
   );
