@@ -1,5 +1,7 @@
 package com.toy.kafka.websocket.radio;
 
+import com.toy.kafka.dto.radio.CurrentSoundDto;
+import com.toy.kafka.dto.socket.SocketBaseDto;
 import com.toy.kafka.util.SessionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.Header;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Controller;
 @RequiredArgsConstructor
 public class RadioController {
 
+    private final RadioService radioService;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     /**
@@ -20,14 +23,14 @@ public class RadioController {
      */
     @MessageMapping("/subscribe")
     public void subscribeToRadio(@Header("simpSessionId") String sessionId) {
-//        CurrentSoundDto currentSound = radioService.getCurrentSound();
-//        SocketBaseDto<CurrentSoundDto> socketBaseDto = SocketBaseDto.<CurrentSoundDto>builder()
-//                .type("RADIO")
-//                .operation(radioService.getCurrentState().toUpperCase())
-//                .data(currentSound)
-//                .build();
+        CurrentSoundDto currentSound = radioService.getCurrentSound();
+        SocketBaseDto<CurrentSoundDto> socketBaseDto = SocketBaseDto.<CurrentSoundDto>builder()
+                .type("RADIO")
+                .operation(radioService.getCurrentState().toUpperCase())
+                .data(currentSound)
+                .build();
         System.out.println("radio controller 들어왔으!");
-        simpMessagingTemplate.convertAndSendToUser(sessionId, "/queue", "radio",
+        simpMessagingTemplate.convertAndSendToUser(sessionId, "/queue", socketBaseDto,
                 SessionUtil.createHeaders(sessionId));
     }
 }
