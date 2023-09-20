@@ -31,6 +31,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
     string | undefined
   >();
   const [playlists, setPlaylists] = React.useState<Playlist[]>([]);
+  const [refreshKey, setRefreshKey] = React.useState(false);
 
   const handleAddClick = (name: string, playlistMetaId: number) => {
     setSelectedPlaylistName(name);
@@ -68,6 +69,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
 
   const handleAlertClose = () => {
     setAlertOpen(false);
+    setRefreshKey((prevKey) => !prevKey);
   };
 
   //내 보관함 불러오기 아직
@@ -88,7 +90,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
           console.log("통신에러", error);
         });
     }
-  }, [isOpen]);
+  }, [isOpen, refreshKey]);
 
   return (
     <>
