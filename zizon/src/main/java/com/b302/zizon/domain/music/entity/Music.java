@@ -20,7 +20,7 @@ public class Music {
     @Column(nullable = false)
     private String artist;
     @Column(nullable = false)
-    private int duration;
+    private Long duration;
     @Column(nullable = false)
     private String youtubeVideoId;
     @Column(nullable = true)
