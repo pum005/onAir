@@ -2,10 +2,7 @@ package com.b302.zizon.domain.music.dto.response;
 
 import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Builder
 public class SpotifySearchResultDTO {
 
@@ -16,5 +13,6 @@ public class SpotifySearchResultDTO {
   private String musicAlbum;
   private String musicImage;
   private String musicReleaseDate;
+  private String externalIds;
   private long spotifyMusicDuration;
 }

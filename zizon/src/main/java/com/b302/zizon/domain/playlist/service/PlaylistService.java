@@ -212,5 +212,40 @@ public class PlaylistService {
 
         return result;
     }
+
+    // 플레이리스트 안에 음악 삭제하기
+    @Transactional
+    public Map<String, Object> deletePlaylistMusic(AddPlaylistMusicDTO addPlaylistMusicDTO){
+        Map<String, Object> result = new HashMap<>();
+        Long userId = getUserId();
+
+        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+
+        User user = byUserId.get();
+
+        Long playlistMetaId = addPlaylistMusicDTO.getPlaylistMetaId();
+        Long musicId = addPlaylistMusicDTO.getMusicId();
+
+        Optional<PlaylistMeta> byPlaylistMeta = playlistMetaRepository.findById(playlistMetaId);
+        if(byPlaylistMeta.isEmpty()){
+            throw new IllegalArgumentException("해당 플레이리스트가 존재하지 않습니다.");
+        }
+        PlaylistMeta playlistMeta = byPlaylistMeta.get();
+
+        Optional<Playlist> byPlaylistMetaPlaylistMetaIdAndMusicMusicId = playlistRepository.findByPlaylistMetaPlaylistMetaIdAndMusicMusicId(playlistMetaId, musicId);
+        if(byPlaylistMetaPlaylistMetaIdAndMusicMusicId.isEmpty()){
+            throw new IllegalArgumentException("해당 음악이 플레이리스트에 존재하지 않습니다.");
+        }
+
+        Playlist playlist = byPlaylistMetaPlaylistMetaIdAndMusicMusicId.get();
+        playlistRepository.delete(playlist);
+        playlistMeta.minusCountPlaylistCount();
+
+        result.put("message", "플레이리스트 음악 삭제 성공.");
+
+        return result;
+    }
+
     
 }
