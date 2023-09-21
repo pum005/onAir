@@ -2,17 +2,23 @@ package com.b302.zizon.domain.playlist.service;
 
 import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.music.entity.MyMusicBox;
+import com.b302.zizon.domain.music.exception.MusicNotFoundException;
 import com.b302.zizon.domain.music.repository.MusicRepository;
 import com.b302.zizon.domain.music.repository.MyMusicBoxRepository;
+import com.b302.zizon.domain.oncast.exception.UnauthorizedOncastAccessException;
 import com.b302.zizon.domain.playlist.dto.AddPlaylistMusicDTO;
 import com.b302.zizon.domain.playlist.dto.MakePlaylistRequestDTO;
 import com.b302.zizon.domain.playlist.dto.PlayPlaylistResponseDTO;
 import com.b302.zizon.domain.playlist.dto.PlaylistInfoResponseDTO;
 import com.b302.zizon.domain.playlist.entity.Playlist;
 import com.b302.zizon.domain.playlist.entity.PlaylistMeta;
+import com.b302.zizon.domain.music.exception.MusicBoxNotFoundException;
+import com.b302.zizon.domain.playlist.exception.PlaylistNotFoundException;
+import com.b302.zizon.domain.playlist.exception.UnauthorizedPlaylistAccessException;
 import com.b302.zizon.domain.playlist.repository.PlaylistMetaRepository;
 import com.b302.zizon.domain.playlist.repository.PlaylistRepository;
 import com.b302.zizon.domain.user.entity.User;
+import com.b302.zizon.domain.user.exception.UserNotFoundException;
 import com.b302.zizon.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -48,7 +54,7 @@ public class PlaylistService {
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
 
         User user = byUserId.get();
 
@@ -57,19 +63,19 @@ public class PlaylistService {
 
         Optional<Music> byMusic = musicRepository.findById(musicId);
         if(byMusic.isEmpty()){
-            throw new IllegalArgumentException("노래 정보가 없습니다.");
+            throw new MusicNotFoundException("노래 정보가 없습니다.");
         }
         Music music = byMusic.get();
 
 
         Optional<MyMusicBox> byMusicMusicIdAndUserUserId = myMusicBoxRepository.findByMusicMusicIdAndUserUserId(musicId, userId);
         if(byMusicMusicIdAndUserUserId.isEmpty()){
-            throw new IllegalArgumentException("보관함에 없는 노래입니다.");
+            throw new MusicBoxNotFoundException("보관함에 없는 노래입니다.");
         }
 
         Optional<PlaylistMeta> byPlaylistMetaIdAndUserUserId = playlistMetaRepository.findByPlaylistMetaIdAndUserUserId(playlistMetaId, userId);
         if(byPlaylistMetaIdAndUserUserId.isEmpty()){
-            throw new IllegalArgumentException("유저의 플레이리스트가 없습니다.");
+            throw new PlaylistNotFoundException("유저의 플레이리스트가 없습니다.");
         }
 
         PlaylistMeta playlistMeta = byPlaylistMetaIdAndUserUserId.get();
@@ -103,7 +109,7 @@ public class PlaylistService {
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
 
         User user = byUserId.get();
 
@@ -124,7 +130,7 @@ public class PlaylistService {
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
 
         User user = byUserId.get();
 
@@ -148,18 +154,18 @@ public class PlaylistService {
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
 
         User user = byUserId.get();
 
         Optional<PlaylistMeta> byPlaylistMeta = playlistMetaRepository.findById(playlistMetaId);
         if(byPlaylistMeta.isEmpty()){
-            throw new IllegalArgumentException("해당 플레이리스트가 없습니다.");
+            throw new PlaylistNotFoundException("해당 플레이리스트가 없습니다.");
         }
 
         PlaylistMeta playlistMeta = byPlaylistMeta.get();
         if(!playlistMeta.getUser().getUserId().equals(userId)){
-            throw new IllegalArgumentException("해당 유저의 플레이리스트가 아닙니다.");
+            throw new UnauthorizedPlaylistAccessException("해당 유저의 플레이리스트가 아닙니다.");
         }
 
         List<Playlist> byPlaylist = playlistRepository.findByPlaylistMetaPlaylistMetaId(playlistMetaId);
@@ -188,18 +194,18 @@ public class PlaylistService {
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
 
         User user = byUserId.get();
 
         Optional<PlaylistMeta> byPlaylistMeta = playlistMetaRepository.findById(playlistMetaId);
         if(byPlaylistMeta.isEmpty()){
-            throw new IllegalArgumentException("플레이리스트 정보가 없습니다.");
+            throw new PlaylistNotFoundException("플레이리스트 정보가 없습니다.");
         }
 
         PlaylistMeta playlistMeta = byPlaylistMeta.get();
         if(!playlistMeta.getUser().getUserId().equals(userId)){
-            throw new IllegalArgumentException("해당 유저의 플레이리스트가 아닙니다.");
+            throw new UnauthorizedPlaylistAccessException("해당 유저의 플레이리스트가 아닙니다.");
         }
 
         List<Playlist> byPlaylist = playlistRepository.findByPlaylistMetaPlaylistMetaId(playlistMetaId);
@@ -220,7 +226,7 @@ public class PlaylistService {
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
 
         User user = byUserId.get();
 
@@ -229,7 +235,7 @@ public class PlaylistService {
 
         Optional<PlaylistMeta> byPlaylistMeta = playlistMetaRepository.findById(playlistMetaId);
         if(byPlaylistMeta.isEmpty()){
-            throw new IllegalArgumentException("해당 플레이리스트가 존재하지 않습니다.");
+            throw new PlaylistNotFoundException("해당 플레이리스트가 존재하지 않습니다.");
         }
         PlaylistMeta playlistMeta = byPlaylistMeta.get();
 

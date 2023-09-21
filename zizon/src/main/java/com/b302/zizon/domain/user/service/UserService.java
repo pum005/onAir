@@ -2,6 +2,7 @@ package com.b302.zizon.domain.user.service;
 
 import com.b302.zizon.domain.user.dto.UserUpdateRequestDTO;
 import com.b302.zizon.domain.user.entity.User;
+import com.b302.zizon.domain.user.exception.UserNotFoundException;
 import com.b302.zizon.domain.user.repository.UserRepository;
 import com.b302.zizon.util.S3.service.S3UploadService;
 import com.b302.zizon.util.jwt.JwtUtil;
@@ -49,7 +50,7 @@ public class UserService {
         Optional<User> byPrivateAccess = userRepository.findByPrivateAccess(privateAccess);
 
         if(byPrivateAccess.isEmpty()){
-            throw new IllegalArgumentException("해당 유저가 존재하지 않습니다.");
+            throw new UserNotFoundException("해당 유저가 존재하지 않습니다.");
         }
 
         User user = byPrivateAccess.get();
@@ -111,7 +112,7 @@ public class UserService {
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
 
         User user = byUserId.get();
 
@@ -128,7 +129,7 @@ public class UserService {
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
 
         User user = byUserId.get();
 
@@ -144,7 +145,7 @@ public class UserService {
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
 
         User user = byUserId.get();
 

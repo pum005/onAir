@@ -4,9 +4,11 @@ import com.b302.zizon.domain.music.dto.*;
 import com.b302.zizon.domain.music.dto.response.*;
 import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.music.entity.MyMusicBox;
+import com.b302.zizon.domain.music.exception.MusicNotFoundException;
 import com.b302.zizon.domain.music.repository.MusicRepository;
 import com.b302.zizon.domain.music.repository.MyMusicBoxRepository;
 import com.b302.zizon.domain.user.entity.User;
+import com.b302.zizon.domain.user.exception.UserNotFoundException;
 import com.b302.zizon.domain.user.repository.UserRepository;
 import com.b302.zizon.util.ConvertTime;
 import com.google.api.services.youtube.YouTube;
@@ -14,14 +16,7 @@ import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.SearchResult;
-import io.lettuce.core.ScriptOutputType;
 import lombok.RequiredArgsConstructor;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
@@ -35,7 +30,6 @@ import javax.persistence.EntityNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URLEncoder;
-import java.time.Duration;
 import java.util.*;
 
 @Service
@@ -153,7 +147,7 @@ public class MusicService {
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
 
         User user = byUserId.get();
 
@@ -252,13 +246,13 @@ public class MusicService {
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
 
         User user = byUserId.get();
 
         Optional<Music> byMusic = musicRepository.findById(musicId);
         if(byMusic.isEmpty()){
-            throw new IllegalArgumentException("해당 음악의 정보가 없습니다.");
+            throw new MusicNotFoundException("해당 음악의 정보가 없습니다.");
         }
 
         Music music = byMusic.get();

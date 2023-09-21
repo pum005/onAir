@@ -7,9 +7,12 @@ import com.b302.zizon.domain.oncast.dto.response.GetOncastDTO;
 import com.b302.zizon.domain.oncast.dto.response.OncastPlayResponseDTO;
 import com.b302.zizon.domain.oncast.entity.Oncast;
 import com.b302.zizon.domain.oncast.entity.OncastCreateData;
+import com.b302.zizon.domain.oncast.exception.OncastNotFoundException;
+import com.b302.zizon.domain.oncast.exception.UnauthorizedOncastAccessException;
 import com.b302.zizon.domain.oncast.repository.OncastCreateDataRepository;
 import com.b302.zizon.domain.oncast.repository.OncastRepository;
 import com.b302.zizon.domain.user.entity.User;
+import com.b302.zizon.domain.user.exception.UserNotFoundException;
 import com.b302.zizon.domain.user.repository.UserRepository;
 import com.b302.zizon.util.gpt.dto.ChatGptResponse;
 import com.b302.zizon.util.gpt.dto.QuestionRequest;
@@ -73,7 +76,7 @@ public class OncastService {
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
 
         User user = byUserId.get();
 
@@ -178,7 +181,7 @@ public class OncastService {
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
 
         User user = byUserId.get();
 
@@ -224,14 +227,14 @@ public class OncastService {
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
 
         User user = byUserId.get();
 
         Optional<Oncast> byOncast = oncastRepository.findById(oncastId);
 
         if(byOncast.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 온캐스트입니다.");
+            throw new OncastNotFoundException("존재하지 않는 온캐스트입니다.");
         }
 
         Oncast oncast = byOncast.get();
@@ -261,13 +264,13 @@ public class OncastService {
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
 
         User user = byUserId.get();
 
         Optional<Oncast> byOncast = oncastRepository.findByOncastIdAndUserUserId(oncastId, userId);
         if (byOncast.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 온캐스트입니다.");
+            throw new OncastNotFoundException("존재하지 않는 온캐스트입니다.");
         }
 
         Oncast oncast = byOncast.get();
@@ -287,17 +290,17 @@ public class OncastService {
         Long userId = getUserId();
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
 
         User user = byUserId.get();
 
         Optional<Oncast> byOncast = oncastRepository.findById(oncastId);
         if(byOncast.isEmpty()){
-            throw new IllegalArgumentException("온캐스트 정보가 없습니다.");
+            throw new OncastNotFoundException("온캐스트 정보가 없습니다.");
         }
 
         if(!byOncast.get().getUser().getUserId().equals(userId)){
-            throw new IllegalArgumentException("해당 유저의 온캐스트가 아닙니다.");
+            throw new UnauthorizedOncastAccessException("해당 유저의 온캐스트가 아닙니다.");
         }
 
         Oncast oncast = byOncast.get();
