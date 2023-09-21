@@ -83,7 +83,7 @@ function MusicCard() {
 
   // 음악 리스트상세보기 모달 닫기 함수
   const closeMusicDetailModal = () => {
-    setRefreshKey(prevKey => !prevKey);
+    setRefreshKey((prevKey) => !prevKey);
     setMusicDetailModalOpen(false);
   };
 
@@ -98,7 +98,7 @@ function MusicCard() {
         withCredentials: true,
       });
     })
-      .then(response => {
+      .then((response) => {
         // 데이터 정규화
         const normalizedData: ApiResponseType = {
           my_music_box: response.data.my_music_box,
@@ -106,7 +106,7 @@ function MusicCard() {
         };
         setData(normalizedData);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("데이터 가져오기 오류:", error);
       });
   }, [refreshPlaylist, refreshKey]);
@@ -273,7 +273,7 @@ function MusicCard() {
               component={Link}
               to="/MyMusicPlayer"
               className={styles.playButton}
-              onClick={event => {
+              onClick={(event) => {
                 if (Playlist.playlistCount === 0) {
                   Swal.fire({
                     icon: "error",
