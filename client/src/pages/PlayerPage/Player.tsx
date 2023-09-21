@@ -32,11 +32,11 @@ export const Player = (): ReactElement => {
         withCredentials: true,
       });
     })
-      .then(response => {
+      .then((response) => {
         console.log(response.data);
         setOncasts(response.data.oncast);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("통신에러 발생", error);
       });
   }, [oncast_id]);
