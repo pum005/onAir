@@ -2,8 +2,6 @@ package com.b302.zizon.util.S3.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.b302.zizon.util.exception.CommonException;
-import com.b302.zizon.util.exception.CustomExceptionStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

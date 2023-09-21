@@ -20,7 +20,6 @@ public class UserController {
     // 닉네임 중복 체크
     @GetMapping("/user/check-nickname")
     public ResponseEntity<?> userCheckNickname(@RequestParam("nickName") String nickname){
-
         boolean result = userService.userCheckNickname(nickname);
 
         return ResponseEntity.status(200).body(result);
@@ -29,7 +28,6 @@ public class UserController {
     // 닉네임 변경
     @PutMapping("/user/nickname/update")
     public ResponseEntity<?> userNicknameUpdate(@RequestBody UserUpdateRequestDTO userUpdateRequestDTO){
-        
         Map<String, Object> result = userService.userNicknameUpdate(userUpdateRequestDTO);
 
         return ResponseEntity.status(200).body(result);
