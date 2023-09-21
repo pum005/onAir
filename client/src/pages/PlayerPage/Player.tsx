@@ -37,7 +37,7 @@ export const Player = (): ReactElement => {
         setOncasts(response.data.oncast);
       })
       .catch(error => {
-        console.error("통신에러 발생", error);
+        console.error("통신에러1 발생", error);
       });
   }, [oncast_id]);
 
