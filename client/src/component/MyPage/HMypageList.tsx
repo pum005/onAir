@@ -16,6 +16,7 @@ interface TabPanelProps {
   value: number;
 }
 type OncastType = {
+  oncastId: number;
   createTime: string;
   title: string;
   shareCheck: boolean;
@@ -71,14 +72,14 @@ export default function BasicTabs() {
         withCredentials: true,
       });
     })
-      .then(response => {
+      .then((response) => {
         if (response.data.message) {
           setMessage(response.data.message);
         } else {
           setOncasts(response.data.oncasts);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("통신에러 발생", error);
       });
   }, []);
@@ -162,11 +163,12 @@ export default function BasicTabs() {
                 style={{ margin: "10px", width: "calc(25% - 20px)" }}
               >
                 <RecipeReviewCard
+                  oncastId={data.oncastId}
                   title={data.createTime}
                   subheader={data.title}
                   shareCheck={data.shareCheck}
                   selectCheck={data.selectCheck}
-                  songs={data.musicList.map(song => ({
+                  songs={data.musicList.map((song) => ({
                     musicId: song.musicId,
                     songTitle: song.title,
                     artist: song.artist,

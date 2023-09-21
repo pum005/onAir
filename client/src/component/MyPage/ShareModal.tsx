@@ -4,18 +4,43 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { ShareConfirm } from "./ShareConfirmModal";
 import React from "react";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import axios from "axios";
 
 type ShareModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  oncastId: number;
 };
 
-function ShareModal({ isOpen, onClose }: ShareModalProps) {
+function ShareModal({ isOpen, onClose, oncastId }: ShareModalProps) {
   const [showConfirm, setShowConfirm] = React.useState(false); // 상태 추가
 
   const handleDelete = () => {
+    console.log(oncastId);
+    // PATCH 요청을 보냅니다.
+    requestWithTokenRefresh(() => {
+      return axios.patch(
+        `http://localhost:8080/api/oncast/shares/${oncastId}`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        }
+      );
+    })
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.message === "이미 공유된 온캐스트입니다.") {
+        }
+        if (response.data.message === "") setShowConfirm(true);
+      })
+      .catch((error) => {
+        console.error("통신에러 발생", error);
+      });
+
     onClose();
-    setShowConfirm(true);
   };
 
   const handleConfirmClose = () => {
