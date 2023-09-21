@@ -81,9 +81,6 @@ public class OncastService {
 
         User user = byUserId.get();
 
-//        String exstory = "오늘 하루종일 비가 와서 너무 힘들었습니다. 비가 오는날마다 너무 습하고 밖을 못돌아다녀서요. " +
-//                "저는 밖에서 산책하고 사람들을 만나는걸 좋아하기 때문이에요.\n" +
-//                "비오는날에도 행복할 수 있게 비를 맘껏 즐길 수 있는 하루가 되었으면 좋겠어요!";
 
         OncastCreateData ocd = OncastCreateData.builder()
                 .title(request.getTitle())
@@ -165,7 +162,6 @@ public class OncastService {
 
         ChatGptResponse chatGptResponse = chatGptService.askQuestion(questionRequest);
         String fullScript = chatGptResponse.getChoices().get(0).getMessage().getContent();
-//        System.out.println(fullScript);
         if (fullScript != null) {
             script = fullScript.split("@@");
         }
@@ -207,8 +203,6 @@ public class OncastService {
         oncastCreateDataRepository.save(ocd);
 
         oncastRepository.save(oncast);
-        System.out.println("db에 온캐스트 저장 완료");
-
 
         return oncast;
     }
