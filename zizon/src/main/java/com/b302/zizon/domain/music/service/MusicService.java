@@ -137,6 +137,7 @@ public class MusicService {
                     .musicAlbum(track.getAlbum().getName())
                     .musicImage(imageUrl)
                     .musicReleaseDate(musicReleaseDate)
+                    .externalIds(track.getExternal_ids().getIsrc())
                     .spotifyMusicDuration(track.getDuration_ms())
                     .build();
 
