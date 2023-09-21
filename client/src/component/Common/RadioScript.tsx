@@ -15,7 +15,7 @@ export const RadioScripts = () => {
 
   return (
     <div className={styles.container}>
-      <h2>DJ이름</h2>
+      <h2>{radioDummyData.djName}</h2>
       <hr className={styles.hrStyle} />
       <p>{radioDummyData[currentScript]}</p>
     </div>

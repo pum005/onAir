@@ -10,7 +10,6 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import 흥애 from "../../resources/흥애.png";
-import Swal from "sweetalert2";
 
 type PlayListModalProps = {
   isOpen: boolean;
@@ -32,6 +31,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
     string | undefined
   >();
   const [playlists, setPlaylists] = React.useState<Playlist[]>([]);
+  const [refreshKey, setRefreshKey] = React.useState(false);
 
   const handleAddClick = (name: string, playlistMetaId: number) => {
     setSelectedPlaylistName(name);
@@ -54,13 +54,10 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
         }
       )
       .then((response) => {
-        if (response.data === "이미 플레이리스트에 추가된 음악입니다.") {
-          Swal.fire({
-            icon: "error",
-            title: "이미 플레이리스트에 추가된 음악입니다.",
-            showConfirmButton: false,
-            timer: 1500,
-          });
+        if (
+          response.data.message === "이미 플레이리스트에 추가된 음악입니다."
+        ) {
+          alert("이미 플레이리스트에 추가된 음악입니다.!");
         } else {
           setAlertOpen(true);
         }
@@ -72,6 +69,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
 
   const handleAlertClose = () => {
     setAlertOpen(false);
+    setRefreshKey((prevKey) => !prevKey);
   };
 
   //내 보관함 불러오기 아직
@@ -92,7 +90,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
           console.log("통신에러", error);
         });
     }
-  }, [isOpen]);
+  }, [isOpen, refreshKey]);
 
   return (
     <>
