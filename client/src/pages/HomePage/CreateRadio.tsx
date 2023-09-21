@@ -228,14 +228,7 @@ const CreateRadio = () => {
         </div>
       </div>
       {showButton && (
-        <button onClick={handleOncastButtonClick}>
-          redux 온캐스트 들으러 가기
-        </button>
-      )}
-      {showButton && (
-        <Link to="/Player">
-          <button>한 페이지에서 온캐스트 들으러 가기</button>
-        </Link>
+        <button onClick={handleOncastButtonClick}>온캐스트 들으러 가기</button>
       )}
     </div>
   );
