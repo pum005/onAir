@@ -1,43 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { useNavigate } from "react-router-dom";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import YouTube, { YouTubeProps } from "react-youtube";
 
-export const Music = () => {
-  const dispatch = useDispatch();
-  const radioDummyData = useSelector((state: RootState) => state.radioDummy);
-  const navigate = useNavigate();
+type MusicProps = {
+  musicFiles: any[];
+};
 
-  // const handleAudioEnd = () => {
+export const Music = ({ musicFiles }: MusicProps) => {
+  const [currentMusicIndex, setCurrentMusicIndex] = useState(0); // 현재 재생 중인 음악의 인덱스
 
-  //   navigate("/RadioPlayer");
-  // };
-
-  const currentMusicKey = [
-    `oncast_music_one`,
-    `oncast_music_two`,
-    `oncast_music_three`,
-  ][radioDummyData.currentMusicIndex];
-
-  // 현재 선택된 음악의 youtubeId 가져오기
-  const currentYoutubeId = String(radioDummyData[currentMusicKey]);
-
-  // 현재 노래의 제목, 아티스트, 앨범 표지 가져오기
-  const currentMusicTitle =
-    radioDummyData.musicTitle[radioDummyData.currentMusicIndex];
-  const currentMusicArtist =
-    radioDummyData.musicArtist[radioDummyData.currentMusicIndex];
-  const currentMusicCover =
-    radioDummyData.musicCover[radioDummyData.currentMusicIndex];
-
-  const onPlayerReady: YouTubeProps["onReady"] = (event) => {};
-
-  const handleVideoEnd = () => {
-    dispatch({ type: "INCREMENT_MUSIC_INDEX" }); // 인덱스 증가
-    navigate("/RadioPlayer"); // Radio.tsx로의 경로를 설정합니다
-  };
-
+  // YouTube 플레이어 설정
   const opts: YouTubeProps["opts"] = {
     height: "390",
     width: "640",
@@ -46,45 +20,30 @@ export const Music = () => {
     },
   };
 
-  useEffect(() => {
-    console.log("Current Music Index:", radioDummyData.currentMusicIndex);
-  }, [radioDummyData.currentMusicIndex]);
+  // 현재 재생 중인 음악의 정보
+  const currentMusic = musicFiles[currentMusicIndex];
+
+  const handleVideoEnd = () => {
+    const nextMusicIndex = currentMusicIndex + 1;
+    if (nextMusicIndex < musicFiles.length) {
+      setCurrentMusicIndex(nextMusicIndex); // 다음 음악으로 넘어갑니다.
+    } else {
+      setCurrentMusicIndex(0); // 모든 음악이 끝나면 처음으로 돌아갑니다.
+    }
+  };
 
   return (
     <div
-      style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(${currentMusicCover})`, // 수정된 부분
-        // backgroundImage: `url(${currentMusicCover})`, // 배경 이미지 설정
-        backgroundSize: "cover", // 배경 이미지를 컨테이너 크기에 맞게 조절
-        backgroundPosition: "center", // 배경 이미지의 위치를 중앙으로 설정
-        backgroundColor: "rgba(0, 1, 4, 0.9)", // 투명도를 조절하는 배경색
-        height: "100%",
-        color: "white",
-      }}
+      style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
     >
-      <div>
-        <h2>{currentMusicTitle}</h2> {/* 현재 노래 제목 렌더링 */}
-        <p>{currentMusicArtist}</p> {/* 현재 아티스트 렌더링 */}
-      </div>
+      {/* 현재 재생 중인 음악의 제목과 아티스트를 출력합니다. */}
+      <h2>{currentMusic.title}</h2>
+      <p>{currentMusic.artist}</p>
 
-      {/* <audio controls autoPlay onEnded={handleAudioEnd}>
-        <source src={radioDummyData[currentMusic] as string} type="audio/mp3" />
-        Your browser does not support the audio element.
-      </audio> */}
-
-      {/* 오디오 플레이어 아래에 앨범 커버 이미지 렌더링 */}
-      <div style={{ marginTop: "20px" }}>
-        <img
-          src={currentMusicCover}
-          alt="앨범 표지"
-          style={{ width: "400px", height: "400px" }}
-        />
-      </div>
       <YouTube
-        videoId={currentYoutubeId}
+        videoId={currentMusic.youtubeId}
         opts={opts}
-        onReady={onPlayerReady}
-        onEnd={handleVideoEnd} // 여기에 onEnd 이벤트 핸들러를 추가합니다.
+        onEnd={handleVideoEnd} // 음악이 끝나면 다음 음악으로 넘어갑니다.
       />
     </div>
   );
