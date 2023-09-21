@@ -39,6 +39,7 @@ const CreateRadio = () => {
     if (!inputContent.trim()) {
       alert("내용을 입력해주세요");
       return;
+      navigate;
     }
     if (!inputTheme.trim()) {
       alert("테마를 선택해주세요");

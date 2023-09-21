@@ -53,6 +53,7 @@ export const Radio = () => {
         onEnded={handleAudioEnd}
         onLoadedMetadata={handleAudioLoaded}
         className={styles.audioStyle}
+        crossOrigin="anonymous"
       >
         <source src={radioDummyData[currentTTS] as string} type="audio/mp3" />
         Your browser does not support the audio element.
