@@ -29,6 +29,7 @@ type ApiResponseType = {
     playlistImage: string;
     playlistCount: number;
     playlistName: string;
+    playlistMetaId: number;
   }>;
 };
 
@@ -46,6 +47,8 @@ function MusicCard({ refreshFlag }: any) {
 
   const [refreshPlaylist, setRefreshPlaylist] = useState(false); //플리추가 렌더링 할 state(보관함 전체 불러오기)
   const [refreshKey, setRefreshKey] = useState(false); //닫기눌렀을때도 리렌더링
+
+  const [removeList, setRemoveList] = useState(0);
 
   /** function */
   //보관함추가 실행 함수
@@ -266,6 +269,7 @@ function MusicCard({ refreshFlag }: any) {
             <DeleteOutlineIcon // 2. 쓰레기통 아이콘 추가
               className={styles.DeleteOutlineIcon}
               onClick={() => {
+                setRemoveList(Playlist.playlistMetaId);
                 openDeleteModal();
               }}
             />
@@ -303,7 +307,11 @@ function MusicCard({ refreshFlag }: any) {
         onClose={MusicBoxModalClose}
         refresh={() => setRefreshPlaylist(!refreshPlaylist)}
       />
-      <DeleteModal isOpen={isDeleteModal} onClose={closeDeleteModal} />
+      <DeleteModal
+        isOpen={isDeleteModal}
+        onClose={closeDeleteModal}
+        playlistId={removeList}
+      />
     </div>
   );
 }
