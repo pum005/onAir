@@ -140,7 +140,8 @@ public class MusicService {
     }
 
     // 유튜브 영상 찾기
-    public YoutubeSearchResultDTO findVideo(String title, String artist, long spotifyMusicDuration, String musicImageUrl) {
+    public Map<String, Object> findVideo(String title, String artist, long spotifyMusicDuration, String musicImageUrl) {
+        Map<String, Object> out = new HashMap<>();
         User user = getUser.getUser();
 
         YoutubeSearchResultDTO result = new YoutubeSearchResultDTO();
@@ -188,8 +189,6 @@ public class MusicService {
                 }
             }
 
-            System.out.println(playTimeYoutube);
-
             Music build = Music.builder()
                     .artist(artist)
                     .duration(playTimeYoutube)
@@ -211,6 +210,14 @@ public class MusicService {
             }
             if(byYoutubeVideoId.isPresent()){
                 music = byYoutubeVideoId.get();
+                Long musicTempId = music.getMusicId();
+                Optional<MyMusicBox> byMusicMusicIdAndUserUserId = myMusicBoxRepository.findByMusicMusicIdAndUserUserId(musicTempId, user.getUserId());
+                if(!byMusicMusicIdAndUserUserId.isEmpty()){
+
+                    out.put("message", "이미 보관함에 추가된 노래입니다.");
+                    return out;
+                }
+
             }
 
             musicId = music.getMusicId();
@@ -226,7 +233,9 @@ public class MusicService {
                 MyMusicBox save = myMusicBoxRepository.save(myMusicBox);
             }
 
-            return result;
+            out.put("result", result);
+
+            return out;
         } catch (Exception e) {
             throw new EntityNotFoundException("해당 영상 없음");
         }
