@@ -311,6 +311,7 @@ function MusicCard({ refreshFlag }: any) {
         isOpen={isDeleteModal}
         onClose={closeDeleteModal}
         playlistId={removeList}
+        refresh={() => setRefreshKey((prevKey) => !prevKey)}
       />
     </div>
   );

@@ -13,6 +13,7 @@ type DeleteModalProps = {
   musicId?: number | null;
   playlistId?: number | null;
   setRefreshKey?: () => void;
+  refresh?: () => void;
 };
 
 function DeleteModal({
@@ -21,10 +22,9 @@ function DeleteModal({
   musicId,
   setRefreshKey,
   playlistId,
+  refresh,
 }: DeleteModalProps) {
   const [showConfirm, setShowConfirm] = React.useState(false); // 상태 추가
-
-  console.log(playlistId);
 
   const handleDelete = () => {
     if (musicId) {
@@ -48,6 +48,7 @@ function DeleteModal({
           console.error("Error deleting the music", error);
         });
     } else if (playlistId) {
+      console.log(playlistId);
       requestWithTokenRefresh(() => {
         return axios.delete(
           `http://localhost:8080/api/playlist/${playlistId}`,
@@ -62,8 +63,8 @@ function DeleteModal({
         .then((response) => {
           console.log("Deleted 성공!", response);
           setShowConfirm(true);
-          if (setRefreshKey) {
-            setRefreshKey();
+          if (refresh) {
+            refresh();
           }
         })
         .catch((error) => {
