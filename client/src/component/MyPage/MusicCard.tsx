@@ -32,7 +32,7 @@ type ApiResponseType = {
   }>;
 };
 
-function MusicCard() {
+function MusicCard({ refreshFlag }: any) {
   /** state */
   const [isMusicBoxModalOpen, setMusicBoxModalOpen] = useState<boolean>(false); //보관함 추가 모달
   // const [myMusicBox, setMyMusicBox] = useState(0); //전체 보관함 관리 state
@@ -109,7 +109,7 @@ function MusicCard() {
       .catch((error) => {
         console.error("데이터 가져오기 오류:", error);
       });
-  }, [refreshPlaylist, refreshKey]);
+  }, [refreshPlaylist, refreshKey, refreshFlag]);
 
   return (
     <div style={{ width: "70%", margin: "0 auto" }}>
