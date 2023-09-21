@@ -51,6 +51,7 @@ public class MyMusicBoxService {
         List<Map<String, Object>> playlistInfo = playlistMetaRepository.findByUserUserId(user.getUserId()).stream()
                 .map(meta -> {
                     Map<String, Object> info = new HashMap<>();
+                    info.put("playlistMetaId", meta.getPlaylistMetaId());
                     info.put("playlistName", meta.getPlaylistName());
                     info.put("playlistCount", meta.getPlaylistCount());
                     info.put("playlistImage", meta.getPlaylistImage());
