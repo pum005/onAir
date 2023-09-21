@@ -20,9 +20,9 @@ public class OncastResponseDto {
     private String ttsTwo;
     private String ttsThree;
     private String ttsFour;
-    private String oncastMusicOne;
-    private String oncastMusicTwo;
-    private String oncastMusicThree;
+//    private Music music1;
+//    private Music music2;
+//    private Music music3;
 
 
 }
