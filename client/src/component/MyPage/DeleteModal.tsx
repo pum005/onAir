@@ -4,19 +4,55 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { DeleteConfirm } from "./DeleteConfirmModal";
 import React from "react";
+import axios from "axios";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 
 type DeleteModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  musicId?: number | null;
+  setRefreshKey?: () => void;
 };
 
-function DeleteModal({ isOpen, onClose }: DeleteModalProps) {
+function DeleteModal({
+  isOpen,
+  onClose,
+  musicId,
+  setRefreshKey,
+}: DeleteModalProps) {
   const [showConfirm, setShowConfirm] = React.useState(false); // 상태 추가
 
   const handleDelete = () => {
-    onClose(); // "삭제하시겠습니까?" 모달 닫기
-    setShowConfirm(true); // "삭제가 완료되었습니다." 알림 모달 표시
+    if (musicId) {
+      requestWithTokenRefresh(() => {
+        return axios.delete("http://localhost:8080/api/my-musicbox", {
+          data: { musicId: musicId },
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        });
+      })
+        .then((response) => {
+          console.log("Deleted 성공!", response);
+          setShowConfirm(true);
+          if (setRefreshKey) {
+            setRefreshKey();
+          }
+        })
+        .catch((error) => {
+          console.error("Error deleting the music", error);
+        });
+    } else {
+      console.error("No musicId provided");
+    }
+    onClose();
   };
+
+  // const handleDelete = () => {
+  //   onClose(); // "삭제하시겠습니까?" 모달 닫기
+  //   setShowConfirm(true); // "삭제가 완료되었습니다." 알림 모달 표시
+  // };
 
   const handleConfirmClose = () => {
     setShowConfirm(false); // 알림 모달 닫기

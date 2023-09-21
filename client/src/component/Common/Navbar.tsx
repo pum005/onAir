@@ -72,7 +72,7 @@ function ResponsiveAppBar() {
   const handleLogoutAlertClose = () => setLogoutAlertOpen(false);
 
   const handleConfirmLogout = () => {
-    const token = localStorage.getItem("accessToken"); // 토큰 가져오기
+    const token = localStorage.getItem("accessToken");
 
     axios
       .post(
