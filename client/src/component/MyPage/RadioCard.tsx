@@ -5,14 +5,18 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AlertDialog from "../Common/AddFullList";
-import { Button } from "@mui/material";
 import PlayListModal from "../Common/PlayListModal";
 import DeleteModal from "./DeleteModal";
 import ShareModal from "./ShareModal";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import ShareIcon from "@mui/icons-material/Share";
+import DeleteIcon from "@mui/icons-material/Delete";
+import RadioPlayModal from "../PlayerPage/RadioPlayModal";
 
 type RecipeReviewCardProps = {
+  oncastId: number;
   title: string;
   subheader: string;
   shareCheck: boolean;
@@ -28,8 +32,10 @@ type SongDataType = {
 }[];
 
 export default function RecipeReviewCard({
+  oncastId,
   title,
   subheader,
+  shareCheck,
   songs = [],
 }: RecipeReviewCardProps & { songs?: SongDataType }) {
   /** state */
@@ -37,6 +43,7 @@ export default function RecipeReviewCard({
   const [playListModalOpen, setPlayListModalOpen] = React.useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
   const [shareModalOpen, setShareModalOpen] = React.useState(false);
+  const [radioplayModalOpen, setRadioplayModalOpen] = React.useState(false);
   const [selectedMusicId, setSelectedMusicId] = React.useState(0);
   //이건 토글로 두어야 계속 불러볼 수 있음.
   const [isPulsButtonClicked, setIsPlusButtonClicked] = React.useState(false);
@@ -75,6 +82,14 @@ export default function RecipeReviewCard({
     setShareModalOpen(false);
   };
 
+  const handlePlayModalClick = () => {
+    setRadioplayModalOpen(true);
+  };
+
+  const handlePlayModalClose = () => {
+    setRadioplayModalOpen(false);
+  };
+
   /**axios */
   //AddCircleOutlineIcon 이거 눌렀을때 전체 보관함 추가하고 나의 플레이리스트 열기
   React.useEffect(() => {
@@ -92,7 +107,7 @@ export default function RecipeReviewCard({
           }
         );
       })
-        .then(response => {
+        .then((response) => {
           console.log(response.data);
           if (response.data.message === "음악 추가 완료") {
             setOpen(true);
@@ -102,7 +117,7 @@ export default function RecipeReviewCard({
             alert("이미 보관함에 있는 음악입니다.");
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("에러발생", error);
         });
     }
@@ -184,20 +199,28 @@ export default function RecipeReviewCard({
           style={{
             marginTop: "10px",
             display: "flex",
-            gap: "10px",
-            justifyContent: "center",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={handleDeleteClick}
-          >
-            삭제하기
-          </Button>
-          <Button variant="outlined" color="primary" onClick={handleShareClick}>
-            공유하기
-          </Button>
+          <div>
+            <ShareIcon
+              onClick={handleShareClick}
+              style={{ cursor: "pointer" }}
+            />
+          </div>
+          <div>
+            <PlayCircleIcon
+              onClick={handlePlayModalClick}
+              style={{ cursor: "pointer" }}
+            />
+          </div>
+          <div>
+            <DeleteIcon
+              onClick={handleDeleteClick}
+              style={{ cursor: "pointer" }}
+            />
+          </div>
         </div>
 
         <IconButton
@@ -212,11 +235,22 @@ export default function RecipeReviewCard({
       </CardContent>
       <AlertDialog open={open} handleClose={handleClose} />
       <PlayListModal
+        musicId={selectedMusicId}
         isOpen={playListModalOpen}
         onClose={handlePlayListModalClose}
       />
       <DeleteModal isOpen={deleteModalOpen} onClose={handleDeleteModalClose} />
-      <ShareModal isOpen={shareModalOpen} onClose={handleShareModalClose} />
+      <ShareModal
+        isOpen={shareModalOpen}
+        onClose={handleShareModalClose}
+        oncastId={oncastId}
+      />
+
+      <RadioPlayModal
+        open={radioplayModalOpen}
+        handleClose={handlePlayModalClose}
+        radioName={subheader}
+      />
     </Card>
   );
 }

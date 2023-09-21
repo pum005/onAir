@@ -1,9 +1,12 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import NavBar from "../../component/Common/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { resetIndices, setMusicInfo, setRadioDummyData } from "../../store";
 import DJSelector from "../../component/Radio/DJSelector";
+import styles from "./CreateRadio.module.css";
+import axios from "axios";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 
 const CreateRadio = () => {
   /** state,ref */
@@ -13,42 +16,11 @@ const CreateRadio = () => {
   const [contentLength, setContentLength] = useState(0); //내용 count
   const [selectedDJ, setSelectedDJ] = useState(""); // 선택한 DJ 이름
 
-  /** dummyData */
-  const dispatch = useDispatch();
-  dispatch(
-    setRadioDummyData({
-      tts_one: "dummyRadio/radio1.mp3",
-      tts_two: "dummyRadio/radio2.mp3",
-      tts_three: "dummyRadio/radio3.mp3",
-      tts_four: "dummyRadio/radio4.mp3",
-      script_one: "첫번째 라디오 스크립트입니다",
-      script_two: "두번째 라디오 스크립트입니다",
-      script_three: "세번째 라디오 스크립트입니다",
-      script_four: "네번째 라디오 스크립트입니다",
-      oncast_music_one: "dummyMusic/1.mp3",
-      oncast_music_two: "dummyMusic/2.mp3",
-      oncast_music_three: "dummyMusic/사라지나요.mp3",
-    })
-  );
-
-  // 음악 정보 더미 데이터를 디스패치합니다.
-  dispatch(
-    setMusicInfo({
-      musicTitle: ["결을(Feat. Ash ISLAND)", "작별인사", "사라지나요"],
-      musicArtist: ["Cloudybay", "Ash ISLAND", "PATEKO"],
-      musicLength: [162000, 167000, 243000],
-      musicCover: [
-        "https://cdnimg.melon.co.kr/cm2/album/images/113/13/701/11313701_20230824151914_500.jpg?028e06e5f0ce0b0760e290fa61831224/melon/optimize/90",
-        "https://image.bugsm.co.kr/album/images/500/205636/20563609.jpg",
-        "https://image.bugsm.co.kr/album/images/500/40581/4058181.jpg",
-      ],
-    })
-  );
-
-  dispatch(resetIndices());
-
   /** action */
   const navigate = useNavigate(); //페이지 이동 함수
+
+  //임시 온캐스트 생성 후 온캐스트 페이지로 넘어가게 하는 버튼
+  const [showButton, setShowButton] = useState(false);
 
   const handleCreate = () => {
     const inputTitle = titleRef.current ? titleRef.current.value : "";
@@ -67,6 +39,7 @@ const CreateRadio = () => {
     if (!inputContent.trim()) {
       alert("내용을 입력해주세요");
       return;
+      navigate;
     }
     if (!inputTheme.trim()) {
       alert("테마를 선택해주세요");
@@ -76,7 +49,8 @@ const CreateRadio = () => {
       alert("DJ를 선택해주세요");
       return;
     }
-    navigate("/Loading");
+    // navigate("/Loading");
+    setShowButton(true);
   };
 
   const handleThemeSelect = (theme: string) => {
@@ -91,28 +65,99 @@ const CreateRadio = () => {
     setContentLength(e.target.value.length);
   };
 
+  const [fetchOncast, setFetchOncast] = useState(false);
+
+  const handleOncastButtonClick = () => {
+    setFetchOncast(true);
+  };
+
+  const dispatch = useDispatch();
+
+  type MusicItem = {
+    title: string;
+    artist: string;
+    duration: number;
+    albumCoverUrl: string;
+    youtubeId: string;
+  };
+
+  useEffect(() => {
+    if (fetchOncast) {
+      requestWithTokenRefresh(() => {
+        return axios.get("http://localhost:8080/api/oncast/play/7", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        });
+      }).then(response => {
+        console.log("Response Data:", response.data);
+        console.log("Music Data:", response.data.oncast.music);
+
+        const data: {
+          djName: string;
+          ttsOne: string;
+          ttsTwo: string;
+          ttsThree: string;
+          ttsFour: string;
+          scriptOne: string;
+          scriptTwo: string;
+          scriptThree: string;
+          scriptFour: string;
+          music: {
+            title: string;
+            artist: string;
+            duration: number;
+            albumCoverUrl: string;
+            youtubeId: string;
+          }[];
+        } = response.data.oncast; // 여기서 .oncast를 추가했습니다.
+
+        const music: MusicItem[] = response.data.oncast.music; // 여기서도 .oncast를 추가했습니다.
+
+        // Redux 액션 디스패치: 데이터를 Redux 스토어에 저장합니다.
+
+        // oncast 데이터 액션 디스패치
+        dispatch(
+          setRadioDummyData({
+            djName: data.djName,
+            tts_one: data.ttsOne,
+            tts_two: data.ttsTwo,
+            tts_three: data.ttsThree,
+            tts_four: data.ttsFour,
+            script_one: data.scriptOne,
+            script_two: data.scriptTwo,
+            script_three: data.scriptThree,
+            script_four: data.scriptFour,
+            oncast_music_one: data.music[0].youtubeId,
+            oncast_music_two: data.music[1].youtubeId,
+            oncast_music_three: data.music[2].youtubeId,
+          })
+        );
+
+        // 음악 데이터 액션 디스패치
+        dispatch(
+          setMusicInfo({
+            musicTitle: music.map(m => m.title),
+            musicArtist: music.map(m => m.artist),
+            musicLength: music.map(m => m.duration),
+            musicCover: music.map(m => m.albumCoverUrl),
+          })
+        );
+        setFetchOncast(false); // 통신 후 상태 값을 초기화합니다.
+        navigate("/RadioPlayer");
+      });
+    }
+  }, [fetchOncast, dispatch]);
+
   /**AXIOS */
   //여기서 POST매핑하면 끝.
 
   return (
-    <div style={{ backgroundColor: "#000104", color: "white" }}>
+    <div className={styles.container}>
       <NavBar />
-      <div
-        style={{
-          maxWidth: "1000px",
-          margin: "3rem auto",
-          border: "1px solid #626262",
-          borderRadius: "20px",
-          backgroundColor: "rgba(34, 34, 34, 0.7)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
+      <div className={styles.radioWrapper}>
+        <div className={styles.flexContainer}>
           <div></div>
           <div style={{ textAlign: "center" }}>
             <h2>TITLE</h2>
@@ -150,26 +195,9 @@ const CreateRadio = () => {
               DRAMATIC
             </button>
             <button onClick={() => handleThemeSelect("FUNKY")}>FUNKY</button>
-            {/* <button onClick={() => handleThemeSelect("EXOTIC")}>EXOTIC</button>
-            <button onClick={() => handleThemeSelect("ELECTRIC")}>
-              ELECTRIC
-            </button>
-            <button onClick={() => handleThemeSelect("ACOUSTIC")}>
-              ACOUSTIC
-            </button>
-            <button onClick={() => handleThemeSelect("NOSTALGIC")}>
-              NOSTALGIC
-            </button>
-            <button onClick={() => handleThemeSelect("DREAMY")}>DREAMY</button> */}
           </div>
         </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
+        <div className={styles.flexContainer}>
           <div>
             <h2>STORY</h2>
             {`${contentLength}/1000`}
@@ -199,6 +227,9 @@ const CreateRadio = () => {
           </Link>
         </div>
       </div>
+      {showButton && (
+        <button onClick={handleOncastButtonClick}>온캐스트 들으러 가기</button>
+      )}
     </div>
   );
 };

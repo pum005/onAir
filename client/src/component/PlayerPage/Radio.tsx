@@ -1,6 +1,6 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { RootState, resetIndices } from "../../store";
 import { useNavigate } from "react-router-dom";
 import Equalizer from "../Common/Equalizer";
 import { RadioScripts } from "../Common/RadioScript";
@@ -32,11 +32,16 @@ export const Radio = () => {
     dispatch({ type: "INCREMENT_TTS_INDEX" });
 
     if (radioDummyData.currentTTSIndex === 3) {
+      dispatch(resetIndices()); // 인덱스 초기화
       setShowModal(true); // 4번째 TTS가 끝나면 모달 표시
     } else {
       navigate("/MusicPlayer");
     }
   };
+
+  useEffect(() => {
+    console.log("Current TTS Index:", radioDummyData.currentTTSIndex);
+  }, [radioDummyData.currentTTSIndex]);
 
   return (
     <div className={styles.container}>
@@ -48,6 +53,7 @@ export const Radio = () => {
         onEnded={handleAudioEnd}
         onLoadedMetadata={handleAudioLoaded}
         className={styles.audioStyle}
+        crossOrigin="anonymous"
       >
         <source src={radioDummyData[currentTTS] as string} type="audio/mp3" />
         Your browser does not support the audio element.

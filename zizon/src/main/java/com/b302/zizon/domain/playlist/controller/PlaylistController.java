@@ -32,9 +32,9 @@ public class PlaylistController {
     // 플레이리스트 생성하기
     @PostMapping("playlist")
     public ResponseEntity<?> makePlaylist(@RequestBody MakePlaylistRequestDTO makePlaylistRequestDTO){
-        playlistService.MakePlaylist(makePlaylistRequestDTO);
+        Map<String, Object> result = playlistService.MakePlaylist(makePlaylistRequestDTO);
 
-        return ResponseEntity.status(HttpStatus.OK).body("플레이리스트 생성 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     // 내 플레이리스트 호출하기
@@ -61,4 +61,11 @@ public class PlaylistController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    // 플레이리스트 안에 있는 음악 삭제하기
+    @DeleteMapping("api/playlist/music")
+    public ResponseEntity<?> deletePlaylistMusic(@RequestBody AddPlaylistMusicDTO deletePlaylistMusicDTO){
+        Map<String, Object> result = playlistService.deletePlaylistMusic(deletePlaylistMusicDTO);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
 }
