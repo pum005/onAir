@@ -188,7 +188,7 @@ export default function BasicTabs() {
       </CustomTabPanel>
       <SearchModal
         isOpen={isSearchModalOpen}
-        onClose={handleSearchModalClose} // 모달 바깥쪽을 클릭하면 모달을 닫는다.
+        onClose={handleSearchModalClose}
       />
     </Box>
   );
