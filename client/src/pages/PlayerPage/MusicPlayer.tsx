@@ -18,7 +18,7 @@ export const MusicPlayer = () => {
           onClick={() => setIsModalOpen(true)}
         />
       </div>
-      <Music />
+      {/* <Music /> */}
       {/* 모달 컴포넌트 추가 */}
       <Modal
         isOpen={isModalOpen}
