@@ -28,37 +28,13 @@ public class OncastController {
     @Transactional
     @PostMapping("/oncast/create")
     public ResponseEntity<?> registOncast(@RequestBody OncastRequestDto request) {
-        // request를 가지고 음악 추천받는 로직 - 테마 + 사연(감성 분석 후)
 
-        String[] oncastMusic = new String[3];
-
-
-        Oncast oncast = oncastService.saveOncast(request,oncastMusic);
-
-//        Map<String, Object> result;
-
-//        return ResponseEntity.status(200).body();
+        Oncast oncast = oncastService.saveOncast(request);
 
 
-        return new ResponseEntity<>(OncastResponseDto.builder()
-                .oncastId(oncast.getOncastId())
-                .userId(oncast.getUser().getUserId())
-                .createTime(oncast.getCreateTime())
-                .shareCheck(oncast.isShareCheck())
-                .deleteCheck(oncast.isDeleteCheck())
-                .selectCheck(oncast.isSelectCheck())
-                .scriptOne(oncast.getScriptOne())
-                .scriptTwo(oncast.getScriptTwo())
-                .scriptThree(oncast.getScriptThree())
-                .scriptFour(oncast.getScriptFour())
-                .ttsOne(oncast.getTtsOne())
-                .ttsTwo(oncast.getTtsTwo())
-                .ttsThree(oncast.getTtsThree())
-                .ttsFour(oncast.getTtsFour())
-//                .oncastMusicOne(oncast.getOncastMusicOne())
-//                .oncastMusicTwo(oncast.getOncastMusicTwo())
-//                .oncastMusicThree(oncast.getOncastMusicThree())
-                .build(), HttpStatus.CREATED);
+        return ResponseEntity.status(200).body("Oncast 생성 성공!");
+
+
 
     }
 
@@ -73,17 +49,17 @@ public class OncastController {
     // oncast 공유하기
     @PatchMapping("oncast/shares/{oncast_id}")
     public ResponseEntity<?> shareOncast(@PathVariable Long oncast_id){
-        Map<String, Object> result = oncastService.shareOncast(oncast_id);
+        oncastService.shareOncast(oncast_id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity.status(HttpStatus.OK).body("공유하기 성공");
     }
 
     // oncast 삭제하기
     @PatchMapping("oncast/{oncast_id}")
     public ResponseEntity<?> deleteOncast(@PathVariable Long oncast_id){
-        Map<String, Object> result = oncastService.deleteOncast(oncast_id);
+        oncastService.deleteOncast(oncast_id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity.status(HttpStatus.OK).body("온캐스트 삭제 성공");
     }
 
     // oncast 재생하기
