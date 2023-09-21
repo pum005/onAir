@@ -4,9 +4,12 @@ import com.b302.zizon.domain.music.dto.*;
 import com.b302.zizon.domain.music.dto.response.*;
 import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.music.entity.MyMusicBox;
+import com.b302.zizon.domain.music.exception.MusicNotFoundException;
 import com.b302.zizon.domain.music.repository.MusicRepository;
 import com.b302.zizon.domain.music.repository.MyMusicBoxRepository;
+import com.b302.zizon.domain.user.GetUser;
 import com.b302.zizon.domain.user.entity.User;
+import com.b302.zizon.domain.user.exception.UserNotFoundException;
 import com.b302.zizon.domain.user.repository.UserRepository;
 import com.b302.zizon.util.ConvertTime;
 import com.google.api.services.youtube.YouTube;
@@ -14,14 +17,7 @@ import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.SearchResult;
-import io.lettuce.core.ScriptOutputType;
 import lombok.RequiredArgsConstructor;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
@@ -35,7 +31,6 @@ import javax.persistence.EntityNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URLEncoder;
-import java.time.Duration;
 import java.util.*;
 
 @Service
@@ -53,14 +48,8 @@ public class MusicService {
     private final MusicRepository musicRepository;
     private final MyMusicBoxRepository myMusicBoxRepository;
     private final UserRepository userRepository;
+    private final GetUser getUser;
 
-    public Long getUserId(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        Long userId = (Long) principal;
-
-        return userId;
-    }
 
 
     // 스포티파이 액세스 가져오기
@@ -87,6 +76,9 @@ public class MusicService {
 
     // 스포티파이 검색 결과 가져오기
     public List<SpotifySearchResultDTO> searchSpotifyMusicList(String query) {
+
+        User user = getUser.getUser();
+
         String accessToken = getAccessToken();
         RestTemplate restTemplate = new RestTemplate();
 
@@ -137,6 +129,7 @@ public class MusicService {
                     .musicAlbum(track.getAlbum().getName())
                     .musicImage(imageUrl)
                     .musicReleaseDate(musicReleaseDate)
+                    .externalIds(track.getExternal_ids().getIsrc())
                     .spotifyMusicDuration(track.getDuration_ms())
                     .build();
 
@@ -147,14 +140,9 @@ public class MusicService {
     }
 
     // 유튜브 영상 찾기
-    public YoutubeSearchResultDTO findVideo(String title, String artist, long spotifyMusicDuration, String musicImageUrl) {
-
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+    public Map<String, Object> findVideo(String title, String artist, long spotifyMusicDuration, String musicImageUrl) {
+        Map<String, Object> out = new HashMap<>();
+        User user = getUser.getUser();
 
         YoutubeSearchResultDTO result = new YoutubeSearchResultDTO();
 
@@ -201,8 +189,6 @@ public class MusicService {
                 }
             }
 
-            System.out.println(playTimeYoutube);
-
             Music build = Music.builder()
                     .artist(artist)
                     .duration(playTimeYoutube)
@@ -224,6 +210,14 @@ public class MusicService {
             }
             if(byYoutubeVideoId.isPresent()){
                 music = byYoutubeVideoId.get();
+                Long musicTempId = music.getMusicId();
+                Optional<MyMusicBox> byMusicMusicIdAndUserUserId = myMusicBoxRepository.findByMusicMusicIdAndUserUserId(musicTempId, user.getUserId());
+                if(!byMusicMusicIdAndUserUserId.isEmpty()){
+
+                    out.put("message", "이미 보관함에 추가된 노래입니다.");
+                    return out;
+                }
+
             }
 
             musicId = music.getMusicId();
@@ -239,7 +233,9 @@ public class MusicService {
                 MyMusicBox save = myMusicBoxRepository.save(myMusicBox);
             }
 
-            return result;
+            out.put("result", result);
+
+            return out;
         } catch (Exception e) {
             throw new EntityNotFoundException("해당 영상 없음");
         }
@@ -248,16 +244,11 @@ public class MusicService {
     // 해당 음악 상세정보 가져오기
     public MusicInfoResponseDTO musicInfo(Long musicId){
 
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         Optional<Music> byMusic = musicRepository.findById(musicId);
         if(byMusic.isEmpty()){
-            throw new IllegalArgumentException("해당 음악의 정보가 없습니다.");
+            throw new MusicNotFoundException("해당 음악의 정보가 없습니다.");
         }
 
         Music music = byMusic.get();
