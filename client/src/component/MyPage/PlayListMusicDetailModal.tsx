@@ -29,7 +29,7 @@ type MusicDetailModalProps = {
   playlistMetaId?: number | null;
 };
 
-const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
+const PlayListMusicDetailModal: React.FC<MusicDetailModalProps> = ({
   isOpen,
   onClose,
   title,
@@ -40,11 +40,11 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
   const [refreshKey, setRefreshKey] = useState(false);
 
   useEffect(() => {
-    if (!isOpen) return; // isOpen이 false면 아무 작업도 수행하지 않습니다.
+    if (!isOpen || !playlistMetaId) return; // isOpen이 false거나 playlistMetaId가 없으면 아무 작업도 수행하지 않습니다.
 
+    console.log(playlistMetaId);
     requestWithTokenRefresh(() => {
-      console.log("재렌더링 몇번?");
-      return axios.get("http://localhost:8080/api/my-musicbox/info", {
+      return axios.get(`http://localhost:8080/api/playlist/${playlistMetaId}`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },
@@ -52,16 +52,16 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
       });
     })
       .then((response) => {
-        if (response.data.message || !response.data.musicInfo) {
+        if (response.data?.length === 0 || !response.data) {
           setSongs([]);
         } else {
-          setSongs(response.data.musicInfo);
+          setSongs(response.data);
         }
       })
       .catch((error) => {
         console.error("데이터 가져오기 오류", error);
       });
-  }, [isOpen, refreshKey]);
+  }, [isOpen, refreshKey, playlistMetaId]);
 
   const formatTime = (milliseconds: number) => {
     const totalSeconds = Math.round(milliseconds / 1000);
@@ -188,4 +188,4 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
   );
 };
 
-export default MusicDetailModal;
+export default PlayListMusicDetailModal;

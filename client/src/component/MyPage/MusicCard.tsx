@@ -22,6 +22,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DeleteModal from "./DeleteModal";
+import PlayListMusicDetailModal from "./PlayListMusicDetailModal";
 
 type ApiResponseType = {
   my_music_box: number;
@@ -49,6 +50,12 @@ function MusicCard({ refreshFlag }: any) {
   const [refreshKey, setRefreshKey] = useState(false); //닫기눌렀을때도 리렌더링
 
   const [removeList, setRemoveList] = useState(0);
+  const [isPlayListMusicDetailModalOpen, setPlayListMusicDetailModalOpen] =
+    useState<boolean>(false);
+
+  const [selectedPlaylistMetaId, setSelectedPlaylistMetaId] = useState<
+    number | null
+  >(null);
 
   /** function */
   //보관함추가 실행 함수
@@ -77,10 +84,23 @@ function MusicCard({ refreshFlag }: any) {
   const closeDeleteModal = () => {
     setDeleteModal(false);
   };
+  const openPlayListMusicDetailModal = () => {
+    setPlayListMusicDetailModalOpen(true);
+  };
+
+  const closePlayListMusicDetailModal = () => {
+    setPlayListMusicDetailModalOpen(false);
+  };
 
   //플레이리스트 이름 보내기 함수
-  const openMusicDetailModal = (playlistName: string) => {
+  const openMusicDetailModal = (
+    playlistName: string,
+    playlistMetaId?: number | null
+  ) => {
     setSelectedPlaylistTitle(playlistName);
+    if (playlistMetaId) {
+      setSelectedPlaylistMetaId(playlistMetaId);
+    }
     setMusicDetailModalOpen(true);
   };
 
@@ -203,6 +223,7 @@ function MusicCard({ refreshFlag }: any) {
             isOpen={isMusicDetailModalOpen}
             onClose={closeMusicDetailModal}
             title={selectedPlaylistTitle}
+            playlistMetaId={null}
           />
         </ListItem>
 
@@ -232,7 +253,8 @@ function MusicCard({ refreshFlag }: any) {
                       timer: 1500,
                     });
                   } else {
-                    openMusicDetailModal(Playlist.playlistName);
+                    setSelectedPlaylistMetaId(Playlist.playlistMetaId);
+                    openPlayListMusicDetailModal();
                   }
                 }}
               />
@@ -250,7 +272,8 @@ function MusicCard({ refreshFlag }: any) {
                         timer: 1500,
                       });
                     } else {
-                      openMusicDetailModal(Playlist.playlistName);
+                      setSelectedPlaylistMetaId(Playlist.playlistMetaId);
+                      openPlayListMusicDetailModal();
                     }
                   }}
                 >
@@ -291,13 +314,11 @@ function MusicCard({ refreshFlag }: any) {
             >
               <PlayCircleOutlineIcon />
             </Button>
-            <MusicDetailModal
-              isOpen={
-                isMusicDetailModalOpen &&
-                selectedPlaylistTitle === Playlist.playlistName
-              }
-              onClose={closeMusicDetailModal}
+            <PlayListMusicDetailModal
+              isOpen={isPlayListMusicDetailModalOpen}
+              onClose={closePlayListMusicDetailModal}
               title={Playlist.playlistName}
+              playlistMetaId={selectedPlaylistMetaId}
             />
           </ListItem>
         ))}
