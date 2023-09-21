@@ -8,6 +8,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import AlertDialog from "./AddFullList";
 
 type SearchModalProps = {
   isOpen: boolean;
@@ -41,12 +42,48 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
       })
         .then((response) => {
           console.log(response.data);
-          setSearchResults(response.data);
+          if (Array.isArray(response.data) && response.data.length === 0) {
+            alert("검색 결과가 없습니다.!");
+            setSearchResults([]);
+          } else {
+            setSearchResults(response.data);
+          }
         })
         .catch((error) => {
           console.log("에러발생", error);
         });
     }
+  };
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleAddMusic = (music: MusucType) => {
+    console.log(music);
+    requestWithTokenRefresh(() => {
+      return axios.get(
+        `http://localhost:8080/api/search/youtube?musicTitle=${music.musicTitle}&musicArtist=${music.musicArtist}&spotifyMusicDuration=${music.spotifyMusicDuration}&musicImageUrl=${music.musicImage}`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        }
+      );
+    })
+      .then((response) => {
+        if (response.data.message === "이미 보관함에 추가된 노래입니다.") {
+          setOpen(false);
+          alert("이미 보관함에 추가된 노래입니다.");
+        } else {
+          setOpen(true);
+        }
+      })
+      .catch((error) => {
+        console.log("에러발생", error);
+      });
   };
 
   const formatTime = (milliseconds: number) => {
@@ -99,41 +136,45 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
             검색
           </Button>
         </div>
-        <div style={{ marginTop: "30px" }}>
-          {searchResults.map((music, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginTop: "10px",
-                borderBottom: "1px solid #e5e5e5",
-                paddingBottom: "5px",
-              }}
-            >
-              <img
-                src={music.musicImage}
-                alt={`${music.musicTitle} cover`}
-                style={{ width: "40px", height: "40px", marginRight: "10px" }}
-              />
-              <div style={{ flex: 2 }}>
-                <div>{music.musicTitle}</div>
-                <div style={{ color: "#888", fontSize: "0.9em" }}>
-                  {music.musicArtist}
+        <div
+          style={{ marginTop: "30px", maxHeight: "300px", overflowY: "auto" }}
+        >
+          {searchResults.length > 0 &&
+            searchResults.map((music, index) => (
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginTop: "10px",
+                  borderBottom: "1px solid #e5e5e5",
+                  paddingBottom: "5px",
+                }}
+              >
+                <img
+                  src={music.musicImage}
+                  alt={`${music.musicTitle} cover`}
+                  style={{ width: "40px", height: "40px", marginRight: "10px" }}
+                />
+                <div style={{ flex: 2 }}>
+                  <div>{music.musicTitle}</div>
+                  <div style={{ color: "#888", fontSize: "0.9em" }}>
+                    {music.musicArtist}
+                  </div>
                 </div>
+                <div style={{ flex: 1, textAlign: "right" }}>
+                  {formatTime(music.spotifyMusicDuration)}
+                </div>
+                <AddCircleOutlineIcon
+                  style={{ marginLeft: "8px" }}
+                  cursor="pointer"
+                  onClick={() => handleAddMusic(music)}
+                />
               </div>
-              <div style={{ flex: 1, textAlign: "right" }}>
-                {formatTime(music.spotifyMusicDuration)}
-              </div>
-              <AddCircleOutlineIcon
-                style={{ marginLeft: "8px" }}
-                // onClick={() => handleClickOpen(index)}
-                cursor="pointer"
-              />
-            </div>
-          ))}
+            ))}
         </div>
+        <AlertDialog open={open} handleClose={handleClose} />
       </Box>
     </Modal>
   );
