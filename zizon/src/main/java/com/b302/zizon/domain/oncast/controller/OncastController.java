@@ -49,17 +49,17 @@ public class OncastController {
     // oncast 공유하기
     @PatchMapping("oncast/shares/{oncast_id}")
     public ResponseEntity<?> shareOncast(@PathVariable Long oncast_id){
-        Map<String, Object> result = oncastService.shareOncast(oncast_id);
+        oncastService.shareOncast(oncast_id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity.status(HttpStatus.OK).body("공유하기 성공");
     }
 
     // oncast 삭제하기
     @PatchMapping("oncast/{oncast_id}")
     public ResponseEntity<?> deleteOncast(@PathVariable Long oncast_id){
-        Map<String, Object> result = oncastService.deleteOncast(oncast_id);
+        oncastService.deleteOncast(oncast_id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity.status(HttpStatus.OK).body("온캐스트 삭제 성공");
     }
 
     // oncast 재생하기
