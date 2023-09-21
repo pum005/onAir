@@ -32,7 +32,7 @@ public class OncastController {
         System.out.println("start -> "+request.toString());
         Oncast oncast = oncastService.saveOncast(request);
 
-        System.out.println("Controller = "+oncast.toString());
+        System.out.println("Controller"+oncast.toString());
 
         return ResponseEntity.status(200).body("Oncast 생성 성공!");
 

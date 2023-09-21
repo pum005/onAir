@@ -31,9 +31,10 @@ public class Oncast {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "oncast_create_data_id")
     private OncastCreateData oncastCreateData;
+
 
     @Column(name = "created_date")
     @CreatedDate
@@ -73,15 +74,15 @@ public class Oncast {
     private String ttsFour;
 
     @JoinColumn(name = "music_id1")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Music music1;
 
     @JoinColumn(name = "music_id2")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Music music2;
 
     @JoinColumn(name = "music_id3")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Music music3;
 
 

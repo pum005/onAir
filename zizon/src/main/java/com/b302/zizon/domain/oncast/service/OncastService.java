@@ -102,18 +102,27 @@ public class OncastService {
 
 
         oncastMusic[0] = Music.builder()
-                .artist("잔나비")
-                .title("November Rain")
+                .artist("뉴진스")
+                .title("hype boy")
+                .youtubeVideoId("Rrf8uQFvICE")
+                .duration(151373L)
+                .albumCoverUrl("oo")
                 .build();
 
         oncastMusic[1] = Music.builder()
-                .artist("태연")
-                .title("Rain")
+                .artist("뉴진스")
+                .title("ETA")
+                .youtubeVideoId("jOTfBlKSQYY")
+                .duration(151373L)
+                .albumCoverUrl("oo")
                 .build();
 
         oncastMusic[2] = Music.builder()
-                .artist("선우정아")
-                .title("비온다")
+                .artist("뉴진스")
+                .title("ASAP")
+                .youtubeVideoId("dJdqn5v4Dkw")
+                .duration(151373L)
+                .albumCoverUrl("oo")
                 .build();
 
 
@@ -122,20 +131,33 @@ public class OncastService {
 
         QuestionRequest questionRequest = new QuestionRequest();
         questionRequest.setQuestion(
-            "라디오 스크립트를 만들어줘\n" +
-                    "1. 사용자의 이야기와 음악 3곡, DJ이름을 입력할거야\n" +
-                    "2. 글 내용에 맞는 첫 인사 후에 story를 읽어줘  클라이언트에서 [[ ]] 로 인식해서 재생할거라서 입력한 부분을 [[ ]]로 감싸주면 될거같아\n" +
-                    "3. 사연을 다 읽은 후엔 사연에 대한 이야기를 하다가 첫번째 음악을 틀거야\n" +
-                    "4. 각 음악이 끝나면 음악과 사연에 관한 이야기를 하다가 다음 음악을 틀면 돼\n" +
-                    "5. 음악 세개가 다 끝나고 이야기를 다 하면 마무리 인사를 하고 끝나면 돼\n" +
-                    "6. 각 음악이 들어갈 자리엔 [++] 를 넣어줘. 이부분을 체크해서 단락을 나누고 음악을 재생시키려고 하는거니까 음악이 들어가는 부분에 딱 한번만 해야하는거야\n" +
-                    "7. 너의 이름은 DJ이름으로 넣어줄거고 진행 방식은 너 혼자 하는거고 대본처럼 말고 줄글로 쭉 답변을 주면돼\n" +
-                    "- story: \n" +
-                    request.getStory() + // story
-                    "- 음악1: " + oncastMusic[0].getArtist() +"의 "+oncastMusic[0].getTitle()+
-                    "- 음악2: " + oncastMusic[1].getArtist() +"의 "+oncastMusic[1].getTitle()+
-                    "- 음악3: " + oncastMusic[2].getArtist() +"의 "+oncastMusic[2].getTitle()+
-                    "- DJ: "+ request.getDjName()
+            "아래의 예시에 몇가지 조건을 더해서 스크립트를 만들어줘\n" +
+                    "        1. 사용자의 이야기와 음악 3곡을 입력할거야\n" +
+                    "        2. 글 내용에 맞는 첫 인사 후에 story를 읽어줘\n" +
+                    "        3. 사연을 다 읽은 후엔 사연에 대한 이야기를 하다가 첫번째 음악을 틀거야 \n" +
+                    "        4. 각 음악이 끝나면 음악과 사연에 관한 이야기를 하다가 다음 음악을 틀면 돼 \n" +
+                    "        5. 음악 세개가 다 끝나고 이야기를 다 하면 마무리 인사를 하고 끝나면 돼\n" +
+                    "        6. 각 음악이 들어갈 자리엔 @@ 을 넣어줘. 이부분을 체크해서 단락을 나누고 음악을 재생시키려고 하는거니까 음악이 들어가는 부분에 딱 한번만 해야하는거야\n" +
+                    "        7. 밑에 내가 준 예시를 보고 \"노래\" 와 [[story]] 를 바꾸고 내용도 그에 맞게 바꿔서 주면 돼 \n" +
+                    "        - story: [["+ request.getStory()+"]]\n" +
+                    "        - 음악1: ("+ oncastMusic[0].getArtist()+" 의 "+ oncastMusic[0].getTitle()+")\n" +
+                    "        - 음악2: ("+ oncastMusic[1].getArtist()+" 의 "+ oncastMusic[1].getTitle()+")\n" +
+                    "        - 음악3:("+ oncastMusic[2].getArtist()+" 의 "+ oncastMusic[2].getTitle()+")\n" +
+                    "        예시 : \n" +
+                    "        안녕하세요, 여러분! 오늘 하루도 고생 정말 많으셨어요. \n" +
+                    "        오늘의 이야기를 들어볼까요? \n" +
+                    "        [[ 너무 힘든 하루네요. 많이 지친 하루 힐링이 필요해요 ]]\n" +
+                    "        많은 분들이 바쁜 하루가 끝나고 퇴근길에 오르면 신나는 마음과 달리 지친 몸이 친구와 연인보단 침대 속을 찾게 되죠 \n" +
+                    "        그러지 말고 오늘 하루정도는 오랜만에 친구를 만나 쌓인 이야기를 나누며 힐링을 찾는게 어떨까요?  \n" +
+                    "        (음악1) 들으시면서 친구에게 연락 한번 해보세요! \n" +
+                    "        @@\n" +
+                    "        다음 곡입니다. 이 노래 그대로 힐링이 필요한 여러분들이 듣고 마음에 안정을 찾으셨으면 좋겠어요. (음악2) 입니다\n" +
+                    "        @@\n" +
+                    "        다들 오늘의 음악들을 들으시면서 어떻게 오늘의 지친 마음을 회복할지 생각하고 계실거같은데요\n" +
+                    "       좋은 시간 보내신 후에 푹 주무시길 바라요. 마지막곡입니다 (음악3) \n" +
+                    "        @@ \n" +
+                    "        오늘 들은 세 곡 모두 여러분의 마음에 힘이 되었으면 좋겠어요 \n" +
+                    "        다들 힘내시고! 다음에 또 만나요~"
         );
 
 
@@ -143,19 +165,11 @@ public class OncastService {
         String fullScript = chatGptResponse.getChoices().get(0).getMessage().getContent();
 //        System.out.println(fullScript);
         if (fullScript != null) {
-            script = fullScript.split("[++]");
+            script = fullScript.split("@@");
         }
 
         List<String> f = new ArrayList<>();
-//        System.out.println(fullScript);
-//        System.out.println("===================================");
-//        System.out.println(Arrays.toString(script));
-//        System.out.println("===================================");
-//        for (String s : script){
-////            System.out.println("--------------------------------------------------------");
-//            System.out.println(s);
-//        }
-//        System.out.println(fullScript);
+
         for (String s : script) {
             try {
                 String str = naverTTSService.generateTTS(s, request.getDjName());
@@ -165,16 +179,7 @@ public class OncastService {
                 e.printStackTrace();
             }
         }
-        System.out.println("tts완료");
-        for(String s : f){
-            System.out.println(s);
-        }
-        System.out.println("<<여기까지 tts 파일");
 
-        f.add("");
-        f.add("");
-        f.add("");
-        f.add("");
 
 
 
@@ -197,7 +202,8 @@ public class OncastService {
                 .music3(oncastMusic[2])
                 .build();
 
-        System.out.println("온캐스트 빌드 끝");
+        oncastCreateDataRepository.save(ocd);
+
         oncastRepository.save(oncast);
         System.out.println("db에 온캐스트 저장 완료");
 
