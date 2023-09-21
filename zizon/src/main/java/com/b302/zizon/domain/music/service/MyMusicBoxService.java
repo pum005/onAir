@@ -10,6 +10,7 @@ import com.b302.zizon.domain.playlist.entity.Playlist;
 import com.b302.zizon.domain.playlist.entity.PlaylistMeta;
 import com.b302.zizon.domain.playlist.repository.PlaylistMetaRepository;
 import com.b302.zizon.domain.playlist.repository.PlaylistRepository;
+import com.b302.zizon.domain.user.GetUser;
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,25 +34,13 @@ public class MyMusicBoxService {
     private final PlaylistRepository playlistRepository;
     private final PlaylistMetaRepository playlistMetaRepository;
     private final MusicRepository musicRepository;
-
-    public Long getUserId(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        Long userId = (Long) principal;
-
-        return userId;
-    }
+    private final GetUser getUser;
 
     // 내 음악 보관함, 플리 전부 가져오기
     public Map<String, Object> getMyMusicBoxAndPlaylist(){
         Map<String, Object> result = new HashMap<>();
 
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         // 내 음악 전부 가져오기
         List<MyMusicBox> byUserUserId = myMusicBoxRepository.findByUserUserId(user.getUserId());
@@ -78,12 +67,7 @@ public class MyMusicBoxService {
     public Map<String, Object> getMyMusicBoxInfo(){
         Map<String, Object> result = new HashMap<>();
 
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         List<MyMusicBox> getMyMusicBox = myMusicBoxRepository.findByUserUserId(user.getUserId());
 
@@ -113,19 +97,15 @@ public class MyMusicBoxService {
     // 내 보관함에 음악 추가하기
     public Map<String, Object> addMusicMyMusicBox(Long musicId){
         Map<String, Object> result = new HashMap<>();
-        Long userId = getUserId();
 
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         Optional<Music> byMusic = Optional.ofNullable(musicRepository.findById(musicId)
                 .orElseThrow(() -> new NotFoundException("음악을 찾을 수 없습니다.")));
 
         Music music = byMusic.get();
 
-        Optional<MyMusicBox> byMusicMusicId = myMusicBoxRepository.findByMusicMusicIdAndUserUserId(musicId, userId);
+        Optional<MyMusicBox> byMusicMusicId = myMusicBoxRepository.findByMusicMusicIdAndUserUserId(musicId, user.getUserId());
 
         if(byMusicMusicId.isPresent()){
             result.put("message", "이미 보관함에 있는 음악입니다.");
@@ -145,12 +125,7 @@ public class MyMusicBoxService {
     @Transactional
     public Map<String, Object> deleteMusicMyMusicBox(Long musicId){
         Map<String, Object> result = new HashMap<>();
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         Optional<Music> byMusicId = musicRepository.findById(musicId);
         if(byMusicId.isEmpty()){
@@ -159,7 +134,7 @@ public class MyMusicBoxService {
 
         Music music = byMusicId.get();
 
-        Optional<MyMusicBox> fineMyMusicBox = Optional.ofNullable(myMusicBoxRepository.findByMusicMusicIdAndUserUserId(musicId, userId)
+        Optional<MyMusicBox> fineMyMusicBox = Optional.ofNullable(myMusicBoxRepository.findByMusicMusicIdAndUserUserId(musicId, user.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저에게 음악이 없습니다.")));
 
         MyMusicBox myMusicBox = fineMyMusicBox.get();
