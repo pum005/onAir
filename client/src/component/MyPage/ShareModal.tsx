@@ -6,6 +6,7 @@ import { ShareConfirm } from "./ShareConfirmModal";
 import React from "react";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 type ShareModalProps = {
   isOpen: boolean;
@@ -22,6 +23,7 @@ function ShareModal({ isOpen, onClose, oncastId }: ShareModalProps) {
     requestWithTokenRefresh(() => {
       return axios.patch(
         `http://localhost:8080/api/oncast/shares/${oncastId}`,
+        {},
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
@@ -31,10 +33,31 @@ function ShareModal({ isOpen, onClose, oncastId }: ShareModalProps) {
       );
     })
       .then((response) => {
-        console.log(response.data);
         if (response.data.message === "이미 공유된 온캐스트입니다.") {
+          Swal.fire({
+            icon: "error",
+            title: "이미 공유된 온캐스트입니다!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
         }
-        if (response.data.message === "") setShowConfirm(true);
+        if (response.data.message === "공유하기 성공") setShowConfirm(true);
+        if (response.data.message === "이미 삭제된 온캐스트입니다.") {
+          Swal.fire({
+            icon: "error",
+            title: "이미 삭제된 온캐스트입니다!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+        if (response.data.message === "이미 채택된 온캐스트입니다.") {
+          Swal.fire({
+            icon: "error",
+            title: "이미 채택된 온캐스트입니다!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
       })
       .catch((error) => {
         console.error("통신에러 발생", error);
