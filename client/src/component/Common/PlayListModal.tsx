@@ -14,6 +14,7 @@ import 흥애 from "../../resources/흥애.png";
 type PlayListModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  musicId?: number | null;
 };
 
 type Playlist = {
@@ -24,20 +25,51 @@ type Playlist = {
   playlistCount: number;
 };
 
-function PlayListModal({ isOpen, onClose }: PlayListModalProps) {
+function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
   const [alertOpen, setAlertOpen] = React.useState(false);
   const [selectedPlaylistName, setSelectedPlaylistName] = React.useState<
     string | undefined
   >();
   const [playlists, setPlaylists] = React.useState<Playlist[]>([]);
+  const [refreshKey, setRefreshKey] = React.useState(false);
 
-  const handleAddClick = (name: string) => {
+  const handleAddClick = (name: string, playlistMetaId: number) => {
     setSelectedPlaylistName(name);
-    setAlertOpen(true);
+    if (!musicId) {
+      console.error("No musicId provided!");
+      return;
+    }
+    axios
+      .post(
+        "http://localhost:8080/api/playlist/music",
+        {
+          playlistMetaId: playlistMetaId,
+          musicId: musicId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        if (
+          response.data.message === "이미 플레이리스트에 추가된 음악입니다."
+        ) {
+          alert("이미 플레이리스트에 추가된 음악입니다.!");
+        } else {
+          setAlertOpen(true);
+        }
+      })
+      .catch((error) => {
+        console.error("Error adding music to playlist", error);
+      });
   };
 
   const handleAlertClose = () => {
     setAlertOpen(false);
+    setRefreshKey((prevKey) => !prevKey);
   };
 
   //내 보관함 불러오기 아직
@@ -58,7 +90,7 @@ function PlayListModal({ isOpen, onClose }: PlayListModalProps) {
           console.log("통신에러", error);
         });
     }
-  }, [isOpen]);
+  }, [isOpen, refreshKey]);
 
   return (
     <>
@@ -105,7 +137,12 @@ function PlayListModal({ isOpen, onClose }: PlayListModalProps) {
               </div>
               <Box sx={{ marginLeft: "auto" }}>
                 <Button
-                  onClick={() => handleAddClick(playlist.playlistName)}
+                  onClick={() =>
+                    handleAddClick(
+                      playlist.playlistName,
+                      playlist.playlistMetaId
+                    )
+                  }
                   startIcon={<AddCircleOutlineIcon />}
                   variant="outlined"
                   size="small"

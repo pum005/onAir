@@ -20,6 +20,8 @@ import { Link } from "react-router-dom";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import axios from "axios";
 import Swal from "sweetalert2";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import DeleteModal from "./DeleteModal";
 
 type ApiResponseType = {
   my_music_box: number;
@@ -36,12 +38,14 @@ function MusicCard() {
   // const [myMusicBox, setMyMusicBox] = useState(0); //전체 보관함 관리 state
   const [data, setData] = useState<ApiResponseType | null>(null); //데이터 관리
   const [isMusicAddModalOpen, setMusicAddModalOpen] = useState<boolean>(false); //음악 더하기 변수
+  const [isDeleteModal, setDeleteModal] = useState<boolean>(false);
   const [isMusicDetailModalOpen, setMusicDetailModalOpen] =
     useState<boolean>(false); //전체 보관함 음악 상세 보기 모달 state
   const [selectedPlaylistTitle, setSelectedPlaylistTitle] =
     useState<string>(""); //리스트 이름 관리 state
 
-  const [refreshPlaylist, setRefreshPlaylist] = useState(false); //리 렌더링 할 state(보관함 전체 불러오기)
+  const [refreshPlaylist, setRefreshPlaylist] = useState(false); //플리추가 렌더링 할 state(보관함 전체 불러오기)
+  const [refreshKey, setRefreshKey] = useState(false); //닫기눌렀을때도 리렌더링
 
   /** function */
   //보관함추가 실행 함수
@@ -63,6 +67,14 @@ function MusicCard() {
     setMusicAddModalOpen(false);
   };
 
+  const openDeleteModal = () => {
+    setDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteModal(false);
+  };
+
   //플레이리스트 이름 보내기 함수
   const openMusicDetailModal = (playlistName: string) => {
     setSelectedPlaylistTitle(playlistName);
@@ -71,6 +83,7 @@ function MusicCard() {
 
   // 음악 리스트상세보기 모달 닫기 함수
   const closeMusicDetailModal = () => {
+    setRefreshKey(prevKey => !prevKey);
     setMusicDetailModalOpen(false);
   };
 
@@ -85,7 +98,7 @@ function MusicCard() {
         withCredentials: true,
       });
     })
-      .then((response) => {
+      .then(response => {
         // 데이터 정규화
         const normalizedData: ApiResponseType = {
           my_music_box: response.data.my_music_box,
@@ -93,10 +106,10 @@ function MusicCard() {
         };
         setData(normalizedData);
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("데이터 가져오기 오류:", error);
       });
-  }, [refreshPlaylist]);
+  }, [refreshPlaylist, refreshKey]);
 
   return (
     <div style={{ width: "70%", margin: "0 auto" }}>
@@ -250,11 +263,17 @@ function MusicCard() {
             >
               {Playlist.playlistCount} 곡
             </Typography>
+            <DeleteOutlineIcon // 2. 쓰레기통 아이콘 추가
+              className={styles.DeleteOutlineIcon}
+              onClick={() => {
+                openDeleteModal();
+              }}
+            />
             <Button
               component={Link}
               to="/MyMusicPlayer"
               className={styles.playButton}
-              onClick={(event) => {
+              onClick={event => {
                 if (Playlist.playlistCount === 0) {
                   Swal.fire({
                     icon: "error",
@@ -284,6 +303,7 @@ function MusicCard() {
         onClose={MusicBoxModalClose}
         refresh={() => setRefreshPlaylist(!refreshPlaylist)}
       />
+      <DeleteModal isOpen={isDeleteModal} onClose={closeDeleteModal} />
     </div>
   );
 }
