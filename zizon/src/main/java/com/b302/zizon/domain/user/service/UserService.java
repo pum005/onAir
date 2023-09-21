@@ -1,5 +1,6 @@
 package com.b302.zizon.domain.user.service;
 
+import com.b302.zizon.domain.user.GetUser;
 import com.b302.zizon.domain.user.dto.UserUpdateRequestDTO;
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.exception.UserNotFoundException;
@@ -33,15 +34,7 @@ public class UserService {
     private String secretKey;
     private final RedisTemplate<String, String> redisTemplate;
     private final S3UploadService s3UploadService;
-
-    public Long getUserId(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        Long userId = (Long) principal;
-
-        return userId;
-    }
-
+    private final GetUser getUser;
 
     // 소셜 로그인
     @Transactional
@@ -96,9 +89,9 @@ public class UserService {
     // 로그아웃
     @Transactional
     public Map<String, Object> logout(){
-        Long userId = getUserId();
+        User user = getUser.getUser();
 
-        redisTemplate.delete(String.valueOf(userId));
+        redisTemplate.delete(String.valueOf(user.getUserId()));
 
         Map<String, Object> result = new HashMap<>();
         result.put("message", "로그아웃 성공");
@@ -109,12 +102,7 @@ public class UserService {
     // 유저 닉네임 변경
     @Transactional
     public Map<String, Object> userNicknameUpdate(UserUpdateRequestDTO userUpdateRequestDTO){
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         user.updateNickname(userUpdateRequestDTO.getNickname());
 
@@ -126,12 +114,7 @@ public class UserService {
 
     // 유저 닉네임 중복체크
     public boolean userCheckNickname(String nickname){
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         boolean flag = userRepository.existsByNickname(nickname);
 
@@ -142,12 +125,7 @@ public class UserService {
     // 유저 프로필사진 변경
     @Transactional
     public Map<String, Object> userProfileImage(MultipartFile multipartFile) throws IOException {
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         String profileUrl = s3UploadService.profileSaveFile(multipartFile);
 

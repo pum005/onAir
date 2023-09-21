@@ -7,6 +7,7 @@ import com.b302.zizon.domain.music.entity.MyMusicBox;
 import com.b302.zizon.domain.music.exception.MusicNotFoundException;
 import com.b302.zizon.domain.music.repository.MusicRepository;
 import com.b302.zizon.domain.music.repository.MyMusicBoxRepository;
+import com.b302.zizon.domain.user.GetUser;
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.exception.UserNotFoundException;
 import com.b302.zizon.domain.user.repository.UserRepository;
@@ -47,14 +48,8 @@ public class MusicService {
     private final MusicRepository musicRepository;
     private final MyMusicBoxRepository myMusicBoxRepository;
     private final UserRepository userRepository;
+    private final GetUser getUser;
 
-    public Long getUserId(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        Long userId = (Long) principal;
-
-        return userId;
-    }
 
 
     // 스포티파이 액세스 가져오기
@@ -81,6 +76,9 @@ public class MusicService {
 
     // 스포티파이 검색 결과 가져오기
     public List<SpotifySearchResultDTO> searchSpotifyMusicList(String query) {
+
+        User user = getUser.getUser();
+
         String accessToken = getAccessToken();
         RestTemplate restTemplate = new RestTemplate();
 
@@ -143,13 +141,7 @@ public class MusicService {
 
     // 유튜브 영상 찾기
     public YoutubeSearchResultDTO findVideo(String title, String artist, long spotifyMusicDuration, String musicImageUrl) {
-
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         YoutubeSearchResultDTO result = new YoutubeSearchResultDTO();
 
@@ -243,12 +235,7 @@ public class MusicService {
     // 해당 음악 상세정보 가져오기
     public MusicInfoResponseDTO musicInfo(Long musicId){
 
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         Optional<Music> byMusic = musicRepository.findById(musicId);
         if(byMusic.isEmpty()){

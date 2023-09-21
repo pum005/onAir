@@ -11,6 +11,7 @@ import com.b302.zizon.domain.oncast.exception.OncastNotFoundException;
 import com.b302.zizon.domain.oncast.exception.UnauthorizedOncastAccessException;
 import com.b302.zizon.domain.oncast.repository.OncastCreateDataRepository;
 import com.b302.zizon.domain.oncast.repository.OncastRepository;
+import com.b302.zizon.domain.user.GetUser;
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.exception.UserNotFoundException;
 import com.b302.zizon.domain.user.repository.UserRepository;
@@ -44,6 +45,7 @@ public class OncastService {
     private final ChatGptService chatGptService;
     private final UserRepository userRepository;
     private final OncastCreateDataRepository oncastCreateDataRepository;
+    private final GetUser getUser;
 
     // 음악dto 변환
     private GetMusicDTO convertToDTO(Music music) {
@@ -56,14 +58,6 @@ public class OncastService {
         return musicDTO;
     }
 
-    public Long getUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        Long userId = (Long) principal;
-
-        return userId;
-    }
-
     // 시간 변환 포맷
     public String convertToFormattedString(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일 (E) HH:mm");
@@ -73,13 +67,7 @@ public class OncastService {
     // 온캐스트 저장
     public Oncast saveOncast(OncastRequestDto request, String[] oncastMusic) {
 
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
-
+        User user = getUser.getUser();
 
         String story = request.getStory();
         String[] script = new String[4];
@@ -177,16 +165,10 @@ public class OncastService {
 
     // 온캐스트 정보 가져오기
     public Map<String, Object> getOncast() {
-
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         Map<String, Object> result = new HashMap<>();
-        List<Oncast> oncastList = oncastRepository.findByUserUserIdAndDeleteCheckFalse(userId);
+        List<Oncast> oncastList = oncastRepository.findByUserUserIdAndDeleteCheckFalse(user.getUserId());
         if (oncastList.isEmpty()) {
             result.put("message", "온캐스트 없음");
             return result;
@@ -224,12 +206,7 @@ public class OncastService {
     public Map<String, Object> shareOncast(Long oncastId) {
         Map<String, Object> result = new HashMap<>();
 
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         Optional<Oncast> byOncast = oncastRepository.findById(oncastId);
 
@@ -261,14 +238,9 @@ public class OncastService {
     public Map<String, Object> deleteOncast(Long oncastId) {
         Map<String, Object> result = new HashMap<>();
 
-        Long userId = getUserId();
+        User user = getUser.getUser();
 
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
-
-        Optional<Oncast> byOncast = oncastRepository.findByOncastIdAndUserUserId(oncastId, userId);
+        Optional<Oncast> byOncast = oncastRepository.findByOncastIdAndUserUserId(oncastId, user.getUserId());
         if (byOncast.isEmpty()) {
             throw new OncastNotFoundException("존재하지 않는 온캐스트입니다.");
         }
@@ -287,19 +259,14 @@ public class OncastService {
     // 온캐스트 재생하기(정보 제공)
     public Map<String, Object> playOncast(Long oncastId){
         Map<String, Object> result = new HashMap<>();
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         Optional<Oncast> byOncast = oncastRepository.findById(oncastId);
         if(byOncast.isEmpty()){
             throw new OncastNotFoundException("온캐스트 정보가 없습니다.");
         }
 
-        if(!byOncast.get().getUser().getUserId().equals(userId)){
+        if(!byOncast.get().getUser().getUserId().equals(user.getUserId())){
             throw new UnauthorizedOncastAccessException("해당 유저의 온캐스트가 아닙니다.");
         }
 

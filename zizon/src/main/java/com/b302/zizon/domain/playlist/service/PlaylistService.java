@@ -17,6 +17,7 @@ import com.b302.zizon.domain.playlist.exception.PlaylistNotFoundException;
 import com.b302.zizon.domain.playlist.exception.UnauthorizedPlaylistAccessException;
 import com.b302.zizon.domain.playlist.repository.PlaylistMetaRepository;
 import com.b302.zizon.domain.playlist.repository.PlaylistRepository;
+import com.b302.zizon.domain.user.GetUser;
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.exception.UserNotFoundException;
 import com.b302.zizon.domain.user.repository.UserRepository;
@@ -45,18 +46,14 @@ public class PlaylistService {
     private final PlaylistMetaRepository playlistMetaRepository;
     private final MyMusicBoxRepository myMusicBoxRepository;
     private final MusicRepository musicRepository;
+    private final GetUser getUser;
 
     // 플리에 음악 추가
     @Transactional
     public Map<String, Object> addPlaylistMusic(AddPlaylistMusicDTO addPlaylistMusicDTO){
         Map<String, Object> result = new HashMap<>();
 
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         Long musicId = addPlaylistMusicDTO.getMusicId();
         Long playlistMetaId = addPlaylistMusicDTO.getPlaylistMetaId();
@@ -68,12 +65,12 @@ public class PlaylistService {
         Music music = byMusic.get();
 
 
-        Optional<MyMusicBox> byMusicMusicIdAndUserUserId = myMusicBoxRepository.findByMusicMusicIdAndUserUserId(musicId, userId);
+        Optional<MyMusicBox> byMusicMusicIdAndUserUserId = myMusicBoxRepository.findByMusicMusicIdAndUserUserId(musicId, user.getUserId());
         if(byMusicMusicIdAndUserUserId.isEmpty()){
             throw new MusicBoxNotFoundException("보관함에 없는 노래입니다.");
         }
 
-        Optional<PlaylistMeta> byPlaylistMetaIdAndUserUserId = playlistMetaRepository.findByPlaylistMetaIdAndUserUserId(playlistMetaId, userId);
+        Optional<PlaylistMeta> byPlaylistMetaIdAndUserUserId = playlistMetaRepository.findByPlaylistMetaIdAndUserUserId(playlistMetaId, user.getUserId());
         if(byPlaylistMetaIdAndUserUserId.isEmpty()){
             throw new PlaylistNotFoundException("유저의 플레이리스트가 없습니다.");
         }
@@ -106,12 +103,7 @@ public class PlaylistService {
     @Transactional
     public Map<String, Object> MakePlaylist(MakePlaylistRequestDTO makePlaylistRequestDTO){
         Map<String, Object> result = new HashMap<>();
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         PlaylistMeta build = PlaylistMeta.builder()
                 .playlistName(makePlaylistRequestDTO.getPlaylistName())
@@ -127,14 +119,9 @@ public class PlaylistService {
 
     // 플레이리스트 정보 가져오기
     public List<PlaylistInfoResponseDTO> getPlaylist(){
-        Long userId = getUserId();
+        User user = getUser.getUser();
 
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
-
-        List<PlaylistMeta> byUserUserId = playlistMetaRepository.findByUserUserId(userId);
+        List<PlaylistMeta> byUserUserId = playlistMetaRepository.findByUserUserId(user.getUserId());
         int index = 1;
         List<PlaylistInfoResponseDTO> list = new ArrayList<>();
         for(PlaylistMeta pm : byUserUserId){
@@ -151,12 +138,7 @@ public class PlaylistService {
 
     // 플레이리스트 재생하기
     public List<PlayPlaylistResponseDTO> playPlaylist(Long playlistMetaId){
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         Optional<PlaylistMeta> byPlaylistMeta = playlistMetaRepository.findById(playlistMetaId);
         if(byPlaylistMeta.isEmpty()){
@@ -164,7 +146,7 @@ public class PlaylistService {
         }
 
         PlaylistMeta playlistMeta = byPlaylistMeta.get();
-        if(!playlistMeta.getUser().getUserId().equals(userId)){
+        if(!playlistMeta.getUser().getUserId().equals(user.getUserId())){
             throw new UnauthorizedPlaylistAccessException("해당 유저의 플레이리스트가 아닙니다.");
         }
 
@@ -191,12 +173,7 @@ public class PlaylistService {
     @Transactional
     public Map<String, Object> deletePlaylist(Long playlistMetaId){
         Map<String, Object> result = new HashMap<>();
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         Optional<PlaylistMeta> byPlaylistMeta = playlistMetaRepository.findById(playlistMetaId);
         if(byPlaylistMeta.isEmpty()){
@@ -204,7 +181,7 @@ public class PlaylistService {
         }
 
         PlaylistMeta playlistMeta = byPlaylistMeta.get();
-        if(!playlistMeta.getUser().getUserId().equals(userId)){
+        if(!playlistMeta.getUser().getUserId().equals(user.getUserId())){
             throw new UnauthorizedPlaylistAccessException("해당 유저의 플레이리스트가 아닙니다.");
         }
 
@@ -223,12 +200,7 @@ public class PlaylistService {
     @Transactional
     public Map<String, Object> deletePlaylistMusic(AddPlaylistMusicDTO addPlaylistMusicDTO){
         Map<String, Object> result = new HashMap<>();
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         Long playlistMetaId = addPlaylistMusicDTO.getPlaylistMetaId();
         Long musicId = addPlaylistMusicDTO.getMusicId();
