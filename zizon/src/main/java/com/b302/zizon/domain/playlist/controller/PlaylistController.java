@@ -61,4 +61,11 @@ public class PlaylistController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    // 플레이리스트 안에 있는 음악 삭제하기
+    @DeleteMapping("api/playlist/music")
+    public ResponseEntity<?> deletePlaylistMusic(@RequestBody AddPlaylistMusicDTO deletePlaylistMusicDTO){
+        Map<String, Object> result = playlistService.deletePlaylistMusic(deletePlaylistMusicDTO);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
 }
