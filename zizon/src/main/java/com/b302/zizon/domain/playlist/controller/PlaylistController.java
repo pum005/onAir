@@ -32,9 +32,9 @@ public class PlaylistController {
     // 플레이리스트 생성하기
     @PostMapping("playlist")
     public ResponseEntity<?> makePlaylist(@RequestBody MakePlaylistRequestDTO makePlaylistRequestDTO){
-        playlistService.MakePlaylist(makePlaylistRequestDTO);
+        Map<String, Object> result = playlistService.MakePlaylist(makePlaylistRequestDTO);
 
-        return ResponseEntity.status(HttpStatus.OK).body("플레이리스트 생성 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     // 내 플레이리스트 호출하기
