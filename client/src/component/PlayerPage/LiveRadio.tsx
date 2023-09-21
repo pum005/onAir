@@ -58,7 +58,7 @@ export const LiveRadio = () => {
         <source src={radioDummyData[currentTTS] as string} type="audio/mp3" />
         Your browser does not support the audio element.
       </audio>
-      {/* <RadioScripts /> */}
+      <RadioScripts />
       <div className={styles.marginTop}></div>
       <FinishModal show={showModal} onClose={handleCloseModal} />
     </div>

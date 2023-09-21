@@ -32,12 +32,12 @@ export const Player = (): ReactElement => {
         withCredentials: true,
       });
     })
-      .then((response) => {
+      .then(response => {
         console.log(response.data);
         setOncasts(response.data.oncast);
       })
-      .catch((error) => {
-        console.error("통신에러 발생", error);
+      .catch(error => {
+        console.error("통신에러1 발생", error);
       });
   }, [oncast_id]);
 
@@ -68,12 +68,12 @@ export const Player = (): ReactElement => {
     >
       <NavBar />
       {/* Radio 컴포넌트에 필요한 데이터를 props로 전달합니다. */}
-      <Radio
+      {/* <Radio
         ttsFiles={ttsFiles}
         scriptFiles={scriptFiles}
         djName={oncasts.djName} // djName을 추가합니다.
       />
-      <Music musicFiles={musicFiles} />
+      <Music musicFiles={musicFiles} /> */}
     </div>
   );
 };
