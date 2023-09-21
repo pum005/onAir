@@ -48,9 +48,9 @@ public class MusicController {
     // 내 보관함에 음악 삭제
     @DeleteMapping("/my-musicbox")
     public ResponseEntity<?> deleteMyMusicBoxMusic(@RequestBody MyMusicBoxAddRequestDTO myMusicBoxAddRequestDTO){
-        myMusicBoxService.deleteMusicMyMusicBox(myMusicBoxAddRequestDTO.getMusicId());
-        
-        return ResponseEntity.status(200).body("음악 삭제 완료");
+        Map<String, Object> result = myMusicBoxService.deleteMusicMyMusicBox(myMusicBoxAddRequestDTO.getMusicId());
+
+        return ResponseEntity.status(200).body(result);
     }
 
     // 스포티파이 음악 검색
