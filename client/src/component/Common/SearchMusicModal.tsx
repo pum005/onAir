@@ -49,6 +49,13 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
+  const formatTime = (milliseconds: number) => {
+    const totalSeconds = Math.round(milliseconds / 1000);
+    const min = Math.floor(totalSeconds / 60);
+    const sec = totalSeconds % 60;
+    return `${min < 10 ? "0" : ""}${min}:${sec < 10 ? "0" : ""}${sec}`;
+  };
+
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box
@@ -117,7 +124,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
               <div style={{ flex: 1, textAlign: "right" }}>
-                {music.spotifyMusicDuration}
+                {formatTime(music.spotifyMusicDuration)}
               </div>
               <AddCircleOutlineIcon
                 style={{ marginLeft: "8px" }}
