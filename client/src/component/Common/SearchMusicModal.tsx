@@ -1,22 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 type SearchModalProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
+type MusucType = {
+  musicTitle: string;
+  musicArtist: string;
+  musicImage: string;
+  spotifyMusicDuration: number;
+};
+
 const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState<MusucType[]>([]); //검색 관리 state
 
   const handleSearch = () => {
-    // 여기에 검색 로직을 추가합니다.
-    console.log(`Searching for: ${searchTerm}`);
+    if (searchTerm) {
+      requestWithTokenRefresh(() => {
+        console.log(searchTerm);
+        return axios.get(
+          `http://localhost:8080/api/search/spotify?title=${searchTerm}`,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+            withCredentials: true,
+          }
+        );
+      })
+        .then((response) => {
+          console.log(response.data);
+          setSearchResults(response.data);
+        })
+        .catch((error) => {
+          console.log("에러발생", error);
+        });
+    }
+  };
+
+  const formatTime = (milliseconds: number) => {
+    const totalSeconds = Math.round(milliseconds / 1000);
+    const min = Math.floor(totalSeconds / 60);
+    const sec = totalSeconds % 60;
+    return `${min < 10 ? "0" : ""}${min}:${sec < 10 ? "0" : ""}${sec}`;
   };
 
   return (
@@ -51,7 +88,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
             variant="outlined"
             label="노래 제목"
             value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <Button
             variant="contained"
@@ -63,7 +100,39 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
           </Button>
         </div>
         <div style={{ marginTop: "30px" }}>
-          {/* 여기에 검색 결과를 표시합니다. */}
+          {searchResults.map((music, index) => (
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginTop: "10px",
+                borderBottom: "1px solid #e5e5e5",
+                paddingBottom: "5px",
+              }}
+            >
+              <img
+                src={music.musicImage}
+                alt={`${music.musicTitle} cover`}
+                style={{ width: "40px", height: "40px", marginRight: "10px" }}
+              />
+              <div style={{ flex: 2 }}>
+                <div>{music.musicTitle}</div>
+                <div style={{ color: "#888", fontSize: "0.9em" }}>
+                  {music.musicArtist}
+                </div>
+              </div>
+              <div style={{ flex: 1, textAlign: "right" }}>
+                {formatTime(music.spotifyMusicDuration)}
+              </div>
+              <AddCircleOutlineIcon
+                style={{ marginLeft: "8px" }}
+                // onClick={() => handleClickOpen(index)}
+                cursor="pointer"
+              />
+            </div>
+          ))}
         </div>
       </Box>
     </Modal>
