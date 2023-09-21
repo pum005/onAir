@@ -76,11 +76,6 @@ function DeleteModal({
     onClose();
   };
 
-  // const handleDelete = () => {
-  //   onClose(); // "삭제하시겠습니까?" 모달 닫기
-  //   setShowConfirm(true); // "삭제가 완료되었습니다." 알림 모달 표시
-  // };
-
   const handleConfirmClose = () => {
     setShowConfirm(false); // 알림 모달 닫기
   };
