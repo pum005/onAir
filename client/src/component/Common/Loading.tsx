@@ -1,4 +1,4 @@
-import Spinner from '../../assets/Dual Ball-1s-200px.gif';
+import Spinner from '../../assets/Equalizer-1s-108px.svg';
 import styles from '../Common/Loading.module.css'; // CSS 모듈을 import
 
 const Loading = () => {
