@@ -61,6 +61,7 @@ export default function BasicTabs() {
   const [value, setValue] = React.useState(0);
   const [oncasts, setOncasts] = React.useState<OncastType>([]);
   const [message, setMessage] = React.useState<string | null>(null);
+  const [refreshFlag, setRefreshFlag] = React.useState(false);
 
   //라디오 list axios
   React.useEffect(() => {
@@ -184,11 +185,14 @@ export default function BasicTabs() {
         )}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <MusicCard />
+        <MusicCard refreshFlag={refreshFlag} />
       </CustomTabPanel>
       <SearchModal
         isOpen={isSearchModalOpen}
-        onClose={handleSearchModalClose}
+        onClose={() => {
+          handleSearchModalClose();
+          setRefreshFlag((prev) => !prev);
+        }}
       />
     </Box>
   );

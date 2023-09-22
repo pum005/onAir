@@ -11,7 +11,9 @@ type DeleteModalProps = {
   isOpen: boolean;
   onClose: () => void;
   musicId?: number | null;
+  playlistId?: number | null;
   setRefreshKey?: () => void;
+  refresh?: () => void;
 };
 
 function DeleteModal({
@@ -19,6 +21,8 @@ function DeleteModal({
   onClose,
   musicId,
   setRefreshKey,
+  playlistId,
+  refresh,
 }: DeleteModalProps) {
   const [showConfirm, setShowConfirm] = React.useState(false); // 상태 추가
 
@@ -43,16 +47,34 @@ function DeleteModal({
         .catch((error) => {
           console.error("Error deleting the music", error);
         });
+    } else if (playlistId) {
+      console.log(playlistId);
+      requestWithTokenRefresh(() => {
+        return axios.delete(
+          `http://localhost:8080/api/playlist/${playlistId}`,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+            withCredentials: true,
+          }
+        );
+      })
+        .then((response) => {
+          console.log("Deleted 성공!", response);
+          setShowConfirm(true);
+          if (refresh) {
+            refresh();
+          }
+        })
+        .catch((error) => {
+          console.error("Error deleting the playlist", error);
+        });
     } else {
-      console.error("No musicId provided");
+      console.error("No musicId or playlistId provided");
     }
     onClose();
   };
-
-  // const handleDelete = () => {
-  //   onClose(); // "삭제하시겠습니까?" 모달 닫기
-  //   setShowConfirm(true); // "삭제가 완료되었습니다." 알림 모달 표시
-  // };
 
   const handleConfirmClose = () => {
     setShowConfirm(false); // 알림 모달 닫기
