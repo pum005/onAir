@@ -1,22 +1,24 @@
-import { configureStore, createAction, createReducer } from "@reduxjs/toolkit";
+import { configureStore, createAction, createReducer, combineReducers } from "@reduxjs/toolkit";
+import storage from 'redux-persist/lib/storage';
+import { persistReducer, persistStore } from 'redux-persist';
+import userReducer from './userReducer';  // Import userReducer
+
+const persistConfig = {
+  key: 'user',
+  storage,
+  whitelist: ['nickname', 'profileImage', 'userId']
+};
+
+const rootReducer = combineReducers({
+  user: persistReducer(persistConfig, userReducer),
+  // ...your other reducers
+});
 
 // 1. Action 생성
 
 // 액션 타입 및 페이로드를 정의하고, 액션 생성자 함수를 만듭니다.
 // 이 액션은 사용자 데이터를 설정하기 위한 것입니다.
-export const setNickName = createAction<{
-  nickname: string;
-}>("SET_NICKNAME");
 
-export const setImage = createAction<{
-  profileImage: string;
-}>("SET_IMAGE");
-
-export const setUserData = createAction<{
-  nickname: string;
-  profileImage: string;
-  userId: number;
-}>("SET_USER_DATA");
 
 export const setRadioDummyData = createAction<{
   tts_one: string;
@@ -46,12 +48,6 @@ export const resetIndices = createAction("RESET_INDICES");
 
 // 2. Reducer 생성
 
-// User를 type으로 정의합니다. Redux에서 사용자 데이터를 관리하기 위한 타입입니다.
-export type User = {
-  nickname: string;
-  profileImage: string;
-  userId: number;
-};
 
 export type RadioDummyData = {
   djName: string;
@@ -73,13 +69,6 @@ export type RadioDummyData = {
   musicLength: number[];
   musicCover: string[];
   [key: string]: string | number | string[] | number[];
-};
-
-// 초기 상태값을 설정합니다. 애플리케이션 시작 시의 사용자 데이터 상태입니다.
-const initialState: User = {
-  nickname: "",
-  profileImage: "",
-  userId: 0,
 };
 
 const initialDummyState: RadioDummyData = {
@@ -105,21 +94,6 @@ const initialDummyState: RadioDummyData = {
 // liveDummyState
 const initialLiveRadioDummyState: RadioDummyData[] = [];
 
-// 리듀서를 정의합니다. 리듀서는 액션에 따라 상태를 변경하는 함수입니다.
-const userReducer = createReducer(initialState, builder => {
-  // setUserData 액션이 디스패치될 때 상태를 어떻게 변경할지 정의합니다.
-  builder.addCase(setNickName, (state, action) => {
-    state.nickname = action.payload.nickname;
-  });
-  builder.addCase(setImage, (state, action) => {
-    state.profileImage = action.payload.profileImage;
-  });
-  builder.addCase(setUserData, (state, action) => {
-    state.nickname = action.payload.nickname;
-    state.profileImage = action.payload.profileImage;
-    state.userId = action.payload.userId;
-  });
-});
 
 const radiodummyReducer = createReducer(initialDummyState, builder => {
   builder
@@ -220,9 +194,9 @@ const liveRadioDummyReducer = createReducer(
 // Redux 스토어를 설정합니다. 스토어는 애플리케이션의 상태를 저장하고 관리하는 객체입니다.
 const store = configureStore({
   reducer: {
-    user: userReducer, // 'user'라는 키로 userReducer를 스토어에 추가합니다.
     radioDummy: radiodummyReducer,
     LiveRadioDummy: liveRadioDummyReducer,
+    user: persistReducer(persistConfig, userReducer) // userReducer에 대한 persist 설정을 여기서 해주고, rootReducer를 제거
   },
 });
 
@@ -231,3 +205,5 @@ export type RootState = ReturnType<typeof store.getState>;
 
 // 설정된 스토어를 내보냅니다. 이 스토어는 애플리케이션 전체에서 사용됩니다.
 export default store;
+export const persistor = persistStore(store);
+export type AppDispatch = typeof store.dispatch;

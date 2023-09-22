@@ -128,7 +128,7 @@ export default function BasicTabs() {
           }}
         >
           <Tab
-            label="라디오"
+            label="온캐스트"
             style={{ fontSize: "larger", font: "bolder" }}
             {...a11yProps(0)}
           />
