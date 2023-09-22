@@ -57,3 +57,9 @@
 .marginRight {
   margin-right: 10px;
 }
+
+.navbarSticky {
+  position: sticky;
+  top: 0;
+  z-index: 1000; /* 다른 요소 위에 나타나게 합니다. */
+}
