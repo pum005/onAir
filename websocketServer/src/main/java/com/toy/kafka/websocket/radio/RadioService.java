@@ -158,7 +158,7 @@ public class RadioService {
     /**
      * 1초마다 라디오 상태를 갱신하는 로직입니다. idle 상태가 지속되면 강제로 finishState에 메세지를 보냅니다.
      */
-    @Scheduled(cron = "0/1 * 15-16 * * ?")// 매일 11시부터 13시까지 1초 간격으로 실
+    @Scheduled(cron = "0/1 * 16-18 * * ?")// 매일 11시부터 13시까지 1초 간격으로 실
     public void checkAndPlayNextItem() {
         logRadioStatus();
         logger.info(currentState);
