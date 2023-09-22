@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom"; // react-router-dom 라이브러리에서 필요한 훅을 가져옵니다.
 import { useDispatch } from "react-redux"; // react-redux 라이브러리에서 useDispatch 훅을 가져옵니다.
-import userReducer, { setUserData } from '../userReducer';  // Import userReducer
+import { setUserData } from "../store"; // 사용자 데이터를 설정하는 Redux 액션을 가져옵니다.
 
 const Login: React.FC = () => {
   const location = useLocation(); // 현재 라우터의 위치 정보를 가져옵니다.
