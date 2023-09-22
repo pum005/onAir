@@ -9,6 +9,7 @@ import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AlertDialog from "./AddFullList";
+import Loading from './Loading';
 
 type SearchModalProps = {
   isOpen: boolean;
@@ -60,7 +61,10 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
     setOpen(false);
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleAddMusic = (music: MusucType) => {
+    setIsLoading(true);
     console.log(music);
     requestWithTokenRefresh(() => {
       return axios.get(
@@ -74,6 +78,8 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
       );
     })
       .then((response) => {
+        setIsLoading(false);
+
         if (response.data.message === "이미 보관함에 추가된 노래입니다.") {
           setOpen(false);
           alert("이미 보관함에 추가된 노래입니다.");
@@ -82,6 +88,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
         }
       })
       .catch((error) => {
+        setIsLoading(false);
         console.log("에러발생", error);
       });
   };
@@ -94,6 +101,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
+    <div>
     <Modal open={isOpen} onClose={onClose}>
       <Box
         sx={{
@@ -176,7 +184,11 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
         </div>
         <AlertDialog open={open} handleClose={handleClose} />
       </Box>
+      
     </Modal>
+    {isLoading && <Loading />}
+    </div>
+    
   );
 };
 
