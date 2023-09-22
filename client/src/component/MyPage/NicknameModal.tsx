@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
-import userReducer from '../../userReducer';  // Import userReducer
+import { setNickName } from "../../store";
 import { error } from "console";
 
 type NickNameModalProps = {
