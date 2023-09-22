@@ -45,7 +45,9 @@ export const Home = () => {
       
       {showRadioButton && (
      <div onClick={navigateToCreateRadio} className={ `${styles.verticalAlign} ${styles.fadeInGif}`} >
-     <img src="/images/magichall.gif" alt="Magic Hall" />
+    <img src="/images/magichall.gif" alt="Magic Hall" className={styles.largeGif} />
+
+
      <div className={`${styles.centerText} ${styles.makeaoncast}`}>MAKE A ONCAST</div>
      
    </div>
