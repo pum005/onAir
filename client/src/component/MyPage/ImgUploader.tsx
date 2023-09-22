@@ -4,7 +4,7 @@ import React, { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import ImgModal from "./ImgModal";
-import { setUserData } from "../../store"; // setUserData 액션을 import
+import userReducer, { setUserData } from '../../userReducer';  // Import userReducer
 
 function ImgUploader() {
   const userData = useSelector((state: RootState) => state.user);
