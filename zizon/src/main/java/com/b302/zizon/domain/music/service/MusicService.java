@@ -23,6 +23,7 @@ import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -140,9 +141,29 @@ public class MusicService {
     }
 
     // 유튜브 영상 찾기
-    public Map<String, Object> findVideo(String title, String artist, long spotifyMusicDuration, String musicImageUrl) {
+    @Transactional
+    public Map<String, Object> findVideo(String title, String artist, long spotifyMusicDuration, String musicImageUrl, String spotifyId) {
         Map<String, Object> out = new HashMap<>();
         User user = getUser.getUser();
+
+        // 음악 중복체크
+        Optional<Music> bySpotifyId = musicRepository.findBySpotifyId(spotifyId);
+        if(!bySpotifyId.isEmpty()){
+            Optional<MyMusicBox> byMusicMusicIdAndUserUserId = myMusicBoxRepository.findByMusicMusicIdAndUserUserId(bySpotifyId.get().getMusicId(), user.getUserId());
+            // 이미 노래가 보관함에 있으면
+            if(!byMusicMusicIdAndUserUserId.isEmpty()){
+                out.put("message", "이미 보관함에 추가된 노래입니다.");
+            }else{
+                MyMusicBox build = MyMusicBox.builder()
+                        .user(user)
+                        .music(bySpotifyId.get()).build();
+
+                myMusicBoxRepository.save(build);
+
+                out.put("message", "보관함에 음악 추가 성공");
+            }
+            return out;
+        }
 
         YoutubeSearchResultDTO result = new YoutubeSearchResultDTO();
 
@@ -193,49 +214,32 @@ public class MusicService {
                     .artist(artist)
                     .duration(playTimeYoutube)
                     .albumCoverUrl(musicImageUrl)
+                    .spotifyId(spotifyId)
                     .youtubeVideoId(result.getMusicYoutubeId())
                     .title(title).build();
 
             Long musicId = 0L;
             // 기존에 음악이 있는지 검사
-            Optional<Music> byYoutubeVideoId = musicRepository.findByYoutubeVideoId(result.getMusicYoutubeId());
 
-            Music music = null;
+            musicRepository.save(build);
 
-            // 기존에 음악이 없으면
-            if(byYoutubeVideoId.isEmpty()){
-                // 음악 저장
-                music = musicRepository.save(build);
-                musicId = music.getMusicId();
-            }
-            if(byYoutubeVideoId.isPresent()){
-                music = byYoutubeVideoId.get();
-                Long musicTempId = music.getMusicId();
-                Optional<MyMusicBox> byMusicMusicIdAndUserUserId = myMusicBoxRepository.findByMusicMusicIdAndUserUserId(musicTempId, user.getUserId());
-                if(!byMusicMusicIdAndUserUserId.isEmpty()){
-
-                    out.put("message", "이미 보관함에 추가된 노래입니다.");
-                    return out;
-                }
-
-            }
-
-            musicId = music.getMusicId();
-
-            Optional<MyMusicBox> byMusicMusicId = myMusicBoxRepository.findByMusicMusicId(musicId);
-
-            MyMusicBox myMusicBox = MyMusicBox.builder()
-                    .music(music)
-                    .user(user)
-                    .build();
+            Optional<MyMusicBox> byMusicMusicId = myMusicBoxRepository.findByMusicMusicId(build.getMusicId());
 
             if(byMusicMusicId.isEmpty()){
-                MyMusicBox save = myMusicBoxRepository.save(myMusicBox);
+                MyMusicBox myMusicBox = MyMusicBox.builder()
+                        .music(build)
+                        .user(user)
+                        .build();
+
+                myMusicBoxRepository.save(myMusicBox);
+            }else{
+                out.put("message", "이미 보관함에 추가된 노래입니다.");
+                return out;
             }
 
-            out.put("result", result);
-
+            out.put("message", "보관함에 음악 추가 성공");
             return out;
+
         } catch (Exception e) {
             throw new EntityNotFoundException("해당 영상 없음");
         }
