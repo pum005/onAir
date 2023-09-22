@@ -63,6 +63,12 @@ export default function BasicTabs() {
   const [message, setMessage] = React.useState<string | null>(null);
   const [refreshFlag, setRefreshFlag] = React.useState(false);
 
+  const [refreshKey, setRefreshKey] = React.useState(false);
+
+  const refresh = () => {
+    setRefreshKey((prevKey) => !prevKey);
+  };
+
   //라디오 list axios
   React.useEffect(() => {
     requestWithTokenRefresh(() => {
@@ -83,7 +89,7 @@ export default function BasicTabs() {
       .catch((error) => {
         console.error("통신에러 발생", error);
       });
-  }, []);
+  }, [refreshKey]);
   const [isSearchModalOpen, setIsSearchModalOpen] = React.useState(false); // 모달의 열림/닫힘 상태를 관리하는 상태 변수
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -169,6 +175,7 @@ export default function BasicTabs() {
                   subheader={data.title}
                   shareCheck={data.shareCheck}
                   selectCheck={data.selectCheck}
+                  refreshkey={refresh}
                   songs={data.musicList.map((song) => ({
                     musicId: song.musicId,
                     songTitle: song.title,
