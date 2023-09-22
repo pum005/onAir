@@ -45,8 +45,8 @@ public class Music {
     private int popularity;
     @Column(nullable = false)
     private String albumCoverUrl;
-    @Column(nullable = true, length = 2000)
-    private String lylics;
+    @Column(nullable = false)
+    private String spotifyId;
 
     public Music() {
     }

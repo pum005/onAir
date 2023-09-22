@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface MusicRepository extends JpaRepository<Music, Long> {
 
     Optional<Music> findByYoutubeVideoId(String youtubeVideoId);
+
+    Optional<Music> findBySpotifyId(String spotifyId);
 }
