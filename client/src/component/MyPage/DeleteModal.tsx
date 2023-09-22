@@ -24,7 +24,7 @@ function DeleteModal({
   playlistId,
   refresh,
 }: DeleteModalProps) {
-  const [showConfirm, setShowConfirm] = React.useState(false); // 상태 추가
+  const [showConfirm, setShowConfirm] = React.useState(false);
 
   const handleDelete = () => {
     const headers = {
