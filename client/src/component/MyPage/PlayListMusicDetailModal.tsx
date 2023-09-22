@@ -42,7 +42,6 @@ const PlayListMusicDetailModal: React.FC<MusicDetailModalProps> = ({
   useEffect(() => {
     if (!isOpen || !playlistMetaId) return; // isOpen이 false거나 playlistMetaId가 없으면 아무 작업도 수행하지 않습니다.
 
-    console.log(playlistMetaId);
     requestWithTokenRefresh(() => {
       return axios.get(`http://localhost:8080/api/playlist/${playlistMetaId}`, {
         headers: {
@@ -61,7 +60,7 @@ const PlayListMusicDetailModal: React.FC<MusicDetailModalProps> = ({
       .catch((error) => {
         console.error("데이터 가져오기 오류", error);
       });
-  }, [isOpen, refreshKey, playlistMetaId]);
+  }, [isOpen, playlistMetaId, refreshKey]);
 
   const formatTime = (milliseconds: number) => {
     const totalSeconds = Math.round(milliseconds / 1000);
@@ -183,6 +182,7 @@ const PlayListMusicDetailModal: React.FC<MusicDetailModalProps> = ({
           setSelectedSong(null);
         }}
         setRefreshKey={() => setRefreshKey((prev) => !prev)}
+        playlistId={playlistMetaId}
       />
     </>
   );

@@ -41,17 +41,23 @@ function MusicCard({ refreshFlag }: any) {
   const [data, setData] = useState<ApiResponseType | null>(null); //데이터 관리
   const [isMusicAddModalOpen, setMusicAddModalOpen] = useState<boolean>(false); //음악 더하기 변수
   const [isDeleteModal, setDeleteModal] = useState<boolean>(false);
+  // 전체 보관함 상태
   const [isMusicDetailModalOpen, setMusicDetailModalOpen] =
-    useState<boolean>(false); //전체 보관함 음악 상세 보기 모달 state
+    useState<boolean>(false);
   const [selectedPlaylistTitle, setSelectedPlaylistTitle] =
-    useState<string>(""); //리스트 이름 관리 state
+    useState<string>("");
+
+  // 플레이리스트 상태
+  const [isMusicDetailModalOpenTwo, setMusicDetailModalOpenTwo] =
+    useState<boolean>(false);
+  const [selectedPlaylistTitleTwo, setSelectedPlaylistTitleTwo] =
+    useState<string>("");
 
   const [refreshPlaylist, setRefreshPlaylist] = useState(false); //플리추가 렌더링 할 state(보관함 전체 불러오기)
   const [refreshKey, setRefreshKey] = useState(false); //닫기눌렀을때도 리렌더링
+  const [refreshKeyTwo, setRefreshKeyTwo] = useState(false);
 
   const [removeList, setRemoveList] = useState(0);
-  const [isPlayListMusicDetailModalOpen, setPlayListMusicDetailModalOpen] =
-    useState<boolean>(false);
 
   const [selectedPlaylistMetaId, setSelectedPlaylistMetaId] = useState<
     number | null
@@ -84,30 +90,34 @@ function MusicCard({ refreshFlag }: any) {
   const closeDeleteModal = () => {
     setDeleteModal(false);
   };
-  const openPlayListMusicDetailModal = () => {
-    setPlayListMusicDetailModalOpen(true);
+
+  // 전체 보관함 모달 열기 함수
+  const openMusicDetailModal = (playlistName: string) => {
+    setSelectedPlaylistTitle(playlistName);
+    setMusicDetailModalOpen(true);
   };
 
-  const closePlayListMusicDetailModal = () => {
-    setPlayListMusicDetailModalOpen(false);
-  };
-
-  //플레이리스트 이름 보내기 함수
-  const openMusicDetailModal = (
+  // 플레이리스트 모달 열기 함수
+  const openMusicDetailModalTwo = (
     playlistName: string,
     playlistMetaId?: number | null
   ) => {
-    setSelectedPlaylistTitle(playlistName);
+    setSelectedPlaylistTitleTwo(playlistName);
     if (playlistMetaId) {
       setSelectedPlaylistMetaId(playlistMetaId);
     }
-    setMusicDetailModalOpen(true);
+    setMusicDetailModalOpenTwo(true);
   };
 
   // 음악 리스트상세보기 모달 닫기 함수
   const closeMusicDetailModal = () => {
     setRefreshKey((prevKey) => !prevKey);
     setMusicDetailModalOpen(false);
+  };
+
+  const closeMusicDetailModalTwo = () => {
+    setRefreshKeyTwo((prevKey) => !prevKey);
+    setMusicDetailModalOpenTwo(false);
   };
 
   /** axios */
@@ -132,7 +142,7 @@ function MusicCard({ refreshFlag }: any) {
       .catch((error) => {
         console.error("데이터 가져오기 오류:", error);
       });
-  }, [refreshPlaylist, refreshKey, refreshFlag]);
+  }, [refreshPlaylist, refreshKey, refreshFlag, refreshKeyTwo]);
 
   return (
     <div style={{ width: "70%", margin: "0 auto" }}>
@@ -253,8 +263,10 @@ function MusicCard({ refreshFlag }: any) {
                       timer: 1500,
                     });
                   } else {
-                    setSelectedPlaylistMetaId(Playlist.playlistMetaId);
-                    openPlayListMusicDetailModal();
+                    openMusicDetailModalTwo(
+                      Playlist.playlistName,
+                      Playlist.playlistMetaId
+                    );
                   }
                 }}
               />
@@ -272,8 +284,10 @@ function MusicCard({ refreshFlag }: any) {
                         timer: 1500,
                       });
                     } else {
-                      setSelectedPlaylistMetaId(Playlist.playlistMetaId);
-                      openPlayListMusicDetailModal();
+                      openMusicDetailModalTwo(
+                        Playlist.playlistName,
+                        Playlist.playlistMetaId
+                      );
                     }
                   }}
                 >
@@ -314,14 +328,14 @@ function MusicCard({ refreshFlag }: any) {
             >
               <PlayCircleOutlineIcon />
             </Button>
-            <PlayListMusicDetailModal
-              isOpen={isPlayListMusicDetailModalOpen}
-              onClose={closePlayListMusicDetailModal}
-              title={Playlist.playlistName}
-              playlistMetaId={selectedPlaylistMetaId}
-            />
           </ListItem>
         ))}
+        <PlayListMusicDetailModal
+          isOpen={isMusicDetailModalOpenTwo}
+          onClose={closeMusicDetailModalTwo}
+          title={selectedPlaylistTitleTwo}
+          playlistMetaId={selectedPlaylistMetaId}
+        />
       </List>
       <MusicBoxAddModal
         isOpen={isMusicBoxModalOpen}

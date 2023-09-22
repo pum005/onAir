@@ -39,6 +39,7 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
   const [playlistSongs, setPlaylistSongs] = useState<MusicInfoType[]>([]);
   const [refreshKey, setRefreshKey] = useState(false);
 
+  console.log(playlistMetaId);
   useEffect(() => {
     if (!isOpen) return; // isOpen이 false면 아무 작업도 수행하지 않습니다.
 
