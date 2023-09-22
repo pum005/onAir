@@ -64,7 +64,13 @@ public class MusicController {
     public ResponseEntity<?> searchMusicByYoutube(@RequestParam String musicTitle,
                                                   @RequestParam String musicArtist, @RequestParam long spotifyMusicDuration,
                                                   @RequestParam String musicImageUrl, @RequestParam String spotifyId) {
-        return ResponseEntity.ok(musicService.findVideo(musicTitle, musicArtist, spotifyMusicDuration, musicImageUrl, spotifyId));
+        Map<String, Object> result = musicService.findVideo(musicTitle, musicArtist, spotifyMusicDuration, musicImageUrl, spotifyId);
+
+        if(result.get("code").equals(204)){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
     }
 
     // 음악 상세정보 가져오기
