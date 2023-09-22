@@ -1,13 +1,15 @@
 package com.toy.kafka.websocket.radio;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toy.kafka.Kafka.KafkaProducerService;
 import com.toy.kafka.domain.live.entity.LiveQueue;
 import com.toy.kafka.domain.live.repository.LiveQueueRepository;
 import com.toy.kafka.domain.oncast.entity.Oncast;
-import com.toy.kafka.dto.playList.*;
+import com.toy.kafka.dto.playList.Data;
+import com.toy.kafka.dto.playList.MusicDto;
+import com.toy.kafka.dto.playList.PlayListDto;
+import com.toy.kafka.dto.playList.TTSDto;
 import com.toy.kafka.dto.radio.RadioStateDto;
 import com.toy.kafka.dto.radio.StoryDto;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +18,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 
 @Service
 @RequiredArgsConstructor
@@ -60,6 +65,33 @@ public class RadioService {
 
     }
 
+    @Scheduled(cron = "0 0 17 * * *")// 매일 11시부터 13시까지 1초 간격으로 실
+    public void startWebSocketServer() {
+        logger.info("websocket server 실행!!");
+        commandWebSocketServer("start");
+    }
+
+    public void commandWebSocketServer(String startOrStop) {
+
+        try {
+            String containerId = "WebSocket-Server"; // 중지할 컨테이너의 ID 또는 이름
+            String[] command = {"sudo", "docker", startOrStop, containerId};
+
+            ProcessBuilder processBuilder = new ProcessBuilder(command);
+            Process process = processBuilder.start();
+
+            int exitCode = process.waitFor();
+
+            if (exitCode == 0) {
+                System.out.println("명령어가 성공적로 실행 되었습니다.");
+            } else {
+                System.out.println("명령어가 실행 중 오류가 발생했습니다.");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void radioProcess() throws JsonProcessingException {
         Queue<String> queue = new ArrayDeque<>(List.of("oncast", "chat", "story", "chat", "music", "chat", "music", "chat", "music", "chat"));
 
@@ -95,13 +127,13 @@ public class RadioService {
     public Data storyProcess() throws JsonProcessingException {
 
         Pageable pageable = PageRequest.of(0, 1);
-        // StoryDto storyDto = database.find_story()
+
         List<LiveQueue> liveQueue = liveQueueRepository.findLiveQueue(pageable);
 
         if (liveQueue.isEmpty()) {
             logger.info("live empty!!!");
+            commandWebSocketServer("stop");
             return new Data("idle", 1234, null);
-
         }
 
         LiveQueue findLiveQueue = liveQueue.get(0);
@@ -109,21 +141,7 @@ public class RadioService {
         findLiveQueue.updateReadCheck();
         liveQueueRepository.save(findLiveQueue);
 
-//        logger.info("readCheck ! : " + liveQueue.get(0).isReadCheck());
-//
-//        logger.info("liveQeue ID !!!!");
-//        logger.info(liveQueue.get(0).getLiveQueueId().toString());
-//
-//        logger.info("update id : ");
-//        logger.info("live queue !");
-//        logger.info(liveQueue.get(0).toString());
-//        logger.info("Live Queue !!");
-
         StoryDto storyDto = new StoryDto("hello world", "hello world", new ArrayList<>(), "hello world", "hello world", "./tts/story/");
-
-//        if (storyDto != null) {
-//            return new Data("idle", 0, null);
-//        }
 
         logger.info("[Story Process] 사연 상태를 생성합니다 {story[story_seq]}");
 
@@ -151,22 +169,6 @@ public class RadioService {
         int musicTwoLength = millisecondsToRoundedSeconds(findOnCast.getMusic2().getDuration());
         int musicThreeLength = millisecondsToRoundedSeconds(findOnCast.getMusic3().getDuration());
 
-
-        // tts 생성
-
-        // Story TTS 생성 후 Merge
-
-        // merged_story_tts 와 story_reaction_file merge
-
-        // intro_length, outro_length 구하기
-
-        // intro_url, outro_url 만들기
-
-        // story에 readed 상태 업데이트, 누가 업데이트 했는지 적기
-
-        // playlist path : intro_url 로 바꾸기
-
-
         TTSDto ttsOneDto = new TTSDto("tts", ttsOne, ttsOneLength);
         TTSDto ttsTwoDto = new TTSDto("tts", ttsTwo,ttsTwoLength);
         TTSDto ttsThreeDto = new TTSDto("tts", ttsThree, ttsThreeLength);
@@ -180,12 +182,8 @@ public class RadioService {
         Data data = new Data("oncast", findLiveQueue.getLiveQueueId().intValue(), playListDto);
 
         logger.info(data.toString());
-        // story_reaction_file 제거
-        // merged_story_tts_file 제거
-        // story_tts_list 제거
 
         return data;
-
     }
 
 
