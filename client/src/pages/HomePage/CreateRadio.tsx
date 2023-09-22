@@ -84,7 +84,7 @@ const CreateRadio = () => {
   useEffect(() => {
     if (fetchOncast) {
       requestWithTokenRefresh(() => {
-        return axios.get("http://localhost:8080/api/oncast/play/7", {
+        return axios.get("http://localhost:8080/api/oncast/play/6", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
           },
