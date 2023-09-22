@@ -24,16 +24,43 @@ function DeleteModal({
   playlistId,
   refresh,
 }: DeleteModalProps) {
-  const [showConfirm, setShowConfirm] = React.useState(false); // 상태 추가
+  const [showConfirm, setShowConfirm] = React.useState(false);
 
   const handleDelete = () => {
-    if (musicId) {
+    const headers = {
+      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+    };
+
+    if (playlistId && musicId) {
+      console.log(playlistId);
+      console.log(musicId);
+      // playlistId와 musicId 모두 있을 때의 처리
+      requestWithTokenRefresh(() => {
+        return axios.delete("http://localhost:8080/api/playlist/music", {
+          data: {
+            playlistMetaId: playlistId,
+            musicId: musicId,
+          },
+          headers: headers,
+          withCredentials: true,
+        });
+      })
+        .then((response) => {
+          console.log("Deleted 성공!", response);
+          setShowConfirm(true);
+          if (setRefreshKey) {
+            setRefreshKey();
+          }
+        })
+        .catch((error) => {
+          console.error("Error deleting the music from playlist", error);
+        });
+    } else if (musicId) {
+      // musicId만 있을 때의 처리
       requestWithTokenRefresh(() => {
         return axios.delete("http://localhost:8080/api/my-musicbox", {
           data: { musicId: musicId },
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("accessToken"),
-          },
+          headers: headers,
           withCredentials: true,
         });
       })
@@ -48,14 +75,12 @@ function DeleteModal({
           console.error("Error deleting the music", error);
         });
     } else if (playlistId) {
-      console.log(playlistId);
+      // playlistId만 있을 때의 처리
       requestWithTokenRefresh(() => {
         return axios.delete(
           `http://localhost:8080/api/playlist/${playlistId}`,
           {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("accessToken"),
-            },
+            headers: headers,
             withCredentials: true,
           }
         );
@@ -73,6 +98,7 @@ function DeleteModal({
     } else {
       console.error("No musicId or playlistId provided");
     }
+
     onClose();
   };
 
