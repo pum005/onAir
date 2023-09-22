@@ -29,10 +29,11 @@ type ApiResponseType = {
     playlistImage: string;
     playlistCount: number;
     playlistName: string;
+    playlistMetaId: number;
   }>;
 };
 
-function MusicCard() {
+function MusicCard({ refreshFlag }: any) {
   /** state */
   const [isMusicBoxModalOpen, setMusicBoxModalOpen] = useState<boolean>(false); //보관함 추가 모달
   // const [myMusicBox, setMyMusicBox] = useState(0); //전체 보관함 관리 state
@@ -46,6 +47,8 @@ function MusicCard() {
 
   const [refreshPlaylist, setRefreshPlaylist] = useState(false); //플리추가 렌더링 할 state(보관함 전체 불러오기)
   const [refreshKey, setRefreshKey] = useState(false); //닫기눌렀을때도 리렌더링
+
+  const [removeList, setRemoveList] = useState(0);
 
   /** function */
   //보관함추가 실행 함수
@@ -109,7 +112,7 @@ function MusicCard() {
       .catch((error) => {
         console.error("데이터 가져오기 오류:", error);
       });
-  }, [refreshPlaylist, refreshKey]);
+  }, [refreshPlaylist, refreshKey, refreshFlag]);
 
   return (
     <div style={{ width: "70%", margin: "0 auto" }}>
@@ -266,6 +269,7 @@ function MusicCard() {
             <DeleteOutlineIcon // 2. 쓰레기통 아이콘 추가
               className={styles.DeleteOutlineIcon}
               onClick={() => {
+                setRemoveList(Playlist.playlistMetaId);
                 openDeleteModal();
               }}
             />
@@ -303,7 +307,12 @@ function MusicCard() {
         onClose={MusicBoxModalClose}
         refresh={() => setRefreshPlaylist(!refreshPlaylist)}
       />
-      <DeleteModal isOpen={isDeleteModal} onClose={closeDeleteModal} />
+      <DeleteModal
+        isOpen={isDeleteModal}
+        onClose={closeDeleteModal}
+        playlistId={removeList}
+        refresh={() => setRefreshKey((prevKey) => !prevKey)}
+      />
     </div>
   );
 }
