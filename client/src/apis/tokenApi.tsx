@@ -1,4 +1,5 @@
 import axios from "axios";
+import { User } from "../store";
 
 // 토큰 검증 및 새로운 액세스 토큰을 받아오는 함수
 export const refreshToken = async (userId: number): Promise<string | null> => {
