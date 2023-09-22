@@ -179,6 +179,12 @@ public class MusicService {
 
             SearchListResponse searchResponse = searchRequest.execute();
             List<SearchResult> searchResults = searchResponse.getItems();
+
+            if(searchRequest.size() == 0){
+                out.put("code", 204);
+                out.put("message", "조건에 맞는 영상을 찾을 수 없습니다.");
+                return out;
+            }
             long playTimeYoutube = 0L;
 
             BigInteger maxViews = BigInteger.ZERO;
