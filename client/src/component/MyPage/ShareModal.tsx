@@ -19,7 +19,7 @@ function ShareModal({ isOpen, onClose, oncastId }: ShareModalProps) {
 
   const handleDelete = () => {
     console.log(oncastId);
-    // PATCH 요청을 보냅니다.
+
     requestWithTokenRefresh(() => {
       return axios.patch(
         `http://localhost:8080/api/oncast/shares/${oncastId}`,
