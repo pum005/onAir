@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
 
-    List<Playlist> findByPlaylistMetaPlaylistMetaId(Long PlaylistMeta_id);
+    List<Playlist> findByPlaylistMetaPlaylistMetaId(Long PlaylistMetaId);
 
     Optional<Playlist> findByPlaylistMetaPlaylistMetaIdAndMusicMusicId(Long playlistMetaId, Long musicId);
 }

@@ -218,6 +218,18 @@ public class PlaylistService {
 
         Playlist playlist = byPlaylistMetaPlaylistMetaIdAndMusicMusicId.get();
         playlistRepository.delete(playlist);
+
+        List<Playlist> byPlaylistMetaPlaylistMetaId = playlistRepository.findByPlaylistMetaPlaylistMetaId(playlistMetaId);
+
+        // 삭제하는 음악이 플레이리스트의 대표 이미지면
+        if(playlistMeta.getPlaylistImage().equals(playlist.getMusic().getAlbumCoverUrl())){
+            if(byPlaylistMetaPlaylistMetaId.size() != 0){
+                playlistMeta.registPlaylistImage(byPlaylistMetaPlaylistMetaId.get(0).getMusic().getAlbumCoverUrl());
+            }else{
+                playlistMeta.changePlaylistImageNull();
+            }
+        }
+
         playlistMeta.minusCountPlaylistCount();
 
         result.put("message", "플레이리스트 음악 삭제 성공.");

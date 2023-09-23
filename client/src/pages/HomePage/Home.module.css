@@ -55,3 +55,7 @@
   align-items: center;
   padding: 10px;  /* 내부 패딩 */
 }
+.largeGif {
+  width: 1000px;
+  height: 500px;
+}

@@ -9,7 +9,7 @@ import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AlertDialog from "./AddFullList";
-import Loading from './Loading';
+import Loading from "./Loading";
 
 type SearchModalProps = {
   isOpen: boolean;
@@ -21,6 +21,7 @@ type MusucType = {
   musicArtist: string;
   musicImage: string;
   spotifyMusicDuration: number;
+  externalIds: string;
 };
 
 const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
@@ -66,9 +67,10 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
   const handleAddMusic = (music: MusucType) => {
     setIsLoading(true);
     console.log(music);
+    console.log(music.externalIds);
     requestWithTokenRefresh(() => {
       return axios.get(
-        `http://localhost:8080/api/search/youtube?musicTitle=${music.musicTitle}&musicArtist=${music.musicArtist}&spotifyMusicDuration=${music.spotifyMusicDuration}&musicImageUrl=${music.musicImage}`,
+        `http://localhost:8080/api/search/youtube?musicTitle=${music.musicTitle}&musicArtist=${music.musicArtist}&spotifyMusicDuration=${music.spotifyMusicDuration}&musicImageUrl=${music.musicImage}&spotifyId=${music.externalIds}`,
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
@@ -78,11 +80,15 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
       );
     })
       .then((response) => {
+        console.log(response)
         setIsLoading(false);
 
         if (response.data.message === "이미 보관함에 추가된 노래입니다.") {
           setOpen(false);
           alert("이미 보관함에 추가된 노래입니다.");
+        } else if (response.data.code === 204){
+          setOpen(false);
+          alert(response.data.message)
         } else {
           setOpen(true);
         }
@@ -102,93 +108,95 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div>
-    <Modal open={isOpen} onClose={onClose}>
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "80%",
-          maxWidth: "600px",
-          bgcolor: "background.paper",
-          border: "2px solid #000",
-          boxShadow: 24,
-          p: 4,
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
+      <Modal open={isOpen} onClose={onClose}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "80%",
+            maxWidth: "600px",
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
           }}
         >
-          <Typography variant="h6">노래 검색</Typography>
-          <CloseIcon onClick={onClose} style={{ cursor: "pointer" }} />
-        </div>
-        <div style={{ marginTop: "20px" }}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            label="노래 제목"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSearch}
-            style={{ marginTop: "10px" }}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
           >
-            검색
-          </Button>
-        </div>
-        <div
-          style={{ marginTop: "30px", maxHeight: "300px", overflowY: "auto" }}
-        >
-          {searchResults.length > 0 &&
-            searchResults.map((music, index) => (
-              <div
-                key={index}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginTop: "10px",
-                  borderBottom: "1px solid #e5e5e5",
-                  paddingBottom: "5px",
-                }}
-              >
-                <img
-                  src={music.musicImage}
-                  alt={`${music.musicTitle} cover`}
-                  style={{ width: "40px", height: "40px", marginRight: "10px" }}
-                />
-                <div style={{ flex: 2 }}>
-                  <div>{music.musicTitle}</div>
-                  <div style={{ color: "#888", fontSize: "0.9em" }}>
-                    {music.musicArtist}
+            <Typography variant="h6">노래 검색</Typography>
+            <CloseIcon onClick={onClose} style={{ cursor: "pointer" }} />
+          </div>
+          <div style={{ marginTop: "20px" }}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="노래 제목"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSearch}
+              style={{ marginTop: "10px" }}
+            >
+              검색
+            </Button>
+          </div>
+          <div
+            style={{ marginTop: "30px", maxHeight: "300px", overflowY: "auto" }}
+          >
+            {searchResults.length > 0 &&
+              searchResults.map((music, index) => (
+                <div
+                  key={index}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginTop: "10px",
+                    borderBottom: "1px solid #e5e5e5",
+                    paddingBottom: "5px",
+                  }}
+                >
+                  <img
+                    src={music.musicImage}
+                    alt={`${music.musicTitle} cover`}
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      marginRight: "10px",
+                    }}
+                  />
+                  <div style={{ flex: 2 }}>
+                    <div>{music.musicTitle}</div>
+                    <div style={{ color: "#888", fontSize: "0.9em" }}>
+                      {music.musicArtist}
+                    </div>
                   </div>
+                  <div style={{ flex: 1, textAlign: "right" }}>
+                    {formatTime(music.spotifyMusicDuration)}
+                  </div>
+                  <AddCircleOutlineIcon
+                    style={{ marginLeft: "8px" }}
+                    cursor="pointer"
+                    onClick={() => handleAddMusic(music)}
+                  />
                 </div>
-                <div style={{ flex: 1, textAlign: "right" }}>
-                  {formatTime(music.spotifyMusicDuration)}
-                </div>
-                <AddCircleOutlineIcon
-                  style={{ marginLeft: "8px" }}
-                  cursor="pointer"
-                  onClick={() => handleAddMusic(music)}
-                />
-              </div>
-            ))}
-        </div>
-        <AlertDialog open={open} handleClose={handleClose} />
-      </Box>
-      
-    </Modal>
-    {isLoading && <Loading />}
+              ))}
+          </div>
+          <AlertDialog open={open} handleClose={handleClose} />
+        </Box>
+      </Modal>
+      {isLoading && <Loading />}
     </div>
-    
   );
 };
 
