@@ -1,13 +1,18 @@
 import SocketManager from "./socket";
 
-const socketManager = SocketManager.getInstance();
-let stompClient = socketManager.connect();
+console.log("초기화 됨");
+
+let socketManager = SocketManager.getInstance();
 
 // 웹소켓 연결
-export const socketConnection = () => {
-  stompClient = socketManager.connect();
+export const socketConnection = async () => {
+  let stompClient = socketManager.connect();
+  console.log("socketConnection 들어오!");
+
   console.log(stompClient);
-  stompClient.onConnect = frame => {
+  console.log(stompClient.onConnect);
+
+  stompClient.onConnect = () => {
     console.log("연결 시작");
 
     stompClient.subscribe("/topic", message => {
@@ -22,10 +27,13 @@ export const socketConnection = () => {
 
     stompClient.publish({ destination: "/app/subscribe", body: "" });
   };
+
+  console.log("소켓 연결 끝");
 };
 
 // 데이터 전송
 export const sendData = async (api: string, data: object) => {
+  let stompClient = socketManager.connect();
   if (stompClient && stompClient.connected) {
     stompClient.publish({ destination: api, body: JSON.stringify(data) });
   } else {
