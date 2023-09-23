@@ -59,19 +59,11 @@ public class RadioService {
      * @param message
      */
     @KafkaListener(topics = "radioState")
-    public void getRadioState(String message) throws JsonProcessingException {
+    public void getRadioState(String message) {
         if (message != null) {
-            String tempState = currentState;
             logger.info("수신한 라디오 상태 데이터 : " + message);
 
             parseJsonMessageAndSetState(message);
-//            if (!tempState.equals(currentState)) {
-//                typeStartTime = System.currentTimeMillis();
-//                if (currentState.equals("chat")) {
-//                    resetInfo();
-//                    sendCurrentSound(true);
-//                }
-//            }
         }
     }
 
@@ -158,8 +150,20 @@ public class RadioService {
     /**
      * 1초마다 라디오 상태를 갱신하는 로직입니다. idle 상태가 지속되면 강제로 finishState에 메세지를 보냅니다.
      */
-    @Scheduled(cron = "0/1 * 16-18 * * ?")// 매일 11시부터 13시까지 1초 간격으로 실
+    @Scheduled(cron = "0 0 11 * * *")// 매일 11시부터 13시까지 1초 간격으로 실
+    public void startServer() {
+        currentState = "idle";
+    }
+
+    /**
+     * 1초마다 라디오 상태를 갱신하는 로직입니다. idle 상태가 지속되면 강제로 finishState에 메세지를 보냅니다.
+     */
+    @Scheduled(fixedRate = 1000)// 매일 11시부터 13시까지 1초 간격으로 실
     public void checkAndPlayNextItem() {
+        if ( currentState.equals("End")) {
+            logger.info("End!!");
+            return;
+        }
         logRadioStatus();
         logger.info(currentState);
         for (PlayListDto playListDto : playlist) {
@@ -229,31 +233,6 @@ public class RadioService {
             }
         } else {
             --idleTimer;
-        }
-    }
-
-    /**
-     * 채팅 관련 프로세스
-     */
-    public void chatProcess() {
-        logger.info("chat Process !");
-        long currentTime = System.currentTimeMillis();
-        if (checkSoundChange() && currentTime - startTime < length) {
-//            sendCurrentSound(true);
-            System.out.println("cliend에게 메시지 보내야함!");
-        }
-        if (chatTimer > 0) {
-            --chatTimer;
-        } else if (chatTimer == 0) {
-            logger.info("채팅 응답 시간 초과로 채팅 응답 생성을 종료합니다.");
-//            kafkaProducerService.send("finishChat", "finish");
-            --chatTimer;
-        } else {
-            if (currentTime - startTime > length && playlist.isEmpty()) {
-//                kafkaProducerService.send("finishState", "chat");
-                resetState();
-                resetTimer();
-            }
         }
     }
 
