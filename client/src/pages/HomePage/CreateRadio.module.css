@@ -2,58 +2,56 @@
 .container {
   background-color: #000104;
   color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
-.radioWrapper {
+.oncastCreate {
   max-width: 1000px;
   margin: 3rem auto;
   border: 1px solid #626262;
   border-radius: 20px;
-  background-color: rgba(34, 34, 34, 0.7);
+  background-color: rgb(61, 61, 61);
+  padding: 1rem;
 }
 
-.flexContainer {
+.itemTitle {
+  text-align: center;
+  padding-left: 10px;
+}
+
+.titleInput,
+.storyInput {
+  color: white !important;
+}
+.typingLimit {
+  text-align: right;
+  color: #000104;
+}
+
+.themeSelect {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.selectedTheme {
+  color: red !important;
 }
 
-.titleInput {
-  width: 80%;
-}
-
-.themeButton {
-  /* 여기에 테마 버튼에 대한 구체적인 스타일을 추가할 수 있습니다 */
-}
-
-.storyTextArea {
-  width: 80%;
-  height: 100px;
-}
-
-.footerButtons {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
+.createButton,
+.cancleButton {
+  margin-right: 10px;
 }
 
 .createButton {
-  margin-right: 10px;
+  background-color: #007bff;
+  color: white;
 }
 
-.centerText {
-  text-align: center;
-}
-
-.inputWidth {
-  width: 80%;
-}
-
-.textAreaStyle {
-  width: 80%;
-  height: 100px;
-}
-
-.marginRight {
-  margin-right: 10px;
+.cancleButton {
+  background-color: #6c757d;
+  color: white;
 }
