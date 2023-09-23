@@ -66,8 +66,8 @@ public class MusicController {
                                                   @RequestParam String musicImageUrl, @RequestParam String spotifyId) {
         Map<String, Object> result = musicService.findVideo(musicTitle, musicArtist, spotifyMusicDuration, musicImageUrl, spotifyId);
 
-        if(result.get("code").equals(204)){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
+        if(result.containsKey("code")){
+            return ResponseEntity.status(HttpStatus.OK).body(result);
         }else{
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }
