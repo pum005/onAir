@@ -80,11 +80,15 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
       );
     })
       .then((response) => {
+        console.log(response)
         setIsLoading(false);
 
         if (response.data.message === "이미 보관함에 추가된 노래입니다.") {
           setOpen(false);
           alert("이미 보관함에 추가된 노래입니다.");
+        } else if (response.data.code === 204){
+          setOpen(false);
+          alert(response.data.message)
         } else {
           setOpen(true);
         }
