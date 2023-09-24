@@ -42,7 +42,7 @@ function CustomTabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 0 }}>
           <Typography component="div">{children}</Typography>
         </Box>
       )}
@@ -120,7 +120,7 @@ export default function BasicTabs() {
           onChange={handleChange}
           aria-label="basic tabs example"
           sx={{
-            paddingLeft: "70px",
+            paddingLeft: "220px",
             ".Mui-selected": {
               // 활성 Tab 스타일
               color: "#000",

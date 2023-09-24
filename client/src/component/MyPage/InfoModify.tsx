@@ -78,16 +78,19 @@ function InfoModify() {
   return (
     <div>
       <img
-        src={userData.profileImage}
-        alt="프로필 이미지"
-        onClick={imgModalOpen}
-        style={{
-          cursor: "pointer",
-          width: "180px",
-          height: "180px",
-          objectFit: "cover",
-        }}
-      />
+      src={userData.profileImage}
+      alt="프로필 이미지"
+      onClick={imgModalOpen}
+      style={{
+        cursor: "pointer",
+        width: "180px",
+        height: "180px",
+        objectFit: "cover",
+        borderRadius: "50%", // 동그랗게 만들기
+        border: "4px solid white", // 테두리 추가
+        boxShadow: "0 0 0 3px #385285", // 외부 테두리 (인스타그램처럼)
+      }}
+    />
       <div
         style={{
           display: "flex",
