@@ -11,9 +11,15 @@ type ModalProps = {
   onClose: () => void;
   title?: string; // Optional props
   content?: string; // Optional props
+  currentMusicList?: {
+    title: string;
+    artist: string;
+    albumCoverUrl: string;
+    duration: number;
+  }[];
 };
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, currentMusicList }) => {
   const radioDummyData = useSelector((state: RootState) => state.radioDummy);
   const dispatch = useDispatch();
 
@@ -25,16 +31,14 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  const formatTime = (seconds: number) => {
-    const min = Math.floor(seconds / 60);
-    const sec = seconds % 60;
-    return `${min}:${sec < 10 ? "0" : ""}${sec}`;
+  const formatTime = (milliseconds: number) => {
+    const totalSeconds = Math.round(milliseconds / 1000);
+    const min = Math.floor(totalSeconds / 60);
+    const sec = totalSeconds % 60;
+    return `${min < 10 ? "0" : ""}${min}:${sec < 10 ? "0" : ""}${sec}`;
   };
 
-  const songsToShow = radioDummyData.musicTitle.slice(
-    0,
-    radioDummyData.currentMusicIndex + 1
-  );
+  const songsToShow = currentMusicList || [];
 
   if (!isOpen) return null;
 
@@ -53,7 +57,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       <div className={styles.modal}>
         <h2>PlayList</h2>
         <hr className={styles.hrStyle} />
-        {songsToShow.map((title, index) => (
+
+        {songsToShow.map((music, index) => (
           <div
             key={index}
             onClick={() => handleSongClick(index)}
@@ -67,18 +72,18 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             }}
           >
             <img
-              src={radioDummyData.musicCover[index]}
+              src={music.albumCoverUrl}
               alt="Album Cover"
               style={{ width: "40px", height: "40px", marginRight: "10px" }}
             />
             <div style={{ flex: 2 }}>
-              <div>{title}</div>
+              <div>{music.title}</div>
               <div style={{ color: "#888", fontSize: "0.9em" }}>
-                {radioDummyData.musicArtist[index]}
+                {music.artist}
               </div>
             </div>
             <div style={{ flex: 1, textAlign: "right" }}>
-              {formatTime(radioDummyData.musicLength[index])}
+              {formatTime(music.duration)}
             </div>
             <AddCircleOutlineIcon
               style={{ marginLeft: "8px" }}
