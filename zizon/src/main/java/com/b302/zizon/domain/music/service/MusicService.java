@@ -9,7 +9,6 @@ import com.b302.zizon.domain.music.repository.MusicRepository;
 import com.b302.zizon.domain.music.repository.MyMusicBoxRepository;
 import com.b302.zizon.domain.user.GetUser;
 import com.b302.zizon.domain.user.entity.User;
-import com.b302.zizon.domain.user.exception.UserNotFoundException;
 import com.b302.zizon.domain.user.repository.UserRepository;
 import com.b302.zizon.util.ConvertTime;
 import com.google.api.services.youtube.YouTube;
@@ -20,8 +19,6 @@ import com.google.api.services.youtube.model.SearchResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -178,19 +175,25 @@ public class MusicService {
                     "items(id(videoId),snippet(publishedAt,channelId,title,description))");
 
             SearchListResponse searchResponse = searchRequest.execute();
+
             List<SearchResult> searchResults = searchResponse.getItems();
 
-            if(searchRequest.size() == 0){
-                out.put("code", 204);
-                out.put("message", "조건에 맞는 영상을 찾을 수 없습니다.");
-                return out;
-            }
             long playTimeYoutube = 0L;
 
             BigInteger maxViews = BigInteger.ZERO;
 
             for (SearchResult searchResult : searchResults) {
                 String musicYoutubeId = searchResult.getId().getVideoId();
+                String videoTitle = searchResult.getSnippet().getTitle().toLowerCase();
+                String videoDescription = searchResult.getSnippet().getDescription().toLowerCase();
+
+                // 커버, 팬메이드 등의 키워드가 제목이나 설명에 포함되면 건너뛴다.
+                if (videoTitle.contains("cover") || videoDescription.contains("cover") ||
+                        videoTitle.contains("fan-made") || videoDescription.contains("fan-made")
+                ){
+                    continue;
+                }
+
                 VideoListResponse videoResponse = youtubeApi.videos()
                         .list(Arrays.asList("id", "statistics", "contentDetails"))
                         .setId(Arrays.asList(musicYoutubeId))
@@ -215,6 +218,12 @@ public class MusicService {
                     result.setMusicLength(playTimeYoutube);
                 }
             }
+
+                if (result.getMusicYoutubeId() == null) {
+                    out.put("code", 204);
+                    out.put("message", "조건에 맞는 영상을 찾을 수 없습니다.");
+                    return out;
+                }
 
             Music build = Music.builder()
                     .artist(artist)
