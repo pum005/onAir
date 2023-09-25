@@ -49,7 +49,7 @@ export const LivePlayer = () => {
         <LiveMusic musicFiles={[musicData.data]} />
       )}
       {musicData?.data.type === "tts" && (
-        <Radio ttsFile={musicData.data.path} script={musicData.data.title} />
+        <Radio ttsFile={musicData.data.path} script={musicData.data.script} />
       )}
       <PlayListModal
         isOpen={isModalOpen}

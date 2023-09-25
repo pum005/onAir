@@ -17,6 +17,7 @@ export type MusicData = {
     title: string;
     artist: string;
     image: string;
+    script: string;
   };
 };
 
