@@ -6,6 +6,7 @@ import styles from "./CreateRadio.module.css";
 import { resetIndices, setMusicInfo, setRadioDummyData } from "../../store";
 import DJSelector from "../../component/Radio/DJSelector";
 import axios from "axios";
+import { Navigate } from "react-router-dom";
 
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import { Grid, TextField, Button, Typography } from "@mui/material";
@@ -58,90 +59,94 @@ const CreateRadio = () => {
     setContentLength(e.target.value.length);
   };
 
-  const [fetchOncast, setFetchOncast] = useState(false);
+  // const [fetchOncast, setFetchOncast] = useState(false);
+
+  // const handleOncastButtonClick = () => {
+  //   setFetchOncast(true);
+  // };
 
   const handleOncastButtonClick = () => {
-    setFetchOncast(true);
+    navigate("/Player");
   };
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  type MusicItem = {
-    title: string;
-    artist: string;
-    duration: number;
-    albumCoverUrl: string;
-    youtubeId: string;
-  };
+  // type MusicItem = {
+  //   title: string;
+  //   artist: string;
+  //   duration: number;
+  //   albumCoverUrl: string;
+  //   youtubeId: string;
+  // };
 
-  useEffect(() => {
-    if (fetchOncast) {
-      requestWithTokenRefresh(() => {
-        return axios.get("http://localhost:8080/api/oncast/play/7", {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("accessToken"),
-          },
-          withCredentials: true,
-        });
-      }).then((response) => {
-        console.log("Response Data:", response.data);
-        console.log("Music Data:", response.data.oncast.music);
+  // useEffect(() => {
+  //   if (fetchOncast) {
+  //     requestWithTokenRefresh(() => {
+  //       return axios.get("http://localhost:8080/api/oncast/play/7", {
+  //         headers: {
+  //           Authorization: "Bearer " + localStorage.getItem("accessToken"),
+  //         },
+  //         withCredentials: true,
+  //       });
+  //     }).then((response) => {
+  //       console.log("Response Data:", response.data);
+  //       console.log("Music Data:", response.data.oncast.music);
 
-        const data: {
-          djName: string;
-          ttsOne: string;
-          ttsTwo: string;
-          ttsThree: string;
-          ttsFour: string;
-          scriptOne: string;
-          scriptTwo: string;
-          scriptThree: string;
-          scriptFour: string;
-          music: {
-            title: string;
-            artist: string;
-            duration: number;
-            albumCoverUrl: string;
-            youtubeId: string;
-          }[];
-        } = response.data.oncast; // 여기서 .oncast를 추가했습니다.
+  //       const data: {
+  //         djName: string;
+  //         ttsOne: string;
+  //         ttsTwo: string;
+  //         ttsThree: string;
+  //         ttsFour: string;
+  //         scriptOne: string;
+  //         scriptTwo: string;
+  //         scriptThree: string;
+  //         scriptFour: string;
+  //         music: {
+  //           title: string;
+  //           artist: string;
+  //           duration: number;
+  //           albumCoverUrl: string;
+  //           youtubeId: string;
+  //         }[];
+  //       } = response.data.oncast; // 여기서 .oncast를 추가했습니다.
 
-        const music: MusicItem[] = response.data.oncast.music; // 여기서도 .oncast를 추가했습니다.
+  //       const music: MusicItem[] = response.data.oncast.music; // 여기서도 .oncast를 추가했습니다.
 
-        // Redux 액션 디스패치: 데이터를 Redux 스토어에 저장합니다.
+  //       // Redux 액션 디스패치: 데이터를 Redux 스토어에 저장합니다.
 
-        // oncast 데이터 액션 디스패치
-        dispatch(
-          setRadioDummyData({
-            djName: data.djName,
-            tts_one: data.ttsOne,
-            tts_two: data.ttsTwo,
-            tts_three: data.ttsThree,
-            tts_four: data.ttsFour,
-            script_one: data.scriptOne,
-            script_two: data.scriptTwo,
-            script_three: data.scriptThree,
-            script_four: data.scriptFour,
-            oncast_music_one: data.music[0].youtubeId,
-            oncast_music_two: data.music[1].youtubeId,
-            oncast_music_three: data.music[2].youtubeId,
-          })
-        );
+  //       // oncast 데이터 액션 디스패치
+  //       dispatch(
+  //         setRadioDummyData({
+  //           djName: data.djName,
+  //           tts_one: data.ttsOne,
+  //           tts_two: data.ttsTwo,
+  //           tts_three: data.ttsThree,
+  //           tts_four: data.ttsFour,
+  //           script_one: data.scriptOne,
+  //           script_two: data.scriptTwo,
+  //           script_three: data.scriptThree,
+  //           script_four: data.scriptFour,
+  //           oncast_music_one: data.music[0].youtubeId,
+  //           oncast_music_two: data.music[1].youtubeId,
+  //           oncast_music_three: data.music[2].youtubeId,
+  //         })
+  //       );
 
-        // 음악 데이터 액션 디스패치
-        dispatch(
-          setMusicInfo({
-            musicTitle: music.map((m) => m.title),
-            musicArtist: music.map((m) => m.artist),
-            musicLength: music.map((m) => m.duration),
-            musicCover: music.map((m) => m.albumCoverUrl),
-          })
-        );
-        setFetchOncast(false); // 통신 후 상태 값을 초기화합니다.
-        navigate("/RadioPlayer");
-      });
-    }
-  }, [fetchOncast, dispatch]);
+  //       // 음악 데이터 액션 디스패치
+  //       dispatch(
+  //         setMusicInfo({
+  //           musicTitle: music.map((m) => m.title),
+  //           musicArtist: music.map((m) => m.artist),
+  //           musicLength: music.map((m) => m.duration),
+  //           musicCover: music.map((m) => m.albumCoverUrl),
+  //         })
+  //       );
+  //       setFetchOncast(false); // 통신 후 상태 값을 초기화합니다.
+  //       navigate("/RadioPlayer");
+  //     });
+  //   }
+  // }, [fetchOncast, dispatch]);
 
   /**AXIOS */
   //여기서 POST매핑하면 끝.
