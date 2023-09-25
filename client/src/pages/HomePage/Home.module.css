@@ -1,18 +1,19 @@
 .fadeInOutText {
   animation: fadeInOut 3s;
   opacity: 0;
+  font-family: "MyFont", fallbackFont, sans-serif;
 }
 .fadeInGif {
   animation: fadeIn 2s;
   opacity: 1;
 }
 
-
 @keyframes fadeInOut {
   0% {
     opacity: 0;
   }
-  60% { /* 2.5초 / 3.5초 = 약 71% */
+  60% {
+    /* 2.5초 / 3.5초 = 약 71% */
     opacity: 1;
   }
   100% {
@@ -38,24 +39,25 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  /* font-family: "MyFont", fallbackFont, sans-serif; */
+  border: 2px solid red;
+  border-radius: 12px;
+  color: crimson;
+  width: 170px;
+  height: 11px;
+  padding: 10px; /* 내부 패딩 */
 }
 .verticalAlign {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.makeaoncast {
-  border: 2px solid red;  
-  border-radius: 12px;  
-  color: crimson;
-  width: 170px;
-  height: 11px;
-  display: flex; 
-  justify-content: center;
-  align-items: center;
-  padding: 10px;  /* 내부 패딩 */
-}
+
 .largeGif {
   width: 1000px;
   height: 500px;
+}
+.ontext {
+  text-align: center;
 }
