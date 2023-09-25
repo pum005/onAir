@@ -16,7 +16,7 @@ type MusicProps = {
   onFinish: () => void;
   onMusicChange?: (music: any) => void;
 };
-//comment
+
 export const Music = ({ musicFiles, onFinish, onMusicChange }: MusicProps) => {
   const [currentMusicIndex, setCurrentMusicIndex] = useState(0);
   const [progress, setProgress] = useState(0);
