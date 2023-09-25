@@ -40,6 +40,15 @@ export const Player = (): ReactElement => {
     }>
   >([]);
 
+  const [openAlertDialog, setOpenAlertDialog] = useState(false);
+  const handleOpenAlertDialog = () => {
+    setOpenAlertDialog(true);
+  };
+
+  const handleCloseAlertDialog = () => {
+    setOpenAlertDialog(false);
+  };
+
   useEffect(() => {
     requestWithTokenRefresh(() => {
       return axios.get(`http://localhost:8080/api/oncast/play/${oncast_id}`, {
