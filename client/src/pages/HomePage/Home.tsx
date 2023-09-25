@@ -31,31 +31,37 @@ export const Home = () => {
   };
 
   return (
-    <div     
+    <div
       style={{ backgroundColor: "#000104", height: "120vh", color: "white" }}
     >
       <NavBar />
-    <div className={styles.centerContent} >
-     
-      {showText && (
-        <h2 className={styles.fadeInOutText}>
-          당신의 이야기로 음악을 추천해드립니다.
-        </h2>
-      )}
-      
-      {showRadioButton && (
-     <div onClick={navigateToCreateRadio} className={ `${styles.verticalAlign} ${styles.fadeInGif}`} >
-    <img src="/images/magichall.gif" alt="Magic Hall" className={styles.largeGif} />
+      <div className={styles.centerContent}>
+        {showText && (
+          <h2 className={styles.fadeInOutText}>
+            당신의 이야기로 음악을 추천해드립니다
+            <hr />
+            <h2 className={styles.ontext}>ONCAST</h2>
+          </h2>
+        )}
 
+        {showRadioButton && (
+          <div
+            onClick={navigateToCreateRadio}
+            className={`${styles.verticalAlign} ${styles.fadeInGif}`}
+          >
+            <img
+              src="/images/magichall.gif"
+              alt="Magic Hall"
+              className={styles.largeGif}
+            />
 
-     <div className={`${styles.centerText} ${styles.makeaoncast}`}>MAKE A ONCAST</div>
-     
-   </div>
-      )}
-      <LoginAlertModal
-        open={loginAlertModalOpen}
-        handleClose={() => setLoginAlertModalOpen(false)}
-      />
+            <div className={styles.centerText}>MAKE A ONCAST</div>
+          </div>
+        )}
+        <LoginAlertModal
+          open={loginAlertModalOpen}
+          handleClose={() => setLoginAlertModalOpen(false)}
+        />
       </div>
     </div>
   );
