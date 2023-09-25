@@ -58,7 +58,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, currentMusicList }) => {
 
   React.useEffect(() => {
     if (selectedMusicId) {
-      // selectedMusicId가 설정되었을 때만 API 호출
       requestWithTokenRefresh(() => {
         return axios.post(
           "http://localhost:8080/api/my-musicbox",
