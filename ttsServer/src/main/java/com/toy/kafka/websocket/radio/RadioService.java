@@ -1,13 +1,16 @@
 package com.toy.kafka.websocket.radio;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toy.kafka.Kafka.KafkaProducerService;
 import com.toy.kafka.domain.live.entity.LiveQueue;
 import com.toy.kafka.domain.live.repository.LiveQueueRepository;
+import com.toy.kafka.domain.music.entity.Music;
 import com.toy.kafka.domain.oncast.entity.Oncast;
-import com.toy.kafka.dto.playList.*;
+import com.toy.kafka.dto.playList.Data;
+import com.toy.kafka.dto.playList.MusicDto;
+import com.toy.kafka.dto.playList.PlayListDto;
+import com.toy.kafka.dto.playList.TTSDto;
 import com.toy.kafka.dto.radio.RadioStateDto;
 import com.toy.kafka.dto.radio.StoryDto;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +19,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 
 @Service
 @RequiredArgsConstructor
@@ -51,141 +57,83 @@ public class RadioService {
         logger.info("finishState 들어옴!");
         logger.info(message);
         if (message != null) {
-//            logger.info(currentState);
-//            if (currentState.equals("music")) {
             logger.info("radio Process 실행 !");
             radioProcess();
-//            }
         }
 
     }
 
     public void radioProcess() throws JsonProcessingException {
-        Queue<String> queue = new ArrayDeque<>(List.of("oncast", "chat", "story", "chat", "music", "chat", "music", "chat", "music", "chat"));
 
         logger.info("[Radio] : 현재 라디오 상태 : " +  currentState);
 
-        currentState = queue.poll();
-        queue.offer(currentState);
+        currentState = "oncast";
 
-        RadioStateDto radioState = new RadioStateDto("idle");
-        Data data = null;
-        if (currentState.equals("oncast")) {
-            logger.info("storyProcess !");
-            data = storyProcess();
-            radioState.setState(data.getState());
-        } else if (currentState.equals("chat")) {
-            radioState = new RadioStateDto("chat");
-        }
-//        else if (currentState.equals("music")) {
-//            radioState = musicProcess();
-//        }
+        logger.info("storyProcess !");
+        Data data = storyProcess();
 
         // Data 객체를 JSON 문자열로 직렬화
-        String jsonString = objectMapper.writeValueAsString(data);
+        String ret = objectMapper.writeValueAsString(data);
 
         logger.info("radioState 로 data 보냄");
-        logger.info(jsonString);
+        logger.info(ret);
 
-
-        kafkaProducerService.send("radioState", jsonString);
+        kafkaProducerService.send("radioState", ret);
     }
 
     @Transactional
-    public Data storyProcess() throws JsonProcessingException {
+    public Data storyProcess(){
 
         Pageable pageable = PageRequest.of(0, 1);
-        // StoryDto storyDto = database.find_story()
+
         List<LiveQueue> liveQueue = liveQueueRepository.findLiveQueue(pageable);
 
         if (liveQueue.isEmpty()) {
             logger.info("live empty!!!");
-            return new Data("idle", 1234, null);
-
+            return new Data("End", 0, null);
         }
 
         LiveQueue findLiveQueue = liveQueue.get(0);
+        logger.info(findLiveQueue.toString());
         Oncast findOnCast = findLiveQueue.getOncast();
         findLiveQueue.updateReadCheck();
         liveQueueRepository.save(findLiveQueue);
 
-//        logger.info("readCheck ! : " + liveQueue.get(0).isReadCheck());
-//
-//        logger.info("liveQeue ID !!!!");
-//        logger.info(liveQueue.get(0).getLiveQueueId().toString());
-//
-//        logger.info("update id : ");
-//        logger.info("live queue !");
-//        logger.info(liveQueue.get(0).toString());
-//        logger.info("Live Queue !!");
-
-        StoryDto storyDto = new StoryDto("hello world", "hello world", new ArrayList<>(), "hello world", "hello world", "./tts/story/");
-
-//        if (storyDto != null) {
-//            return new Data("idle", 0, null);
-//        }
-
         logger.info("[Story Process] 사연 상태를 생성합니다 {story[story_seq]}");
-
-        String storyContent = storyDto.getStoryContent();
-        List<String> storyContentList = storyDto.getStoryContentList();
-        String storyReaction = storyDto.getStoryReaction();
-        String storyOutro = storyDto.getStoryOutro();
-        String ttsPath = "./tts/story/";
-
-        String storyReactionFileName = ttsPath + "story_reaction.mp3";
-        String storyOutroFileName = ttsPath + "outro.mp3";
 
         String ttsOne = findOnCast.getTtsOne();
         String ttsTwo = findOnCast.getTtsTwo();
         String ttsThree = findOnCast.getTtsThree();
         String ttsFour = findOnCast.getTtsFour();
-        int ttsOneLength = 10;
-        int ttsTwoLength = 10;
-        int ttsThreeLength = 10;
-        int ttsFourLength = 10;
-        String musicOne = findOnCast.getMusic1().getYoutubeVideoId();
-        String musicTwo = findOnCast.getMusic2().getYoutubeVideoId();
-        String musicThree = findOnCast.getMusic3().getYoutubeVideoId();
+        int ttsOneLength = findOnCast.getTtsDurationOne();
+        int ttsTwoLength = findOnCast.getTtsDurationTwo();
+        int ttsThreeLength = findOnCast.getTtsDurationThree();
+        int ttsFourLength = findOnCast.getTtsDurationFour();
+        Music musicOne = findOnCast.getMusic1();
+        Music musicTwo = findOnCast.getMusic2();
+        Music musicThree = findOnCast.getMusic3();
+        String musicOneId = findOnCast.getMusic1().getYoutubeVideoId();
+        String musicTwoId = findOnCast.getMusic2().getYoutubeVideoId();
+        String musicThreeId = findOnCast.getMusic3().getYoutubeVideoId();
         int musicOneLength = millisecondsToRoundedSeconds(findOnCast.getMusic1().getDuration());
         int musicTwoLength = millisecondsToRoundedSeconds(findOnCast.getMusic2().getDuration());
         int musicThreeLength = millisecondsToRoundedSeconds(findOnCast.getMusic3().getDuration());
-
-
-        // tts 생성
-
-        // Story TTS 생성 후 Merge
-
-        // merged_story_tts 와 story_reaction_file merge
-
-        // intro_length, outro_length 구하기
-
-        // intro_url, outro_url 만들기
-
-        // story에 readed 상태 업데이트, 누가 업데이트 했는지 적기
-
-        // playlist path : intro_url 로 바꾸기
-
 
         TTSDto ttsOneDto = new TTSDto("tts", ttsOne, ttsOneLength);
         TTSDto ttsTwoDto = new TTSDto("tts", ttsTwo,ttsTwoLength);
         TTSDto ttsThreeDto = new TTSDto("tts", ttsThree, ttsThreeLength);
         TTSDto ttsFourDto = new TTSDto("tts", ttsFour, ttsFourLength);
-        MusicDto musicOneDto = new MusicDto("youtube", musicOne, musicOneLength, "artist", "title", "image");
-        MusicDto musicTwoDto = new MusicDto("youtube", musicTwo, musicTwoLength,"artist", "title", "image");
-        MusicDto musicThreeDto = new MusicDto("youtube", musicThree, musicThreeLength, "artist", "title", "image");
+        MusicDto musicOneDto = new MusicDto("youtube", musicOneId, musicOneLength, musicOne.getArtist(), musicOne.getTitle(), musicOne.getAlbumCoverUrl());
+        MusicDto musicTwoDto = new MusicDto("youtube", musicTwoId, musicTwoLength,musicTwo.getArtist(), musicTwo.getTitle(), musicThree.getAlbumCoverUrl());
+        MusicDto musicThreeDto = new MusicDto("youtube", musicThreeId, musicThreeLength, musicThree.getArtist(), musicThree.getTitle(), musicThree.getAlbumCoverUrl());
 
         PlayListDto playListDto = new PlayListDto(ttsOneDto, musicOneDto, ttsTwoDto, musicTwoDto, ttsThreeDto, musicThreeDto, ttsFourDto);
 
         Data data = new Data("oncast", findLiveQueue.getLiveQueueId().intValue(), playListDto);
 
         logger.info(data.toString());
-        // story_reaction_file 제거
-        // merged_story_tts_file 제거
-        // story_tts_list 제거
 
         return data;
-
     }
 
 

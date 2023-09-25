@@ -84,6 +84,11 @@ public class Oncast {
     @ManyToOne(fetch = FetchType.LAZY)
     private Music music3;
 
+    private int ttsDurationOne;
+    private int ttsDurationTwo;
+    private int ttsDurationThree;
+    private int ttsDurationFour;
+
 
     // 공유하기 눌렀을 경우 상태 업데이트
     public void updateShareOncast(){
