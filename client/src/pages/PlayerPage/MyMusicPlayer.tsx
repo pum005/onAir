@@ -7,6 +7,11 @@ import AddCircleOutline from "@mui/icons-material/AddCircleOutline";
 import styles from "./MyMusicPlayer.module.css";
 import SearchModal from "../../component/Common/SearchMusicModal";
 import DeleteModal from "../../component/MyPage/DeleteModal";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
+import SkipNextIcon from "@mui/icons-material/SkipNext";
+import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
+import Button from "@mui/material/Button";
 
 type MyMusicPlayerProps = {};
 
@@ -47,7 +52,7 @@ export const MyMusicPlayer = () => {
     setIsDeleteModalOpen(false);
   };
 
-  const [isPlaying, setIsPlaying] = useState(false); // 현재 재생 상태를 저장
+  const [isPlaying, setIsPlaying] = useState(true); // 현재 재생 상태를 저장
   const [currentTime, setCurrentTime] = useState(0); // 현재 재생 시간
   const [duration, setDuration] = useState(0); // 전체 오디오 길이
 
@@ -149,9 +154,15 @@ export const MyMusicPlayer = () => {
           </audio>
           {/* 커스텀 오디오 컨트롤러 */}
           <div className={styles.audioControls}>
-            <button onClick={skipToPrevious}>◀</button>
-            <button onClick={togglePlay}>{isPlaying ? "||" : "▶"}</button>
-            <button onClick={skipToNext}>▶</button>
+            <Button onClick={skipToPrevious} color="primary" variant="outlined">
+              <SkipPreviousIcon />
+            </Button>
+            <Button onClick={togglePlay} color="primary" variant="outlined">
+              {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+            </Button>
+            <Button onClick={skipToNext} color="primary" variant="outlined">
+              <SkipNextIcon />
+            </Button>
             <div className={styles.progressBar}>
               <div
                 className={styles.progress}
@@ -161,10 +172,6 @@ export const MyMusicPlayer = () => {
             <span>
               {Math.floor(currentTime / 60)}:
               {String(Math.floor(currentTime % 60)).padStart(2, "0")}
-            </span>
-            <span>
-              {Math.floor(duration / 60)}:
-              {String(Math.floor(duration % 60)).padStart(2, "0")}
             </span>
           </div>
         </div>
