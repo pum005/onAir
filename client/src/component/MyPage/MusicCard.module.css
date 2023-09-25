@@ -1,12 +1,14 @@
 .hoverableListItem .playButton {
-  display: block; /* 항상 보이지만 opacity 0으로 시작함 */
-  opacity: 0; /* 기본적으로 투명 */
+  display: flex; /* Flexbox 사용 */
+  align-items: center; /* 수직 중앙 정렬 */
+  justify-content: center; /* 수평 중앙 정렬 */
+  opacity: 0; 
   position: absolute;
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
   color: #ffffff;
-  transition: opacity 0.3s, transform 0.3s; /* opacity와 transform에 대한 transition 추가 */
+  transition: opacity 0.3s, transform 0.3s;
 }
 
 .hoverableListItem:hover .playButton {
@@ -18,8 +20,8 @@
   display: block; /* 항상 보이지만 opacity 0으로 시작함 */
   opacity: 0; /* 기본적으로 투명 */
   position: absolute;
-  right: 10%;
-  top: 45%;
+  right: 7%;
+  top: 50%;
   transform: translateY(-50%);
   color: #ffffff;
   transition: opacity 0.3s, transform 0.3s; /* opacity와 transform에 대한 transition 추가 */
@@ -29,6 +31,12 @@
   opacity: 1; /* 호버 상태에서 완전 불투명 */
   transform: translateY(-50%) scale(1.1); /* 약간 확대되는 효과를 위한 scale 추가 */
 }
+
+.PlayArrowIcon:hover {
+  opacity: 1; /* 호버 상태에서 완전 불투명 */
+  color: rgb(52, 129, 246);
+}
+
 
 .hoverableListItem:hover {
   background-color: rgba(228, 224, 224, 0.197);
