@@ -22,7 +22,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: transparent;
+  /* background-image: linear-gradient(to right, red,orange,yellow,green,blue,navy, purple)!important; */
+  background-image: url('../../../public/images/밤하늘에펄.jpg');
   box-shadow: none;
   position: relative;
 }

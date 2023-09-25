@@ -32,15 +32,14 @@ export const Home = () => {
 
   return (
     <div
-      style={{ backgroundColor: "#000104", height: "120vh", color: "white" }}
+      className={styles.background}
+      style={{ backgroundColor: "#000104", height: "120vh", color: "white" ,}}
     >
       <NavBar />
       <div className={styles.centerContent}>
         {showText && (
           <h2 className={styles.fadeInOutText}>
             당신의 이야기로 음악을 추천해드립니다
-            <hr />
-            <h2 className={styles.ontext}>ONCAST</h2>
           </h2>
         )}
 
