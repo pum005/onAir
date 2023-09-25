@@ -15,6 +15,11 @@
   }
 }
 
+@font-face {
+  font-family: "MyFont";
+  src: url("../public/font/bernoru.otf") format("opentype");
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
