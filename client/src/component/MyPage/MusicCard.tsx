@@ -147,12 +147,21 @@ function MusicCard({ refreshFlag }: any) {
   return (
     <div style={{ width: "70%", margin: "0 auto" }}>
       <List>
-        <ListItem alignItems="flex-start" className={styles.hoverableListItem}>
-          <ListItemAvatar>
+        <ListItem
+          alignItems="center"
+          className={styles.hoverableListItem}
+          style={{ height: "56.8px" }}
+          onClick={MusicBoxModalOpen}
+        >
+          <ListItemAvatar
+            style={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
             <AddIcon
               color="primary"
               className={styles.audiotrackIcon}
-              onClick={MusicBoxModalOpen} // 'MusicBoxModalOpen' 함수를 호출하여 모달창을 열기
               style={{ cursor: "pointer" }}
             />
           </ListItemAvatar>
@@ -161,7 +170,6 @@ function MusicCard({ refreshFlag }: any) {
           >
             <Typography
               className={styles.textPrimary}
-              onClick={MusicBoxModalOpen}
               style={{ marginTop: "8px" }}
             >
               플레이리스트 추가
@@ -171,11 +179,16 @@ function MusicCard({ refreshFlag }: any) {
 
         {/* 전체보관함 */}
         <ListItem
-          alignItems="flex-start"
+          alignItems="center"
           className={styles.hoverableListItem}
-          style={{ display: "flex", alignItems: "center" }}
+          style={{ display: "flex", alignItems: "center", height: "56.8px" }} // 높이를 조정했습니다.
         >
-          <ListItemAvatar>
+          <ListItemAvatar
+            style={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
             <AudiotrackIcon
               color="primary"
               className={styles.audiotrackIcon}
@@ -245,12 +258,13 @@ function MusicCard({ refreshFlag }: any) {
         {data?.playlist_info.map((Playlist, index) => (
           <ListItem
             key={index}
-            alignItems="flex-start"
+            alignItems="center"
             className={styles.hoverableListItem}
             style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
           >
             <ListItemAvatar>
               <Avatar
+                style={{ marginTop: "auto", marginBottom: "auto" }}
                 variant="square"
                 src={Playlist.playlistImage || picture}
                 alt={Playlist.playlistName}
