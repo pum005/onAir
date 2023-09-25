@@ -15,12 +15,13 @@ import lombok.ToString;
 @ToString
 public class CurrentSoundDto {
     private String type;
-    private long typePlayedTime;
+//    private long typePlayedTime;
     private String path;
-    private long startTime;
+//    private long startTime;
     private long playedTime;
     private long length;
     private String title;
     private String artist;
     private String image;
+    private String script;
 }
