@@ -85,13 +85,14 @@ public class RadioService {
     public Data storyProcess(){
 
         Pageable pageable = PageRequest.of(0, 1);
-
         List<LiveQueue> liveQueue = liveQueueRepository.findLiveQueue(pageable);
 
         if (liveQueue.isEmpty()) {
             logger.info("live empty!!!");
             return new Data("End", 0, null);
         }
+
+        logger.info(liveQueue.toString());
 
         LiveQueue findLiveQueue = liveQueue.get(0);
         logger.info(findLiveQueue.toString());
@@ -118,11 +119,15 @@ public class RadioService {
         int musicOneLength = millisecondsToRoundedSeconds(findOnCast.getMusic1().getDuration());
         int musicTwoLength = millisecondsToRoundedSeconds(findOnCast.getMusic2().getDuration());
         int musicThreeLength = millisecondsToRoundedSeconds(findOnCast.getMusic3().getDuration());
+        String ttsOneScript = findOnCast.getScriptOne();
+        String ttsTwoScript = findOnCast.getScriptTwo();
+        String ttsThreeScript = findOnCast.getScriptThree();
+        String ttsFourScript = findOnCast.getScriptFour();
 
-        TTSDto ttsOneDto = new TTSDto("tts", ttsOne, ttsOneLength);
-        TTSDto ttsTwoDto = new TTSDto("tts", ttsTwo,ttsTwoLength);
-        TTSDto ttsThreeDto = new TTSDto("tts", ttsThree, ttsThreeLength);
-        TTSDto ttsFourDto = new TTSDto("tts", ttsFour, ttsFourLength);
+        TTSDto ttsOneDto = new TTSDto("tts", ttsOneScript,ttsOne, ttsOneLength);
+        TTSDto ttsTwoDto = new TTSDto("tts", ttsTwoScript, ttsTwo,ttsTwoLength);
+        TTSDto ttsThreeDto = new TTSDto("tts", ttsThreeScript,ttsThree, ttsThreeLength);
+        TTSDto ttsFourDto = new TTSDto("tts", ttsFourScript,ttsFour, ttsFourLength);
         MusicDto musicOneDto = new MusicDto("youtube", musicOneId, musicOneLength, musicOne.getArtist(), musicOne.getTitle(), musicOne.getAlbumCoverUrl());
         MusicDto musicTwoDto = new MusicDto("youtube", musicTwoId, musicTwoLength,musicTwo.getArtist(), musicTwo.getTitle(), musicThree.getAlbumCoverUrl());
         MusicDto musicThreeDto = new MusicDto("youtube", musicThreeId, musicThreeLength, musicThree.getArtist(), musicThree.getTitle(), musicThree.getAlbumCoverUrl());

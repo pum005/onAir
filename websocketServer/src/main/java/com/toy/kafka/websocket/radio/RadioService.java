@@ -41,6 +41,7 @@ public class RadioService {
     private String image = "";
     private long typeStartTime = System.currentTimeMillis();
     private long startTime = System.currentTimeMillis();
+    private String script = "";
     private Queue<PlayListDto> playlist = new LinkedList<PlayListDto>();
 
     //
@@ -113,6 +114,10 @@ public class RadioService {
                 String title = "";
                 String artist = "";
                 String image = "";
+                String script = "";
+                if (itemNode.has("script")) {
+                    script = itemNode.get("script").asText();
+                }
                 if (itemNode.has("title")) {
                     title = itemNode.get("title").asText();
                     artist = itemNode.get("artist").asText();
@@ -125,6 +130,7 @@ public class RadioService {
                         .title(title)
                         .artist(artist)
                         .image(image)
+                        .script(script)
                         .build());
             }
         }
@@ -184,7 +190,7 @@ public class RadioService {
     private void sendCurrentSound(boolean isChanged) {
         CurrentSoundDto currentSound = getCurrentSound();
         if (isChanged) {
-            currentSound.setTypePlayedTime(0L);
+//            currentSound.setTypePlayedTime(0L);
             currentSound.setPlayedTime(0L);
         }
         SocketBaseDto<CurrentSoundDto> socketBaseDto = SocketBaseDto.<CurrentSoundDto>builder()
@@ -204,14 +210,15 @@ public class RadioService {
         long currentTime = System.currentTimeMillis();
         CurrentSoundDto currentSound = CurrentSoundDto.builder()
                 .type(type)
-                .typePlayedTime(currentTime - typeStartTime)
+//                .typePlayedTime(currentTime - typeStartTime)
                 .path(path)
-                .startTime(startTime)
+//                .startTime(startTime)
                 .playedTime(currentTime - startTime)
                 .length(length)
                 .title(title)
                 .artist(artist)
                 .image(image)
+                .script(script)
                 .build();
         return currentSound;
     }
@@ -281,6 +288,7 @@ public class RadioService {
                 artist = sound.getArtist();
                 image = sound.getImage();
                 startTime = currentTime;
+                script = sound.getScript();
             }
             return true;
         }
@@ -302,6 +310,7 @@ public class RadioService {
         title = "";
         artist = "";
         image = "";
+        script = "";
         startTime = System.currentTimeMillis();
         length = 0L;
         playlist.clear();
