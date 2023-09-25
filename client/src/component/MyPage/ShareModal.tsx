@@ -33,6 +33,7 @@ function ShareModal({ isOpen, onClose, oncastId }: ShareModalProps) {
       );
     })
       .then((response) => {
+        console.log(response.data);
         if (response.data.message === "이미 공유된 온캐스트입니다.") {
           Swal.fire({
             icon: "error",
@@ -41,7 +42,7 @@ function ShareModal({ isOpen, onClose, oncastId }: ShareModalProps) {
             timer: 1500,
           });
         }
-        if (response.data.message === "공유하기 성공") setShowConfirm(true);
+        if (response.data.message === "공유하기 성공.") setShowConfirm(true);
         if (response.data.message === "이미 삭제된 온캐스트입니다.") {
           Swal.fire({
             icon: "error",
