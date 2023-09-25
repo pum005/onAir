@@ -1,0 +1,28 @@
+.logoImage {
+  margin-right: 8px;
+  height: auto;
+  width: 145px;
+}
+
+.liveImage {
+  height: 40px;
+  width: auto;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-90%);
+}
+
+.userProfileImage {
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+}
+
+.centerAppBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  box-shadow: none;
+  position: relative;
+}
