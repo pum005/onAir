@@ -1,0 +1,79 @@
+/* SearchModal.module.css */
+.modalContainer {
+    position: relative;
+    background-color: rgb(50, 51, 55);
+    border-radius: 15px;
+    padding: 20px;
+    width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    margin-top: 100px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.closeIcon {
+    cursor: pointer;
+}
+
+.searchResults {
+    margin-top: 30px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+  
+  .musicItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #181818;
+    margin-top: 10px;
+    border-radius: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  .musicItem:hover {
+    background-color: #282828;
+  }
+  
+  .musicImage {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .musicDetails {
+    flex: 2;
+    color: white;
+  }
+  
+  .artistName {
+    color: #bbb;
+    font-size: 0.9em;
+  }
+  
+  .musicDuration {
+    flex: 1;
+    text-align: right;
+    color: white;
+  }
+
+  .searchButton {
+    color: #1DB954;
+    font-size: 28px;
+    cursor: pointer;
+    background-color: transparent;
+    padding: 5px;
+    box-shadow: none;
+    margin-left: 8px;
+}
+
+.TextField {
+    color: #fff !important;
+}
