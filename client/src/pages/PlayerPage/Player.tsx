@@ -7,6 +7,7 @@ import { Music } from "../../component/PlayerPage/Music";
 import { FinishModal } from "../../component/PlayerPage/FinishModal";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import Modal from "../../component/PlayerPage/PlayListModal";
+import { useLocation } from "react-router-dom";
 
 type OncastDataType = {
   ttsOne: string;
@@ -26,9 +27,12 @@ export const Player = (): ReactElement => {
   const [oncasts, setOncasts] = useState<OncastDataType | null>(null); // 타입을 명시
   const [playState, setPlayState] = useState<"TTS" | "MUSIC">("TTS");
   const [currentIndex, setCurrentIndex] = useState(0);
-  const oncast_id = 7;
   const [showModal, setShowModal] = useState(false); //
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  //이부분이 이제 재생했을때 하드코딩 되어있는 oncast가 아니라 location에서 가져오는 oncastId
+  const location = useLocation();
+  const { oncastId } = location.state;
 
   const [currentMusicList, setCurrentMusicList] = useState<
     Array<{
@@ -51,7 +55,7 @@ export const Player = (): ReactElement => {
 
   useEffect(() => {
     requestWithTokenRefresh(() => {
-      return axios.get(`http://localhost:8080/api/oncast/play/${oncast_id}`, {
+      return axios.get(`http://localhost:8080/api/oncast/play/${oncastId}`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },
@@ -65,7 +69,7 @@ export const Player = (): ReactElement => {
       .catch((error) => {
         console.error("통신에러 발생", error);
       });
-  }, [oncast_id]);
+  }, [oncastId]);
 
   if (!oncasts) {
     return <div>Loading...</div>;
