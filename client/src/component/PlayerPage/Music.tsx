@@ -14,9 +14,10 @@ type YouTubePlayer = {
 type MusicProps = {
   musicFiles: any[];
   onFinish: () => void;
+  onMusicChange?: (music: any) => void;
 };
-//comment
-export const Music = ({ musicFiles, onFinish }: MusicProps) => {
+
+export const Music = ({ musicFiles, onFinish, onMusicChange }: MusicProps) => {
   const [currentMusicIndex, setCurrentMusicIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
@@ -90,6 +91,12 @@ export const Music = ({ musicFiles, onFinish }: MusicProps) => {
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
   };
+
+  useEffect(() => {
+    if (onMusicChange && currentMusic) {
+      onMusicChange(currentMusic);
+    }
+  }, [currentMusic]);
 
   return (
     <div

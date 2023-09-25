@@ -103,7 +103,6 @@ function NavBar() {
       <AppBar
         className={style.centerAppBar} // 이 부분을 추가합니다.
         position="static"
-        style={{ backgroundColor: "transparent", boxShadow: "none" }}
       >
         <Container maxWidth="xl">
           <Toolbar disableGutters>

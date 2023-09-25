@@ -5,6 +5,8 @@ import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import { Radio } from "../../component/PlayerPage/Radio";
 import { Music } from "../../component/PlayerPage/Music";
 import { FinishModal } from "../../component/PlayerPage/FinishModal";
+import QueueMusicIcon from "@mui/icons-material/QueueMusic";
+import Modal from "../../component/PlayerPage/PlayListModal";
 
 type OncastDataType = {
   ttsOne: string;
@@ -25,7 +27,27 @@ export const Player = (): ReactElement => {
   const [playState, setPlayState] = useState<"TTS" | "MUSIC">("TTS");
   const [currentIndex, setCurrentIndex] = useState(0);
   const oncast_id = 7;
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false); //
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [currentMusicList, setCurrentMusicList] = useState<
+    Array<{
+      musicId: number;
+      title: string;
+      artist: string;
+      albumCoverUrl: string;
+      duration: number;
+    }>
+  >([]);
+
+  const [openAlertDialog, setOpenAlertDialog] = useState(false);
+  const handleOpenAlertDialog = () => {
+    setOpenAlertDialog(true);
+  };
+
+  const handleCloseAlertDialog = () => {
+    setOpenAlertDialog(false);
+  };
 
   useEffect(() => {
     requestWithTokenRefresh(() => {
@@ -86,6 +108,12 @@ export const Player = (): ReactElement => {
       style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
     >
       <NavBar />
+      <div style={{ position: "absolute", top: "120px", right: "100px" }}>
+        <QueueMusicIcon
+          style={{ fontSize: "2.5rem", color: "white", cursor: "pointer" }}
+          onClick={() => setIsModalOpen(true)}
+        />
+      </div>
       {playState === "TTS" ? (
         <Radio
           ttsFiles={[ttsFiles[currentIndex]]}
@@ -98,10 +126,18 @@ export const Player = (): ReactElement => {
           <Music
             musicFiles={[musicFiles[currentIndex]]}
             onFinish={handleFinished}
+            onMusicChange={(music) =>
+              setCurrentMusicList((prev) => [...prev, music])
+            }
           />
         )
       )}
       <FinishModal show={showModal} onClose={() => setShowModal(false)} />
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        currentMusicList={currentMusicList}
+      />
     </div>
   );
 };
