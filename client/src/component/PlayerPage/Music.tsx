@@ -1,28 +1,42 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
-import { useNavigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
-import YouTube, { YouTubeProps } from "react-youtube";
+import React, { useState, useEffect } from "react";
+import YouTube from "react-youtube";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
+
+type YouTubePlayer = {
+  getCurrentTime: () => number;
+  getDuration: () => number;
+  seekTo: (seconds: number, allowSeekAhead?: boolean) => void;
+  playVideo: () => void;
+  pauseVideo: () => void;
+};
 
 type MusicProps = {
   musicFiles: any[];
   onFinish: () => void;
 };
-
+//comment
 export const Music = ({ musicFiles, onFinish }: MusicProps) => {
-  const [currentMusicIndex, setCurrentMusicIndex] = useState(0); // 현재 재생 중인 음악의 인덱스
+  const [currentMusicIndex, setCurrentMusicIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [player, setPlayer] = useState<YouTubePlayer | null>(null);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
 
-  // YouTube 플레이어 설정
-  const opts: YouTubeProps["opts"] = {
-    height: "390",
-    width: "640",
+  const opts = {
+    height: "0",
+    width: "0",
     playerVars: {
       autoplay: 1,
     },
   };
 
-  // 현재 재생 중인 음악의 정보
   const currentMusic = musicFiles[currentMusicIndex];
+
+  const onPlayerReady = (event: { target: YouTubePlayer }) => {
+    setPlayer(event.target);
+  };
 
   const handleVideoEnd = () => {
     const nextMusicIndex = currentMusicIndex + 1;
@@ -34,19 +48,137 @@ export const Music = ({ musicFiles, onFinish }: MusicProps) => {
     }
   };
 
+  const updateProgress = () => {
+    if (player) {
+      const newCurrentTime = player.getCurrentTime();
+      const newDuration = player.getDuration();
+      setCurrentTime(newCurrentTime);
+      setDuration(newDuration);
+      setProgress((newCurrentTime / newDuration) * 100);
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(updateProgress, 1000);
+    return () => clearInterval(interval);
+  }, [player]);
+
+  const handleProgressBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (player && e.currentTarget) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const clickedValue = x / rect.width;
+      const newTime = clickedValue * player.getDuration();
+
+      player.seekTo(newTime); // 원하는 노래 지점으로 이동
+    }
+  };
+
+  const handlePlayPause = () => {
+    if (player) {
+      if (isPlaying) {
+        player.pauseVideo();
+      } else {
+        player.playVideo();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+  };
+
   return (
     <div
-      style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
+      style={{
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(${currentMusic.albumCoverUrl})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundColor: "rgba(0, 1, 4, 0.9)",
+        height: "100%",
+        color: "white",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
     >
-      {/* 현재 재생 중인 음악의 제목과 아티스트를 출력합니다. */}
-      <h2>{currentMusic.title}</h2>
-      <p>{currentMusic.artist}</p>
+      {/* Album Info */}
+      <div style={{ textAlign: "center", zIndex: 2 }}>
+        <h2>{currentMusic.title}</h2>
+        <p>{currentMusic.artist}</p>
+      </div>
 
+      {/* 진행 바, 현재/전체 시간, 재생/일시정지 아이콘 */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
+          marginBottom: "20px",
+        }}
+      >
+        <div
+          style={{
+            width: "50%",
+            background: "#ccc",
+            cursor: "pointer",
+          }}
+          onClick={handleProgressBarClick}
+        >
+          <div
+            style={{
+              width: `${progress}%`,
+              background: "blue",
+              height: "4px",
+            }}
+          ></div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "50%",
+          }}
+        >
+          <span>{formatTime(currentTime)}</span>
+          <div>
+            {isPlaying ? (
+              <PauseIcon
+                onClick={handlePlayPause}
+                style={{ cursor: "pointer" }}
+              />
+            ) : (
+              <PlayArrowIcon
+                onClick={handlePlayPause}
+                style={{ cursor: "pointer" }}
+              />
+            )}
+          </div>
+          <span>{formatTime(duration)}</span>
+        </div>
+      </div>
+
+      {/* Album Cover */}
+      <img
+        src={currentMusic.albumCoverUrl}
+        alt="Album cover"
+        style={{ width: "400px", height: "400px" }}
+      />
+
+      {/* YouTube Player */}
       <YouTube
         videoId={currentMusic.youtubeId}
         opts={opts}
-        onEnd={handleVideoEnd} // 음악이 끝나면 다음 음악으로 넘어갑니다.
+        onReady={onPlayerReady}
+        onEnd={handleVideoEnd}
       />
     </div>
   );
 };
+
+export default Music;
