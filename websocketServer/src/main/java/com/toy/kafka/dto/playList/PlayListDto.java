@@ -16,4 +16,5 @@ public class PlayListDto implements Serializable {
     private String title;
     private String artist;
     private String image;
+    private String script;
 }
