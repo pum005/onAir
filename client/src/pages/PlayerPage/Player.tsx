@@ -4,6 +4,7 @@ import NavBar from "../../component/Common/Navbar";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import { Radio } from "../../component/PlayerPage/Radio";
 import { Music } from "../../component/PlayerPage/Music";
+import { FinishModal } from "../../component/PlayerPage/FinishModal";
 
 type OncastDataType = {
   ttsOne: string;
@@ -21,7 +22,10 @@ type OncastDataType = {
 export const Player = (): ReactElement => {
   // 반환 타입을 ReactElement로 설정
   const [oncasts, setOncasts] = useState<OncastDataType | null>(null); // 타입을 명시
+  const [playState, setPlayState] = useState<"TTS" | "MUSIC">("TTS");
+  const [currentIndex, setCurrentIndex] = useState(0);
   const oncast_id = 7;
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     requestWithTokenRefresh(() => {
@@ -32,12 +36,12 @@ export const Player = (): ReactElement => {
         withCredentials: true,
       });
     })
-      .then(response => {
+      .then((response) => {
         console.log(response.data);
         setOncasts(response.data.oncast);
       })
-      .catch(error => {
-        console.error("통신에러1 발생", error);
+      .catch((error) => {
+        console.error("통신에러 발생", error);
       });
   }, [oncast_id]);
 
@@ -62,18 +66,42 @@ export const Player = (): ReactElement => {
 
   const musicFiles = oncasts.music;
 
+  const handleFinished = () => {
+    if (playState === "TTS") {
+      if (currentIndex === 3) {
+        // 마지막 TTS 체크
+        setShowModal(true);
+        return;
+      }
+      setPlayState("MUSIC");
+    } else {
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
+      setPlayState("TTS");
+    }
+  };
+
   return (
     <div
       style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
     >
       <NavBar />
-      {/* Radio 컴포넌트에 필요한 데이터를 props로 전달합니다. */}
-      {/* <Radio
-        ttsFiles={ttsFiles}
-        scriptFiles={scriptFiles}
-        djName={oncasts.djName} // djName을 추가합니다.
-      />
-      <Music musicFiles={musicFiles} /> */}
+      {playState === "TTS" ? (
+        <Radio
+          ttsFiles={[ttsFiles[currentIndex]]}
+          scriptFiles={[scriptFiles[currentIndex]]}
+          djName={oncasts.djName}
+          onFinish={handleFinished}
+        />
+      ) : (
+        currentIndex !== 3 && (
+          <Music
+            musicFiles={[musicFiles[currentIndex]]}
+            onFinish={handleFinished}
+          />
+        )
+      )}
+      <FinishModal show={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 };
