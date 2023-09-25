@@ -40,11 +40,11 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  /* font-family: "MyFont", fallbackFont, sans-serif; */
+  font-family: "MyFont", fallbackFont, sans-serif;
   border: 2px solid red;
   border-radius: 12px;
   color: crimson;
-  width: 170px;
+  width: 250px;
   height: 11px;
   padding: 10px; /* 내부 패딩 */
 }
@@ -60,4 +60,15 @@
 }
 .ontext {
   text-align: center;
+}
+
+.background{
+  /* background-image: url('../../../public/images/밤하늘에펄.jpg'); */
+  /* background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), url('../../../public/images/밤하늘에펄.jpg'); */
+
+  background-color : #000104;
+  height : 120vh;
+  color: white ;
+
+
 }
