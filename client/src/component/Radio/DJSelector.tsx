@@ -75,8 +75,8 @@ function DJSelector({ onSelect }: DJSelectorProps) {
           <button
             onClick={() => handleSelect(DJ.name, DJ.sound)}
             style={{
-              height: "53px", // 보더의 두께만큼 증가시킵니다 (2px x 2)
-              width: "53px", // 보더의 두께만큼 증가시킵니다 (2px x 2)
+              height: "52px", // 보더의 두께만큼 증가시킵니다 (2px x 2)
+              width: "52px", // 보더의 두께만큼 증가시킵니다 (2px x 2)
               margin: 0,
               padding: 0,
               border:
