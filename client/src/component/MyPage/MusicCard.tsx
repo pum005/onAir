@@ -125,6 +125,10 @@ function MusicCard({ refreshFlag }: any) {
     navigate("/MyMusicPlayer", { state: { playlistMetaId: null } });
   };
 
+  const handlePlayListPlayButtonClick = (playlistMetaId: number) => {
+    navigate("/MyMusicPlayer", { state: { playlistMetaId: playlistMetaId } });
+  };
+
   /** axios */
   //음악 보관함리스트 가져오기
   React.useEffect(() => {
@@ -239,7 +243,21 @@ function MusicCard({ refreshFlag }: any) {
           >
             {data?.my_music_box} 곡
           </Typography>
-          <Button className={styles.playButton} onClick={handlePlayButtonClick}>
+          <Button
+            className={styles.playButton}
+            onClick={() => {
+              if (data?.my_music_box === 0) {
+                Swal.fire({
+                  icon: "error",
+                  title: "재생할 노래가 없습니다!",
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+              } else {
+                handlePlayButtonClick();
+              }
+            }}
+          >
             <PlayArrowIcon className={styles.PlayArrowIcon} />
           </Button>
           <MusicDetailModal
@@ -325,8 +343,6 @@ function MusicCard({ refreshFlag }: any) {
               }}
             />
             <Button
-              component={Link}
-              to="/MyMusicPlayer"
               className={styles.playButton}
               onClick={(event) => {
                 if (Playlist.playlistCount === 0) {
@@ -336,7 +352,8 @@ function MusicCard({ refreshFlag }: any) {
                     showConfirmButton: false,
                     timer: 1500,
                   });
-                  event.preventDefault();
+                } else {
+                  handlePlayListPlayButtonClick(Playlist.playlistMetaId);
                 }
               }}
             >
