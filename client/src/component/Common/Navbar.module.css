@@ -2,6 +2,7 @@
   margin-right: 8px;
   height: auto;
   width: 145px;
+  user-select: none;
 }
 
 .liveImage {
@@ -33,4 +34,8 @@
   align-items: center;
   font-family: "Interop" !important;
   /* flex-direction: row; */
+}
+
+.selectNone {
+  user-select: none;
 }

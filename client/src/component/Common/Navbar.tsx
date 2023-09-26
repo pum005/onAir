@@ -78,7 +78,7 @@ function NavBar() {
               />
             </Button>
           </Link>
-          <h4 style={{ width: "135px" }}>
+          <h4 style={{ width: "135px", userSelect: "none" }}>
             환영합니다,
             <br />
             {displayNickname}님!
@@ -120,7 +120,7 @@ function NavBar() {
         position="static"
       >
         <Container maxWidth="xl">
-          <Toolbar disableGutters>
+          <Toolbar disableGutters className={style.selectNone}>
             <Box
               sx={{
                 flexGrow: 1,
