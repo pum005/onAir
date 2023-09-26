@@ -61,13 +61,17 @@ function DJSelector({ onSelect }: DJSelectorProps) {
   return (
     <Grid container alignItems="center" justifyContent="center" spacing={2}>
       <Grid item>
-        <IconButton onClick={handlePrev} size="large">
+        <IconButton
+          onClick={handlePrev}
+          size="large"
+          style={{ color: "white" }}
+        >
           <ArrowBackIos />
         </IconButton>
       </Grid>
 
       {DJData.slice(centerIndex - 3, centerIndex + 4).map((DJ, index) => (
-        <Grid item key={index} style={{ textAlign: "center" }}>
+        <Grid item key={index} style={{ textAlign: "center", color: "white" }}>
           <button
             onClick={() => handleSelect(DJ.name, DJ.sound)}
             style={{
@@ -90,14 +94,18 @@ function DJSelector({ onSelect }: DJSelectorProps) {
               }}
             />
           </button>
-          <div style={{ color: selectedDJ === DJ.name ? "red" : "black" }}>
+          <div style={{ color: selectedDJ === DJ.name ? "red" : "white" }}>
             {`${DJ.name}`}
           </div>
         </Grid>
       ))}
 
       <Grid item>
-        <IconButton onClick={handleNext} size="large">
+        <IconButton
+          onClick={handleNext}
+          size="large"
+          style={{ color: "white" }}
+        >
           <ArrowForwardIos />
         </IconButton>
       </Grid>
