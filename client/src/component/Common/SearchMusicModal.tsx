@@ -32,6 +32,12 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
   const [searchResults, setSearchResults] = useState<MusucType[]>([]); //검색 관리 state
   const [isSearchLoading, setIsSearchLoading] = useState(false);
 
+  const handleModalClose = () => {
+    setSearchTerm(""); // 검색어 초기화
+    setSearchResults([]); // 검색 결과 초기화
+    onClose(); // 모달 닫기
+  };
+
   const handleSearch = () => {
     setIsSearchLoading(true);
     if (searchTerm) {
@@ -115,23 +121,31 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
     <div>
       <Modal
         open={isOpen}
-        onClose={onClose}
+        onClose={handleModalClose}
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          marginTop: "100px", // Add this line
         }}
       >
         <Box className={styles.modalContainer}>
           <div className={styles.header}>
-            <Typography variant="h6">음악 검색</Typography>
-            <CloseIcon onClick={onClose} className={styles.closeIcon} />
+            <div>
+              <div>
+                <CloseIcon
+                  onClick={handleModalClose}
+                  className={styles.closeIcon}
+                />
+              </div>
+              <div>
+                <Typography variant="h6">음악 검색</Typography>
+              </div>
+            </div>
           </div>
           <div className={styles.textFieldContainer}>
             <TextField
               id="standard-basic"
-              label="음악 제목"
+              placeholder="음악 제목을 입력해주세요"
               variant="standard"
               fullWidth
               value={searchTerm}
@@ -149,7 +163,9 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
                     onClick={handleSearch}
                   />
                 ),
-                style: { color: '#fff' }  // Add this line
+              }}
+              inputProps={{
+                style: { color: "#fff" }, // This style is applied to the actual input element
               }}
             />
           </div>
