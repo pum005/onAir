@@ -129,7 +129,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
         console.log("에러발생", error);
       });
   };
-  //
+
   const formatTime = (milliseconds: number) => {
     const totalSeconds = Math.round(milliseconds / 1000);
     const min = Math.floor(totalSeconds / 60);
