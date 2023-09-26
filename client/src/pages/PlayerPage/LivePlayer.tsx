@@ -46,10 +46,17 @@ export const LivePlayer = () => {
         />
       </div>
       {musicData?.data.type === "youtube" && (
-        <LiveMusic musicFiles={[musicData.data]} />
+        <LiveMusic
+          musicFiles={[musicData.data]}
+          playedTime={musicData.data.playedTime / 1000}
+        />
       )}
       {musicData?.data.type === "tts" && (
-        <Radio ttsFile={musicData.data.path} script={musicData.data.script} />
+        <Radio
+          ttsFile={musicData.data.path}
+          script={musicData.data.script}
+          playedTime={musicData.data.playedTime}
+        />
       )}
       <PlayListModal
         isOpen={isModalOpen}
