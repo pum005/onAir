@@ -33,7 +33,7 @@ export const Home = () => {
   return (
     <div
       className={styles.background}
-      style={{ backgroundColor: "#000104", height: "120vh", color: "white" ,}}
+      style={{ backgroundColor: "#000104", height: "120vh", color: "white" }}
     >
       <NavBar />
       <div className={styles.centerContent}>
@@ -45,6 +45,7 @@ export const Home = () => {
 
         {showRadioButton && (
           <div
+            style={{userSelect: "none"}}
             onClick={navigateToCreateRadio}
             className={`${styles.verticalAlign} ${styles.fadeInGif}`}
           >
@@ -57,6 +58,7 @@ export const Home = () => {
             <div className={styles.centerText}>MAKE A ONCAST</div>
           </div>
         )}
+
         <LoginAlertModal
           open={loginAlertModalOpen}
           handleClose={() => setLoginAlertModalOpen(false)}

@@ -21,6 +21,7 @@
 .itemTitle {
   text-align: center;
   padding-left: 10px;
+  user-select: none;
 }
 
 .titleInput,
@@ -47,7 +48,7 @@
 }
 
 .createButton {
-  background-color: #007bff;
+  background-color: #6966FF;
   color: white;
 }
 

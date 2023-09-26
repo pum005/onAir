@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,6 +12,8 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../store";
 import LoginAlertModal from "./NoLoginModal";
 import style from "./Navbar.module.css";
 
@@ -25,6 +27,13 @@ function NavBar() {
   const handleLoginAlertModalOpen = () => setLoginAlertModalOpen(true);
   const handleLoginAlertModalClose = () => setLoginAlertModalOpen(false);
 
+  const userData = useSelector((state: RootState) => state.user); // 사용자 정보를 Redux store에서 가져옵니다.
+  const [userImage, setUserImage] = useState<null | FileList>(null); // 사용자가 업로드한 이미지
+
+  const displayNickname =
+    userData.nickname.length > 6
+      ? userData.nickname.substring(0, 6) + "..."
+      : userData.nickname;
   const handleImageClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -57,18 +66,24 @@ function NavBar() {
 
   const renderUserIcon = () => {
     if (isLoggedIn) {
-      const userProfileImageUrl = "/path/to/user/profile/image.jpg";
       return (
-        <Link to="/MyPage">
-          <Button>
-            <img
-              src={userProfileImageUrl}
-              alt="User Profile"
-              style={{ borderRadius: "50%", width: "35px", height: "35px" }}
-              className={style.userProfileImagerIcon}
-            />
-          </Button>
-        </Link>
+        <div className={style.userNickName}>
+          <Link to="/MyPage">
+            <Button>
+              <img
+                src={userData.profileImage}
+                alt="User Profile"
+                style={{ borderRadius: "50%", width: "35px", height: "35px" }}
+                className={style.userProfileImagerIcon}
+              />
+            </Button>
+          </Link>
+          <h4 style={{ width: "135px", userSelect: "none" }}>
+            환영합니다,
+            <br />
+            {displayNickname}님!
+          </h4>
+        </div>
       );
     } else {
       return (
@@ -105,7 +120,7 @@ function NavBar() {
         position="static"
       >
         <Container maxWidth="xl">
-          <Toolbar disableGutters>
+          <Toolbar disableGutters className={style.selectNone}>
             <Box
               sx={{
                 flexGrow: 1,
@@ -124,9 +139,9 @@ function NavBar() {
             </Box>
 
             <Box
-              className="parentOfLiveImage"
               sx={{
                 display: "flex",
+
                 justifyContent: "center",
                 alignItems: "center",
                 width: "100%",
