@@ -80,6 +80,7 @@ function DeleteModal({
         });
     } else if (musicId) {
       // musicId만 있을 때의 처리
+      console.log(musicId);
       requestWithTokenRefresh(() => {
         return axios.delete("http://localhost:8080/api/my-musicbox", {
           data: { musicId: musicId },

@@ -17,6 +17,7 @@ import SearchIcon from "@mui/icons-material/Search";
 type SearchModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  setRefreshKey?: () => void;
 };
 
 type MusucType = {
@@ -27,7 +28,11 @@ type MusucType = {
   externalIds: string;
 };
 
-const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
+const SearchModal: React.FC<SearchModalProps> = ({
+  isOpen,
+  onClose,
+  setRefreshKey,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<MusucType[]>([]); //검색 관리 state
   const [isSearchLoading, setIsSearchLoading] = useState(false);
@@ -102,6 +107,10 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
           alert(response.data.message);
         } else {
           setOpen(true);
+          console.log(setRefreshKey);
+          if (setRefreshKey) {
+            setRefreshKey();
+          }
         }
       })
       .catch((error) => {

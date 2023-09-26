@@ -45,6 +45,7 @@ export const MyMusicPlayer = () => {
   const location = useLocation();
   //받아와야함
   const playlistMetaId = location.state?.playlistMetaId;
+  const [refreshKey, setRefreshKey] = useState(false);
 
   useEffect(() => {
     requestWithTokenRefresh(() => {
@@ -61,7 +62,7 @@ export const MyMusicPlayer = () => {
       .catch((error) => {
         console.error("axios 에러", error);
       });
-  }, []);
+  }, [refreshKey]);
 
   const handleSongEnd = () => {
     if (currentTrackIndex < musicData.length - 1) {
@@ -94,7 +95,7 @@ export const MyMusicPlayer = () => {
   console.log(currentTime);
   const [duration, setDuration] = useState<number>(0);
   const [player, setPlayer] = useState<any>(null);
-  const [intervalId, setIntervalId] = useState<number | null>(null);
+  const [deletingMusicId, setDeletingMusicId] = useState<number | null>(null);
 
   const togglePlay = () => {
     if (isPlaying) {
@@ -158,6 +159,11 @@ export const MyMusicPlayer = () => {
     return () => clearInterval(interval);
   }, [player]);
 
+  const handleDeleteIconClick = (musicId: number) => {
+    setDeletingMusicId(musicId);
+    handleDeleteModalOpen();
+  };
+
   return (
     <div className={styles.root}>
       <NavBar />
@@ -203,8 +209,8 @@ export const MyMusicPlayer = () => {
                     <DeleteOutlineIcon
                       className={styles.deleteIcon}
                       onClick={(event) => {
-                        event.stopPropagation(); // 이 줄을 추가하세요
-                        handleDeleteModalOpen();
+                        event.stopPropagation();
+                        handleDeleteIconClick(song.musicId); // pass the song ID to be deleted
                       }}
                     />
                     {Math.floor(song.duration / 60000)}:
@@ -265,10 +271,13 @@ export const MyMusicPlayer = () => {
       <SearchModal
         isOpen={isSearchModalOpen}
         onClose={handleSearchModalClose} // 모달 바깥쪽을 클릭하면 모달을 닫는다.
+        setRefreshKey={() => setRefreshKey((prev) => !prev)}
       />
       <DeleteModal
         isOpen={isDeleteModalOpen}
         onClose={handleDeleteModalClose} // 모달 바깥쪽을 클릭하면 모달을 닫는다.
+        musicId={deletingMusicId}
+        setRefreshKey={() => setRefreshKey((prev) => !prev)}
       />
     </div>
   );
