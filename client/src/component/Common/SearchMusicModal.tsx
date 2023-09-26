@@ -38,7 +38,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
   const [searchResults, setSearchResults] = useState<MusucType[]>([]); //검색 관리 state
   const [isSearchLoading, setIsSearchLoading] = useState(false);
 
-  // Alert 모달 상태
+  // Alert 모달
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
