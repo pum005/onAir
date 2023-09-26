@@ -2,6 +2,7 @@
   animation: fadeInOut 3s;
   opacity: 0;
   font-family: "MyFont", fallbackFont, sans-serif;
+  user-select: none;
 }
 .fadeInGif {
   animation: fadeIn 2s;

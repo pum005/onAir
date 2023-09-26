@@ -21,6 +21,7 @@
 .itemTitle {
   text-align: center;
   padding-left: 10px;
+  user-select: none;
 }
 
 .titleInput,

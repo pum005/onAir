@@ -176,7 +176,7 @@ const CreateRadio = () => {
                   DJ
                 </Typography>
               </Grid>
-              <Grid item xs={10}>
+              <Grid item xs={10} style={{userSelect: "none"}}>
                 <DJSelector onSelect={handlDJSelect} />
               </Grid>
             </Grid>
