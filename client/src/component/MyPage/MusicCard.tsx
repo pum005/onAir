@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import MusicAddModal from "../Common/MusicAddModal";
 import MusicDetailModal from "./MusicDetailModal";
 import AudiotrackIcon from "@mui/icons-material/Audiotrack";
-import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import picture from "../../resources/흥애.png";
 import {
   List,
@@ -162,7 +162,7 @@ function MusicCard({ refreshFlag }: any) {
             <AddIcon
               color="primary"
               className={styles.audiotrackIcon}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer" , fontSize: "40px"}}
             />
           </ListItemAvatar>
           <ListItemText
@@ -170,7 +170,7 @@ function MusicCard({ refreshFlag }: any) {
           >
             <Typography
               className={styles.textPrimary}
-              style={{ marginTop: "8px" }}
+              style={{}}
             >
               플레이리스트 추가
             </Typography>
@@ -204,7 +204,7 @@ function MusicCard({ refreshFlag }: any) {
                   openMusicDetailModal("전체보관함");
                 }
               }}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer" , fontSize: "40px"}}
             />
           </ListItemAvatar>
           <ListItemText
@@ -239,7 +239,7 @@ function MusicCard({ refreshFlag }: any) {
           </Typography>
           <Link to="/MyMusicPlayer">
             <Button className={styles.playButton}>
-              <PlayCircleOutlineIcon />
+              <PlayArrowIcon className={styles.PlayArrowIcon}/>
             </Button>
           </Link>
           <MusicDetailModal
@@ -340,7 +340,7 @@ function MusicCard({ refreshFlag }: any) {
                 }
               }}
             >
-              <PlayCircleOutlineIcon />
+              <PlayArrowIcon className={styles.PlayArrowIcon} />
             </Button>
           </ListItem>
         ))}
