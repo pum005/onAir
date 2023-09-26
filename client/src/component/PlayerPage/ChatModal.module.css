@@ -1,0 +1,83 @@
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100%;
+  background-color: rgba(37, 35, 37, 0.9);
+  box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.5);
+  transition: right 0.3s;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.chatHeader {
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.chatMessages {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  min-height: 60vh;
+}
+
+.chatInputContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chatInput {
+  width: 85%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.chatButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  width: 15%;
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+}
+
+.closed {
+  right: -500px; /* -400px 모달 너비와 -10px 패딩의 합계 */
+}
+
+.chatMessage {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.chatMessage img {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  margin-right: 10px;
+}

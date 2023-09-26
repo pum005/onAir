@@ -40,6 +40,15 @@ export const setMusicInfo = createAction<{
   musicCover: string[];
 }>("SET_MUSIC_INFO");
 
+// 채팅 메시지를 추가하는 액션 생성자
+export const addChatMessage = createAction<{
+  content: string;
+  sender: string;
+  senderImage: string;
+}>("ADD_CHAT_MESSAGE");
+
+// 채팅 메시지를 초기화하는 액션 생성자
+export const resetChatMessages = createAction("RESET_CHAT_MESSAGES");
 export const incrementTTSIndex = createAction("INCREMENT_TTS_INDEX");
 export const incrementMusicIndex = createAction("INCREMENT_MUSIC_INDEX");
 export const resetIndices = createAction("RESET_INDICES");
@@ -215,6 +224,29 @@ const liveRadioDummyReducer = createReducer(
   }
 );
 
+// 채팅 메시지 타입 정의
+export type ChatMessage = {
+  content: string;
+  sender: string;
+  senderImage: string;
+};
+
+// 초기 상태값 설정
+const initialChatState: ChatMessage[] = [];
+
+// 리듀서 정의
+const chatReducer = createReducer(initialChatState, builder => {
+  builder
+    .addCase(addChatMessage, (state, action) => {
+      // 새로운 메시지를 배열에 추가
+      state.push(action.payload);
+    })
+    .addCase(resetChatMessages, state => {
+      // 채팅 메시지 초기화
+      return initialChatState;
+    });
+});
+
 // 3. Store 설정
 
 // Redux 스토어를 설정합니다. 스토어는 애플리케이션의 상태를 저장하고 관리하는 객체입니다.
@@ -223,6 +255,7 @@ const store = configureStore({
     user: userReducer, // 'user'라는 키로 userReducer를 스토어에 추가합니다.
     radioDummy: radiodummyReducer,
     LiveRadioDummy: liveRadioDummyReducer,
+    chat: chatReducer,
   },
 });
 
