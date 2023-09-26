@@ -1,7 +1,7 @@
 package com.b302.zizon.util.scheduler.service;
 
-import com.b302.zizon.domain.live.entity.LiveQueue;
-import com.b302.zizon.domain.live.repository.LiveQueueRepository;
+import com.b302.zizon.domain.oncast.entity.LiveQueue;
+import com.b302.zizon.domain.oncast.repository.LiveQueueRepository;
 import com.b302.zizon.domain.oncast.entity.Oncast;
 import com.b302.zizon.domain.oncast.repository.OncastRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class SchedulerService {
     private final LiveQueueRepository liveQueueRepository;
 
     // 채택하기 라이브큐
-    @Scheduled(cron = "0 12 09 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 49 13 * * *", zone = "Asia/Seoul")
     @Transactional
     public void selectedOncast(){
         log.info("라이브큐 채택 스케줄러 동작");

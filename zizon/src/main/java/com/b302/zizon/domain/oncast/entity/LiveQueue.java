@@ -1,4 +1,4 @@
-package com.b302.zizon.domain.live.entity;
+package com.b302.zizon.domain.oncast.entity;
 
 import com.b302.zizon.domain.oncast.entity.Oncast;
 import com.b302.zizon.domain.user.entity.User;
