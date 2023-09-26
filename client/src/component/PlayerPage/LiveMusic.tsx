@@ -29,7 +29,7 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
     width: "0",
     playerVars: {
       autoplay: 1,
-      start: playedTime / 1000, // 밀리초를 초로 변환
+      start: playedTime,
     },
   };
 
@@ -37,6 +37,7 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
 
   const onPlayerReady = (event: { target: YouTubePlayer }) => {
     setPlayer(event.target);
+    event.target.seekTo(playedTime); // 추가된 코드
   };
 
   const handleVideoEnd = () => {
