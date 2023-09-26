@@ -47,6 +47,7 @@
   width: 250px;
   height: 11px;
   padding: 10px; /* 내부 패딩 */
+  cursor: pointer;
 }
 .verticalAlign {
   display: flex;
@@ -57,18 +58,17 @@
 .largeGif {
   width: 1000px;
   height: 500px;
+  cursor: pointer;
 }
 .ontext {
   text-align: center;
 }
 
-.background{
+.background {
   /* background-image: url('../../../public/images/밤하늘에펄.jpg'); */
   /* background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), url('../../../public/images/밤하늘에펄.jpg'); */
 
-  background-color : #000104;
-  height : 120vh;
-  color: white ;
-
-
+  background-color: #000104;
+  height: 120vh;
+  color: white;
 }
