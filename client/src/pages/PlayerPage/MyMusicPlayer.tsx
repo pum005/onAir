@@ -43,6 +43,7 @@ export const MyMusicPlayer = () => {
   const [musicData, setMusicData] = useState<MusicInfo[]>([]);
 
   const location = useLocation();
+  //받아와야함
   const playlistMetaId = location.state?.playlistMetaId;
 
   useEffect(() => {
