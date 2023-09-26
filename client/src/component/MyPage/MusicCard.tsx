@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import MusicAddModal from "../Common/MusicAddModal";
 import MusicDetailModal from "./MusicDetailModal";
 import AudiotrackIcon from "@mui/icons-material/Audiotrack";
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import picture from "../../resources/흥애.png";
 import {
   List,
@@ -23,6 +23,7 @@ import Swal from "sweetalert2";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DeleteModal from "./DeleteModal";
 import PlayListMusicDetailModal from "./PlayListMusicDetailModal";
+import { useNavigate } from "react-router-dom";
 
 type ApiResponseType = {
   my_music_box: number;
@@ -62,7 +63,7 @@ function MusicCard({ refreshFlag }: any) {
   const [selectedPlaylistMetaId, setSelectedPlaylistMetaId] = useState<
     number | null
   >(null);
-
+  const navigate = useNavigate();
   /** function */
   //보관함추가 실행 함수
   const MusicBoxModalOpen = () => {
@@ -120,6 +121,10 @@ function MusicCard({ refreshFlag }: any) {
     setMusicDetailModalOpenTwo(false);
   };
 
+  const handlePlayButtonClick = () => {
+    navigate("/MyMusicPlayer", { state: { playlistMetaId: null } });
+  };
+
   /** axios */
   //음악 보관함리스트 가져오기
   React.useEffect(() => {
@@ -162,16 +167,13 @@ function MusicCard({ refreshFlag }: any) {
             <AddIcon
               color="primary"
               className={styles.audiotrackIcon}
-              style={{ cursor: "pointer" , fontSize: "40px"}}
+              style={{ cursor: "pointer", fontSize: "40px" }}
             />
           </ListItemAvatar>
           <ListItemText
             style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
           >
-            <Typography
-              className={styles.textPrimary}
-              style={{}}
-            >
+            <Typography className={styles.textPrimary} style={{}}>
               플레이리스트 추가
             </Typography>
           </ListItemText>
@@ -204,7 +206,7 @@ function MusicCard({ refreshFlag }: any) {
                   openMusicDetailModal("전체보관함");
                 }
               }}
-              style={{ cursor: "pointer" , fontSize: "40px"}}
+              style={{ cursor: "pointer", fontSize: "40px" }}
             />
           </ListItemAvatar>
           <ListItemText
@@ -237,11 +239,9 @@ function MusicCard({ refreshFlag }: any) {
           >
             {data?.my_music_box} 곡
           </Typography>
-          <Link to="/MyMusicPlayer">
-            <Button className={styles.playButton}>
-              <PlayArrowIcon className={styles.PlayArrowIcon}/>
-            </Button>
-          </Link>
+          <Button className={styles.playButton} onClick={handlePlayButtonClick}>
+            <PlayArrowIcon className={styles.PlayArrowIcon} />
+          </Button>
           <MusicDetailModal
             isOpen={isMusicDetailModalOpen}
             onClose={closeMusicDetailModal}
