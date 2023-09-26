@@ -6,7 +6,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
+  font-family: "Ramche" !important;
 }
 
 .oncastCreate {
@@ -21,22 +22,86 @@
 .itemTitle {
   text-align: center;
   padding-left: 10px;
-  user-select: none;
+  font-family: "Ramche" !important;
+  /* font-family: "MyFont", fallbackFont, sans-serif; */
+}
+.textFieldFont {
+  font-family: "Ramche" !important;
+}
+
+@font-face {
+  font-family: "Ramche";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/Ramche.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "intelone-mono-font-family-regular";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/intelone-mono-font-family-regular.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SUITE-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/SUITE-Regular.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "IAMAPLAYER";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/IAMAPLAYER.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
 }
 
 .titleInput,
 .storyInput {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 1rem;
+  background-color: transparent;
   color: white !important;
+  font-family: "Ramche" !important;
+  border: 1px solid white;
+  border-radius: 4px;
+  resize: none; /* textarea 크기 조절 방지 */
+
+  transition: border 0.2s ease-in-out;
 }
+.titleInput:hover,
+.storyInput:hover {
+  border-color: #aaa; /* 원하는 hover 테두리 색상으로 변경 가능 */
+}
+
+.titleInput:focus,
+.storyInput:focus {
+  border-color: #fff;
+}
+
 .typingLimit {
   text-align: right;
-  color: #000104;
+  color: aliceblue;
+  font-family: "Ramche" !important;
+  margin-top: 5px;
 }
 
 .themeSelect {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+}
+.theme {
+  font-family: "Ramche" !important;
+  color: #ededed !important;
+  /* font-family: "IAMAPLAYER" !important; */
+  /* font-family: "SUITE-Regular" !important; */
+  /* font-family: "intelone-mono-font-family-regular" !important; */
 }
 .selectedTheme {
   color: red !important;
@@ -45,11 +110,11 @@
 .createButton,
 .cancleButton {
   margin-right: 10px;
+  font-family: "Ramche" !important;
 }
 
 .createButton {
-  background-color: #6966FF;
-  color: white;
+  color: black;
 }
 
 .cancleButton {
