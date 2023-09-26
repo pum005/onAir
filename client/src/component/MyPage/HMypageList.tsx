@@ -7,7 +7,7 @@ import RecipeReviewCard from "./RadioCard";
 import MusicCard from "./MusicCard";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
-import AddIcon from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
 import SearchModal from "../Common/SearchMusicModal";
 
 interface TabPanelProps {
@@ -124,7 +124,11 @@ export default function BasicTabs() {
             ".Mui-selected": {
               // 활성 Tab 스타일
               color: "#000",
-              borderBottom: "2px solid blue",
+              fontWeight: "bold", // 굵은 글씨체 효과 추가
+              backgroundColor: "#646464",
+              borderTopLeftRadius: "15px", // 상단 왼쪽 둥글게
+              borderTopRightRadius: "15px", // 상단 오른쪽 둥글게
+              margin: "0 10px", // 좌우 여백 추가
             },
             ".MuiTab-root": {
               // 비활성 Tab 스타일 및 간격 설정
@@ -135,21 +139,29 @@ export default function BasicTabs() {
         >
           <Tab
             label="온캐스트"
-            style={{ fontSize: "larger", font: "bolder" }}
+            style={{ fontSize: "larger", font: "bolder", color: "white" }}
             {...a11yProps(0)}
           />
           <Tab
             label="음악 보관함"
-            style={{ fontSize: "larger", font: "bolder" }}
+            style={{ fontSize: "larger", font: "bolder", color: "white" }}
             {...a11yProps(1)}
           />
         </Tabs>
         {/* "+" 아이콘 추가 */}
-        {value === 1 && ( // value가 1일 때만 "+" 버튼을 표시합니다.
-          <AddIcon
-            style={{ marginRight: "18%", cursor: "pointer" }}
+        {value === 1 && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginRight: "15%",
+              cursor: "pointer",
+            }}
             onClick={handleSearchModalOpen}
-          />
+          >
+            <SearchIcon />
+            <Typography style={{ marginLeft: "5px" }}>음악검색</Typography>
+          </div>
         )}
       </Box>
       <CustomTabPanel value={value} index={0}>

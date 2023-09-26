@@ -22,7 +22,7 @@ public class SchedulerService {
     private final LiveQueueRepository liveQueueRepository;
 
     // 채택하기 라이브큐
-    @Scheduled(cron = "0 48 13 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 12 09 * * *", zone = "Asia/Seoul")
     @Transactional
     public void selectedOncast(){
         log.info("라이브큐 채택 스케줄러 동작");
@@ -58,13 +58,13 @@ public class SchedulerService {
     }
 
     // 라이브큐에 있는 내용 삭제하기
-    @Scheduled(cron = "0 0 23 * * *", zone = "Asia/Seoul")
-    @Transactional
-    public void deleteLiveQueue(){
-        log.info("라이브큐 삭제 스케줄러 동작");
-        List<LiveQueue> byLiveQueue = liveQueueRepository.findAll();
-        for(LiveQueue q : byLiveQueue){
-            liveQueueRepository.delete(q);
-        }
-    }
+//    @Scheduled(cron = "0 0 23 * * *", zone = "Asia/Seoul")
+//    @Transactional
+//    public void deleteLiveQueue(){
+//        log.info("라이브큐 삭제 스케줄러 동작");
+//        List<LiveQueue> byLiveQueue = liveQueueRepository.findAll();
+//        for(LiveQueue q : byLiveQueue){
+//            liveQueueRepository.delete(q);
+//        }
+//    }
 }
