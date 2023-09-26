@@ -21,8 +21,8 @@ const Login: React.FC = () => {
   const sendLoginRequest = async (token: string | null) => {
     // 서버에 POST 요청을 보냅니다.
     const response = await fetch(
-      "https://j9b302.p.ssafy.io/api/oauth/login",
-      // "http://localhost:8080/api/oauth/login",
+      // "https://j9b302.p.ssafy.io/api/oauth/login",
+      "http://localhost:8080/api/oauth/login",
       {
         method: "POST",
         credentials: "include",
