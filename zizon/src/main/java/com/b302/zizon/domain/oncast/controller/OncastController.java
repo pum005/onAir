@@ -70,4 +70,12 @@ public class OncastController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    // Livq Queue 가져오기
+    @GetMapping("oncast/livelist")
+    public ResponseEntity<?> getLiveQueueList(){
+        Map<String, Object> result = oncastService.getLiveQueueList();
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
 }

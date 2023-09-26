@@ -3,13 +3,13 @@ package com.b302.zizon.domain.oncast.service;
 import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.music.entity.ThemeEnum;
 import com.b302.zizon.domain.oncast.dto.request.OncastRequestDto;
-import com.b302.zizon.domain.oncast.dto.response.GetMusicDTO;
-import com.b302.zizon.domain.oncast.dto.response.GetOncastDTO;
-import com.b302.zizon.domain.oncast.dto.response.OncastPlayResponseDTO;
+import com.b302.zizon.domain.oncast.dto.response.*;
+import com.b302.zizon.domain.oncast.entity.LiveQueue;
 import com.b302.zizon.domain.oncast.entity.Oncast;
 import com.b302.zizon.domain.oncast.entity.OncastCreateData;
 import com.b302.zizon.domain.oncast.exception.OncastNotFoundException;
 import com.b302.zizon.domain.oncast.exception.UnauthorizedOncastAccessException;
+import com.b302.zizon.domain.oncast.repository.LiveQueueRepository;
 import com.b302.zizon.domain.oncast.repository.OncastCreateDataRepository;
 import com.b302.zizon.domain.oncast.repository.OncastRepository;
 import com.b302.zizon.domain.user.GetUser;
@@ -47,6 +47,7 @@ public class OncastService {
     private final UserRepository userRepository;
     private final OncastCreateDataRepository oncastCreateDataRepository;
     private final GetUser getUser;
+    private final LiveQueueRepository liveQueueRepository;
 
     // 음악dto 변환
     private GetMusicDTO convertToDTO(Music music) {
@@ -361,5 +362,56 @@ public class OncastService {
         result.put("oncast", build);
         return result;
     }
+
+    // 라이브큐 정보 가져오기
+    public Map<String, Object> getLiveQueueList(){
+        Map<String, Object> result = new HashMap<>();
+        User user = getUser.getUser();
+
+        List<LiveQueue> listQueueList = liveQueueRepository.findAll();
+
+        List<GetLiveQueueDTO> list = new ArrayList<>();
+        for(LiveQueue q : listQueueList){
+
+            List<MusicDTO> musicList = new ArrayList<>();
+
+            if (q.getOncast().getMusic1() != null) {
+                musicList.add(MusicDTO.builder()
+                        .albumCoverUrl(q.getOncast().getMusic1().getAlbumCoverUrl())
+                        .title(q.getOncast().getMusic1().getTitle())
+                        .artist(q.getOncast().getMusic1().getArtist())
+                        .build());
+            }
+
+            if (q.getOncast().getMusic2() != null) {
+            musicList.add(MusicDTO.builder()
+                .albumCoverUrl(q.getOncast().getMusic2().getAlbumCoverUrl())
+                .title(q.getOncast().getMusic2().getTitle())
+                .artist(q.getOncast().getMusic2().getArtist())
+                .build());
+            }
+
+            if (q.getOncast().getMusic3() != null) {
+            musicList.add(MusicDTO.builder()
+                .albumCoverUrl(q.getOncast().getMusic3().getAlbumCoverUrl())
+                .title(q.getOncast().getMusic3().getTitle())
+                .artist(q.getOncast().getMusic3().getArtist())
+                .build());
+            }
+
+            GetLiveQueueDTO liveQueueDTO = GetLiveQueueDTO.builder()
+            .nickname(q.getUser().getNickname())
+            .profileImage(q.getUser().getProfileImage())
+            .title(q.getOncast().getOncastCreateData().getTitle())
+            .musicList(musicList)
+            .build();
+
+            list.add(liveQueueDTO);
+        }
+
+        result.put("oncast", list);
+        return result;
+    }
+
 }
 
