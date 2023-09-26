@@ -13,6 +13,7 @@ import AddLoading from "./AddLoading";
 import SearchLoading from "./SearchLoading";
 import styles from "./SearchModal.module.css";
 import SearchIcon from "@mui/icons-material/Search";
+import AlertModal from "./AlertModal";
 
 type SearchModalProps = {
   isOpen: boolean;
@@ -36,6 +37,14 @@ const SearchModal: React.FC<SearchModalProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<MusucType[]>([]); //검색 관리 state
   const [isSearchLoading, setIsSearchLoading] = useState(false);
+
+  // Alert 모달 상태
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+
+  const closeAlert = () => {
+    setIsAlertOpen(false);
+  };
 
   const handleModalClose = () => {
     setSearchTerm(""); // 검색어 초기화
@@ -101,10 +110,12 @@ const SearchModal: React.FC<SearchModalProps> = ({
 
         if (response.data.message === "이미 보관함에 추가된 노래입니다.") {
           setOpen(false);
-          alert("이미 보관함에 추가된 노래입니다.");
+          setAlertMessage("이미 보관함에 추가된 노래입니다.");
+          setIsAlertOpen(true);
         } else if (response.data.code === 204) {
           setOpen(false);
-          alert(response.data.message);
+          setAlertMessage(response.data.message);
+          setIsAlertOpen(true);
         } else {
           setOpen(true);
           console.log(setRefreshKey);
@@ -118,7 +129,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
         console.log("에러발생", error);
       });
   };
-
+  //
   const formatTime = (milliseconds: number) => {
     const totalSeconds = Math.round(milliseconds / 1000);
     const min = Math.floor(totalSeconds / 60);
@@ -147,16 +158,15 @@ const SearchModal: React.FC<SearchModalProps> = ({
                 />
               </div>
               <div>
-                <Typography variant="h6">음악 검색</Typography>
+                <Typography variant="h6">노래 검색</Typography>
               </div>
             </div>
           </div>
           <div className={styles.textFieldContainer}>
             <TextField
               id="standard-basic"
-              placeholder="음악 제목을 입력해주세요"
+              placeholder="노래 제목을 입력해주세요"
               variant="standard"
-              fullWidth
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyDown={(e) => {
@@ -174,8 +184,9 @@ const SearchModal: React.FC<SearchModalProps> = ({
                 ),
               }}
               inputProps={{
-                style: { color: "#fff" }, // This style is applied to the actual input element
+                style: { color: "#f5e9e9" }, // This style is applied to the actual input element
               }}
+              style={{ width: "300px" }}
             />
           </div>
           <div className={styles.searchResults}>
@@ -195,7 +206,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                     {formatTime(music.spotifyMusicDuration)}
                   </div>
                   <AddCircleOutlineIcon
-                    style={{ marginLeft: "8px" }}
+                    style={{ marginLeft: "8px", color: "white" }}
                     cursor="pointer"
                     onClick={() => handleAddMusic(music)}
                   />
@@ -205,6 +216,11 @@ const SearchModal: React.FC<SearchModalProps> = ({
           <AlertDialog open={open} handleClose={handleClose} />
         </Box>
       </Modal>
+      <AlertModal
+        open={isAlertOpen}
+        message={alertMessage}
+        onClose={closeAlert}
+      />
       {isSearchLoading && <SearchLoading />}
       {isAddLoading && <AddLoading />}
     </div>
