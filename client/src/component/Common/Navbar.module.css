@@ -7,9 +7,9 @@
 .liveImage {
   height: 40px;
   width: auto;
-  /* position: absolute; */
-  position: fixed;
-  left: 46.5%;
+  position: absolute;
+  /* position: fixed; */
+  left: -7%;
 }
 
 .userProfileImage {
@@ -31,5 +31,6 @@
 .userNickName {
   display: flex;
   align-items: center;
+  font-family: "Interop" !important;
   /* flex-direction: row; */
 }
