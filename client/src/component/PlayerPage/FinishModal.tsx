@@ -5,13 +5,18 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
-
+import { useNavigate } from "react-router-dom";
 type FinishModalProps = {
   show: boolean;
   onClose: () => void;
 };
 
 export const FinishModal: React.FC<FinishModalProps> = ({ show, onClose }) => {
+  const navigate = useNavigate();
+  const handleConfirm = () => {
+    onClose();
+    navigate("/");
+  };
   return (
     <Dialog
       open={show}
@@ -26,7 +31,7 @@ export const FinishModal: React.FC<FinishModalProps> = ({ show, onClose }) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button onClick={handleConfirm} color="primary">
           확인
         </Button>
       </DialogActions>

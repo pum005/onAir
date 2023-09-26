@@ -1,46 +1,53 @@
 import React from "react";
 import styles from "./PlayListModal.module.css";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../store";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AlertDialog from "../Common/AddFullList";
 import PlayListModal from "../Common/PlayListModal";
+import axios from "axios";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 
 type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
   title?: string; // Optional props
   content?: string; // Optional props
+  currentMusicList?: {
+    musicId: number;
+    title: string;
+    artist: string;
+    albumCoverUrl: string;
+    duration: number;
+  }[];
 };
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
-  const radioDummyData = useSelector((state: RootState) => state.radioDummy);
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, currentMusicList }) => {
+  if (!isOpen) return null;
   const dispatch = useDispatch();
-
   const [open, setOpen] = React.useState(false);
   const [playListModalOpen, setPlayListModalOpen] = React.useState(false);
+  const [selectedMusicId, setSelectedMusicId] = React.useState<number | null>(
+    null
+  );
+  const [isPulsButtonClicked, setIsPlusButtonClicked] = React.useState(false);
+  const songsToShow = currentMusicList || [];
 
   const handleSongClick = (index: number) => {
     dispatch({ type: "SET_MUSIC_INDEX", payload: index });
     onClose();
   };
 
-  const formatTime = (seconds: number) => {
-    const min = Math.floor(seconds / 60);
-    const sec = seconds % 60;
-    return `${min}:${sec < 10 ? "0" : ""}${sec}`;
+  const formatTime = (milliseconds: number) => {
+    const totalSeconds = Math.round(milliseconds / 1000);
+    const min = Math.floor(totalSeconds / 60);
+    const sec = totalSeconds % 60;
+    return `${min < 10 ? "0" : ""}${min}:${sec < 10 ? "0" : ""}${sec}`;
   };
 
-  const songsToShow = radioDummyData.musicTitle.slice(
-    0,
-    radioDummyData.currentMusicIndex + 1
-  );
-
-  if (!isOpen) return null;
-
-  const handleClickOpen = (event: React.MouseEvent) => {
+  const handleClickOpen = (event: React.MouseEvent, musicId: number) => {
     event.stopPropagation(); // 이벤트 버블링 방지
-    setOpen(true);
+    setSelectedMusicId(musicId);
+    setIsPlusButtonClicked(!isPulsButtonClicked);
   };
 
   const handleClose = () => {
@@ -48,12 +55,44 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     // 알림 모달이 닫히면 플레이리스트 모달을 연다.
     setPlayListModalOpen(true);
   };
+
+  React.useEffect(() => {
+    if (selectedMusicId) {
+      requestWithTokenRefresh(() => {
+        return axios.post(
+          "http://localhost:8080/api/my-musicbox",
+          { musicId: selectedMusicId },
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+            withCredentials: true,
+          }
+        );
+      })
+        .then((response) => {
+          console.log(response.data);
+          if (response.data.message === "음악 추가 완료") {
+            setOpen(true);
+          }
+          if (response.data.message === "이미 보관함에 있는 음악입니다.") {
+            setOpen(false);
+            alert("이미 보관함에 있는 음악입니다.");
+          }
+        })
+        .catch((error) => {
+          console.error("에러발생", error);
+        });
+    }
+  }, [selectedMusicId, isPulsButtonClicked]);
+
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
         <h2>PlayList</h2>
         <hr className={styles.hrStyle} />
-        {songsToShow.map((title, index) => (
+
+        {songsToShow.map((music, index) => (
           <div
             key={index}
             onClick={() => handleSongClick(index)}
@@ -67,22 +106,22 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
             }}
           >
             <img
-              src={radioDummyData.musicCover[index]}
+              src={music.albumCoverUrl}
               alt="Album Cover"
               style={{ width: "40px", height: "40px", marginRight: "10px" }}
             />
             <div style={{ flex: 2 }}>
-              <div>{title}</div>
+              <div>{music.title}</div>
               <div style={{ color: "#888", fontSize: "0.9em" }}>
-                {radioDummyData.musicArtist[index]}
+                {music.artist}
               </div>
             </div>
             <div style={{ flex: 1, textAlign: "right" }}>
-              {formatTime(radioDummyData.musicLength[index])}
+              {formatTime(music.duration)}
             </div>
             <AddCircleOutlineIcon
               style={{ marginLeft: "8px" }}
-              onClick={handleClickOpen}
+              onClick={(event) => handleClickOpen(event, music.musicId)}
               cursor="pointer"
             />
           </div>
@@ -93,6 +132,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       <PlayListModal
         isOpen={playListModalOpen}
         onClose={() => setPlayListModalOpen(false)}
+        musicId={selectedMusicId}
       />
     </div>
   );

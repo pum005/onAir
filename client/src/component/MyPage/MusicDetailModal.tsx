@@ -164,7 +164,7 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
             onClose={handleMenuClose}
           >
             <MenuItem onClick={handleMoveToOtherBox}>
-              다른 보관함으로 이동
+              다른 플레이리스트로 이동
             </MenuItem>
             <MenuItem onClick={handleDeleteSong}>삭제하기</MenuItem>
           </Menu>

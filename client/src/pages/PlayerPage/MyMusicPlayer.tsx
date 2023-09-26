@@ -7,6 +7,11 @@ import AddCircleOutline from "@mui/icons-material/AddCircleOutline";
 import styles from "./MyMusicPlayer.module.css";
 import SearchModal from "../../component/Common/SearchMusicModal";
 import DeleteModal from "../../component/MyPage/DeleteModal";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
+import SkipNextIcon from "@mui/icons-material/SkipNext";
+import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
+import Button from "@mui/material/Button";
 
 type MyMusicPlayerProps = {};
 
@@ -45,6 +50,39 @@ export const MyMusicPlayer = () => {
 
   const handleDeleteModalClose = () => {
     setIsDeleteModalOpen(false);
+  };
+
+  const [isPlaying, setIsPlaying] = useState(true); // 현재 재생 상태를 저장
+  const [currentTime, setCurrentTime] = useState(0); // 현재 재생 시간
+  const [duration, setDuration] = useState(0); // 전체 오디오 길이
+
+  const togglePlay = () => {
+    if (isPlaying) {
+      audioRef.current?.pause();
+    } else {
+      audioRef.current?.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const skipToNext = () => {
+    handleSongEnd();
+  };
+
+  const skipToPrevious = () => {
+    if (currentTrackIndex === 0) {
+      setCurrentTrackIndex(musicDummyData.length - 1);
+    } else {
+      setCurrentTrackIndex(currentTrackIndex - 1);
+    }
+  };
+
+  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLAudioElement>) => {
+    setCurrentTime(e.currentTarget.currentTime);
+  };
+
+  const handleLoadMetadata = (e: React.SyntheticEvent<HTMLAudioElement>) => {
+    setDuration(e.currentTarget.duration);
   };
 
   return (
@@ -105,9 +143,37 @@ export const MyMusicPlayer = () => {
           </div>
         </div>
         <div className={styles.audioContainer}>
-          <audio ref={audioRef} onEnded={handleSongEnd} controls>
+          {/* 오디오 태그에 이벤트 핸들러 추가 */}
+          <audio
+            ref={audioRef}
+            onEnded={handleSongEnd}
+            onTimeUpdate={handleTimeUpdate}
+            onLoadedMetadata={handleLoadMetadata}
+          >
             <source type="audio/mp3" />
           </audio>
+          {/* 커스텀 오디오 컨트롤러 */}
+          <div className={styles.audioControls}>
+            <Button onClick={skipToPrevious} color="primary" variant="outlined">
+              <SkipPreviousIcon />
+            </Button>
+            <Button onClick={togglePlay} color="primary" variant="outlined">
+              {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+            </Button>
+            <Button onClick={skipToNext} color="primary" variant="outlined">
+              <SkipNextIcon />
+            </Button>
+            <div className={styles.progressBar}>
+              <div
+                className={styles.progress}
+                style={{ width: `${(currentTime / duration) * 100}%` }}
+              />
+            </div>
+            <span>
+              {Math.floor(currentTime / 60)}:
+              {String(Math.floor(currentTime % 60)).padStart(2, "0")}
+            </span>
+          </div>
         </div>
       </div>
       <SearchModal

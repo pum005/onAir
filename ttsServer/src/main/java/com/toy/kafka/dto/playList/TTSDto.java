@@ -7,6 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class TTSDto {
     private String type;
+    private String script;
     private String path;
     private int length;
 }
