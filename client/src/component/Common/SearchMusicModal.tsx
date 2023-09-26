@@ -38,7 +38,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
   const [searchResults, setSearchResults] = useState<MusucType[]>([]); //검색 관리 state
   const [isSearchLoading, setIsSearchLoading] = useState(false);
 
-  // Alert 모달 상태
+  // Alert 모달
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
 
@@ -129,7 +129,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
         console.log("에러발생", error);
       });
   };
-  //
+
   const formatTime = (milliseconds: number) => {
     const totalSeconds = Math.round(milliseconds / 1000);
     const min = Math.floor(totalSeconds / 60);

@@ -16,6 +16,8 @@ import { useLocation } from "react-router-dom";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import axios from "axios";
 import YouTube from "react-youtube";
+import Swal from "sweetalert2";
+import 흥애 from "../../resources/흥애.png";
 
 type YouTubePlayer = {
   getCurrentTime: () => number;
@@ -45,24 +47,66 @@ export const MyMusicPlayer = () => {
   const location = useLocation();
   //받아와야함
   const playlistMetaId = location.state?.playlistMetaId;
+
   const [refreshKey, setRefreshKey] = useState(false);
 
   useEffect(() => {
-    requestWithTokenRefresh(() => {
-      return axios.get("http://localhost:8080/api/my-musicbox/info", {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("accessToken"),
-        },
-        withCredentials: true,
-      });
-    })
-      .then((response) => {
-        setMusicData(response.data.musicInfo);
+    if (playlistMetaId) {
+      requestWithTokenRefresh(() => {
+        return axios.get(
+          `http://localhost:8080/api/playlist/${playlistMetaId}`,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+            withCredentials: true,
+          }
+        );
       })
-      .catch((error) => {
-        console.error("axios 에러", error);
-      });
-  }, [refreshKey]);
+        .then((response) => {
+          // 이부분 message 안뜸
+          if (response.data) {
+            setMusicData(response.data);
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "보관함에 노래가 없습니다!",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            setMusicData([]);
+          }
+        })
+        .catch((error) => {
+          console.error("axios 에러", error);
+        });
+    } else {
+      requestWithTokenRefresh(() => {
+        return axios.get("http://localhost:8080/api/my-musicbox/info", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        });
+      })
+        .then((response) => {
+          if (response.data.message === "보관함에 노래가 없습니다.") {
+            Swal.fire({
+              icon: "error",
+              title: "보관함에 노래가 없습니다!",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            setMusicData([]);
+          } else {
+            setMusicData(response.data.musicInfo);
+          }
+        })
+        .catch((error) => {
+          console.error("axios 에러", error);
+        });
+    }
+  }, [playlistMetaId, refreshKey]);
 
   const handleSongEnd = () => {
     if (currentTrackIndex < musicData.length - 1) {
@@ -96,6 +140,7 @@ export const MyMusicPlayer = () => {
   const [duration, setDuration] = useState<number>(0);
   const [player, setPlayer] = useState<any>(null);
   const [deletingMusicId, setDeletingMusicId] = useState<number | null>(null);
+  const [isButtonEnabled, setIsButtonEnabled] = useState(false);
 
   const togglePlay = () => {
     if (isPlaying) {
@@ -146,6 +191,18 @@ export const MyMusicPlayer = () => {
   const onPlayerReady = (event: { target: YouTubePlayer }) => {
     setPlayer(event.target);
   };
+  useEffect(() => {
+    // 버튼을 잠시 비활성화
+    setIsButtonEnabled(false);
+
+    // 0.5초 후 버튼을 활성화
+    const timer = setTimeout(() => {
+      setIsButtonEnabled(true);
+    }, 1000);
+
+    // 컴포넌트 unmount 혹은 effect가 재실행될 때 타이머를 클리어해주는 작업
+    return () => clearTimeout(timer);
+  }, [currentTrackIndex]);
 
   const updateProgress = () => {
     if (player) {
@@ -170,9 +227,18 @@ export const MyMusicPlayer = () => {
       <div className={styles.container}>
         <div className={styles.songDisplayContainer}>
           <div className={styles.coverImageContainer}>
+            {/* 이부분 노래가 아무것도 없을때 기본 이미지 설정 가능 */}
             <img
-              src={musicData[currentTrackIndex]?.albumCoverUrl}
-              alt={musicData[currentTrackIndex]?.title}
+              src={
+                musicData.length === 0
+                  ? 흥애
+                  : musicData[currentTrackIndex]?.albumCoverUrl
+              }
+              alt={
+                musicData.length === 0
+                  ? "흥애"
+                  : musicData[currentTrackIndex]?.title
+              }
               className={styles.coverImage}
             />
           </div>
@@ -243,13 +309,28 @@ export const MyMusicPlayer = () => {
           />
           {/* 커스텀 오디오 컨트롤러 */}
           <div className={styles.audioControls}>
-            <Button onClick={skipToPrevious} color="primary" variant="outlined">
+            <Button
+              onClick={skipToPrevious}
+              color="primary"
+              variant="outlined"
+              disabled={!isButtonEnabled}
+            >
               <SkipPreviousIcon />
             </Button>
-            <Button onClick={togglePlay} color="primary" variant="outlined">
+            <Button
+              onClick={togglePlay}
+              color="primary"
+              variant="outlined"
+              disabled={!isButtonEnabled}
+            >
               {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
             </Button>
-            <Button onClick={skipToNext} color="primary" variant="outlined">
+            <Button
+              onClick={skipToNext}
+              color="primary"
+              variant="outlined"
+              disabled={!isButtonEnabled}
+            >
               <SkipNextIcon />
             </Button>
             <div
@@ -277,6 +358,7 @@ export const MyMusicPlayer = () => {
         isOpen={isDeleteModalOpen}
         onClose={handleDeleteModalClose} // 모달 바깥쪽을 클릭하면 모달을 닫는다.
         musicId={deletingMusicId}
+        playlistId={playlistMetaId}
         setRefreshKey={() => setRefreshKey((prev) => !prev)}
       />
     </div>
