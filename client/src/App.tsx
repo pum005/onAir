@@ -1,7 +1,6 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import store from "./store";
 
 import CreateRadio from "./pages/HomePage/CreateRadio";
 import { Home } from "./pages/HomePage/Home";
@@ -16,27 +15,35 @@ import { MyMusicPlayer } from "./pages/PlayerPage/MyMusicPlayer";
 import { Player } from "./pages/PlayerPage/Player";
 
 import Success from "./utils/Success";
+
+// persist 관련 import
+
+import { PersistGate } from "redux-persist/integration/react";
+import store, { persistor } from "./store";
+
 function App() {
   return (
     <div className="App">
       <Provider store={store}>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/CreateRadio" element={<CreateRadio />} />
+        <PersistGate loading={null} persistor={persistor}>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/CreateRadio" element={<CreateRadio />} />
 
-            <Route path="/MyPage" element={<MyPage />} />
+              <Route path="/MyPage" element={<MyPage />} />
 
-            <Route path="/Loading" element={<Loading />} />
-            <Route path="/LivePlayer" element={<LivePlayer />} />
-            <Route path="/Player" element={<Player />} />
-            {/* <Route path="/MusicPlayer" element={<MusicPlayer />} />
+              <Route path="/Loading" element={<Loading />} />
+              <Route path="/LivePlayer" element={<LivePlayer />} />
+              <Route path="/Player" element={<Player />} />
+              {/* <Route path="/MusicPlayer" element={<MusicPlayer />} />
             <Route path="/RadioPlayer" element={<RadioPlayer />} /> */}
-            <Route path="/MyMusicPlayer" element={<MyMusicPlayer />} />
+              <Route path="/MyMusicPlayer" element={<MyMusicPlayer />} />
 
-            <Route path="/Success" element={<Success />} />
-          </Routes>
-        </Router>
+              <Route path="/Success" element={<Success />} />
+            </Routes>
+          </Router>
+        </PersistGate>
       </Provider>
     </div>
   );
