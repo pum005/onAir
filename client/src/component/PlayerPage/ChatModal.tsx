@@ -4,10 +4,16 @@ import { RootState } from "../../store";
 import { useSelector, useDispatch } from "react-redux";
 import { sendData, socketConnection } from "../../utils/socket.atom";
 import { addChatMessage } from "../../store";
+type ChatMessage = {
+  content: string;
+  sender: string;
+  senderImage: string;
+};
 
 type ChatModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  messages?: ChatMessage[];
 };
 
 export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
@@ -15,6 +21,8 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
 
   const nickname = useSelector((state: RootState) => state.user.nickname);
   const messages = useSelector((state: RootState) => state.chat);
+
+  console.log(messages);
 
   const profileImage = useSelector(
     (state: RootState) => state.user.profileImage
@@ -30,6 +38,14 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
       sender: nickname,
       senderImage: profileImage,
     });
+
+    // dispatch(
+    //   addChatMessage({
+    //     content: message,
+    //     sender: nickname,
+    //     senderImage: profileImage,
+    //   })
+    // );
 
     setMessage("");
   };
@@ -49,21 +65,22 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
       </button>
       <h2 className={styles.chatHeader}>대화방</h2>
       <div className={styles.chatMessages}>
-        {messages.map((msg, index) => {
-          const isCurrentUser = msg.sender === nickname;
-          return (
-            <div
-              key={index}
-              className={`${styles.chatMessage} ${
-                isCurrentUser ? styles.sent : styles.received
-              }`}
-            >
-              <img src={msg.senderImage} alt={msg.sender} />
-              <span className={styles.username}>{msg.sender}</span>
-              <span className={styles.message_content}>{msg.content}</span>
-            </div>
-          );
-        })}
+        {Array.isArray(messages) &&
+          messages.map((msg, index) => {
+            const isCurrentUser = msg.sender === nickname;
+            return (
+              <div
+                key={index}
+                className={`${styles.chatMessage} ${
+                  isCurrentUser ? styles.sent : styles.received
+                }`}
+              >
+                <img src={msg.senderImage} alt={msg.sender} />
+                <span className={styles.username}>{msg.sender}</span>
+                <span className={styles.message_content}>{msg.content}</span>
+              </div>
+            );
+          })}
         <div ref={chatMessagesEndRef}></div>
       </div>
       <div className={styles.chatInputContainer}>

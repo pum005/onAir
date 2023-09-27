@@ -16,26 +16,30 @@ import { Player } from "./pages/PlayerPage/Player";
 
 import Success from "./utils/Success";
 
-import store from "./store";
+import store, { persistor } from "./store";
+import { PersistGate } from "redux-persist/integration/react";
+
 function App() {
   return (
     <div className="App">
       <Provider store={store}>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/CreateRadio" element={<CreateRadio />} />
+        <PersistGate loading={null} persistor={persistor}>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/CreateRadio" element={<CreateRadio />} />
 
-            <Route path="/MyPage" element={<MyPage />} />
+              <Route path="/MyPage" element={<MyPage />} />
 
-            <Route path="/Loading" element={<Loading />} />
-            <Route path="/LivePlayer" element={<LivePlayer />} />
-            <Route path="/Player" element={<Player />} />
-            <Route path="/MyMusicPlayer" element={<MyMusicPlayer />} />
+              <Route path="/Loading" element={<Loading />} />
+              <Route path="/LivePlayer" element={<LivePlayer />} />
+              <Route path="/Player" element={<Player />} />
+              <Route path="/MyMusicPlayer" element={<MyMusicPlayer />} />
 
-            <Route path="/Success" element={<Success />} />
-          </Routes>
-        </Router>
+              <Route path="/Success" element={<Success />} />
+            </Routes>
+          </Router>
+        </PersistGate>
       </Provider>
     </div>
   );
