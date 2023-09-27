@@ -9,6 +9,8 @@ import ThemeSelector from "../../component/Radio/ThemeSelector";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
+import Box from "@mui/material/Box";
+import { Loading } from "../../pages/PlayerPage/Loading";
 
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import {
@@ -29,6 +31,19 @@ const CreateRadio = () => {
   const [selectedDJ, setSelectedDJ] = useState("");
   const navigate = useNavigate();
   const [showButton, setShowButton] = useState(false);
+  const [contentMaxLengthReached, setContentMaxLengthReached] = useState(false); // 추가: 텍스트 최대 길이 도달 여부
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newContent = e.target.value;
+    if (newContent.length <= 1000) {
+      setContent(newContent);
+      setContentLength(newContent.length);
+      setContentMaxLengthReached(false); // 내용 길이가 1000자 이하일 경우 상태를 false로 설정
+    } else {
+      setContentMaxLengthReached(true);
+    }
+  };
 
   const handleCreate = () => {
     const inputTitle = title;
@@ -52,7 +67,8 @@ const CreateRadio = () => {
       alert("DJ를 선택해주세요");
       return;
     }
-    setShowButton(true);
+
+    CreateOncast();
   };
 
   const handleThemeSelect = (theme: string) => {
@@ -63,8 +79,8 @@ const CreateRadio = () => {
     setSelectedDJ(DJ);
   };
 
-  const handleOncastButtonClick = () => {
-    navigate("/Player");
+  const comeBackHome = () => {
+    navigate("/");
   };
 
   const CreateButton = styled(Button)<ButtonProps>(({ theme }) => ({
@@ -83,108 +99,138 @@ const CreateRadio = () => {
     },
   }));
 
+  const CreateOncast = () => {
+    setIsLoading(true);
+    requestWithTokenRefresh(() => {
+      return axios.post(
+        "http://localhost:8080/api/oncast/create",
+        {
+          title: title,
+          theme: selectedTheme,
+          story: content,
+          djName: selectedDJ,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        }
+      );
+    })
+      .then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          setIsLoading(false);
+          navigate("/OncastCreateComplete");
+        } else {
+          alert("온캐스트 생성에 실패했습니다.");
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false);
+
+        console.log("통신에러 발생", error);
+      });
+  };
   return (
     <div>
       <NavBar />
-      <div className={styles.container}>
-        <div>
-          <Grid container spacing={3} className={styles.oncastCreate}>
-            <Grid item container xs={12} alignItems="center" spacing={2}>
-              <Grid item xs={2}>
-                <Typography variant="h5" className={styles.itemTitle}>
-                  TITLE
-                </Typography>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <div className={styles.container}>
+          <div>
+            <Grid container spacing={3} className={styles.oncastCreate}>
+              <Grid item container xs={12} alignItems="center" spacing={2}>
+                <Grid item xs={2}>
+                  <Typography variant="h5" className={styles.itemTitle}>
+                    TITLE
+                  </Typography>
+                </Grid>
+                <Grid item xs={9.5}>
+                  <textarea
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className={styles.titleInput}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={9.5}>
-                <textarea
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className={styles.titleInput}
-                />
-              </Grid>
-            </Grid>
 
-            <Grid item container xs={12} alignItems="center" spacing={2}>
-              <Grid item xs={2}>
-                <Typography variant="h5" className={styles.itemTitle}>
-                  THEME
-                </Typography>
+              <Grid item container xs={12} alignItems="center" spacing={2}>
+                <Grid item xs={2}>
+                  <Typography variant="h5" className={styles.itemTitle}>
+                    THEME
+                  </Typography>
+                </Grid>
+                <Grid item xs={10} className={styles.themeSelect}>
+                  <ThemeSelector
+                    selectedTheme={selectedTheme}
+                    onThemeSelect={handleThemeSelect}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={10} className={styles.themeSelect}>
-                <ThemeSelector
-                  selectedTheme={selectedTheme}
-                  onThemeSelect={handleThemeSelect}
-                />
-              </Grid>
-            </Grid>
 
-            <Grid item container xs={12} alignItems="flex-start" spacing={2}>
-              <Grid item xs={2}>
-                <Typography className={styles.itemTitle} variant="h5">
-                  STORY
-                </Typography>
-              </Grid>
-              <Grid
-                className={styles.textfield}
-                item
-                xs={9.5}
-                style={{ textAlign: "right" }}
-              >
-                <textarea
-                  value={content}
-                  onChange={(e) => {
-                    setContent(e.target.value);
-                    setContentLength(e.target.value.length);
-                  }}
-                  className={styles.storyInput}
-                />
-                <div
-                  className={styles.typingLimit}
-                >{`${contentLength}/1000`}</div>
-              </Grid>
-            </Grid>
+              <Grid item container xs={12} alignItems="flex-start" spacing={2}>
+                <Grid item xs={2}>
+                  <Typography className={styles.itemTitle} variant="h5">
+                    STORY
+                  </Typography>
+                </Grid>
 
-            <Grid item container xs={12} alignItems="center" spacing={2}>
-              <Grid item xs={2}>
-                <Typography variant="h5" className={styles.itemTitle}>
-                  DJ
-                </Typography>
-              </Grid>
-              <Grid item xs={10} style={{ userSelect: "none" }}>
-                <DJSelector onSelect={handlDJSelect} />
-              </Grid>
-            </Grid>
-
-            <Grid item container xs={12} justifyContent="flex-end">
-              <CreateButton
-                variant="contained"
-                onClick={handleCreate}
-                style={{ marginRight: "10px" }}
-                className={styles.createButton}
-              >
-                생성
-              </CreateButton>
-              <Link to="/">
-                <CancleButton
-                  variant="contained"
-                  className={styles.cancleButton}
+                <Grid
+                  className={styles.textfield}
+                  item
+                  xs={9.5}
+                  style={{ textAlign: "right" }}
                 >
-                  취소
-                </CancleButton>
-              </Link>
+                  <textarea
+                    value={content}
+                    onChange={handleContentChange} // 함수 변경
+                    className={styles.storyInput}
+                  />
+                  <div
+                    className={styles.typingLimit}
+                    style={{ color: contentMaxLengthReached ? "red" : "white" }}
+                  >
+                    {`${contentLength}/1000`}
+                  </div>
+                </Grid>
+              </Grid>
+
+              <Grid item container xs={12} alignItems="center" spacing={2}>
+                <Grid item xs={2}>
+                  <Typography variant="h5" className={styles.itemTitle}>
+                    DJ
+                  </Typography>
+                </Grid>
+                <Grid item xs={10} style={{ userSelect: "none" }}>
+                  <DJSelector onSelect={handlDJSelect} />
+                </Grid>
+              </Grid>
+
+              <Grid item container xs={12} justifyContent="flex-end">
+                <CreateButton
+                  variant="contained"
+                  onClick={handleCreate}
+                  style={{ marginRight: "10px" }}
+                  className={styles.createButton}
+                >
+                  생성
+                </CreateButton>
+                <Link to="/">
+                  <CancleButton
+                    variant="contained"
+                    className={styles.cancleButton}
+                  >
+                    취소
+                  </CancleButton>
+                </Link>
+              </Grid>
             </Grid>
-          </Grid>
+          </div>
         </div>
-        {showButton && (
-          <Button
-            onClick={handleOncastButtonClick}
-            variant="contained"
-            color="primary"
-          >
-            온캐스트 들으러 가기
-          </Button>
-        )}
-      </div>
+      )}
     </div>
   );
 };

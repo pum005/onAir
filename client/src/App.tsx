@@ -14,6 +14,8 @@ import { RadioPlayer } from "./pages/PlayerPage/RadioPlayer";
 import { MyMusicPlayer } from "./pages/PlayerPage/MyMusicPlayer";
 import { Player } from "./pages/PlayerPage/Player";
 
+import OncastCreateComplete from "./pages/PlayerPage/OncastCreateComplete";
+
 import Success from "./utils/Success";
 
 // persist 관련 import
@@ -34,6 +36,10 @@ function App() {
               <Route path="/MyPage" element={<MyPage />} />
 
               <Route path="/Loading" element={<Loading />} />
+              <Route
+                path="/OncastCreateComplete"
+                element={<OncastCreateComplete />}
+              />
               <Route path="/LivePlayer" element={<LivePlayer />} />
               <Route path="/Player" element={<Player />} />
               {/* <Route path="/MusicPlayer" element={<MusicPlayer />} />
