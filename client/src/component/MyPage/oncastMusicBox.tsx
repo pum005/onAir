@@ -9,7 +9,7 @@ import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import SearchIcon from "@mui/icons-material/Search";
 import SearchModal from "../Common/SearchMusicModal";
-
+import styles from './oncastMusicBox.module.css';
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -57,7 +57,7 @@ function a11yProps(index: number) {
   };
 }
 
-export default function BasicTabs() {
+export default function  oncastMusicBox() {
   const [value, setValue] = React.useState(0);
   const [oncasts, setOncasts] = React.useState<OncastType>([]);
   const [message, setMessage] = React.useState<string | null>(null);
@@ -107,6 +107,7 @@ export default function BasicTabs() {
   return (
     <Box sx={{ width: "100%" }}>
       <Box
+      
         sx={{
           borderBottom: 1,
           borderColor: "divider",
@@ -119,6 +120,7 @@ export default function BasicTabs() {
           value={value}
           onChange={handleChange}
           aria-label="basic tabs example"
+          
           sx={{
             paddingLeft: "220px",
             ".Mui-selected": {
@@ -139,11 +141,13 @@ export default function BasicTabs() {
         >
           <Tab
             label="온캐스트"
+            className={styles.tabOnMusic}
             style={{ fontSize: "larger", font: "bolder", color: "white" }}
             {...a11yProps(0)}
           />
           <Tab
             label="음악 보관함"
+            className={styles.tabOnMusic}
             style={{ fontSize: "larger", font: "bolder", color: "white" }}
             {...a11yProps(1)}
           />
@@ -160,7 +164,8 @@ export default function BasicTabs() {
             onClick={handleSearchModalOpen}
           >
             <SearchIcon />
-            <Typography style={{ marginLeft: "5px" }}>음악검색</Typography>
+            <Typography 
+            className={styles.musicSearch}>음악검색</Typography>
           </div>
         )}
       </Box>
