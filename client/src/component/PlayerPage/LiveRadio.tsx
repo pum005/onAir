@@ -1,48 +1,24 @@
-import React, { useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
 import Equalizer from "../Common/Equalizer";
-import { RadioScripts } from "../Common/RadioScript";
 import styles from "./Radio.module.css";
-import { FinishModal } from "./FinishModal";
+import { LiveScriptRadio } from "./LiveScriptRadio";
 
-export const LiveRadio = () => {
-  const dispatch = useDispatch();
-  const radioDummyData = useSelector((state: RootState) => state.radioDummy);
-  const navigate = useNavigate();
-  const audioRef = useRef<HTMLAudioElement>(null); // 오디오 태그 참조
-  const [isAudioLoaded, setIsAudioLoaded] = React.useState(false);
-  const [showModal, setShowModal] = React.useState(false); // 모달 상태 추가
+type RadioProps = {
+  ttsFile: string;
+  script: string;
+  playedTime: number;
+};
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-    navigate("/");
-  };
-
-  const currentTTS = [`tts_one`, `tts_two`, `tts_three`, `tts_four`][
-    radioDummyData.currentTTSIndex
-  ];
+export const Radio = ({ ttsFile, script, playedTime }: RadioProps) => {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isAudioLoaded, setIsAudioLoaded] = useState(false);
 
   const handleAudioLoaded = () => {
     setIsAudioLoaded(true);
-  };
-
-  const handleAudioEnd = () => {
-    dispatch({ type: "INCREMENT_TTS_INDEX" });
-
-    if (radioDummyData.currentTTSIndex === 3) {
-      setShowModal(true); // 4번째 TTS가 끝나면 모달 표시
-    } else {
-      navigate("/MusicPlayer");
+    if (audioRef.current) {
+      audioRef.current.currentTime = playedTime / 1000; // ms를 s로 변환
     }
   };
-  // const currentScript = [
-  //   `script_one`,
-  //   `script_two`,
-  //   `script_three`,
-  //   `tts_four`,
-  // ][radioDummyData.currentTTSIndex];
 
   return (
     <div className={styles.container}>
@@ -51,16 +27,14 @@ export const LiveRadio = () => {
         ref={audioRef}
         controls
         autoPlay
-        onEnded={handleAudioEnd}
         onLoadedMetadata={handleAudioLoaded}
         className={styles.audioStyle}
+        crossOrigin="anonymous"
       >
-        <source src={radioDummyData[currentTTS] as string} type="audio/mp3" />
+        <source src={ttsFile} type="audio/mp3" />
         Your browser does not support the audio element.
       </audio>
-      <RadioScripts />
-      <div className={styles.marginTop}></div>
-      <FinishModal show={showModal} onClose={handleCloseModal} />
+      <LiveScriptRadio script={script} />
     </div>
   );
 };

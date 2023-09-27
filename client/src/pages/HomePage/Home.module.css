@@ -1,6 +1,52 @@
-.fadeInText {
-  animation: fadeIn 2s;
+.fadeInOutText {
+  animation: fadeInOut 3s;
   opacity: 0;
+  font-family: "BookkGothic-Bd" !important;
+  /* font-family: "LINESeedKR-Bd" !important; */
+}
+
+@font-face {
+  font-family: "BookkGothic-Bd";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkGothic-Bd.woff2")
+    format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "LINESeedKR-Bd";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2")
+    format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Interop";
+  src: url("https://raw.githubusercontent.com/payw-org/Interop/main/web/fonts/Interop-Regular.woff2")
+      format("woff2"),
+    url("https://raw.githubusercontent.com/payw-org/Interop/main/web/fonts/Interop-Regular.woff")
+      format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.fadeInGif {
+  animation: fadeIn 2s;
+  opacity: 1;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  60% {
+    /* 2.5초 / 3.5초 = 약 71% */
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 @keyframes fadeIn {
@@ -10,4 +56,55 @@
   100% {
     opacity: 1;
   }
+}
+.centerContent {
+  display: grid;
+  place-items: center;
+  height: 80vh;
+}
+
+.centerText {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: "MyFont", fallbackFont, sans-serif;
+  border: 2px solid red;
+  border-radius: 12px;
+  color: crimson;
+  width: 250px;
+  height: 11px;
+  padding: 10px; /* 내부 패딩 */
+  cursor: pointer;
+}
+.verticalAlign {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.largeGif {
+  width: 1000px;
+  height: 500px;
+  cursor: pointer;
+}
+.ontext {
+  text-align: center;
+}
+
+.background {
+  /* background-image: url('../../../public/images/밤하늘에펄.jpg'); */
+  /* background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), url('../../../public/images/밤하늘에펄.jpg'); */
+
+  background-color: #000104;
+  height: 100vh;
+  color: white;
+}
+
+@font-face {
+  font-family: "Ramche";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/Ramche.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
 }

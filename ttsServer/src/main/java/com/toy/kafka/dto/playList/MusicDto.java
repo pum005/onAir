@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class MusicDto implements Serializable {
     private String type;
     private String path;
-    private int length;
+    private long length;
     private String artist;
     private String title;
     private String image;

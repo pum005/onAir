@@ -2,6 +2,8 @@
   /* text-align: center; */
   background-color: #000104;
   min-height: 100vh;
+  font-family: "MonoplexKR-Regular";
+  /* background-image: url('../public/images/밤하늘에펄.jpg'); */
 }
 
 .App-logo {
@@ -13,6 +15,11 @@
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
+}
+
+@font-face {
+  font-family: "MyFont";
+  src: url("../public/font/bernoru.otf") format("opentype");
 }
 
 .App-header {

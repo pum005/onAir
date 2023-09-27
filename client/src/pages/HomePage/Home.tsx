@@ -32,21 +32,38 @@ export const Home = () => {
 
   return (
     <div
+      className={styles.background}
       style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
     >
       <NavBar />
-      {showText && (
-        <h2 className={styles.fadeInText}>
-          당신의 이야기로 음악을 추천해드립니다.
-        </h2>
-      )}
-      {showRadioButton && (
-        <button onClick={navigateToCreateRadio}>사연 작성하기</button>
-      )}
-      <LoginAlertModal
-        open={loginAlertModalOpen}
-        handleClose={() => setLoginAlertModalOpen(false)}
-      />
+      <div className={styles.centerContent}>
+        {showText && (
+          <h2 className={styles.fadeInOutText}>
+            당신의 이야기로 음악을 추천해드립니다
+          </h2>
+        )}
+
+        {showRadioButton && (
+          <div
+            style={{userSelect: "none"}}
+            onClick={navigateToCreateRadio}
+            className={`${styles.verticalAlign} ${styles.fadeInGif}`}
+          >
+            <img
+              src="/images/magichall.gif"
+              alt="Magic Hall"
+              className={styles.largeGif}
+            />
+
+            <div className={styles.centerText}>MAKE A ONCAST</div>
+          </div>
+        )}
+
+        <LoginAlertModal
+          open={loginAlertModalOpen}
+          handleClose={() => setLoginAlertModalOpen(false)}
+        />
+      </div>
     </div>
   );
 };

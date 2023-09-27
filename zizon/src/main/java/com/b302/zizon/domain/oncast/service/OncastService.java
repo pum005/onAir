@@ -1,15 +1,20 @@
 package com.b302.zizon.domain.oncast.service;
 
 import com.b302.zizon.domain.music.entity.Music;
+import com.b302.zizon.domain.music.entity.ThemeEnum;
 import com.b302.zizon.domain.oncast.dto.request.OncastRequestDto;
-import com.b302.zizon.domain.oncast.dto.response.GetMusicDTO;
-import com.b302.zizon.domain.oncast.dto.response.GetOncastDTO;
-import com.b302.zizon.domain.oncast.dto.response.OncastPlayResponseDTO;
+import com.b302.zizon.domain.oncast.dto.response.*;
+import com.b302.zizon.domain.oncast.entity.LiveQueue;
 import com.b302.zizon.domain.oncast.entity.Oncast;
 import com.b302.zizon.domain.oncast.entity.OncastCreateData;
+import com.b302.zizon.domain.oncast.exception.OncastNotFoundException;
+import com.b302.zizon.domain.oncast.exception.UnauthorizedOncastAccessException;
+import com.b302.zizon.domain.oncast.repository.LiveQueueRepository;
 import com.b302.zizon.domain.oncast.repository.OncastCreateDataRepository;
 import com.b302.zizon.domain.oncast.repository.OncastRepository;
+import com.b302.zizon.domain.user.GetUser;
 import com.b302.zizon.domain.user.entity.User;
+import com.b302.zizon.domain.user.exception.UserNotFoundException;
 import com.b302.zizon.domain.user.repository.UserRepository;
 import com.b302.zizon.util.gpt.dto.ChatGptResponse;
 import com.b302.zizon.util.gpt.dto.QuestionRequest;
@@ -41,6 +46,8 @@ public class OncastService {
     private final ChatGptService chatGptService;
     private final UserRepository userRepository;
     private final OncastCreateDataRepository oncastCreateDataRepository;
+    private final GetUser getUser;
+    private final LiveQueueRepository liveQueueRepository;
 
     // 음악dto 변환
     private GetMusicDTO convertToDTO(Music music) {
@@ -53,67 +60,105 @@ public class OncastService {
         return musicDTO;
     }
 
-    public Long getUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        Long userId = (Long) principal;
-
-        return userId;
-    }
-
     // 시간 변환 포맷
     public String convertToFormattedString(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일 (E) HH:mm");
         return dateTime.format(formatter);
     }
 
+    @Transactional
     // 온캐스트 저장
-    public Oncast saveOncast(OncastRequestDto request, String[] oncastMusic) {
+    public Oncast saveOncast(OncastRequestDto request) {
 
-        Long userId = getUserId();
+        User user = getUser.getUser();
 
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
+//        String exstory = "오늘 하루종일 비가 와서 너무 힘들었습니다. 비가 오는날마다 너무 습하고 밖을 못돌아다녀서요. " +
+//                "저는 밖에서 산책하고 사람들을 만나는걸 좋아하기 때문이에요.\n" +
+//                "비오는날에도 행복할 수 있게 비를 맘껏 즐길 수 있는 하루가 되었으면 좋겠어요!";
 
-        User user = byUserId.get();
+        OncastCreateData ocd = OncastCreateData.builder()
+                .title(request.getTitle())
+                .theme(request.getTheme())
+                .story(request.getStory())
+                .djName(request.getDjName())
+                .build();
+
+
+        // 음악 추천받는 로직
+        Music[] oncastMusic = new Music[3];
+
 
 
         String story = request.getStory();
         String[] script = new String[4];
-        String[] tts = new String[4];
 
 
-        String exstory = "오늘 하루종일 비가 와서 너무 힘들었습니다. 비가 오는날마다 너무 습하고 밖을 못돌아다녀서요. " +
-                "저는 밖에서 산책하고 사람들을 만나는걸 좋아하기 때문이에요.\n" +
-                "비오는날에도 행복할 수 있게 비를 맘껏 즐길 수 있는 하루가 되었으면 좋겠어요!";
 
-        String exmusic1 = "잔나비" + "의 " + "November Rain";
-        String exmusic2 = "태연" + "의 " + "Rain";
-        String exmusic3 = "선우정아" + "의 " + "비온다";
+        oncastMusic[0] = Music.builder()
+                .artist("뉴진스")
+                .title("hype boy")
+                .youtubeVideoId("Rrf8uQFvICE")
+                .duration(151373L)
+                .albumCoverUrl("oo")
+                .build();
+
+        oncastMusic[1] = Music.builder()
+                .artist("뉴진스")
+                .title("ETA")
+                .youtubeVideoId("jOTfBlKSQYY")
+                .duration(151373L)
+                .albumCoverUrl("oo")
+                .build();
+
+        oncastMusic[2] = Music.builder()
+                .artist("뉴진스")
+                .title("ASAP")
+                .youtubeVideoId("dJdqn5v4Dkw")
+                .duration(151373L)
+                .albumCoverUrl("oo")
+                .build();
+
+
+
+
 
         QuestionRequest questionRequest = new QuestionRequest();
         questionRequest.setQuestion(
-                "라디오 스크립트를 만들어줘\n" +
-                        "1. 사용자의 사연과 음악 3곡을 입력할거야\n" +
-                        "2. 사연 내용에 맞는 첫 인사 후에 사연을 읽어줘\n" +
-                        "3. 사연을 다 읽은 후엔 사연에 대한 이야기를 하다가 첫번째 음악을 틀거야\n" +
-                        "4. 각 음악이 끝나면 음악과 사연에 관한 이야기를 하다가 다음 음악을 틀면 돼\n" +
-                        "5. 음악 세개가 다 끝나고 이야기를 다 하면 마무리 인사를 하고 끝나면 돼\n" +
-                        "6. 각 음악이 들어갈 자리엔 \"//\" 를 넣어줘\n" +
-                        "\n" +
-                        "- 사연: \n" +
-                        exstory + // story
-                        "- 음악1: " + exmusic1 +
-                        "- 음악2: " + exmusic2 +
-                        "- 음악3: " + exmusic3
+                "아래의 예시에 몇가지 조건을 더해서 스크립트를 만들어줘\n" +
+                        "        1. 사용자의 이야기와 음악 3곡을 입력할거야\n" +
+                        "        2. 글 내용에 맞는 첫 인사 후에 story를 읽어줘\n" +
+                        "        3. 사연을 다 읽은 후엔 사연에 대한 이야기를 하다가 첫번째 음악을 틀거야 \n" +
+                        "        4. 각 음악이 끝나면 음악과 사연에 관한 이야기를 하다가 다음 음악을 틀면 돼 \n" +
+                        "        5. 음악 세개가 다 끝나고 이야기를 다 하면 마무리 인사를 하고 끝나면 돼\n" +
+                        "        6. 각 음악이 들어갈 자리엔 @@ 을 넣어줘. 이부분을 체크해서 단락을 나누고 음악을 재생시키려고 하는거니까 음악이 들어가는 부분에 딱 한번만 해야하는거야\n" +
+                        "        7. 밑에 내가 준 예시를 보고 \"노래\" 와 [[story]] 를 바꾸고 내용도 그에 맞게 바꿔서 주면 돼 \n" +
+                        "        - story: [["+ request.getStory()+"]]\n" +
+                        "        - 음악1: ("+ oncastMusic[0].getArtist()+" 의 "+ oncastMusic[0].getTitle()+")\n" +
+                        "        - 음악2: ("+ oncastMusic[1].getArtist()+" 의 "+ oncastMusic[1].getTitle()+")\n" +
+                        "        - 음악3:("+ oncastMusic[2].getArtist()+" 의 "+ oncastMusic[2].getTitle()+")\n" +
+                        "        예시 : \n" +
+                        "        안녕하세요, 여러분! 오늘 하루도 고생 정말 많으셨어요. \n" +
+                        "        오늘의 이야기를 들어볼까요? \n" +
+                        "        [[ 너무 힘든 하루네요. 많이 지친 하루 힐링이 필요해요 ]]\n" +
+                        "        많은 분들이 바쁜 하루가 끝나고 퇴근길에 오르면 신나는 마음과 달리 지친 몸이 친구와 연인보단 침대 속을 찾게 되죠 \n" +
+                        "        그러지 말고 오늘 하루정도는 오랜만에 친구를 만나 쌓인 이야기를 나누며 힐링을 찾는게 어떨까요?  \n" +
+                        "        (음악1) 들으시면서 친구에게 연락 한번 해보세요! \n" +
+                        "        @@\n" +
+                        "        다음 곡입니다. 이 노래 그대로 힐링이 필요한 여러분들이 듣고 마음에 안정을 찾으셨으면 좋겠어요. (음악2) 입니다\n" +
+                        "        @@\n" +
+                        "        다들 오늘의 음악들을 들으시면서 어떻게 오늘의 지친 마음을 회복할지 생각하고 계실거같은데요\n" +
+                        "       좋은 시간 보내신 후에 푹 주무시길 바라요. 마지막곡입니다 (음악3) \n" +
+                        "        @@ \n" +
+                        "        오늘 들은 세 곡 모두 여러분의 마음에 힘이 되었으면 좋겠어요 \n" +
+                        "        다들 힘내시고! 다음에 또 만나요~"
         );
 
 
         ChatGptResponse chatGptResponse = chatGptService.askQuestion(questionRequest);
         String fullScript = chatGptResponse.getChoices().get(0).getMessage().getContent();
-
+//        System.out.println(fullScript);
         if (fullScript != null) {
-            script = fullScript.split("//");
+            script = fullScript.split("@@");
         }
 
         List<String> f = new ArrayList<>();
@@ -131,25 +176,9 @@ public class OncastService {
 
 
 
-        // f 리스트 s3에 저장해서 tts 배열에 싹 넣기
-
-        String sc1tmp = script[0]; // 사연 가져온거 잘라서 넣어야함
-        String sc2tmp = script[1];
-        String sc3tmp = script[2];
-        String sc4tmp = script[3];
-        System.out.println(Arrays.toString(script));
-
-        String ts1tmp = tts[0]; // 자른거 tts에 넣고
-        String ts2tmp = tts[1]; // 돌려받은 mp3 파일 s3에 저장
-        String ts3tmp = tts[2]; // s3 경로 가져와서 각각 넣기
-        String ts4tmp = tts[3];
-        String om1tmp = oncastMusic[0]; // 음악 유튜브 url로 받음
-        String om2tmp = oncastMusic[1]; // url로 다운 후 s3에 저장
-        String om3tmp = oncastMusic[2]; // 경로 가져와서 각각 넣기
-
         Oncast oncast = Oncast.builder()
                 .user(user)
-                .createTime(LocalDateTime.now())
+                .oncastCreateData(ocd)
                 .shareCheck(false)
                 .deleteCheck(false)
                 .selectCheck(false)
@@ -161,12 +190,15 @@ public class OncastService {
                 .ttsTwo(f.get(1))
                 .ttsThree(f.get(2))
                 .ttsFour(f.get(3))
-//                .oncastMusicOne(om1tmp)
-//                .oncastMusicTwo(om2tmp)
-//                .oncastMusicThree(om3tmp)
+                .music1(oncastMusic[0])
+                .music2(oncastMusic[1])
+                .music3(oncastMusic[2])
                 .build();
 
+        oncastCreateDataRepository.save(ocd);
+
         oncastRepository.save(oncast);
+        System.out.println("db에 온캐스트 저장 완료");
 
 
         return oncast;
@@ -174,16 +206,10 @@ public class OncastService {
 
     // 온캐스트 정보 가져오기
     public Map<String, Object> getOncast() {
-
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         Map<String, Object> result = new HashMap<>();
-        List<Oncast> oncastList = oncastRepository.findByUserUserIdAndDeleteCheckFalse(userId);
+        List<Oncast> oncastList = oncastRepository.findByUserUserIdAndDeleteCheckFalse(user.getUserId());
         if (oncastList.isEmpty()) {
             result.put("message", "온캐스트 없음");
             return result;
@@ -221,17 +247,12 @@ public class OncastService {
     public Map<String, Object> shareOncast(Long oncastId) {
         Map<String, Object> result = new HashMap<>();
 
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         Optional<Oncast> byOncast = oncastRepository.findById(oncastId);
 
         if(byOncast.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 온캐스트입니다.");
+            throw new OncastNotFoundException("존재하지 않는 온캐스트입니다.");
         }
 
         Oncast oncast = byOncast.get();
@@ -258,16 +279,11 @@ public class OncastService {
     public Map<String, Object> deleteOncast(Long oncastId) {
         Map<String, Object> result = new HashMap<>();
 
-        Long userId = getUserId();
+        User user = getUser.getUser();
 
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
-
-        Optional<Oncast> byOncast = oncastRepository.findByOncastIdAndUserUserId(oncastId, userId);
+        Optional<Oncast> byOncast = oncastRepository.findByOncastIdAndUserUserId(oncastId, user.getUserId());
         if (byOncast.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 온캐스트입니다.");
+            throw new OncastNotFoundException("존재하지 않는 온캐스트입니다.");
         }
 
         Oncast oncast = byOncast.get();
@@ -284,20 +300,15 @@ public class OncastService {
     // 온캐스트 재생하기(정보 제공)
     public Map<String, Object> playOncast(Long oncastId){
         Map<String, Object> result = new HashMap<>();
-        Long userId = getUserId();
-
-        Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("pk에 해당하는 유저 존재하지 않음")));
-
-        User user = byUserId.get();
+        User user = getUser.getUser();
 
         Optional<Oncast> byOncast = oncastRepository.findById(oncastId);
         if(byOncast.isEmpty()){
-            throw new IllegalArgumentException("온캐스트 정보가 없습니다.");
+            throw new OncastNotFoundException("온캐스트 정보가 없습니다.");
         }
 
-        if(!byOncast.get().getUser().getUserId().equals(userId)){
-            throw new IllegalArgumentException("해당 유저의 온캐스트가 아닙니다.");
+        if(!byOncast.get().getUser().getUserId().equals(user.getUserId())){
+            throw new UnauthorizedOncastAccessException("해당 유저의 온캐스트가 아닙니다.");
         }
 
         Oncast oncast = byOncast.get();
@@ -351,5 +362,56 @@ public class OncastService {
         result.put("oncast", build);
         return result;
     }
+
+    // 라이브큐 정보 가져오기
+    public Map<String, Object> getLiveQueueList(){
+        Map<String, Object> result = new HashMap<>();
+        User user = getUser.getUser();
+
+        List<LiveQueue> listQueueList = liveQueueRepository.findAll();
+
+        List<GetLiveQueueDTO> list = new ArrayList<>();
+        for(LiveQueue q : listQueueList){
+
+            List<MusicDTO> musicList = new ArrayList<>();
+
+            if (q.getOncast().getMusic1() != null) {
+                musicList.add(MusicDTO.builder()
+                        .albumCoverUrl(q.getOncast().getMusic1().getAlbumCoverUrl())
+                        .title(q.getOncast().getMusic1().getTitle())
+                        .artist(q.getOncast().getMusic1().getArtist())
+                        .build());
+            }
+
+            if (q.getOncast().getMusic2() != null) {
+            musicList.add(MusicDTO.builder()
+                .albumCoverUrl(q.getOncast().getMusic2().getAlbumCoverUrl())
+                .title(q.getOncast().getMusic2().getTitle())
+                .artist(q.getOncast().getMusic2().getArtist())
+                .build());
+            }
+
+            if (q.getOncast().getMusic3() != null) {
+            musicList.add(MusicDTO.builder()
+                .albumCoverUrl(q.getOncast().getMusic3().getAlbumCoverUrl())
+                .title(q.getOncast().getMusic3().getTitle())
+                .artist(q.getOncast().getMusic3().getArtist())
+                .build());
+            }
+
+            GetLiveQueueDTO liveQueueDTO = GetLiveQueueDTO.builder()
+            .nickname(q.getUser().getNickname())
+            .profileImage(q.getUser().getProfileImage())
+            .title(q.getOncast().getOncastCreateData().getTitle())
+            .musicList(musicList)
+            .build();
+
+            list.add(liveQueueDTO);
+        }
+
+        result.put("oncast", list);
+        return result;
+    }
+
 }
 

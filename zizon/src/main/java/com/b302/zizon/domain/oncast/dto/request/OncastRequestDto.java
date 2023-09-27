@@ -6,9 +6,7 @@ import lombok.Data;
 @Data
 public class OncastRequestDto {
 
-    private Long oncastCreateDataId; //온캐스트 생성데이터 고유 id
-
-    private Long oncastId; // 온캐스트 고유 id
+    private String title; // 온캐스트 제목
 
     private ThemeEnum theme; // 선택한 테마
 

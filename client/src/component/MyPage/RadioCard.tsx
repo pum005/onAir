@@ -21,6 +21,7 @@ type RecipeReviewCardProps = {
   subheader: string;
   shareCheck: boolean;
   selectCheck: boolean;
+  refreshkey?: () => void;
 };
 
 type SongDataType = {
@@ -36,6 +37,7 @@ export default function RecipeReviewCard({
   title,
   subheader,
   shareCheck,
+  refreshkey,
   songs = [],
 }: RecipeReviewCardProps & { songs?: SongDataType }) {
   /** state */
@@ -239,7 +241,12 @@ export default function RecipeReviewCard({
         isOpen={playListModalOpen}
         onClose={handlePlayListModalClose}
       />
-      <DeleteModal isOpen={deleteModalOpen} onClose={handleDeleteModalClose} />
+      <DeleteModal
+        setRefreshKey={refreshkey}
+        isOpen={deleteModalOpen}
+        onClose={handleDeleteModalClose}
+        oncastId={oncastId}
+      />
       <ShareModal
         isOpen={shareModalOpen}
         onClose={handleShareModalClose}
@@ -250,6 +257,7 @@ export default function RecipeReviewCard({
         open={radioplayModalOpen}
         handleClose={handlePlayModalClose}
         radioName={subheader}
+        oncastId={oncastId}
       />
     </Card>
   );

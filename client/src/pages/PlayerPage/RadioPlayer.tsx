@@ -24,7 +24,7 @@ export const RadioPlayer = () => {
       <div style={{ position: "absolute", top: "120px", right: "100px" }}>
         {/* QueueMusicIcon 클릭 시 모달 열기 */}
       </div>
-      <Radio />
+      {/* <Radio /> */}
 
       {/* 모달 컴포넌트 추가 */}
       <Modal
