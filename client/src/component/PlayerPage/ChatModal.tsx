@@ -39,14 +39,6 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
       senderImage: profileImage,
     });
 
-    // dispatch(
-    //   addChatMessage({
-    //     content: message,
-    //     sender: nickname,
-    //     senderImage: profileImage,
-    //   })
-    // );
-
     setMessage("");
   };
 
@@ -81,6 +73,7 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
               </div>
             );
           })}
+
         <div ref={chatMessagesEndRef}></div>
       </div>
       <div className={styles.chatInputContainer}>
