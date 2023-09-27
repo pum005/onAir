@@ -5,6 +5,7 @@ import com.b302.zizon.domain.user.dto.UserUpdateRequestDTO;
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.exception.UserNotFoundException;
 import com.b302.zizon.domain.user.repository.UserRepository;
+import com.b302.zizon.util.OAuthAPI.service.LogoutAPIService;
 import com.b302.zizon.util.S3.service.S3UploadService;
 import com.b302.zizon.util.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class UserService {
     private final RedisTemplate<String, String> redisTemplate;
     private final S3UploadService s3UploadService;
     private final GetUser getUser;
+    private final LogoutAPIService logoutAPIService;
 
     // 소셜 로그인
     @Transactional
@@ -93,8 +95,14 @@ public class UserService {
 
         redisTemplate.delete(String.valueOf(user.getUserId()));
 
+        if(user.getAccountType().equals("kakao")){
+            logoutAPIService.kakaoUnlinkLogout(user.getAccessToken(), "logout");
+        }
+
         Map<String, Object> result = new HashMap<>();
         result.put("message", "로그아웃 성공");
+
+        System.out.println(result);
 
         return result;
     }
