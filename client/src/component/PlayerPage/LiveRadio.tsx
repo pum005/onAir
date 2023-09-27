@@ -6,14 +6,18 @@ import { LiveScriptRadio } from "./LiveScriptRadio";
 type RadioProps = {
   ttsFile: string;
   script: string;
+  playedTime: number;
 };
 
-export const Radio = ({ ttsFile, script }: RadioProps) => {
+export const Radio = ({ ttsFile, script, playedTime }: RadioProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isAudioLoaded, setIsAudioLoaded] = useState(false);
 
   const handleAudioLoaded = () => {
     setIsAudioLoaded(true);
+    if (audioRef.current) {
+      audioRef.current.currentTime = playedTime / 1000; // ms를 s로 변환
+    }
   };
 
   return (
