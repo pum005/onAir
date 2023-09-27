@@ -1,5 +1,10 @@
 import { configureStore, createAction, createReducer } from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
+const persistConfig = {
+  key: "user",
+};
 // 1. Action 생성
 
 // 액션 타입 및 페이로드를 정의하고, 액션 생성자 함수를 만듭니다.
@@ -106,7 +111,7 @@ const initialDummyState: RadioDummyData = {
 const initialLiveRadioDummyState: RadioDummyData[] = [];
 
 // 리듀서를 정의합니다. 리듀서는 액션에 따라 상태를 변경하는 함수입니다.
-const userReducer = createReducer(initialState, builder => {
+const userReducer = createReducer(initialState, (builder) => {
   // setUserData 액션이 디스패치될 때 상태를 어떻게 변경할지 정의합니다.
   builder.addCase(setNickName, (state, action) => {
     state.nickname = action.payload.nickname;
@@ -121,7 +126,7 @@ const userReducer = createReducer(initialState, builder => {
   });
 });
 
-const radiodummyReducer = createReducer(initialDummyState, builder => {
+const radiodummyReducer = createReducer(initialDummyState, (builder) => {
   builder
     .addCase(setRadioDummyData, (state, action) => {
       state.tts_one = action.payload.tts_one;
@@ -142,19 +147,19 @@ const radiodummyReducer = createReducer(initialDummyState, builder => {
       state.musicArtist = action.payload.musicArtist;
 
       // 밀리초를 초로 변환하여 저장
-      state.musicLength = action.payload.musicLength.map(length =>
+      state.musicLength = action.payload.musicLength.map((length) =>
         Math.round(length / 1000)
       );
 
       state.musicCover = action.payload.musicCover;
     })
-    .addCase(incrementTTSIndex, state => {
+    .addCase(incrementTTSIndex, (state) => {
       state.currentTTSIndex++;
     })
-    .addCase(incrementMusicIndex, state => {
+    .addCase(incrementMusicIndex, (state) => {
       state.currentMusicIndex++;
     });
-  builder.addCase(resetIndices, state => {
+  builder.addCase(resetIndices, (state) => {
     state.currentTTSIndex = 0;
     state.currentMusicIndex = 0;
   });
@@ -162,7 +167,7 @@ const radiodummyReducer = createReducer(initialDummyState, builder => {
 //수정필요
 const liveRadioDummyReducer = createReducer(
   initialLiveRadioDummyState,
-  builder => {
+  (builder) => {
     builder
       .addCase(setRadioDummyData, (state, action) => {
         state.push({
@@ -191,22 +196,22 @@ const liveRadioDummyReducer = createReducer(
         const lastItem = state[state.length - 1];
         lastItem.musicTitle = action.payload.musicTitle;
         lastItem.musicArtist = action.payload.musicArtist;
-        lastItem.musicLength = action.payload.musicLength.map(length =>
+        lastItem.musicLength = action.payload.musicLength.map((length) =>
           Math.round(length / 1000)
         );
         lastItem.musicCover = action.payload.musicCover;
       })
-      .addCase(incrementTTSIndex, state => {
+      .addCase(incrementTTSIndex, (state) => {
         // 마지막 원소의 TTS 인덱스 증가 (또는 원하는 인덱스의 TTS 인덱스 증가)
         const lastItem = state[state.length - 1];
         lastItem.currentTTSIndex++;
       })
-      .addCase(incrementMusicIndex, state => {
+      .addCase(incrementMusicIndex, (state) => {
         // 마지막 원소의 음악 인덱스 증가 (또는 원하는 인덱스의 음악 인덱스 증가)
         const lastItem = state[state.length - 1];
         lastItem.currentMusicIndex++;
       })
-      .addCase(resetIndices, state => {
+      .addCase(resetIndices, (state) => {
         // 마지막 원소의 인덱스 리셋 (또는 원하는 인덱스의 인덱스 리셋)
         const lastItem = state[state.length - 1];
         lastItem.currentTTSIndex = 0;
