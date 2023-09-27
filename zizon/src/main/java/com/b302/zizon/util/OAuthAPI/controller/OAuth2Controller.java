@@ -13,9 +13,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +33,11 @@ public class OAuth2Controller {
 
     @Value("${jwt.secret}")
     private String secretKey;
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String kakaoClientId;
+//    @Value("${kakao.logout-redirect-uri}")
+    private String kakaoLogoutRedirectUri = "http://localhost:3000";
+
 
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -44,13 +54,16 @@ public class OAuth2Controller {
 
     @PostMapping("oauth/logout")
     public ResponseEntity<?> Logout(){
+        String logoutUrl = "https://kauth.kakao.com/oauth/logout";
 
-        Map<String, Object> result = userService.logout();
+    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(logoutUrl)
+        .queryParam("client_id", kakaoClientId)
+        .queryParam("logout_redirect_uri", kakaoLogoutRedirectUri);
 
-        return ResponseEntity.status(200).body(result);
+    Map<String, String> response = new HashMap<>();
+    response.put("logoutUrl", builder.toUriString());
+
+    return ResponseEntity.ok(response);
     }
-
-
-
 
 }
