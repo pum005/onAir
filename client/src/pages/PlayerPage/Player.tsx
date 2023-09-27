@@ -54,6 +54,7 @@ export const Player = (): ReactElement => {
   };
 
   useEffect(() => {
+    console.log(oncastId);
     requestWithTokenRefresh(() => {
       return axios.get(`http://localhost:8080/api/oncast/play/${oncastId}`, {
         headers: {
