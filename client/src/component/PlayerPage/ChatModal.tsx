@@ -4,10 +4,16 @@ import { RootState } from "../../store";
 import { useSelector, useDispatch } from "react-redux";
 import { sendData, socketConnection } from "../../utils/socket.atom";
 import { addChatMessage } from "../../store";
+type ChatMessage = {
+  content: string;
+  sender: string;
+  senderImage: string;
+};
 
 type ChatModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  messages?: ChatMessage[];
 };
 
 export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
@@ -15,6 +21,8 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
 
   const nickname = useSelector((state: RootState) => state.user.nickname);
   const messages = useSelector((state: RootState) => state.chat);
+
+  console.log(messages);
 
   const profileImage = useSelector(
     (state: RootState) => state.user.profileImage
@@ -41,13 +49,14 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
       </button>
       <h2 className={styles.chatHeader}>대화방</h2>
       <div className={styles.chatMessages}>
-        {messages.map((msg, index) => (
-          <div key={index} className={styles.chatMessage}>
-            <img src={msg.senderImage} alt={msg.sender} />
-            <span className={styles.username}>{msg.sender}</span>:
-            <span className={styles.message_content}>{msg.content}</span>
-          </div>
-        ))}
+        {Array.isArray(messages) &&
+          messages.map((msg, index) => (
+            <div key={index} className={styles.chatMessage}>
+              <img src={msg.senderImage} alt={msg.sender} />
+              <span className={styles.username}>{msg.sender}</span>:
+              <span className={styles.message_content}>{msg.content}</span>
+            </div>
+          ))}
       </div>
       <div className={styles.chatInputContainer}>
         <input
@@ -55,8 +64,8 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
           placeholder="메시지를 입력하세요..."
           className={styles.chatInput}
           value={message}
-          onChange={e => setMessage(e.target.value)}
-          onKeyPress={e => {
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyPress={(e) => {
             if (e.key === "Enter") {
               clickSubmit();
             }

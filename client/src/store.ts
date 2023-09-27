@@ -122,7 +122,7 @@ const initialDummyState: RadioDummyData = {
 const initialLiveRadioDummyState: RadioDummyData[] = [];
 
 // 리듀서를 정의합니다. 리듀서는 액션에 따라 상태를 변경하는 함수입니다.
-const userReducer = createReducer(initialState, builder => {
+const userReducer = createReducer(initialState, (builder) => {
   // setUserData 액션이 디스패치될 때 상태를 어떻게 변경할지 정의합니다.
   builder.addCase(setNickName, (state, action) => {
     state.nickname = action.payload.nickname;
@@ -137,7 +137,7 @@ const userReducer = createReducer(initialState, builder => {
   });
 });
 
-const radiodummyReducer = createReducer(initialDummyState, builder => {
+const radiodummyReducer = createReducer(initialDummyState, (builder) => {
   builder
     .addCase(setRadioDummyData, (state, action) => {
       state.tts_one = action.payload.tts_one;
@@ -158,19 +158,19 @@ const radiodummyReducer = createReducer(initialDummyState, builder => {
       state.musicArtist = action.payload.musicArtist;
 
       // 밀리초를 초로 변환하여 저장
-      state.musicLength = action.payload.musicLength.map(length =>
+      state.musicLength = action.payload.musicLength.map((length) =>
         Math.round(length / 1000)
       );
 
       state.musicCover = action.payload.musicCover;
     })
-    .addCase(incrementTTSIndex, state => {
+    .addCase(incrementTTSIndex, (state) => {
       state.currentTTSIndex++;
     })
-    .addCase(incrementMusicIndex, state => {
+    .addCase(incrementMusicIndex, (state) => {
       state.currentMusicIndex++;
     });
-  builder.addCase(resetIndices, state => {
+  builder.addCase(resetIndices, (state) => {
     state.currentTTSIndex = 0;
     state.currentMusicIndex = 0;
   });
@@ -178,7 +178,7 @@ const radiodummyReducer = createReducer(initialDummyState, builder => {
 //수정필요
 const liveRadioDummyReducer = createReducer(
   initialLiveRadioDummyState,
-  builder => {
+  (builder) => {
     builder
       .addCase(setRadioDummyData, (state, action) => {
         state.push({
@@ -207,22 +207,22 @@ const liveRadioDummyReducer = createReducer(
         const lastItem = state[state.length - 1];
         lastItem.musicTitle = action.payload.musicTitle;
         lastItem.musicArtist = action.payload.musicArtist;
-        lastItem.musicLength = action.payload.musicLength.map(length =>
+        lastItem.musicLength = action.payload.musicLength.map((length) =>
           Math.round(length / 1000)
         );
         lastItem.musicCover = action.payload.musicCover;
       })
-      .addCase(incrementTTSIndex, state => {
+      .addCase(incrementTTSIndex, (state) => {
         // 마지막 원소의 TTS 인덱스 증가 (또는 원하는 인덱스의 TTS 인덱스 증가)
         const lastItem = state[state.length - 1];
         lastItem.currentTTSIndex++;
       })
-      .addCase(incrementMusicIndex, state => {
+      .addCase(incrementMusicIndex, (state) => {
         // 마지막 원소의 음악 인덱스 증가 (또는 원하는 인덱스의 음악 인덱스 증가)
         const lastItem = state[state.length - 1];
         lastItem.currentMusicIndex++;
       })
-      .addCase(resetIndices, state => {
+      .addCase(resetIndices, (state) => {
         // 마지막 원소의 인덱스 리셋 (또는 원하는 인덱스의 인덱스 리셋)
         const lastItem = state[state.length - 1];
         lastItem.currentTTSIndex = 0;
@@ -242,13 +242,13 @@ export type ChatMessage = {
 const initialChatState: ChatMessage[] = [];
 
 // 리듀서 정의
-const chatReducer = createReducer(initialChatState, builder => {
+const chatReducer = createReducer(initialChatState, (builder) => {
   builder
     .addCase(addChatMessage, (state, action) => {
       // 새로운 메시지를 배열에 추가
       state.push(action.payload);
     })
-    .addCase(resetChatMessages, state => {
+    .addCase(resetChatMessages, (state) => {
       // 채팅 메시지 초기화
       return initialChatState;
     });
@@ -257,16 +257,42 @@ const chatReducer = createReducer(initialChatState, builder => {
 // 3. Store 설정
 
 // Redux 스토어를 설정합니다. 스토어는 애플리케이션의 상태를 저장하고 관리하는 객체입니다.
-const store = configureStore({
-  reducer: {
-    user: userReducer, // 'user'라는 키로 userReducer를 스토어에 추가합니다.
-    radioDummy: radiodummyReducer,
-    LiveRadioDummy: liveRadioDummyReducer,
-    chat: chatReducer,
-  },
-});
+// const store = configureStore({
+//   reducer: {
+//     user: userReducer, // 'user'라는 키로 userReducer를 스토어에 추가합니다.
+//     radioDummy: radiodummyReducer,
+//     LiveRadioDummy: liveRadioDummyReducer,
+//     chat: chatReducer,
+//   },
+// });
 
 // RootState 타입을 정의합니다. 이 타입은 스토어의 전체 상태의 타입을 나타냅니다.
 export type RootState = ReturnType<typeof store.getState>;
+
+//config 설정
+const persistConfig = {
+  key: "user",
+  storage,
+};
+
+const chatPersistConfig = {
+  key: "chat",
+  storage,
+};
+
+//reducer 설정으로 키값과 내용
+const persistedUserReducer = persistReducer(persistConfig, userReducer);
+const persistedChatReducer = persistReducer(chatPersistConfig, chatReducer);
+
+const store = configureStore({
+  reducer: {
+    user: persistedUserReducer,
+    chat: persistedChatReducer,
+  },
+});
+
+export const persistor = persistStore(store);
+
+//persist
 
 export default store;
