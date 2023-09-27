@@ -256,33 +256,6 @@ const chatReducer = createReducer(initialChatState, builder => {
     });
 });
 
-// const userReducer = createReducer(initialState, builder => {
-//   // setUserData 액션이 디스패치될 때 상태를 어떻게 변경할지 정의합니다.
-//   builder.addCase(setNickName, (state, action) => {
-//     state.nickname = action.payload.nickname;
-//   });
-//   builder.addCase(setImage, (state, action) => {
-//     state.profileImage = action.payload.profileImage;
-//   });
-//   builder.addCase(setUserData, (state, action) => {
-//     state.nickname = action.payload.nickname;
-//     state.profileImage = action.payload.profileImage;
-//     state.userId = action.payload.userId;
-//   });
-// });
-
-// 3. Store 설정
-
-// Redux 스토어를 설정합니다. 스토어는 애플리케이션의 상태를 저장하고 관리하는 객체입니다.
-// const store = configureStore({
-//   reducer: {
-//     user: userReducer, // 'user'라는 키로 userReducer를 스토어에 추가합니다.
-//     radioDummy: radiodummyReducer,
-//     LiveRadioDummy: liveRadioDummyReducer,
-//     chat: chatReducer,
-//   },
-// });
-
 // RootState 타입을 정의합니다. 이 타입은 스토어의 전체 상태의 타입을 나타냅니다.
 export type RootState = ReturnType<typeof store.getState>;
 
@@ -292,14 +265,8 @@ const persistConfig = {
   storage,
 };
 
-const chatPersistConfig = {
-  key: "chat",
-  storage,
-};
-
 //reducer 설정으로 키값과 내용
 const persistedUserReducer = persistReducer(persistConfig, userReducer);
-const persistedChatReducer = persistReducer(chatPersistConfig, chatReducer);
 
 const store = configureStore({
   reducer: {
