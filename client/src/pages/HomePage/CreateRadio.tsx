@@ -9,22 +9,28 @@ import axios from "axios";
 import { Navigate } from "react-router-dom";
 
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
-import { Grid, TextField, Button, Typography, styled, makeStyles } from "@mui/material";
-import { ButtonProps } from '@mui/material/Button';
-import { purple } from '@mui/material/colors';
-
+import {
+  Grid,
+  TextField,
+  Button,
+  Typography,
+  styled,
+  makeStyles,
+} from "@mui/material";
+import { ButtonProps } from "@mui/material/Button";
 const CreateRadio = () => {
-  const titleRef = useRef<HTMLInputElement>(null);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+
   const [selectedTheme, setSelectedTheme] = useState("");
-  const contentRef = useRef<HTMLTextAreaElement>(null);
   const [contentLength, setContentLength] = useState(0);
   const [selectedDJ, setSelectedDJ] = useState("");
   const navigate = useNavigate();
   const [showButton, setShowButton] = useState(false);
 
   const handleCreate = () => {
-    const inputTitle = titleRef.current ? titleRef.current.value : "";
-    const inputContent = contentRef.current ? contentRef.current.value : "";
+    const inputTitle = title;
+    const inputContent = content;
     const inputTheme = selectedTheme;
     const inputDJ = selectedDJ;
 
@@ -35,7 +41,6 @@ const CreateRadio = () => {
     if (!inputContent.trim()) {
       alert("내용을 입력해주세요");
       return;
-      navigate;
     }
     if (!inputTheme.trim()) {
       alert("테마를 선택해주세요");
@@ -45,7 +50,6 @@ const CreateRadio = () => {
       alert("DJ를 선택해주세요");
       return;
     }
-    // navigate("/Loading");
     setShowButton(true);
   };
 
@@ -57,42 +61,25 @@ const CreateRadio = () => {
     setSelectedDJ(DJ);
   };
 
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContentLength(e.target.value.length);
-  };
-
   const handleOncastButtonClick = () => {
     navigate("/Player");
   };
 
-  /**AXIOS */
-  //여기서 POST매핑하면 끝.
-  const CssTextField = styled(TextField)({
-    '& .MuiInputBase-input': {
-      color: "white",
-    },
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        border: "1px solid white"
-      },
-      '&:hover fieldset': {
-        borderColor: 'white',
-      },
-      '&.Mui-focused fieldset': {
-        border: "1px solid white"
-      },
-    },
-  });
-
-  const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
-    color: theme.palette.getContrastText(purple[500]),
-    backgroundColor: "#6966FF",
-    '&:hover': {
-      backgroundColor: "#6966FF",
+  const CreateButton = styled(Button)<ButtonProps>(({ theme }) => ({
+    color: "black",
+    backgroundColor: "#EDEDED",
+    "&:hover": {
+      backgroundColor: "#444444",
     },
   }));
 
-  
+  const CancleButton = styled(Button)<ButtonProps>(({ theme }) => ({
+    color: "white",
+    backgroundColor: "#DA0037",
+    "&:hover": {
+      backgroundColor: "#444444",
+    },
+  }));
 
   return (
     <div>
@@ -107,8 +94,10 @@ const CreateRadio = () => {
                 </Typography>
               </Grid>
               <Grid item xs={9.5}>
-                <CssTextField
-                  fullWidth
+                <textarea
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className={styles.titleInput}
                 />
               </Grid>
             </Grid>
@@ -142,9 +131,9 @@ const CreateRadio = () => {
                   <Button
                     key={theme}
                     onClick={() => handleThemeSelect(theme)}
-                    className={
+                    className={`${styles.theme} ${
                       theme === selectedTheme ? styles.selectedTheme : ""
-                    }
+                    }`}
                   >
                     {theme}
                   </Button>
@@ -158,11 +147,19 @@ const CreateRadio = () => {
                   STORY
                 </Typography>
               </Grid>
-              <Grid className={styles.textfield} item xs={9.5} style={{ textAlign: "right" }}>
-                <CssTextField
-                  fullWidth
-                  multiline
-                  rows={4}
+              <Grid
+                className={styles.textfield}
+                item
+                xs={9.5}
+                style={{ textAlign: "right" }}
+              >
+                <textarea
+                  value={content}
+                  onChange={(e) => {
+                    setContent(e.target.value);
+                    setContentLength(e.target.value.length);
+                  }}
+                  className={styles.titleInput}
                 />
                 <div
                   className={styles.typingLimit}
@@ -176,20 +173,27 @@ const CreateRadio = () => {
                   DJ
                 </Typography>
               </Grid>
-              <Grid item xs={10}>
+              <Grid item xs={10} style={{userSelect: "none"}}>
                 <DJSelector onSelect={handlDJSelect} />
               </Grid>
             </Grid>
 
             <Grid item container xs={12} justifyContent="flex-end">
-              <ColorButton 
+              <CreateButton
                 variant="contained"
                 onClick={handleCreate}
                 style={{ marginRight: "10px" }}
+                className={styles.createButton}
               >
-                생성</ColorButton>
+                생성
+              </CreateButton>
               <Link to="/">
-                <ColorButton className={styles.cancleButton}>취소</ColorButton>
+                <CancleButton
+                  variant="contained"
+                  className={styles.cancleButton}
+                >
+                  취소
+                </CancleButton>
               </Link>
             </Grid>
           </Grid>
