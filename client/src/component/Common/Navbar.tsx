@@ -93,11 +93,19 @@ function NavBar() {
             style={{
               display: "flex",
               alignItems: "center",
-              width: "100%",
-              height: "100%",
+              width: "110%",
+              height: "110%",
+              marginRight: "145px",
             }}
           >
-            <AccountCircleIcon style={{ fontSize: 35, color: "white" }} />
+            <AccountCircleIcon
+              style={{
+                marginTop: "17px",
+                marginBottom: "17px",
+                fontSize: 35,
+                color: "white",
+              }}
+            />
           </Link>
         </Button>
       );

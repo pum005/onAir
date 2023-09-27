@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import AlertDialog from "./AddFullList";
 import AddLoading from "./AddLoading";
 import SearchLoading from "./SearchLoading";
 import styles from "./SearchModal.module.css";
@@ -36,6 +34,8 @@ const SearchModal: React.FC<SearchModalProps> = ({
   setRefreshKey,
   playlistId,
 }) => {
+  const titleRefs = useRef<(HTMLDivElement | null)[]>([]);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<MusucType[]>([]); //검색 관리 state
   const [isSearchLoading, setIsSearchLoading] = useState(false);
@@ -155,6 +155,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
           setAlertMessage(response.data.message);
           setIsAlertOpen(true);
         } else {
+          setAlertMessage("전체보관함에 추가되었습니다.");
           setOpen(true);
           if (response.data.musicId && playlistId) {
             requestWithTokenRefresh(() => {
@@ -243,7 +244,6 @@ const SearchModal: React.FC<SearchModalProps> = ({
                   handleSearch();
                 }
               }}
-              className={styles.searchField}
               InputProps={{
                 endAdornment: (
                   <SearchIcon
@@ -268,7 +268,30 @@ const SearchModal: React.FC<SearchModalProps> = ({
                     className={styles.musicImage}
                   />
                   <div className={styles.musicDetails}>
-                    <div>{music.musicTitle}</div>
+                    <div
+                      ref={(el) => (titleRefs.current[index] = el)}
+                      className={styles.musicTitle}
+                      title={music.musicTitle}
+                      onMouseOver={() => {
+                        const titleEl = titleRefs.current[index];
+                        const detailsEl = titleEl?.parentElement; // 부모 요소인 musicDetails를 가져옵니다.
+                        if (
+                          titleEl &&
+                          detailsEl &&
+                          titleEl.scrollWidth > detailsEl.clientWidth
+                        ) {
+                          titleEl.classList.add("longTitle");
+                        }
+                      }}
+                      onMouseOut={() => {
+                        const el = titleRefs.current[index];
+                        if (el) {
+                          el.classList.remove("longTitle");
+                        }
+                      }}
+                    >
+                      <span>{music.musicTitle}</span>
+                    </div>
                     <div className={styles.artistName}>{music.musicArtist}</div>
                   </div>
                   <div className={styles.musicDuration}>
@@ -282,7 +305,12 @@ const SearchModal: React.FC<SearchModalProps> = ({
                 </div>
               ))}
           </div>
-          <AlertDialog open={open} handleClose={handleClose} />
+
+          <AlertModal
+            open={open}
+            onClose={handleClose}
+            message={alertMessage}
+          ></AlertModal>
         </Box>
       </Modal>
       <AlertModal
