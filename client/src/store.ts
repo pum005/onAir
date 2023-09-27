@@ -1,10 +1,12 @@
-import { configureStore, createAction, createReducer } from "@reduxjs/toolkit";
+import {
+  combineReducers,
+  configureStore,
+  createAction,
+  createReducer,
+} from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-const persistConfig = {
-  key: "user",
-};
 // 1. Action 생성
 
 // 액션 타입 및 페이로드를 정의하고, 액션 생성자 함수를 만듭니다.
@@ -223,16 +225,35 @@ const liveRadioDummyReducer = createReducer(
 // 3. Store 설정
 
 // Redux 스토어를 설정합니다. 스토어는 애플리케이션의 상태를 저장하고 관리하는 객체입니다.
-const store = configureStore({
-  reducer: {
-    user: userReducer, // 'user'라는 키로 userReducer를 스토어에 추가합니다.
-    radioDummy: radiodummyReducer,
-    LiveRadioDummy: liveRadioDummyReducer,
-  },
-});
+// const store = configureStore({
+//   reducer: {
+//     user: userReducer, // 'user'라는 키로 userReducer를 스토어에 추가합니다.
+//     radioDummy: radiodummyReducer,
+//     LiveRadioDummy: liveRadioDummyReducer,
+//   },
+// });
 
 // RootState 타입을 정의합니다. 이 타입은 스토어의 전체 상태의 타입을 나타냅니다.
 export type RootState = ReturnType<typeof store.getState>;
+
+// redux persist 설정
+
+//config 설정
+const persistConfig = {
+  key: "user",
+  storage,
+};
+
+//reducer 설정으로 키값과 내용
+const persistedUserReducer = persistReducer(persistConfig, userReducer);
+
+const store = configureStore({
+  reducer: {
+    user: persistedUserReducer,
+  },
+});
+
+export const persistor = persistStore(store);
 
 // 설정된 스토어를 내보냅니다. 이 스토어는 애플리케이션 전체에서 사용됩니다.
 export default store;
