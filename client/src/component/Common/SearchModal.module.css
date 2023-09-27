@@ -1,0 +1,120 @@
+/* 스크롤바 전체 */
+.modalContainer::-webkit-scrollbar,
+.searchResults::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* 스크롤바의 핸들 부분 */
+.modalContainer::-webkit-scrollbar-thumb,
+.searchResults::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  border-radius: 10px;
+}
+
+/* 스크롤바의 트랙 부분 */
+.modalContainer::-webkit-scrollbar-track,
+.searchResults::-webkit-scrollbar-track {
+  background-color: lightgrey;
+  border-radius: 10px;
+}
+
+
+.searchResults {
+  scrollbar-width: thin;
+  scrollbar-color: darkgrey lightgrey;
+}
+
+/* SearchModal.module.css */
+.modalContainer {
+    position: relative;
+    background-color: #222222;
+    border-radius: 30px;
+    padding: 20px;
+    width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    color: #f5e9e9;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+.header > div > div:first-child {
+  text-align: right;
+}
+
+.header > div > div:last-child {
+  text-align: center;
+}
+
+.closeIcon {
+  position: absolute; /* 추가 */
+  top: 20px; /* 추가: 필요에 따라 조절 */
+  right: 25px; /* 추가: 필요에 따라 조절 */
+  cursor: pointer;
+}
+
+.searchResults {
+    margin-top: 30px;
+    max-height: 220px;
+    overflow-y: auto;
+}
+  
+  .musicItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #A3A3A3;
+    transition: background-color 0.3s;
+  }
+  
+  .musicItem:hover {
+    background-color: #3b3a3a;
+  }
+  
+  .musicImage {
+    width: 40px;
+    height: 40px;
+    margin-right: 30px;
+  }
+  
+  .musicDetails {
+    flex: 2;
+    color: white;
+  }
+  
+  .artistName {
+    color: #bbb;
+    font-size: 0.9em;
+  }
+  
+  .musicDuration {
+    flex: 1;
+    text-align: right;
+    color: #bbb;
+    margin-right: 20px;
+  }
+
+  .searchButton {
+    color: #ffffff;
+    font-size: 28px;
+    cursor: pointer;
+    background-color: transparent;
+    padding: 5px;
+    box-shadow: none;
+    margin-left: 8px;
+}
+
+.textFieldContainer {
+  display: flex;
+  justify-content: center;
+}
+

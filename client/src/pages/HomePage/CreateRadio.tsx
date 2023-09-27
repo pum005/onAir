@@ -2,35 +2,54 @@ import React, { useState, useRef, useEffect } from "react";
 import NavBar from "../../component/Common/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import styles from "./CreateRadio.module.css";
 import { resetIndices, setMusicInfo, setRadioDummyData } from "../../store";
 import DJSelector from "../../component/Radio/DJSelector";
-import styles from "./CreateRadio.module.css";
+import ThemeSelector from "../../component/Radio/ThemeSelector";
 import axios from "axios";
+import { Navigate } from "react-router-dom";
+import Tooltip from "@mui/material/Tooltip";
+import Box from "@mui/material/Box";
+import { Loading } from "../../pages/PlayerPage/Loading";
+
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
-
+import {
+  Grid,
+  TextField,
+  Button,
+  Typography,
+  styled,
+  makeStyles,
+} from "@mui/material";
+import { ButtonProps } from "@mui/material/Button";
 const CreateRadio = () => {
-  /** state,ref */
-  const titleRef = useRef<HTMLInputElement>(null); //제목 REF
-  const [selectedTheme, setSelectedTheme] = useState(""); // 선택된 테마 상태
-  const contentRef = useRef<HTMLTextAreaElement>(null); //내용 REF
-  const [contentLength, setContentLength] = useState(0); //내용 count
-  const [selectedDJ, setSelectedDJ] = useState(""); // 선택한 DJ 이름
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
-  /** action */
-  const navigate = useNavigate(); //페이지 이동 함수
-
-  //임시 온캐스트 생성 후 온캐스트 페이지로 넘어가게 하는 버튼
+  const [selectedTheme, setSelectedTheme] = useState("");
+  const [contentLength, setContentLength] = useState(0);
+  const [selectedDJ, setSelectedDJ] = useState("");
+  const navigate = useNavigate();
   const [showButton, setShowButton] = useState(false);
+  const [contentMaxLengthReached, setContentMaxLengthReached] = useState(false); // 추가: 텍스트 최대 길이 도달 여부
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newContent = e.target.value;
+    if (newContent.length <= 1000) {
+      setContent(newContent);
+      setContentLength(newContent.length);
+      setContentMaxLengthReached(false); // 내용 길이가 1000자 이하일 경우 상태를 false로 설정
+    } else {
+      setContentMaxLengthReached(true);
+    }
+  };
 
   const handleCreate = () => {
-    const inputTitle = titleRef.current ? titleRef.current.value : "";
-    const inputContent = contentRef.current ? contentRef.current.value : "";
+    const inputTitle = title;
+    const inputContent = content;
     const inputTheme = selectedTheme;
     const inputDJ = selectedDJ;
-    console.log("Title:", inputTitle);
-    console.log("Content:", inputContent);
-    console.log("inputTheme", inputTheme);
-    console.log("inputDJ", inputDJ);
 
     if (!inputTitle.trim()) {
       alert("제목을 입력해주세요!");
@@ -48,8 +67,8 @@ const CreateRadio = () => {
       alert("DJ를 선택해주세요");
       return;
     }
-    // navigate("/Loading");
-    setShowButton(true);
+
+    CreateOncast();
   };
 
   const handleThemeSelect = (theme: string) => {
@@ -60,174 +79,157 @@ const CreateRadio = () => {
     setSelectedDJ(DJ);
   };
 
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContentLength(e.target.value.length);
+  const comeBackHome = () => {
+    navigate("/");
   };
 
-  const [fetchOncast, setFetchOncast] = useState(false);
+  const CreateButton = styled(Button)<ButtonProps>(({ theme }) => ({
+    color: "black",
+    backgroundColor: "#EDEDED",
+    "&:hover": {
+      backgroundColor: "#444444",
+    },
+  }));
 
-  const handleOncastButtonClick = () => {
-    setFetchOncast(true);
-  };
+  const CancleButton = styled(Button)<ButtonProps>(({ theme }) => ({
+    color: "white",
+    backgroundColor: "#DA0037",
+    "&:hover": {
+      backgroundColor: "#444444",
+    },
+  }));
 
-  const dispatch = useDispatch();
-
-  type MusicItem = {
-    title: string;
-    artist: string;
-    duration: number;
-    albumCoverUrl: string;
-    youtubeId: string;
-  };
-
-  useEffect(() => {
-    if (fetchOncast) {
-      requestWithTokenRefresh(() => {
-        return axios.get("http://localhost:8080/api/oncast/play/7", {
+  const CreateOncast = () => {
+    setIsLoading(true);
+    requestWithTokenRefresh(() => {
+      return axios.post(
+        "http://localhost:8080/api/oncast/create",
+        {
+          title: title,
+          theme: selectedTheme,
+          story: content,
+          djName: selectedDJ,
+        },
+        {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
           },
           withCredentials: true,
-        });
-      }).then(response => {
-        console.log("Response Data:", response.data);
-        console.log("Music Data:", response.data.oncast.music);
+        }
+      );
+    })
+      .then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          setIsLoading(false);
+          navigate("/OncastCreateComplete");
+        } else {
+          alert("온캐스트 생성에 실패했습니다.");
+        }
+      })
+      .catch((error) => {
+        setIsLoading(false);
 
-        const data: {
-          djName: string;
-          ttsOne: string;
-          ttsTwo: string;
-          ttsThree: string;
-          ttsFour: string;
-          scriptOne: string;
-          scriptTwo: string;
-          scriptThree: string;
-          scriptFour: string;
-          music: {
-            title: string;
-            artist: string;
-            duration: number;
-            albumCoverUrl: string;
-            youtubeId: string;
-          }[];
-        } = response.data.oncast; // 여기서 .oncast를 추가했습니다.
-
-        const music: MusicItem[] = response.data.oncast.music; // 여기서도 .oncast를 추가했습니다.
-
-        // Redux 액션 디스패치: 데이터를 Redux 스토어에 저장합니다.
-
-        // oncast 데이터 액션 디스패치
-        dispatch(
-          setRadioDummyData({
-            djName: data.djName,
-            tts_one: data.ttsOne,
-            tts_two: data.ttsTwo,
-            tts_three: data.ttsThree,
-            tts_four: data.ttsFour,
-            script_one: data.scriptOne,
-            script_two: data.scriptTwo,
-            script_three: data.scriptThree,
-            script_four: data.scriptFour,
-            oncast_music_one: data.music[0].youtubeId,
-            oncast_music_two: data.music[1].youtubeId,
-            oncast_music_three: data.music[2].youtubeId,
-          })
-        );
-
-        // 음악 데이터 액션 디스패치
-        dispatch(
-          setMusicInfo({
-            musicTitle: music.map(m => m.title),
-            musicArtist: music.map(m => m.artist),
-            musicLength: music.map(m => m.duration),
-            musicCover: music.map(m => m.albumCoverUrl),
-          })
-        );
-        setFetchOncast(false); // 통신 후 상태 값을 초기화합니다.
-        navigate("/RadioPlayer");
+        console.log("통신에러 발생", error);
       });
-    }
-  }, [fetchOncast, dispatch]);
-
-  /**AXIOS */
-  //여기서 POST매핑하면 끝.
-
+  };
   return (
-    <div className={styles.container}>
+    <div>
       <NavBar />
-      <div className={styles.radioWrapper}>
-        <div className={styles.flexContainer}>
-          <div></div>
-          <div style={{ textAlign: "center" }}>
-            <h2>TITLE</h2>
-          </div>
-          <input type="text" ref={titleRef} style={{ width: "80%" }} />
-          <div></div>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <div className={styles.container}>
           <div>
-            <h2>THEME</h2>
-          </div>
-          <div>
-            <button onClick={() => handleThemeSelect("JOYFUL")}>JOYFUL</button>
-            <button onClick={() => handleThemeSelect("SENSITIVE")}>
-              SENSITIVE
-            </button>
-            <button onClick={() => handleThemeSelect("HOPEFUL")}>
-              HOPEFUL
-            </button>
-            <button onClick={() => handleThemeSelect("CHILL")}>CHILL</button>
-            <button onClick={() => handleThemeSelect("AGGRESSIVE")}>
-              AGGRESSIVE
-            </button>
-            <button onClick={() => handleThemeSelect("ROMANTIC")}>
-              ROMANTIC
-            </button>
-            <button onClick={() => handleThemeSelect("RETRO")}>RETRO</button>
-            <button onClick={() => handleThemeSelect("DRAMATIC")}>
-              DRAMATIC
-            </button>
-            <button onClick={() => handleThemeSelect("FUNKY")}>FUNKY</button>
-          </div>
-        </div>
-        <div className={styles.flexContainer}>
-          <div>
-            <h2>STORY</h2>
-            {`${contentLength}/1000`}
-          </div>
-          <textarea
-            ref={contentRef}
-            onChange={handleContentChange}
-            maxLength={1000}
-            style={{ width: "80%", height: "100px" }}
-          ></textarea>
-        </div>
+            <Grid container spacing={3} className={styles.oncastCreate}>
+              <Grid item container xs={12} alignItems="center" spacing={2}>
+                <Grid item xs={2}>
+                  <Typography variant="h5" className={styles.itemTitle}>
+                    TITLE
+                  </Typography>
+                </Grid>
+                <Grid item xs={9.5}>
+                  <textarea
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className={styles.titleInput}
+                  />
+                </Grid>
+              </Grid>
 
-        <DJSelector onSelect={handlDJSelect}></DJSelector>
+              <Grid item container xs={12} alignItems="center" spacing={2}>
+                <Grid item xs={2}>
+                  <Typography variant="h5" className={styles.itemTitle}>
+                    THEME
+                  </Typography>
+                </Grid>
+                <Grid item xs={10} className={styles.themeSelect}>
+                  <ThemeSelector
+                    selectedTheme={selectedTheme}
+                    onThemeSelect={handleThemeSelect}
+                  />
+                </Grid>
+              </Grid>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginTop: "20px",
-          }}
-        >
-          <button onClick={handleCreate} style={{ marginRight: "10px" }}>
-            생성
-          </button>
-          <Link to="/">
-            <button>취소</button>
-          </Link>
+              <Grid item container xs={12} alignItems="flex-start" spacing={2}>
+                <Grid item xs={2}>
+                  <Typography className={styles.itemTitle} variant="h5">
+                    STORY
+                  </Typography>
+                </Grid>
+
+                <Grid
+                  className={styles.textfield}
+                  item
+                  xs={9.5}
+                  style={{ textAlign: "right" }}
+                >
+                  <textarea
+                    value={content}
+                    onChange={handleContentChange} // 함수 변경
+                    className={styles.storyInput}
+                  />
+                  <div
+                    className={styles.typingLimit}
+                    style={{ color: contentMaxLengthReached ? "red" : "white" }}
+                  >
+                    {`${contentLength}/1000`}
+                  </div>
+                </Grid>
+              </Grid>
+
+              <Grid item container xs={12} alignItems="center" spacing={2}>
+                <Grid item xs={2}>
+                  <Typography variant="h5" className={styles.itemTitle}>
+                    DJ
+                  </Typography>
+                </Grid>
+                <Grid item xs={10} style={{ userSelect: "none" }}>
+                  <DJSelector onSelect={handlDJSelect} />
+                </Grid>
+              </Grid>
+
+              <Grid item container xs={12} justifyContent="flex-end">
+                <CreateButton
+                  variant="contained"
+                  onClick={handleCreate}
+                  style={{ marginRight: "10px" }}
+                  className={styles.createButton}
+                >
+                  생성
+                </CreateButton>
+                <Link to="/">
+                  <CancleButton
+                    variant="contained"
+                    className={styles.cancleButton}
+                  >
+                    취소
+                  </CancleButton>
+                </Link>
+              </Grid>
+            </Grid>
+          </div>
         </div>
-      </div>
-      {showButton && (
-        <button onClick={handleOncastButtonClick}>온캐스트 들으러 가기</button>
       )}
     </div>
   );

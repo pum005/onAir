@@ -48,9 +48,9 @@ public class MusicController {
     // 내 보관함에 음악 삭제
     @DeleteMapping("/my-musicbox")
     public ResponseEntity<?> deleteMyMusicBoxMusic(@RequestBody MyMusicBoxAddRequestDTO myMusicBoxAddRequestDTO){
-        myMusicBoxService.deleteMusicMyMusicBox(myMusicBoxAddRequestDTO.getMusicId());
-        
-        return ResponseEntity.status(200).body("음악 삭제 완료");
+        Map<String, Object> result = myMusicBoxService.deleteMusicMyMusicBox(myMusicBoxAddRequestDTO.getMusicId());
+
+        return ResponseEntity.status(200).body(result);
     }
 
     // 스포티파이 음악 검색
@@ -63,8 +63,14 @@ public class MusicController {
     @GetMapping("/search/youtube")
     public ResponseEntity<?> searchMusicByYoutube(@RequestParam String musicTitle,
                                                   @RequestParam String musicArtist, @RequestParam long spotifyMusicDuration,
-                                                  @RequestParam String musicImageUrl) {
-        return ResponseEntity.ok(musicService.findVideo(musicTitle, musicArtist, spotifyMusicDuration, musicImageUrl));
+                                                  @RequestParam String musicImageUrl, @RequestParam String spotifyId) {
+        Map<String, Object> result = musicService.findVideo(musicTitle, musicArtist, spotifyMusicDuration, musicImageUrl, spotifyId);
+
+        if(result.containsKey("code")){
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
     }
 
     // 음악 상세정보 가져오기

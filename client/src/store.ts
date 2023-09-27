@@ -1,4 +1,11 @@
-import { configureStore, createAction, createReducer } from "@reduxjs/toolkit";
+import {
+  combineReducers,
+  configureStore,
+  createAction,
+  createReducer,
+} from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 // 1. Action 생성
 
@@ -40,6 +47,15 @@ export const setMusicInfo = createAction<{
   musicCover: string[];
 }>("SET_MUSIC_INFO");
 
+// 채팅 메시지를 추가하는 액션 생성자
+export const addChatMessage = createAction<{
+  content: string;
+  sender: string;
+  senderImage: string;
+}>("ADD_CHAT_MESSAGE");
+
+// 채팅 메시지를 초기화하는 액션 생성자
+export const resetChatMessages = createAction("RESET_CHAT_MESSAGES");
 export const incrementTTSIndex = createAction("INCREMENT_TTS_INDEX");
 export const incrementMusicIndex = createAction("INCREMENT_MUSIC_INDEX");
 export const resetIndices = createAction("RESET_INDICES");
@@ -215,19 +231,85 @@ const liveRadioDummyReducer = createReducer(
   }
 );
 
+// 채팅 메시지 타입 정의
+export type ChatMessage = {
+  content: string;
+  sender: string;
+  senderImage: string;
+};
+
+// 초기 상태값 설정
+const initialChatState: ChatMessage[] = [];
+
+// 리듀서 정의
+const chatReducer = createReducer(initialChatState, builder => {
+  builder
+    .addCase(addChatMessage, (state, action) => {
+      console.log("State before push:", action.payload);
+      console.log("State:", state);
+      console.log("Is state an array?", Array.isArray(state));
+      state.push(action.payload); // state.push 대신 spread 연산자를 사용하여 배열에 추가
+    })
+    .addCase(resetChatMessages, state => {
+      // 채팅 메시지 초기화
+      return initialChatState;
+    });
+});
+
+// const userReducer = createReducer(initialState, builder => {
+//   // setUserData 액션이 디스패치될 때 상태를 어떻게 변경할지 정의합니다.
+//   builder.addCase(setNickName, (state, action) => {
+//     state.nickname = action.payload.nickname;
+//   });
+//   builder.addCase(setImage, (state, action) => {
+//     state.profileImage = action.payload.profileImage;
+//   });
+//   builder.addCase(setUserData, (state, action) => {
+//     state.nickname = action.payload.nickname;
+//     state.profileImage = action.payload.profileImage;
+//     state.userId = action.payload.userId;
+//   });
+// });
+
 // 3. Store 설정
 
 // Redux 스토어를 설정합니다. 스토어는 애플리케이션의 상태를 저장하고 관리하는 객체입니다.
-const store = configureStore({
-  reducer: {
-    user: userReducer, // 'user'라는 키로 userReducer를 스토어에 추가합니다.
-    radioDummy: radiodummyReducer,
-    LiveRadioDummy: liveRadioDummyReducer,
-  },
-});
+// const store = configureStore({
+//   reducer: {
+//     user: userReducer, // 'user'라는 키로 userReducer를 스토어에 추가합니다.
+//     radioDummy: radiodummyReducer,
+//     LiveRadioDummy: liveRadioDummyReducer,
+//     chat: chatReducer,
+//   },
+// });
 
 // RootState 타입을 정의합니다. 이 타입은 스토어의 전체 상태의 타입을 나타냅니다.
 export type RootState = ReturnType<typeof store.getState>;
 
-// 설정된 스토어를 내보냅니다. 이 스토어는 애플리케이션 전체에서 사용됩니다.
+//config 설정
+const persistConfig = {
+  key: "user",
+  storage,
+};
+
+const chatPersistConfig = {
+  key: "chat",
+  storage,
+};
+
+//reducer 설정으로 키값과 내용
+const persistedUserReducer = persistReducer(persistConfig, userReducer);
+const persistedChatReducer = persistReducer(chatPersistConfig, chatReducer);
+
+const store = configureStore({
+  reducer: {
+    user: persistedUserReducer,
+    chat: chatReducer,
+  },
+});
+
+export const persistor = persistStore(store);
+
+//persist
+
 export default store;
