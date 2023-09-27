@@ -33,7 +33,7 @@ export const Home = () => {
   return (
     <div
       className={styles.background}
-      style={{ backgroundColor: "#000104", height: "120vh", color: "white" }}
+      style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
     >
       <NavBar />
       <div className={styles.centerContent}>
@@ -45,6 +45,7 @@ export const Home = () => {
 
         {showRadioButton && (
           <div
+            style={{userSelect: "none"}}
             onClick={navigateToCreateRadio}
             className={`${styles.verticalAlign} ${styles.fadeInGif}`}
           >

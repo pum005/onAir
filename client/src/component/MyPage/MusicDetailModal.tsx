@@ -12,6 +12,7 @@ import DeleteModal from "./DeleteModal";
 import { useEffect } from "react";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import CloseIcon from "@mui/icons-material/Close";
 
 type MusicInfoType = {
   musicId: number;
@@ -112,51 +113,71 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
 
   return (
     <>
-      <Modal open={isOpen} onClose={onClose}>
+      <Modal
+        open={isOpen}
+        onClose={onClose}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <Box className={styles.modalBox}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            {title} 노래 목록
-          </Typography>
-          {songs.length > 0 ? (
-            songs.map((song, index) => (
-              <div
-                key={index}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginTop: "10px",
-                  borderBottom: "1px solid #e5e5e5",
-                  paddingBottom: "5px",
-                }}
-              >
-                <img
-                  src={song.albumCoverUrl}
-                  alt="Album Cover"
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    marginRight: "10px",
-                  }}
-                />
-                <div style={{ flex: 2 }}>
-                  <div>{song.title}</div>
-                  <div style={{ color: "#888", fontSize: "0.9em" }}>
-                    {song.artist}
+          <div className={styles.header}>
+            <div>
+              <div>
+                <CloseIcon onClick={onClose} className={styles.closeIcon} />
+              </div>
+              <div>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  {title} 노래 목록
+                </Typography>
+              </div>
+            </div>
+          </div>
+          <div className={styles.musicList}>
+            {songs.length > 0 ? (
+              songs.map((song, index) => (
+                <div key={index} className={styles.songItem}>
+                  <div className={styles.albumCoverUrl}>
+                    <img
+                      src={song.albumCoverUrl}
+                      alt="Album Cover"
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        marginRight: "10px",
+                      }}
+                    />
+                  </div>
+                  <div style={{ flex: 2 }}>
+                    <div className={styles.songTitle}>{song.title}</div>
+                    <div style={{ color: "#888", fontSize: "0.9em" }}>
+                      <div className={styles.artist}>{song.artist}</div>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      flex: 1,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <div className={styles.duration}>
+                      {formatTime(song.duration)}
+                    </div>
+                    <MoreVertIcon
+                      style={{ marginLeft: "8px", cursor: "pointer", color: "white"}}
+                      onClick={(event) => handleMenuOpen(event, index)}
+                    />
                   </div>
                 </div>
-                <div style={{ flex: 1, textAlign: "right" }}>
-                  {formatTime(song.duration)}
-                  <MoreVertIcon
-                    style={{ marginLeft: "8px", cursor: "pointer" }}
-                    onClick={(event) => handleMenuOpen(event, index)}
-                  />
-                </div>
-              </div>
-            ))
-          ) : (
-            <div>노래가 없습니다.</div>
-          )}
+              ))
+            ) : (
+              <div>노래가 없습니다.</div>
+            )}
+          </div>
           <Menu
             anchorEl={anchorEl}
             keepMounted
@@ -168,7 +189,6 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
             </MenuItem>
             <MenuItem onClick={handleDeleteSong}>삭제하기</MenuItem>
           </Menu>
-          <Button onClick={onClose}>닫기</Button>
         </Box>
       </Modal>
       <PlayListModal
