@@ -1,0 +1,44 @@
+.logoImage {
+  margin-right: 8px;
+  height: auto;
+  width: 145px;
+  user-select: none;
+}
+
+.liveImage {
+  height: 40px;
+  width: auto;
+  position: absolute;
+  /* position: fixed; */
+  left: -7%;
+}
+
+.userProfileImage {
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+}
+
+.centerAppBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-image: linear-gradient(to right, red,orange,yellow,green,blue,navy, purple)!important; */
+  background-image: url("../../../public/images/밤하늘에펄.jpg");
+  box-shadow: none;
+  position: relative;
+}
+
+.userNickName {
+  display: flex;
+  align-items: center;
+  font-family: "Interop" !important;
+  /* flex-direction: row; */
+}
+
+.selectNone {
+  user-select: none;
+}
+.textRed {
+  color: red;
+}

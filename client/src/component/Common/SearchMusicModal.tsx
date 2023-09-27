@@ -1,72 +1,298 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import AlertDialog from "./AddFullList";
+import AddLoading from "./AddLoading";
+import SearchLoading from "./SearchLoading";
+import styles from "./SearchModal.module.css";
+import SearchIcon from "@mui/icons-material/Search";
+import AlertModal from "./AlertModal";
 
 type SearchModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  setRefreshKey?: () => void;
+  playlistId?: number;
 };
 
-const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
+type MusucType = {
+  musicTitle: string;
+  musicArtist: string;
+  musicImage: string;
+  spotifyMusicDuration: number;
+  externalIds: string;
+};
+
+const SearchModal: React.FC<SearchModalProps> = ({
+  isOpen,
+  onClose,
+  setRefreshKey,
+  playlistId,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState<MusucType[]>([]); //검색 관리 state
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
+
+  // Alert 모달
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+
+  const closeAlert = () => {
+    setIsAlertOpen(false);
+  };
+
+  const handleModalClose = () => {
+    setSearchTerm(""); // 검색어 초기화
+    setSearchResults([]); // 검색 결과 초기화
+    onClose(); // 모달 닫기
+  };
 
   const handleSearch = () => {
-    // 여기에 검색 로직을 추가합니다.
-    console.log(`Searching for: ${searchTerm}`);
+    setIsSearchLoading(true);
+    if (searchTerm) {
+      requestWithTokenRefresh(() => {
+        console.log(searchTerm);
+        return axios.get(
+          `http://localhost:8080/api/search/spotify?title=${searchTerm}`,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+            withCredentials: true,
+          }
+        );
+      })
+        .then((response) => {
+          setIsSearchLoading(false);
+          if (Array.isArray(response.data) && response.data.length === 0) {
+            alert("검색 결과가 없습니다.!");
+            setSearchResults([]);
+          } else {
+            setSearchResults(response.data);
+          }
+        })
+        .catch((error) => {
+          setIsSearchLoading(false);
+          console.log("에러발생", error);
+        });
+    } else {
+      setIsSearchLoading(false);
+    }
+  };
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const [isAddLoading, setIsAddLoading] = useState(false);
+
+  const handleAddMusic = (music: MusucType) => {
+    setIsAddLoading(true);
+    requestWithTokenRefresh(() => {
+      return axios.get(
+        `http://localhost:8080/api/search/youtube?musicTitle=${music.musicTitle}&musicArtist=${music.musicArtist}&spotifyMusicDuration=${music.spotifyMusicDuration}&musicImageUrl=${music.musicImage}&spotifyId=${music.externalIds}`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        }
+      );
+    })
+      .then((response) => {
+        setIsAddLoading(false);
+        if (response.data.message === "이미 보관함에 추가된 노래입니다.") {
+          setOpen(false);
+          setAlertMessage("이미 보관함에 추가된 노래입니다.");
+          setIsAlertOpen(true);
+          console.log(response.data.musicId);
+          console.log(playlistId);
+          if (response.data.musicId && playlistId) {
+            requestWithTokenRefresh(() => {
+              return axios
+                .post(
+                  "http://localhost:8080/api/playlist/music",
+                  {
+                    playlistMetaId: playlistId,
+                    musicId: response.data.musicId,
+                  },
+                  {
+                    headers: {
+                      Authorization:
+                        "Bearer " + localStorage.getItem("accessToken"),
+                    },
+                    withCredentials: true,
+                  }
+                )
+                .then((response) => {
+                  if (
+                    response.data.message ===
+                    "이미 플레이리스트에 추가된 음악입니다."
+                  ) {
+                    alert("이미 플레이리스트에 추가된 음악입니다.!");
+                  } else {
+                    alert("현재 플레이 리스트에 음악이 추가되었습니다.!");
+                    if (setRefreshKey) {
+                      setRefreshKey();
+                    }
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error adding music to playlist", error);
+                });
+            });
+          }
+        } else if (response.data.code === 204) {
+          setOpen(false);
+          setAlertMessage(response.data.message);
+          setIsAlertOpen(true);
+        } else {
+          setOpen(true);
+          if (response.data.musicId && playlistId) {
+            requestWithTokenRefresh(() => {
+              return axios
+                .post(
+                  "http://localhost:8080/api/playlist/music",
+                  {
+                    playlistMetaId: playlistId,
+                    musicId: response.data.musicId,
+                  },
+                  {
+                    headers: {
+                      Authorization:
+                        "Bearer " + localStorage.getItem("accessToken"),
+                    },
+                    withCredentials: true,
+                  }
+                )
+                .then((response) => {
+                  if (
+                    response.data.message ===
+                    "이미 플레이리스트에 추가된 음악입니다."
+                  ) {
+                    alert("이미 플레이리스트에 추가된 음악입니다.!");
+                  } else {
+                    alert("현재 플레이 리스트에 음악이 추가되었습니다.!");
+                    if (setRefreshKey) {
+                      setRefreshKey();
+                    }
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error adding music to playlist", error);
+                });
+            });
+          }
+        }
+      })
+      .catch((error) => {
+        setIsAddLoading(false);
+        console.log("에러발생", error);
+      });
+  };
+
+  const formatTime = (milliseconds: number) => {
+    const totalSeconds = Math.round(milliseconds / 1000);
+    const min = Math.floor(totalSeconds / 60);
+    const sec = totalSeconds % 60;
+    return `${min < 10 ? "0" : ""}${min}:${sec < 10 ? "0" : ""}${sec}`;
   };
 
   return (
-    <Modal open={isOpen} onClose={onClose}>
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "80%",
-          maxWidth: "600px",
-          bgcolor: "background.paper",
-          border: "2px solid #000",
-          boxShadow: 24,
-          p: 4,
+    <div>
+      <Modal
+        open={isOpen}
+        onClose={handleModalClose}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="h6">노래 검색</Typography>
-          <CloseIcon onClick={onClose} style={{ cursor: "pointer" }} />
-        </div>
-        <div style={{ marginTop: "20px" }}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            label="노래 제목"
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSearch}
-            style={{ marginTop: "10px" }}
-          >
-            검색
-          </Button>
-        </div>
-        <div style={{ marginTop: "30px" }}>
-          {/* 여기에 검색 결과를 표시합니다. */}
-        </div>
-      </Box>
-    </Modal>
+        <Box className={styles.modalContainer}>
+          <div className={styles.header}>
+            <div>
+              <div>
+                <CloseIcon
+                  onClick={handleModalClose}
+                  className={styles.closeIcon}
+                />
+              </div>
+              <div>
+                <Typography variant="h6">노래 검색</Typography>
+              </div>
+            </div>
+          </div>
+          <div className={styles.textFieldContainer}>
+            <TextField
+              id="standard-basic"
+              placeholder="노래 제목을 입력해주세요"
+              variant="standard"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch();
+                }
+              }}
+              className={styles.searchField}
+              InputProps={{
+                endAdornment: (
+                  <SearchIcon
+                    className={styles.searchButton}
+                    onClick={handleSearch}
+                  />
+                ),
+              }}
+              inputProps={{
+                style: { color: "#f5e9e9" }, // This style is applied to the actual input element
+              }}
+              style={{ width: "300px" }}
+            />
+          </div>
+          <div className={styles.searchResults}>
+            {searchResults.length > 0 &&
+              searchResults.map((music, index) => (
+                <div key={index} className={styles.musicItem}>
+                  <img
+                    src={music.musicImage}
+                    alt={`${music.musicTitle} cover`}
+                    className={styles.musicImage}
+                  />
+                  <div className={styles.musicDetails}>
+                    <div>{music.musicTitle}</div>
+                    <div className={styles.artistName}>{music.musicArtist}</div>
+                  </div>
+                  <div className={styles.musicDuration}>
+                    {formatTime(music.spotifyMusicDuration)}
+                  </div>
+                  <AddCircleOutlineIcon
+                    style={{ marginLeft: "8px", color: "white" }}
+                    cursor="pointer"
+                    onClick={() => handleAddMusic(music)}
+                  />
+                </div>
+              ))}
+          </div>
+          <AlertDialog open={open} handleClose={handleClose} />
+        </Box>
+      </Modal>
+      <AlertModal
+        open={isAlertOpen}
+        message={alertMessage}
+        onClose={closeAlert}
+      />
+      {isSearchLoading && <SearchLoading />}
+      {isAddLoading && <AddLoading />}
+    </div>
   );
 };
 

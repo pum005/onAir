@@ -11,7 +11,10 @@ type DeleteModalProps = {
   isOpen: boolean;
   onClose: () => void;
   musicId?: number | null;
+  playlistId?: number | null;
   setRefreshKey?: () => void;
+  refresh?: () => void;
+  oncastId?: number | null;
 };
 
 function DeleteModal({
@@ -19,17 +22,68 @@ function DeleteModal({
   onClose,
   musicId,
   setRefreshKey,
+  playlistId,
+  refresh,
+  oncastId,
 }: DeleteModalProps) {
-  const [showConfirm, setShowConfirm] = React.useState(false); // 상태 추가
+  const [showConfirm, setShowConfirm] = React.useState(false);
 
   const handleDelete = () => {
-    if (musicId) {
+    const headers = {
+      Authorization: "Bearer " + localStorage.getItem("accessToken"),
+    };
+    console.log(oncastId);
+    if (oncastId) {
+      requestWithTokenRefresh(() => {
+        return axios.patch(
+          `http://localhost:8080/api/oncast/${oncastId}`,
+          {},
+          {
+            headers: headers,
+            withCredentials: true,
+          }
+        );
+      })
+        .then((response) => {
+          console.log("OnCast Update 성공!", response);
+          alert("삭제되었습니다.");
+          if (setRefreshKey) {
+            setRefreshKey();
+          }
+        })
+        .catch((error) => {
+          console.error("Error updating oncast", error);
+        });
+    } else if (playlistId && musicId) {
+      console.log(playlistId);
+      console.log(musicId);
+      // playlistId와 musicId 모두 있을 때의 처리
+      requestWithTokenRefresh(() => {
+        return axios.delete("http://localhost:8080/api/playlist/music", {
+          data: {
+            playlistMetaId: playlistId,
+            musicId: musicId,
+          },
+          headers: headers,
+          withCredentials: true,
+        });
+      })
+        .then((response) => {
+          console.log("Deleted 성공!", response);
+          setShowConfirm(true);
+          if (setRefreshKey) {
+            setRefreshKey();
+          }
+        })
+        .catch((error) => {
+          console.error("Error deleting the music from playlist", error);
+        });
+    } else if (musicId) {
+      // musicId만 있을 때의 처리
       requestWithTokenRefresh(() => {
         return axios.delete("http://localhost:8080/api/my-musicbox", {
           data: { musicId: musicId },
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("accessToken"),
-          },
+          headers: headers,
           withCredentials: true,
         });
       })
@@ -43,16 +97,33 @@ function DeleteModal({
         .catch((error) => {
           console.error("Error deleting the music", error);
         });
+    } else if (playlistId) {
+      // playlistId만 있을 때의 처리
+      requestWithTokenRefresh(() => {
+        return axios.delete(
+          `http://localhost:8080/api/playlist/${playlistId}`,
+          {
+            headers: headers,
+            withCredentials: true,
+          }
+        );
+      })
+        .then((response) => {
+          console.log("Deleted 성공!", response);
+          setShowConfirm(true);
+          if (refresh) {
+            refresh();
+          }
+        })
+        .catch((error) => {
+          console.error("Error deleting the playlist", error);
+        });
     } else {
-      console.error("No musicId provided");
+      console.error("No musicId or playlistId or No OncastId provided");
     }
+
     onClose();
   };
-
-  // const handleDelete = () => {
-  //   onClose(); // "삭제하시겠습니까?" 모달 닫기
-  //   setShowConfirm(true); // "삭제가 완료되었습니다." 알림 모달 표시
-  // };
 
   const handleConfirmClose = () => {
     setShowConfirm(false); // 알림 모달 닫기

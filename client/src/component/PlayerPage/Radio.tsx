@@ -1,47 +1,39 @@
-import React, { useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, resetIndices } from "../../store";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
 import Equalizer from "../Common/Equalizer";
 import { RadioScripts } from "../Common/RadioScript";
 import styles from "./Radio.module.css";
-import { FinishModal } from "./FinishModal";
 
-export const Radio = () => {
-  const dispatch = useDispatch();
-  const radioDummyData = useSelector((state: RootState) => state.radioDummy);
-  const navigate = useNavigate();
-  const audioRef = useRef<HTMLAudioElement>(null); // 오디오 태그 참조
-  const [isAudioLoaded, setIsAudioLoaded] = React.useState(false);
-  const [showModal, setShowModal] = React.useState(false); // 모달 상태 추가
+type RadioProps = {
+  ttsFiles: string[];
+  scriptFiles: string[];
+  djName: string; // djName을 추가합니다.
+  onFinish: () => void;
+};
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-    navigate("/");
-  };
-
-  const currentTTS = [`tts_one`, `tts_two`, `tts_three`, `tts_four`][
-    radioDummyData.currentTTSIndex
-  ];
+export const Radio = ({
+  ttsFiles,
+  scriptFiles,
+  djName,
+  onFinish,
+}: RadioProps) => {
+  const [currentTTSIndex, setCurrentTTSIndex] = useState(0); // 로컬 상태 변수 추가
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isAudioLoaded, setIsAudioLoaded] = useState(false);
 
   const handleAudioLoaded = () => {
     setIsAudioLoaded(true);
   };
 
   const handleAudioEnd = () => {
-    dispatch({ type: "INCREMENT_TTS_INDEX" });
+    const nextIndex = currentTTSIndex + 1;
+    setCurrentTTSIndex(nextIndex);
 
-    if (radioDummyData.currentTTSIndex === 3) {
-      dispatch(resetIndices()); // 인덱스 초기화
-      setShowModal(true); // 4번째 TTS가 끝나면 모달 표시
+    if (nextIndex === 4) {
+      setCurrentTTSIndex(0);
     } else {
-      navigate("/MusicPlayer");
+      onFinish(); // TTS 재생 완료 후 콜백 함수 호출
     }
   };
-
-  useEffect(() => {
-    console.log("Current TTS Index:", radioDummyData.currentTTSIndex);
-  }, [radioDummyData.currentTTSIndex]);
 
   return (
     <div className={styles.container}>
@@ -53,13 +45,13 @@ export const Radio = () => {
         onEnded={handleAudioEnd}
         onLoadedMetadata={handleAudioLoaded}
         className={styles.audioStyle}
+        crossOrigin="anonymous"
       >
-        <source src={radioDummyData[currentTTS] as string} type="audio/mp3" />
+        <source src={ttsFiles[currentTTSIndex]} type="audio/mp3" />{" "}
+        {/* props에서 가져오도록 수정 */}
         Your browser does not support the audio element.
       </audio>
-      <RadioScripts />
-      <div className={styles.marginTop}></div>
-      <FinishModal show={showModal} onClose={handleCloseModal} />
+      <RadioScripts script={scriptFiles[currentTTSIndex]} djName={djName} />
     </div>
   );
 };

@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import styles from "./LoginModal.module.css";
 
 //카카오 로그인으로 가게 해주는 url
-// const KAKAO_OAUTH_URL = `http://j9b302.p.ssafy.io:8080/oauth2/authorization/kakao`;
+// const KAKAO_OAUTH_URL = `https://j9b302.p.ssafy.io/oauth2/authorization/kakao`;
 const KAKAO_OAUTH_URL = `http://localhost:8080/oauth2/authorization/kakao`;
 
 const redirectToKakaoLogin = () => {
@@ -15,7 +15,8 @@ const redirectToKakaoLogin = () => {
 };
 
 //네이버 로그인으로 가게 해주는 url
-const NAVER_OAUTH_URL = `http://localhost:8080/oauth2/authorization/naver`;
+// const NAVER_OAUTH_URL = `https://j9b302.p.ssafy.io/oauth2/authorization/naver`;
+const NAVER_OAUTH_URL = `https://localhost:8080/oauth2/authorization/naver`;
 
 const redirectToNaverLogin = () => {
   window.location.href = NAVER_OAUTH_URL;
@@ -39,12 +40,8 @@ export default function LoginModal({ open, handleOpen, handleClose }: any) {
       >
         <Fade in={open}>
           <Box className={styles.modalContent}>
-            <img
-              src="images/tempLogo.png"
-              alt="tempLogo"
-              className={styles.tempLogo}
-            />
-            <h2 className={styles.modalTitle}>나만의 플레이리스트 onAIr</h2>
+            <img src="onAIr.png" alt="Logo" className={styles.tempLogo} />
+            <h2 className={styles.modalTitle}>로그인</h2>
             <Button
               variant="contained"
               onClick={redirectToKakaoLogin} // 카카오 로그인 함수 추가

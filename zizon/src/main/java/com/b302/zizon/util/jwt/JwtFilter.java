@@ -31,13 +31,15 @@ public class JwtFilter extends OncePerRequestFilter { // 모든 요청에 대해
     @Override // 이 주소로 오는 건 토큰 없어도 됨.
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        return path.startsWith("/api/oauth/login") || path.startsWith("/login/**") || path.startsWith("/oauth2/**");
+        return path.startsWith("/api/oauth/login") || path.startsWith("/login/") || path.startsWith("/api/oauth2/authorization/") ||
+                path.startsWith("/api/login/oauth2/");
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+
         log.info("authorization : {}", authorization);
 
         // 토큰이 없거나 Bearer로 시작하지 않는 경우

@@ -1,29 +1,116 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import NavBar from "../../component/Common/Navbar";
-import { musicDummyData } from "./MusicDummy";
+// import { musicDummyData } from "./MusicDummy";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AddCircleOutline from "@mui/icons-material/AddCircleOutline";
 import styles from "./MyMusicPlayer.module.css";
 import SearchModal from "../../component/Common/SearchMusicModal";
 import DeleteModal from "../../component/MyPage/DeleteModal";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
+import SkipNextIcon from "@mui/icons-material/SkipNext";
+import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
+import Button from "@mui/material/Button";
+import { useLocation } from "react-router-dom";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import axios from "axios";
+import YouTube from "react-youtube";
+import Swal from "sweetalert2";
+import 흥애 from "../../resources/흥애.png";
 
-type MyMusicPlayerProps = {};
+type YouTubePlayer = {
+  getCurrentTime: () => number;
+  getDuration: () => number;
+  seekTo: (seconds: number, allowSeekAhead?: boolean) => void;
+  playVideo: () => void;
+  pauseVideo: () => void;
+};
+
+type MusicInfo = {
+  musicId: number;
+  title: string;
+  artist: string;
+  duration: number;
+  albumCoverUrl: string;
+  youtubeVideoId: string;
+};
+
+type ApiResponse = {
+  musicInfo: MusicInfo[];
+};
 
 export const MyMusicPlayer = () => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const [musicData, setMusicData] = useState<MusicInfo[]>([]);
+
+  const location = useLocation();
+  //받아와야함
+  const playlistMetaId = location.state?.playlistMetaId;
+
+  const [refreshKey, setRefreshKey] = useState(false);
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.src = musicDummyData[currentTrackIndex].musicSrc; // 노래 소스 업데이트
-      audioRef.current.play();
+    if (playlistMetaId) {
+      requestWithTokenRefresh(() => {
+        return axios.get(
+          `http://localhost:8080/api/playlist/${playlistMetaId}`,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+            withCredentials: true,
+          }
+        );
+      })
+        .then((response) => {
+          // 이부분 message 안뜸
+          if (response.data) {
+            setMusicData(response.data);
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "보관함에 노래가 없습니다!",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            setMusicData([]);
+          }
+        })
+        .catch((error) => {
+          console.error("axios 에러", error);
+        });
+    } else {
+      requestWithTokenRefresh(() => {
+        return axios.get("http://localhost:8080/api/my-musicbox/info", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        });
+      })
+        .then((response) => {
+          if (response.data.message === "보관함에 노래가 없습니다.") {
+            Swal.fire({
+              icon: "error",
+              title: "보관함에 노래가 없습니다!",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            setMusicData([]);
+          } else {
+            setMusicData(response.data.musicInfo);
+          }
+        })
+        .catch((error) => {
+          console.error("axios 에러", error);
+        });
     }
-  }, [currentTrackIndex]);
+  }, [playlistMetaId, refreshKey]);
 
   const handleSongEnd = () => {
-    if (currentTrackIndex < musicDummyData.length - 1) {
-      setCurrentTrackIndex(prevIndex => prevIndex + 1);
+    if (currentTrackIndex < musicData.length - 1) {
+      setCurrentTrackIndex((prevIndex) => prevIndex + 1);
     } else {
       setCurrentTrackIndex(0);
     }
@@ -47,15 +134,111 @@ export const MyMusicPlayer = () => {
     setIsDeleteModalOpen(false);
   };
 
+  const [isPlaying, setIsPlaying] = useState(true); // 현재 재생 상태를 저장
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  console.log(currentTime);
+  const [duration, setDuration] = useState<number>(0);
+  const [player, setPlayer] = useState<any>(null);
+  const [deletingMusicId, setDeletingMusicId] = useState<number | null>(null);
+  const [isButtonEnabled, setIsButtonEnabled] = useState(false);
+
+  const togglePlay = () => {
+    if (isPlaying) {
+      player.pauseVideo(); // YouTube 동영상 일시정지
+    } else {
+      player.playVideo(); // YouTube 동영상 재생
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const skipToNext = () => {
+    handleSongEnd();
+  };
+
+  const skipToPrevious = () => {
+    if (currentTrackIndex === 0) {
+      setCurrentTrackIndex(musicData.length - 1);
+    } else {
+      setCurrentTrackIndex(currentTrackIndex - 1);
+    }
+  };
+
+  const opts = {
+    height: "0",
+    width: "0",
+    playerVars: {
+      autoplay: isPlaying ? 1 : 0,
+    },
+  };
+
+  const handleProgressBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!player) return;
+
+    // 클릭한 위치의 X 좌표
+    const clickX = e.nativeEvent.offsetX;
+    // 프로그레스 바의 전체 너비
+    const width = e.currentTarget.offsetWidth;
+
+    // 클릭한 위치의 비율
+    const clickRatio = clickX / width;
+    // 새로운 재생 위치 (초 단위)
+    const newTime = clickRatio * duration;
+
+    // YouTube 동영상의 재생 위치를 변경
+    player.seekTo(newTime);
+  };
+
+  const onPlayerReady = (event: { target: YouTubePlayer }) => {
+    setPlayer(event.target);
+  };
+  useEffect(() => {
+    // 버튼을 잠시 비활성화
+    setIsButtonEnabled(false);
+
+    // 1.5초 후 버튼을 활성화
+    const timer = setTimeout(() => {
+      setIsButtonEnabled(true);
+    }, 1500);
+
+    // 컴포넌트 unmount 혹은 effect가 재실행될 때 타이머를 클리어해주는 작업
+    return () => clearTimeout(timer);
+  }, [currentTrackIndex]);
+
+  const updateProgress = () => {
+    if (player) {
+      const newCurrentTime = player.getCurrentTime();
+      setCurrentTime(newCurrentTime);
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(updateProgress, 1000);
+    return () => clearInterval(interval);
+  }, [player]);
+
+  const handleDeleteIconClick = (musicId: number) => {
+    setDeletingMusicId(musicId);
+    handleDeleteModalOpen();
+  };
+
   return (
     <div className={styles.root}>
       <NavBar />
       <div className={styles.container}>
         <div className={styles.songDisplayContainer}>
           <div className={styles.coverImageContainer}>
+            {/* 이부분 노래가 아무것도 없을때 기본 이미지 설정 가능 */}
             <img
-              src={musicDummyData[currentTrackIndex].cover}
-              alt={musicDummyData[currentTrackIndex].title}
+              src={
+                musicData.length === 0
+                  ? 흥애
+                  : musicData[currentTrackIndex]?.albumCoverUrl
+              }
+              alt={
+                musicData.length === 0
+                  ? "흥애"
+                  : musicData[currentTrackIndex]?.title
+              }
               className={styles.coverImage}
             />
           </div>
@@ -68,7 +251,7 @@ export const MyMusicPlayer = () => {
               />
             </div>
             <div className={styles.songList}>
-              {musicDummyData.map((song, index) => (
+              {musicData.map((song, index) => (
                 <div
                   key={index}
                   className={`${styles.playlistItem} ${
@@ -76,7 +259,7 @@ export const MyMusicPlayer = () => {
                   }`}
                 >
                   <img
-                    src={song.cover}
+                    src={song.albumCoverUrl}
                     alt={song.title}
                     className={styles.albumImage}
                   />
@@ -91,13 +274,13 @@ export const MyMusicPlayer = () => {
                   <div className={styles.songLength}>
                     <DeleteOutlineIcon
                       className={styles.deleteIcon}
-                      onClick={event => {
-                        event.stopPropagation(); // 이 줄을 추가하세요
-                        handleDeleteModalOpen();
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        handleDeleteIconClick(song.musicId); // pass the song ID to be deleted
                       }}
                     />
-                    {Math.floor(song.length / 60000)}:
-                    {String((song.length % 60000) / 1000).padStart(2, "0")}
+                    {Math.floor(song.duration / 60000)}:
+                    {String((song.duration % 60000) / 1000).padStart(2, "0")}
                   </div>
                 </div>
               ))}
@@ -105,18 +288,79 @@ export const MyMusicPlayer = () => {
           </div>
         </div>
         <div className={styles.audioContainer}>
-          <audio ref={audioRef} onEnded={handleSongEnd} controls>
-            <source type="audio/mp3" />
-          </audio>
+          {/* 오디오 태그에 이벤트 핸들러 추가 */}
+          <YouTube
+            videoId={musicData[currentTrackIndex]?.youtubeVideoId}
+            opts={opts}
+            onEnd={handleSongEnd}
+            onReady={onPlayerReady}
+            onStateChange={(event) => {
+              if (player) {
+                setCurrentTime(player.getCurrentTime());
+                setDuration(player.getDuration());
+              }
+
+              if (event.data === YouTube.PlayerState.PLAYING) {
+                setIsPlaying(true);
+              } else if (event.data === YouTube.PlayerState.PAUSED) {
+                setIsPlaying(false);
+              }
+            }}
+          />
+          {/* 커스텀 오디오 컨트롤러 */}
+          <div className={styles.audioControls}>
+            <Button
+              onClick={skipToPrevious}
+              color="primary"
+              variant="outlined"
+              disabled={!isButtonEnabled}
+            >
+              <SkipPreviousIcon />
+            </Button>
+            <Button
+              onClick={togglePlay}
+              color="primary"
+              variant="outlined"
+              disabled={!isButtonEnabled}
+            >
+              {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+            </Button>
+            <Button
+              onClick={skipToNext}
+              color="primary"
+              variant="outlined"
+              disabled={!isButtonEnabled}
+            >
+              <SkipNextIcon />
+            </Button>
+            <div
+              className={styles.progressBar}
+              onClick={handleProgressBarClick}
+            >
+              <div
+                className={styles.progress}
+                style={{ width: `${(currentTime / duration) * 100}%` }}
+              />
+            </div>
+            <span>
+              {Math.floor(currentTime / 60)}:
+              {String(Math.floor(currentTime % 60)).padStart(2, "0")}
+            </span>
+          </div>
         </div>
       </div>
       <SearchModal
         isOpen={isSearchModalOpen}
         onClose={handleSearchModalClose} // 모달 바깥쪽을 클릭하면 모달을 닫는다.
+        playlistId={playlistMetaId}
+        setRefreshKey={() => setRefreshKey((prev) => !prev)}
       />
       <DeleteModal
         isOpen={isDeleteModalOpen}
         onClose={handleDeleteModalClose} // 모달 바깥쪽을 클릭하면 모달을 닫는다.
+        musicId={deletingMusicId}
+        playlistId={playlistMetaId}
+        setRefreshKey={() => setRefreshKey((prev) => !prev)}
       />
     </div>
   );
