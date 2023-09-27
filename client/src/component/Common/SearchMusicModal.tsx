@@ -19,6 +19,7 @@ type SearchModalProps = {
   isOpen: boolean;
   onClose: () => void;
   setRefreshKey?: () => void;
+  playlistId?: number;
 };
 
 type MusucType = {
@@ -33,6 +34,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
   isOpen,
   onClose,
   setRefreshKey,
+  playlistId,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<MusucType[]>([]); //검색 관리 state
@@ -107,20 +109,87 @@ const SearchModal: React.FC<SearchModalProps> = ({
     })
       .then((response) => {
         setIsAddLoading(false);
-
         if (response.data.message === "이미 보관함에 추가된 노래입니다.") {
           setOpen(false);
           setAlertMessage("이미 보관함에 추가된 노래입니다.");
           setIsAlertOpen(true);
+          console.log(response.data.musicId);
+          console.log(playlistId);
+          if (response.data.musicId && playlistId) {
+            requestWithTokenRefresh(() => {
+              return axios
+                .post(
+                  "http://localhost:8080/api/playlist/music",
+                  {
+                    playlistMetaId: playlistId,
+                    musicId: response.data.musicId,
+                  },
+                  {
+                    headers: {
+                      Authorization:
+                        "Bearer " + localStorage.getItem("accessToken"),
+                    },
+                    withCredentials: true,
+                  }
+                )
+                .then((response) => {
+                  if (
+                    response.data.message ===
+                    "이미 플레이리스트에 추가된 음악입니다."
+                  ) {
+                    alert("이미 플레이리스트에 추가된 음악입니다.!");
+                  } else {
+                    alert("현재 플레이 리스트에 음악이 추가되었습니다.!");
+                    if (setRefreshKey) {
+                      setRefreshKey();
+                    }
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error adding music to playlist", error);
+                });
+            });
+          }
         } else if (response.data.code === 204) {
           setOpen(false);
           setAlertMessage(response.data.message);
           setIsAlertOpen(true);
         } else {
           setOpen(true);
-          console.log(setRefreshKey);
-          if (setRefreshKey) {
-            setRefreshKey();
+          if (response.data.musicId && playlistId) {
+            requestWithTokenRefresh(() => {
+              return axios
+                .post(
+                  "http://localhost:8080/api/playlist/music",
+                  {
+                    playlistMetaId: playlistId,
+                    musicId: response.data.musicId,
+                  },
+                  {
+                    headers: {
+                      Authorization:
+                        "Bearer " + localStorage.getItem("accessToken"),
+                    },
+                    withCredentials: true,
+                  }
+                )
+                .then((response) => {
+                  if (
+                    response.data.message ===
+                    "이미 플레이리스트에 추가된 음악입니다."
+                  ) {
+                    alert("이미 플레이리스트에 추가된 음악입니다.!");
+                  } else {
+                    alert("현재 플레이 리스트에 음악이 추가되었습니다.!");
+                    if (setRefreshKey) {
+                      setRefreshKey();
+                    }
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error adding music to playlist", error);
+                });
+            });
           }
         }
       })
