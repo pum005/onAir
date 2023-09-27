@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./ChatModal.module.css";
 import { RootState } from "../../store";
 import { useSelector, useDispatch } from "react-redux";
@@ -34,6 +34,14 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
     setMessage("");
   };
 
+  const chatMessagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (chatMessagesEndRef.current) {
+      chatMessagesEndRef.current.scrollIntoView({ behavior: "smooth" }); // 스크롤을 맨 아래로 이동시킵니다.
+    }
+  }, [messages]);
+
   return (
     <div className={isOpen ? styles.modal : `${styles.modal} ${styles.closed}`}>
       <button className={styles.closeButton} onClick={onClose}>
@@ -41,13 +49,22 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
       </button>
       <h2 className={styles.chatHeader}>대화방</h2>
       <div className={styles.chatMessages}>
-        {messages.map((msg, index) => (
-          <div key={index} className={styles.chatMessage}>
-            <img src={msg.senderImage} alt={msg.sender} />
-            <span className={styles.username}>{msg.sender}</span>:
-            <span className={styles.message_content}>{msg.content}</span>
-          </div>
-        ))}
+        {messages.map((msg, index) => {
+          const isCurrentUser = msg.sender === nickname;
+          return (
+            <div
+              key={index}
+              className={`${styles.chatMessage} ${
+                isCurrentUser ? styles.sent : styles.received
+              }`}
+            >
+              <img src={msg.senderImage} alt={msg.sender} />
+              <span className={styles.username}>{msg.sender}</span>
+              <span className={styles.message_content}>{msg.content}</span>
+            </div>
+          );
+        })}
+        <div ref={chatMessagesEndRef}></div>
       </div>
       <div className={styles.chatInputContainer}>
         <input
