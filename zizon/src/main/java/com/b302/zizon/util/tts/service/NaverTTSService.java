@@ -44,9 +44,7 @@ public class NaverTTSService {
             String postParams = String.format("speaker=%s&volume=0&speed=0&pitch=0&format=mp3&text=%s", speaker, encodedText);
             sendPostRequest(con, postParams);
 
-
             int responseCode = con.getResponseCode();
-
 
             if(responseCode == 200) { // 정상 호출
                 generatedFile = writeToFile(con.getInputStream());
@@ -56,10 +54,18 @@ public class NaverTTSService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         FileItem fileItem = convertToFileItem(generatedFile);
-        MultipartFile  generatedFileConverted = new CommonsMultipartFile(fileItem);
-        return s3UploadService.fileSaveFile(generatedFileConverted);
+        MultipartFile generatedFileConverted = new CommonsMultipartFile(fileItem);
+        String s3Url = s3UploadService.fileSaveFile(generatedFileConverted);
+
+        if (generatedFile != null && generatedFile.exists()) {
+            generatedFile.delete();
+        }
+
+        return s3Url;
     }
+
 
     private HttpURLConnection setupConnection(String apiURL) throws IOException {
         URL url = new URL(apiURL);
