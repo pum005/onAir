@@ -195,10 +195,10 @@ export const MyMusicPlayer = () => {
     // 버튼을 잠시 비활성화
     setIsButtonEnabled(false);
 
-    // 0.5초 후 버튼을 활성화
+    // 1.5초 후 버튼을 활성화
     const timer = setTimeout(() => {
       setIsButtonEnabled(true);
-    }, 1000);
+    }, 1500);
 
     // 컴포넌트 unmount 혹은 effect가 재실행될 때 타이머를 클리어해주는 작업
     return () => clearTimeout(timer);
@@ -352,6 +352,7 @@ export const MyMusicPlayer = () => {
       <SearchModal
         isOpen={isSearchModalOpen}
         onClose={handleSearchModalClose} // 모달 바깥쪽을 클릭하면 모달을 닫는다.
+        playlistId={playlistMetaId}
         setRefreshKey={() => setRefreshKey((prev) => !prev)}
       />
       <DeleteModal
