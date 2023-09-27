@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -27,8 +28,10 @@ public class NaverTTSService {
 
 
     private final S3UploadService s3UploadService;
-    private static final String CLIENT_ID = "0u1rkuoto7";
-    private static final String CLIENT_SECRET = "1PkYCPatyIVR0FVZifbnLrPDL5dknQVCE5svhn0E";
+    @Value("${tts.client-id}")
+    private String CLIENT_ID;
+    @Value("${tts.client-secret}")
+    private String CLIENT_SECRET;
     private static final String API_URL = "https://naveropenapi.apigw.ntruss.com/tts-premium/v1/tts";
 
 
