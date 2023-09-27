@@ -40,12 +40,8 @@ export default function LoginModal({ open, handleOpen, handleClose }: any) {
       >
         <Fade in={open}>
           <Box className={styles.modalContent}>
-            <img
-              src="images/tempLogo.png"
-              alt="tempLogo"
-              className={styles.tempLogo}
-            />
-            <h2 className={styles.modalTitle}>나만의 플레이리스트 onAIr</h2>
+            <img src="onAIr.png" alt="Logo" className={styles.tempLogo} />
+            <h2 className={styles.modalTitle}>로그인</h2>
             <Button
               variant="contained"
               onClick={redirectToKakaoLogin} // 카카오 로그인 함수 추가

@@ -6,6 +6,7 @@ import { DeleteConfirm } from "./DeleteConfirmModal";
 import React from "react";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import styles from "./DeleteModal.module.css";
 
 type DeleteModalProps = {
   isOpen: boolean;
@@ -131,25 +132,14 @@ function DeleteModal({
 
   return (
     <>
-      <Modal open={isOpen} onClose={onClose}>
-        <Box
-          sx={{
-            position: "absolute",
-            width: 400,
-            backgroundColor: "white",
-            borderRadius: 2, // 모서리 둥글게
-            boxShadow: 3, // 그림자 효과
-            p: 3,
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        >
+      <Modal open={isOpen} onClose={onClose} className={styles.modalContainer}>
+        <Box className={styles.modalBox}>
           <Typography
             id="modal-modal-title"
             variant="h6"
             component="h2"
             marginBottom={2}
+            className={styles.modalTypography}
           >
             삭제하시겠습니까 ?
           </Typography>
@@ -160,14 +150,13 @@ function DeleteModal({
               gap: 2,
             }}
           >
-            {/* 아래의 버튼에 스타일을 추가하였습니다. */}
-            <Button variant="outlined" color="primary" onClick={onClose}>
+            <Button variant="outlined" onClick={onClose} className={styles.modalButton}>
               취소
             </Button>
             <Button
               variant="contained"
-              color="secondary"
               onClick={handleDelete}
+              className={styles.modalButton}
             >
               삭제
             </Button>
