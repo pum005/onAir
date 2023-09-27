@@ -79,5 +79,13 @@
             this.lastLoginDate = LocalDateTime.now();
         }
 
+        public void updateAccessToken(String accessToken){
+            this.accessToken = accessToken;
+        }
+
+        public void updatePrivateAccessToken(String privateAccessToken){
+            this.privateAccess = privateAccessToken;
+        }
+
 
     }
