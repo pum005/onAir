@@ -48,6 +48,7 @@ public class OncastService {
     private final OncastCreateDataRepository oncastCreateDataRepository;
     private final GetUser getUser;
     private final LiveQueueRepository liveQueueRepository;
+    private final CallFlaskService callFlaskService;
 
     // 음악dto 변환
     private GetMusicDTO convertToDTO(Music music) {
@@ -85,7 +86,7 @@ public class OncastService {
 
 
         // 음악 추천받는 로직
-        Music[] oncastMusic = new Music[3];
+        Music[] oncastMusic = callFlaskService.getMusicData(request.getStory(),request.getTheme());
 
 
 
