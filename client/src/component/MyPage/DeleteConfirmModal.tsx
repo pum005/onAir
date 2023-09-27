@@ -5,6 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
+import styles from "./DeleteConfirmModal.module.css";
 
 type DeleteConfirmProps = {
   show: boolean;
@@ -21,18 +22,20 @@ export const DeleteConfirm: React.FC<DeleteConfirmProps> = ({
       onClose={onClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      PaperProps={{
+        className: styles.dialogContent,
+      }}
     >
-      <DialogTitle id="alert-dialog-title">{"삭제 완료"}</DialogTitle>
+      <DialogTitle id="alert-dialog-title" className={styles.dialogTitle}>
+        {"삭제 완료"}
+      </DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          삭제가 완료되었습니다!
-        </DialogContentText>
+        <DialogActions className={styles.dialogActions}>
+          <Button onClick={onClose} className={styles.dialogButton}>
+            확인
+          </Button>
+        </DialogActions>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="primary">
-          확인
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 };
