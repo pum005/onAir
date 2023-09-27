@@ -39,3 +39,6 @@
 .selectNone {
   user-select: none;
 }
+.textRed {
+  color: red;
+}
