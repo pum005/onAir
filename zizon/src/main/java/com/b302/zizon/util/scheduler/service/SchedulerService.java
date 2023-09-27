@@ -22,7 +22,7 @@ public class SchedulerService {
     private final LiveQueueRepository liveQueueRepository;
 
     // 채택하기 라이브큐
-    @Scheduled(cron = "0 49 13 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 35 09 * * *", zone = "Asia/Seoul")
     @Transactional
     public void selectedOncast(){
         log.info("라이브큐 채택 스케줄러 동작");
