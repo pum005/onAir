@@ -148,15 +148,17 @@ public class MusicService {
         if(!bySpotifyId.isEmpty()){
             Optional<MyMusicBox> byMusicMusicIdAndUserUserId = myMusicBoxRepository.findByMusicMusicIdAndUserUserId(bySpotifyId.get().getMusicId(), user.getUserId());
             // 이미 노래가 보관함에 있으면
+            Music music = bySpotifyId.get();
             if(!byMusicMusicIdAndUserUserId.isEmpty()){
                 out.put("message", "이미 보관함에 추가된 노래입니다.");
+                out.put("musicId", music.getMusicId());
             }else{
                 MyMusicBox build = MyMusicBox.builder()
                         .user(user)
                         .music(bySpotifyId.get()).build();
 
                 myMusicBoxRepository.save(build);
-                Music music = bySpotifyId.get();
+
 
                 out.put("message", "보관함에 음악 추가 성공");
                 out.put("musicId", music.getMusicId());
@@ -251,6 +253,7 @@ public class MusicService {
                 myMusicBoxRepository.save(myMusicBox);
             }else{
                 out.put("message", "이미 보관함에 추가된 노래입니다.");
+                out.put("musicId", savedMusic.getMusicId());
                 return out;
             }
 
