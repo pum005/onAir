@@ -71,8 +71,10 @@
   border: 1px solid white;
   border-radius: 4px;
   resize: none; /* textarea 크기 조절 방지 */
-
   transition: border 0.2s ease-in-out;
+}
+.storyInput {
+  height: 70px;
 }
 .titleInput:hover,
 .storyInput:hover {

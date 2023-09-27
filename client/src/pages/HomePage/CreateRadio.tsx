@@ -5,8 +5,10 @@ import { useDispatch } from "react-redux";
 import styles from "./CreateRadio.module.css";
 import { resetIndices, setMusicInfo, setRadioDummyData } from "../../store";
 import DJSelector from "../../component/Radio/DJSelector";
+import ThemeSelector from "../../component/Radio/ThemeSelector";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
+import Tooltip from "@mui/material/Tooltip";
 
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import {
@@ -109,35 +111,10 @@ const CreateRadio = () => {
                 </Typography>
               </Grid>
               <Grid item xs={10} className={styles.themeSelect}>
-                {[
-                  "JOYFUL",
-                  "SENSITIVE",
-                  "HOPEFUL",
-                  "CHILL",
-                  "AGGRESSIVE",
-                  "ROMANTIC",
-                  "RETRO",
-                  "DRAMATIC",
-                  "FUNKY",
-                  "EXOTIC",
-                  "ACOUSTIC",
-                  "NOSTALGIC",
-                  "DREAMY",
-                  "UPBEAT",
-                  "ENERGETIC",
-                  "MELANCHOLY",
-                  "SAD",
-                ].map((theme) => (
-                  <Button
-                    key={theme}
-                    onClick={() => handleThemeSelect(theme)}
-                    className={`${styles.theme} ${
-                      theme === selectedTheme ? styles.selectedTheme : ""
-                    }`}
-                  >
-                    {theme}
-                  </Button>
-                ))}
+                <ThemeSelector
+                  selectedTheme={selectedTheme}
+                  onThemeSelect={handleThemeSelect}
+                />
               </Grid>
             </Grid>
 
@@ -159,7 +136,7 @@ const CreateRadio = () => {
                     setContent(e.target.value);
                     setContentLength(e.target.value.length);
                   }}
-                  className={styles.titleInput}
+                  className={styles.storyInput}
                 />
                 <div
                   className={styles.typingLimit}
@@ -173,7 +150,7 @@ const CreateRadio = () => {
                   DJ
                 </Typography>
               </Grid>
-              <Grid item xs={10} style={{userSelect: "none"}}>
+              <Grid item xs={10} style={{ userSelect: "none" }}>
                 <DJSelector onSelect={handlDJSelect} />
               </Grid>
             </Grid>
