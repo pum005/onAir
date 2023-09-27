@@ -21,17 +21,27 @@ export type MusicData = {
   };
 };
 
-// socket.atom.ts
+export type ChatData = {
+  sender: string;
+  senderImage: string;
+  content: string;
+};
 
-export const socketConnection = async (
-  onDataReceived: (data: MusicData) => void
+export const socketConnection = (
+  onDataReceived: (data: MusicData) => void,
+  onChatReceived: (data: ChatData) => void
 ) => {
   let stompClient = socketManager.connect();
 
   stompClient.onConnect = () => {
     stompClient.subscribe("/topic", message => {
       let receivedData = JSON.parse(message.body);
-      onDataReceived(receivedData);
+
+      if (receivedData.sender && receivedData.content) {
+        onChatReceived(receivedData);
+      } else {
+        onDataReceived(receivedData);
+      }
     });
 
     stompClient.subscribe("/user/queue", message => {
@@ -43,7 +53,6 @@ export const socketConnection = async (
   };
 };
 
-// 데이터 전송
 export const sendData = async (api: string, data: object) => {
   let stompClient = socketManager.connect();
   if (stompClient && stompClient.connected) {

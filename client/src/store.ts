@@ -1,4 +1,11 @@
-import { configureStore, createAction, createReducer } from "@reduxjs/toolkit";
+import {
+  combineReducers,
+  configureStore,
+  createAction,
+  createReducer,
+} from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 // 1. Action 생성
 
@@ -262,5 +269,4 @@ const store = configureStore({
 // RootState 타입을 정의합니다. 이 타입은 스토어의 전체 상태의 타입을 나타냅니다.
 export type RootState = ReturnType<typeof store.getState>;
 
-// 설정된 스토어를 내보냅니다. 이 스토어는 애플리케이션 전체에서 사용됩니다.
 export default store;

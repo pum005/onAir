@@ -80,4 +80,16 @@
   height: 40px;
   border-radius: 20px;
   margin-right: 10px;
+  object-fit: cover; /* 이미지의 비율을 유지하면서 컨테이너에 맞게 조정 */
+}
+
+/* 사용자 닉네임 스타일 */
+.chatMessage .username {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.message_content {
+  flex: 1;
+  word-wrap: break-word; /* 긴 텍스트가 있을 경우 줄 바꿈 */
 }

@@ -21,15 +21,6 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
   );
 
   const [message, setMessage] = useState<string>("");
-  //   const [messages, setMessages] = useState<
-  //     Array<{ content: string; sender: string; senderImage: string }>
-  //   >([]);
-
-  //   useEffect(() => {
-  //     socketConnection(data => {
-  //       console.log("Received data in ChatModal:", data);
-  //     }, dispatch); // dispatch를 파라미터로 전달
-  //   }, []);
 
   const clickSubmit = () => {
     if (!message) return;
@@ -39,15 +30,6 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
       sender: nickname,
       senderImage: profileImage,
     });
-
-    // 새로운 메시지를 Redux 스토어에 저장합니다.
-    dispatch(
-      addChatMessage({
-        content: message,
-        sender: nickname,
-        senderImage: profileImage,
-      })
-    );
 
     setMessage("");
   };
@@ -60,9 +42,10 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
       <h2 className={styles.chatHeader}>대화방</h2>
       <div className={styles.chatMessages}>
         {messages.map((msg, index) => (
-          <div key={index}>
+          <div key={index} className={styles.chatMessage}>
             <img src={msg.senderImage} alt={msg.sender} />
-            <strong>{msg.sender}</strong>: {msg.content}
+            <span className={styles.username}>{msg.sender}</span>:
+            <span className={styles.message_content}>{msg.content}</span>
           </div>
         ))}
       </div>
@@ -73,6 +56,11 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
           className={styles.chatInput}
           value={message}
           onChange={e => setMessage(e.target.value)}
+          onKeyPress={e => {
+            if (e.key === "Enter") {
+              clickSubmit();
+            }
+          }}
         />
         <button className={styles.chatButton} onClick={clickSubmit}>
           전송

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -27,8 +28,10 @@ public class NaverTTSService {
 
 
     private final S3UploadService s3UploadService;
-    private static final String CLIENT_ID = "0u1rkuoto7";
-    private static final String CLIENT_SECRET = "1PkYCPatyIVR0FVZifbnLrPDL5dknQVCE5svhn0E";
+    @Value("${tts.client-id}")
+    private String CLIENT_ID;
+    @Value("${tts.client-secret}")
+    private String CLIENT_SECRET;
     private static final String API_URL = "https://naveropenapi.apigw.ntruss.com/tts-premium/v1/tts";
 
 
@@ -41,9 +44,7 @@ public class NaverTTSService {
             String postParams = String.format("speaker=%s&volume=0&speed=0&pitch=0&format=mp3&text=%s", speaker, encodedText);
             sendPostRequest(con, postParams);
 
-
             int responseCode = con.getResponseCode();
-
 
             if(responseCode == 200) { // 정상 호출
                 generatedFile = writeToFile(con.getInputStream());
@@ -53,10 +54,18 @@ public class NaverTTSService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         FileItem fileItem = convertToFileItem(generatedFile);
-        MultipartFile  generatedFileConverted = new CommonsMultipartFile(fileItem);
-        return s3UploadService.fileSaveFile(generatedFileConverted);
+        MultipartFile generatedFileConverted = new CommonsMultipartFile(fileItem);
+        String s3Url = s3UploadService.fileSaveFile(generatedFileConverted);
+
+        if (generatedFile != null && generatedFile.exists()) {
+            generatedFile.delete();
+        }
+
+        return s3Url;
     }
+
 
     private HttpURLConnection setupConnection(String apiURL) throws IOException {
         URL url = new URL(apiURL);

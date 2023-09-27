@@ -1,7 +1,6 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import store from "./store";
 
 import CreateRadio from "./pages/HomePage/CreateRadio";
 import { Home } from "./pages/HomePage/Home";
@@ -16,6 +15,8 @@ import { MyMusicPlayer } from "./pages/PlayerPage/MyMusicPlayer";
 import { Player } from "./pages/PlayerPage/Player";
 
 import Success from "./utils/Success";
+
+import store from "./store";
 function App() {
   return (
     <div className="App">
@@ -30,8 +31,6 @@ function App() {
             <Route path="/Loading" element={<Loading />} />
             <Route path="/LivePlayer" element={<LivePlayer />} />
             <Route path="/Player" element={<Player />} />
-            {/* <Route path="/MusicPlayer" element={<MusicPlayer />} />
-            <Route path="/RadioPlayer" element={<RadioPlayer />} /> */}
             <Route path="/MyMusicPlayer" element={<MyMusicPlayer />} />
 
             <Route path="/Success" element={<Success />} />
