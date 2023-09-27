@@ -116,9 +116,9 @@ public class RadioService {
         String musicOneId = findOnCast.getMusic1().getYoutubeVideoId();
         String musicTwoId = findOnCast.getMusic2().getYoutubeVideoId();
         String musicThreeId = findOnCast.getMusic3().getYoutubeVideoId();
-        int musicOneLength = millisecondsToRoundedSeconds(findOnCast.getMusic1().getDuration());
-        int musicTwoLength = millisecondsToRoundedSeconds(findOnCast.getMusic2().getDuration());
-        int musicThreeLength = millisecondsToRoundedSeconds(findOnCast.getMusic3().getDuration());
+        long musicOneLength = findOnCast.getMusic1().getDuration();
+        long musicTwoLength = findOnCast.getMusic2().getDuration();
+        long musicThreeLength = findOnCast.getMusic3().getDuration();
         String ttsOneScript = findOnCast.getScriptOne();
         String ttsTwoScript = findOnCast.getScriptTwo();
         String ttsThreeScript = findOnCast.getScriptThree();

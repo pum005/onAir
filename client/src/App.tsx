@@ -18,10 +18,8 @@ import OncastCreateComplete from "./pages/PlayerPage/OncastCreateComplete";
 
 import Success from "./utils/Success";
 
-// persist 관련 import
-
-import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./store";
+import { PersistGate } from "redux-persist/integration/react";
 
 function App() {
   return (
@@ -42,8 +40,6 @@ function App() {
               />
               <Route path="/LivePlayer" element={<LivePlayer />} />
               <Route path="/Player" element={<Player />} />
-              {/* <Route path="/MusicPlayer" element={<MusicPlayer />} />
-            <Route path="/RadioPlayer" element={<RadioPlayer />} /> */}
               <Route path="/MyMusicPlayer" element={<MyMusicPlayer />} />
 
               <Route path="/Success" element={<Success />} />
