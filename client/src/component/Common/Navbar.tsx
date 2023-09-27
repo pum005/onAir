@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LoginModal from "./LoginModal";
+import LogoutAlertModal from "./LogoutModal";
 import LoginIcon from "@mui/icons-material/Login";
 import Container from "@mui/material/Container";
 import AdbIcon from "@mui/icons-material/Adb";
@@ -16,6 +17,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import LoginAlertModal from "./NoLoginModal";
 import style from "./Navbar.module.css";
+import axios from "axios";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 
 function NavBar() {
   const navigate = useNavigate();
@@ -26,6 +29,10 @@ function NavBar() {
   const [loginAlertModalOpen, setLoginAlertModalOpen] = React.useState(false);
   const handleLoginAlertModalOpen = () => setLoginAlertModalOpen(true);
   const handleLoginAlertModalClose = () => setLoginAlertModalOpen(false);
+
+  const [logoutModalOpen, setLogoutModalOpen] = React.useState(false); // 2. 로그아웃 모달 관련 상태
+  const handleLogoutModalOpen = () => setLogoutModalOpen(true);
+  const handleLogoutModalClose = () => setLogoutModalOpen(false);
 
   const userData = useSelector((state: RootState) => state.user); // 사용자 정보를 Redux store에서 가져옵니다.
   const [userImage, setUserImage] = useState<null | FileList>(null); // 사용자가 업로드한 이미지
@@ -62,6 +69,29 @@ function NavBar() {
     });
   };
 
+  const handleConfirmLogout = () => {
+    requestWithTokenRefresh(() => {
+      return axios.post(
+        "http://localhost:8080/api/oauth/logout",
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        }
+      );
+    })
+      .then((response) => {
+        window.location.href = response.data.logoutUrl;
+        localStorage.removeItem("accessToken"); // 액세스 토큰 제거
+        handleLogoutModalClose();
+      })
+      .catch((error) => {
+        console.log("통신에러발생", error);
+      });
+  };
+
   const isLoggedIn = Boolean(localStorage.getItem("accessToken"));
 
   const renderUserIcon = () => {
@@ -78,6 +108,11 @@ function NavBar() {
               />
             </Button>
           </Link>
+          <Button onClick={handleLogoutModalOpen}>
+            <Typography variant="body1" style={{ color: "white" }}>
+              로그아웃
+            </Typography>
+          </Button>
           <h4 style={{ width: "135px", userSelect: "none" }}>
             환영합니다,
             <br />
@@ -87,27 +122,27 @@ function NavBar() {
       );
     } else {
       return (
-        <Button onClick={handleMyPageClick}>
-          <Link
-            to={isLoggedIn ? "/MyPage" : "#"}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              width: "110%",
-              height: "110%",
-              marginRight: "145px",
-            }}
-          >
-            <AccountCircleIcon
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Button onClick={handleMyPageClick}>
+            <Link
+              to="#"
               style={{
-                marginTop: "17px",
-                marginBottom: "17px",
-                fontSize: 35,
-                color: "white",
+                display: "flex",
+                alignItems: "center",
+                marginRight: "145px",
               }}
-            />
-          </Link>
-        </Button>
+            >
+              <AccountCircleIcon
+                style={{
+                  marginTop: "17px",
+                  marginBottom: "17px",
+                  fontSize: 35,
+                  color: "white",
+                }}
+              />
+            </Link>
+          </Button>
+        </div>
       );
     }
   };
@@ -185,6 +220,11 @@ function NavBar() {
         open={loginModalOpen}
         handleClose={handleLoginModalClose}
       ></LoginModal>
+      <LogoutAlertModal
+        open={logoutModalOpen}
+        handleClose={handleLogoutModalClose}
+        handleConfirmLogout={handleConfirmLogout}
+      />
     </>
   );
 }

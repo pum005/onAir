@@ -66,6 +66,8 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             // 최근 로그인 시간 갱신
             user = optionalUser.get();
             user.updateLastLoginDate();
+            user.updateAccessToken(accessToken);
+            user.updatePrivateAccessToken(encoder.encode(accessToken));
             userRepository.save(user);
         }
 
