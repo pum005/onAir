@@ -5,20 +5,18 @@ import com.b302.zizon.domain.user.dto.UserUpdateRequestDTO;
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.exception.UserNotFoundException;
 import com.b302.zizon.domain.user.repository.UserRepository;
-import com.b302.zizon.util.OAuthAPI.service.LogoutAPIService;
 import com.b302.zizon.util.S3.service.S3UploadService;
 import com.b302.zizon.util.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.ResponseCookie;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,14 +27,19 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String kakaoClientId;
+//    @Value("${kakao.logout-redirect-uri}")
+    private String kakaoLogoutRedirectUri = "http://localhost:8080/api/oauth/logout";
     @Value("${jwt.secret}")
     private String secretKey;
+
+    private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
     private final RedisTemplate<String, String> redisTemplate;
     private final S3UploadService s3UploadService;
     private final GetUser getUser;
-    private final LogoutAPIService logoutAPIService;
+
 
     // 소셜 로그인
     @Transactional
@@ -87,17 +90,27 @@ public class UserService {
         return result;
     }
 
+    // 소셜 로그아웃
+    public Map<String, Object> socialLogout(){
+
+        String logoutUrl = "https://kauth.kakao.com/oauth/logout";
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(logoutUrl)
+            .queryParam("client_id", kakaoClientId)
+            .queryParam("logout_redirect_uri", kakaoLogoutRedirectUri);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("logoutUrl", builder.toUriString());
+
+        return response;
+    }
 
     // 로그아웃
     @Transactional
-    public Map<String, Object> logout(){
+    public Map<String, Object> logout(HttpServletRequest request){
         User user = getUser.getUser();
 
         redisTemplate.delete(String.valueOf(user.getUserId()));
-
-        if(user.getAccountType().equals("kakao")){
-            logoutAPIService.kakaoUnlinkLogout(user.getAccessToken(), "logout");
-        }
 
         Map<String, Object> result = new HashMap<>();
         result.put("message", "로그아웃 성공");

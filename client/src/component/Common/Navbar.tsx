@@ -72,7 +72,7 @@ function NavBar() {
   const handleConfirmLogout = () => {
     requestWithTokenRefresh(() => {
       return axios.post(
-        "http://localhost:8080/api/oauth/logout",
+        "http://localhost:8080/api/oauth/logout/kakao",
         {},
         {
           headers: {
@@ -84,7 +84,7 @@ function NavBar() {
     })
       .then((response) => {
         window.location.href = response.data.logoutUrl;
-        localStorage.removeItem("accessToken"); // 액세스 토큰 제거
+        // localStorage.removeItem("accessToken"); // 액세스 토큰 제거
         handleLogoutModalClose();
       })
       .catch((error) => {
