@@ -156,8 +156,10 @@ public class MusicService {
                         .music(bySpotifyId.get()).build();
 
                 myMusicBoxRepository.save(build);
+                Music music = bySpotifyId.get();
 
                 out.put("message", "보관함에 음악 추가 성공");
+                out.put("musicId", music.getMusicId());
             }
             return out;
         }
@@ -236,7 +238,7 @@ public class MusicService {
             Long musicId = 0L;
             // 기존에 음악이 있는지 검사
 
-            musicRepository.save(build);
+            Music savedMusic = musicRepository.save(build);
 
             Optional<MyMusicBox> byMusicMusicId = myMusicBoxRepository.findByMusicMusicId(build.getMusicId());
 
@@ -253,6 +255,7 @@ public class MusicService {
             }
 
             out.put("message", "보관함에 음악 추가 성공");
+            out.put("musicId", savedMusic.getMusicId());
             return out;
 
         } catch (Exception e) {
