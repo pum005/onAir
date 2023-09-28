@@ -104,7 +104,7 @@
 
 @keyframes marquee {
   0%   { text-indent: 0%; }
-  100% { text-indent: -400%; }
+  100% { text-indent: -200%; }
 }
 
 .artistName {
