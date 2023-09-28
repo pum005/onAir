@@ -9,6 +9,8 @@ import com.b302.zizon.util.response.DataResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +39,7 @@ public class OAuth2Controller {
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;
 //    @Value("${kakao.logout-redirect-uri}")
-    private String kakaoLogoutRedirectUri = "http://localhost:3000";
+    private String kakaoLogoutRedirectUri = "http://localhost:8080/api/oauth/logout";
 
 
     private final UserRepository userRepository;
@@ -52,18 +55,24 @@ public class OAuth2Controller {
         return ResponseEntity.status(200).body(result);
     }
 
-    @PostMapping("oauth/logout")
-    public ResponseEntity<?> Logout(){
-        String logoutUrl = "https://kauth.kakao.com/oauth/logout";
+    // 소셜 로그아웃
+    @PostMapping("oauth/social/logout")
+    public ResponseEntity<?> LogoutKakao(HttpServletRequest request, HttpServletResponse response){
 
-    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(logoutUrl)
-        .queryParam("client_id", kakaoClientId)
-        .queryParam("logout_redirect_uri", kakaoLogoutRedirectUri);
-
-    Map<String, String> response = new HashMap<>();
-    response.put("logoutUrl", builder.toUriString());
-
-    return ResponseEntity.ok(response);
+        Map<String, Object> result = userService.socialLogout(request, response);
+        
+        return ResponseEntity.ok(result);
     }
 
+    // 우리 서비스 로그아웃
+    @GetMapping("oauth/logout")
+    public ResponseEntity<?> Logout(HttpServletRequest request, HttpServletResponse response){
+        System.out.println("들어옴");
+        Map<String, Object> result = userService.logout(request, response);
+        URI redirectUri = URI.create("http://localhost:3000");
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(redirectUri);
+
+        return new ResponseEntity<>(result, httpHeaders, HttpStatus.SEE_OTHER);
+    }
 }

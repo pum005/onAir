@@ -5,21 +5,24 @@ import com.b302.zizon.domain.user.dto.UserUpdateRequestDTO;
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.exception.UserNotFoundException;
 import com.b302.zizon.domain.user.repository.UserRepository;
-import com.b302.zizon.util.OAuthAPI.service.LogoutAPIService;
 import com.b302.zizon.util.S3.service.S3UploadService;
 import com.b302.zizon.util.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.ResponseCookie;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,22 +32,33 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String kakaoClientId;
+    //    @Value("${kakao.logout-redirect-uri}")
+    private String kakaoLogoutRedirectUri = "http://localhost:8080/api/oauth/logout";
     @Value("${jwt.secret}")
     private String secretKey;
+    @Value("${spring.security.oauth2.client.registration.naver.clientId}")
+    private String naverClientId;
+    @Value("${spring.security.oauth2.client.registration.naver.clientSecret}")
+    private String naverSecretId;
+
+    private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
     private final RedisTemplate<String, String> redisTemplate;
     private final S3UploadService s3UploadService;
     private final GetUser getUser;
-    private final LogoutAPIService logoutAPIService;
+    @Autowired
+    private RestTemplate restTemplate;
+
 
     // 소셜 로그인
     @Transactional
-    public Map<String, Object> oauthLogin(String privateAccess, HttpServletResponse response){
+    public Map<String, Object> oauthLogin(String privateAccess, HttpServletResponse response) {
 
         Optional<User> byPrivateAccess = userRepository.findByPrivateAccess(privateAccess);
 
-        if(byPrivateAccess.isEmpty()){
+        if (byPrivateAccess.isEmpty()) {
             throw new UserNotFoundException("해당 유저가 존재하지 않습니다.");
         }
 
@@ -55,7 +69,7 @@ public class UserService {
         String refreshToken = jwtUtil.createRefreshToken(secretKey, user); // 리프레시 토큰 발급해서 넘김
 
         // create a cookie
-        Cookie cookie = new Cookie("refreshToken",refreshToken);
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
 
         // expires in 7 days
         cookie.setMaxAge(14 * 24 * 60 * 60);
@@ -78,38 +92,76 @@ public class UserService {
         result.put("profileImage", user.getProfileImage());
         result.put("userId", user.getUserId());
 
-        if(user.getAccountType().equals("kakao")){
+        if (user.getAccountType().equals("kakao")) {
             result.put("message", "카카오 로그인 성공");
-        }else if(user.getAccountType().equals("naver")){
+        } else if (user.getAccountType().equals("naver")) {
             result.put("message", "네이버 로그인 성공");
         }
 
         return result;
     }
 
+    // 소셜 로그아웃
+    public Map<String, Object> socialLogout(HttpServletRequest request, HttpServletResponse response) {
+        User user = getUser.getUser();
+        Long userId = user.getUserId();
+
+        HttpSession session = request.getSession();
+        session.setAttribute("userId", userId);
+
+        Map<String, Object> result = new HashMap<>();
+
+        if (user.getAccountType().equals("kakao")) {
+
+            String logoutUrl = "https://kauth.kakao.com/oauth/logout";
+
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(logoutUrl)
+                    .queryParam("client_id", kakaoClientId)
+                    .queryParam("logout_redirect_uri", kakaoLogoutRedirectUri);
+
+            result.put("logoutUrl", builder.toUriString());
+        } else if (user.getAccountType().equals("naver")) {
+
+            String logoutUrl = "https://nid.naver.com/oauth2.0/token";
+
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(logoutUrl)
+                    .queryParam("client_id", naverClientId)
+                    .queryParam("service_provider", "NAVER")
+                    .queryParam("client_secret", naverSecretId)
+                    .queryParam("access_token", user.getAccessToken())
+                    .queryParam("grant_type", "delete");
+
+            ResponseEntity<String> res = restTemplate.exchange(builder.toUriString(), HttpMethod.DELETE, null, String.class);
+
+            clearCookies(request, response);
+            result.put("naver", "성공");
+
+            redisTemplate.delete(String.valueOf(userId));
+        }
+        return result;
+    }
 
     // 로그아웃
     @Transactional
-    public Map<String, Object> logout(){
-        User user = getUser.getUser();
+    public Map<String, Object> logout(HttpServletRequest request, HttpServletResponse response) {
 
-        redisTemplate.delete(String.valueOf(user.getUserId()));
+        // 세션에서 유저 ID 꺼내기
+        HttpSession session = request.getSession();
+        Long userId = (Long) session.getAttribute("userId");
 
-        if(user.getAccountType().equals("kakao")){
-            logoutAPIService.kakaoUnlinkLogout(user.getAccessToken(), "logout");
-        }
+        redisTemplate.delete(String.valueOf(userId));
 
         Map<String, Object> result = new HashMap<>();
         result.put("message", "로그아웃 성공");
 
-        System.out.println(result);
+        clearCookies(request, response);
 
         return result;
     }
 
     // 유저 닉네임 변경
     @Transactional
-    public Map<String, Object> userNicknameUpdate(UserUpdateRequestDTO userUpdateRequestDTO){
+    public Map<String, Object> userNicknameUpdate(UserUpdateRequestDTO userUpdateRequestDTO) {
         User user = getUser.getUser();
 
         user.updateNickname(userUpdateRequestDTO.getNickname());
@@ -121,7 +173,7 @@ public class UserService {
     }
 
     // 유저 닉네임 중복체크
-    public boolean userCheckNickname(String nickname){
+    public boolean userCheckNickname(String nickname) {
         User user = getUser.getUser();
 
         boolean flag = userRepository.existsByNickname(nickname);
@@ -146,5 +198,18 @@ public class UserService {
         return result;
     }
 
+    // 쿠키 날리기
+    private void clearCookies(HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                cookie.setMaxAge(0); // 쿠키의 유효 기간을 0으로 설정하여 즉시 만료시킵니다.
+                cookie.setValue(null);
+                cookie.setPath("/");
+                response.addCookie(cookie); // 무효화된 쿠키를 응답에 추가합니다.
+            }
+        }
 
+
+    }
 }
