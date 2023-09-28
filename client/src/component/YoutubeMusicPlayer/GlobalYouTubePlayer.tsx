@@ -36,7 +36,7 @@ export const GlobalYouTubePlayer = () => {
     height: "0",
     width: "0",
     playerVars: {
-      autoplay: isPlaying ? 1 : 0, // 자동재생 설정
+      autoplay: isPlaying ? 1 : 0, // 자동재생
     },
   };
 
