@@ -10,6 +10,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 import styles from "./GlobalYouTubePlayer.module.css";
 
+//파일 분리 완료
 type YouTubePlayer = {
   getCurrentTime: () => number;
   getDuration: () => number;
