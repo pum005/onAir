@@ -274,11 +274,11 @@ const SearchModal: React.FC<SearchModalProps> = ({
                       title={music.musicTitle}
                       onMouseOver={() => {
                         const titleEl = titleRefs.current[index];
-                        const detailsEl = titleEl?.parentElement; // 부모 요소인 musicDetails를 가져옵니다.
+                        const spanEl = titleEl?.querySelector("span"); // span 요소를 가져옵니다.
                         if (
+                          spanEl &&
                           titleEl &&
-                          detailsEl &&
-                          titleEl.scrollWidth > detailsEl.clientWidth
+                          spanEl.scrollWidth > titleEl.clientWidth
                         ) {
                           titleEl.classList.add("longTitle");
                         }
