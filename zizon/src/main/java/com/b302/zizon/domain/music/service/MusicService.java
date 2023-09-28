@@ -49,7 +49,6 @@ public class MusicService {
     private final GetUser getUser;
 
 
-
     // 스포티파이 액세스 가져오기
     private String getAccessToken() {
         RestTemplate restTemplate = new RestTemplate();
@@ -145,14 +144,14 @@ public class MusicService {
 
         // 음악 중복체크
         Optional<Music> bySpotifyId = musicRepository.findBySpotifyId(spotifyId);
-        if(!bySpotifyId.isEmpty()){
+        if (!bySpotifyId.isEmpty()) {
             Optional<MyMusicBox> byMusicMusicIdAndUserUserId = myMusicBoxRepository.findByMusicMusicIdAndUserUserId(bySpotifyId.get().getMusicId(), user.getUserId());
             // 이미 노래가 보관함에 있으면
             Music music = bySpotifyId.get();
-            if(!byMusicMusicIdAndUserUserId.isEmpty()){
+            if (!byMusicMusicIdAndUserUserId.isEmpty()) {
                 out.put("message", "이미 보관함에 추가된 노래입니다.");
                 out.put("musicId", music.getMusicId());
-            }else{
+            } else {
                 MyMusicBox build = MyMusicBox.builder()
                         .user(user)
                         .music(bySpotifyId.get()).build();
@@ -168,7 +167,7 @@ public class MusicService {
 
         YoutubeSearchResultDTO result = new YoutubeSearchResultDTO();
 
-        String query = title + " " + artist;
+        String query = title + " " + artist + "음원";
         YouTube.Search.List searchRequest;
         try {
             searchRequest = youtubeApi.search().list(Arrays.asList("id", "snippet"));
@@ -185,16 +184,25 @@ public class MusicService {
             long playTimeYoutube = 0L;
 
             BigInteger maxViews = BigInteger.ZERO;
+            int maxResultsToConsider = 5;
+            int resultsConsidered = 0;
 
             for (SearchResult searchResult : searchResults) {
+                if (resultsConsidered >= maxResultsToConsider) {
+                    break; // 상위 5개만 고려하도록 for 루프 종료
+                }
                 String musicYoutubeId = searchResult.getId().getVideoId();
                 String videoTitle = searchResult.getSnippet().getTitle().toLowerCase();
                 String videoDescription = searchResult.getSnippet().getDescription().toLowerCase();
 
                 // 커버, 팬메이드 등의 키워드가 제목이나 설명에 포함되면 건너뛴다.
                 if (videoTitle.contains("cover") || videoDescription.contains("cover") ||
-                        videoTitle.contains("fan-made") || videoDescription.contains("fan-made")
-                ){
+                        videoTitle.contains("fan-made") || videoDescription.contains("fan-made") ||
+                        videoTitle.contains("무대") || videoDescription.contains("무대") ||
+                        videoTitle.contains("live") || videoDescription.contains("live") ||
+                        videoTitle.contains("performance") || videoDescription.contains("performance") ||
+                        videoTitle.contains("MV") || videoDescription.contains("MV")
+                ) {
                     continue;
                 }
 
@@ -205,10 +213,10 @@ public class MusicService {
 
                 Video video = videoResponse.getItems().get(0);
 
-                // 재생 시간 검증 (+,- 3초)
+                // 재생 시간 검증 (+,- 10초)
                 long playTime = convertTime.convertDurationToMillis(
                         video.getContentDetails().getDuration());
-                if (Math.abs(spotifyMusicDuration - playTime) > 5000) {
+                if (Math.abs(spotifyMusicDuration - playTime) > 10000) {
                     continue;
                 }
                 playTimeYoutube = playTime;
@@ -221,13 +229,14 @@ public class MusicService {
                     result.setMusicYoutubeId(musicYoutubeId);
                     result.setMusicLength(playTimeYoutube);
                 }
+                 resultsConsidered++; // 고려한 결과 수 증가
             }
 
-                if (result.getMusicYoutubeId() == null) {
-                    out.put("code", 204);
-                    out.put("message", "조건에 맞는 영상을 찾을 수 없습니다.");
-                    return out;
-                }
+            if (result.getMusicYoutubeId() == null) {
+                out.put("code", 204);
+                out.put("message", "조건에 맞는 영상을 찾을 수 없습니다.");
+                return out;
+            }
 
             Music build = Music.builder()
                     .artist(artist)
@@ -244,14 +253,14 @@ public class MusicService {
 
             Optional<MyMusicBox> byMusicMusicId = myMusicBoxRepository.findByMusicMusicId(build.getMusicId());
 
-            if(byMusicMusicId.isEmpty()){
+            if (byMusicMusicId.isEmpty()) {
                 MyMusicBox myMusicBox = MyMusicBox.builder()
                         .music(build)
                         .user(user)
                         .build();
 
                 myMusicBoxRepository.save(myMusicBox);
-            }else{
+            } else {
                 out.put("message", "이미 보관함에 추가된 노래입니다.");
                 out.put("musicId", savedMusic.getMusicId());
                 return out;
@@ -265,14 +274,14 @@ public class MusicService {
             throw new EntityNotFoundException("해당 영상 없음");
         }
     }
-    
+
     // 해당 음악 상세정보 가져오기
-    public MusicInfoResponseDTO musicInfo(Long musicId){
+    public MusicInfoResponseDTO musicInfo(Long musicId) {
 
         User user = getUser.getUser();
 
         Optional<Music> byMusic = musicRepository.findById(musicId);
-        if(byMusic.isEmpty()){
+        if (byMusic.isEmpty()) {
             throw new MusicNotFoundException("해당 음악의 정보가 없습니다.");
         }
 
