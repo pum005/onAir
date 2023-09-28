@@ -304,7 +304,25 @@ const musicPersistConfig = {
 
 const persistedMusicReducer = persistReducer(musicPersistConfig, musicReducer);
 
-// Music 상태 타입
+/** Music 상태 타입 (현재 어떤 인덱스의 노래를 듣는지)*/
+export type SelectedMusicIndexState = number;
+//초기 상태값
+const initialSelectedMusicIndexState: SelectedMusicIndexState = 0;
+
+//액션 생성자 정의
+export const setSelectedMusicIndex = createAction<number>(
+  "SET_SELECTED_MUSIC_INDEX"
+);
+
+//리듀서 정의
+const selectedMusicIndexReducer = createReducer(
+  initialSelectedMusicIndexState,
+  (builder) => {
+    builder.addCase(setSelectedMusicIndex, (state, action) => {
+      return action.payload; // 선택된 노래의 인덱스를 상태에 설정합니다.
+    });
+  }
+);
 
 //reducer 설정으로 키값과 내용
 
@@ -313,6 +331,7 @@ const store = configureStore({
     user: persistedUserReducer,
     chat: chatReducer,
     music: persistedMusicReducer,
+    selectedMusicIndex: selectedMusicIndexReducer,
   },
 });
 
