@@ -32,7 +32,7 @@ public class JwtFilter extends OncePerRequestFilter { // 모든 요청에 대해
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
         return path.startsWith("/api/oauth/login") || path.startsWith("/login/") || path.startsWith("/api/oauth2/authorization/") ||
-                path.startsWith("/api/login/oauth2/");
+                path.startsWith("/api/login/oauth2/") || path.startsWith("/api/oauth/logout") || path.startsWith("/favicon.ico");
     }
 
     @Override
@@ -44,6 +44,7 @@ public class JwtFilter extends OncePerRequestFilter { // 모든 요청에 대해
 
         // 토큰이 없거나 Bearer로 시작하지 않는 경우
         if(authorization == null || !authorization.startsWith("Bearer ")){
+            log.info("Request URI: {}", request.getRequestURI());
             log.error("authorization을 잘못 보냈습니다.");
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "토큰을 잘못 보냈습니다");
             return;
