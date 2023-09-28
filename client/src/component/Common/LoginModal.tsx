@@ -16,7 +16,7 @@ const redirectToKakaoLogin = () => {
 
 //네이버 로그인으로 가게 해주는 url
 // const NAVER_OAUTH_URL = `https://j9b302.p.ssafy.io/oauth2/authorization/naver`;
-const NAVER_OAUTH_URL = `https://localhost:8080/oauth2/authorization/naver`;
+const NAVER_OAUTH_URL = `http://localhost:8080/oauth2/authorization/naver`;
 
 const redirectToNaverLogin = () => {
   window.location.href = NAVER_OAUTH_URL;
