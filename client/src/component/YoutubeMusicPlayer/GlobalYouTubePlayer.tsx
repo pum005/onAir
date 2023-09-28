@@ -36,7 +36,7 @@ export const GlobalYouTubePlayer = () => {
     height: "0",
     width: "0",
     playerVars: {
-      autoplay: isPlaying ? 1 : 0, // 자동재생 설정
+      autoplay: isPlaying ? 1 : 0, // 자동재생
     },
   };
 
@@ -143,42 +143,44 @@ export const GlobalYouTubePlayer = () => {
         />
       )}
       {/* 커스텀 오디오 컨트롤러 */}
-      <div className={styles.audioControls}>
-        <Button
-          onClick={skipToPrevious}
-          color="primary"
-          variant="outlined"
-          disabled={!isButtonEnabled}
-        >
-          <SkipPreviousIcon />
-        </Button>
-        <Button
-          onClick={togglePlay}
-          color="primary"
-          variant="outlined"
-          disabled={!isButtonEnabled}
-        >
-          {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-        </Button>
-        <Button
-          onClick={skipToNext}
-          color="primary"
-          variant="outlined"
-          disabled={!isButtonEnabled}
-        >
-          <SkipNextIcon />
-        </Button>
-        <div className={styles.progressBar} onClick={handleProgressBarClick}>
-          <div
-            className={styles.progress}
-            style={{ width: `${(currentTime / duration) * 100}%` }}
-          />
+      {videoId && (
+        <div className={styles.audioControls}>
+          <Button
+            onClick={skipToPrevious}
+            color="primary"
+            variant="outlined"
+            disabled={!isButtonEnabled}
+          >
+            <SkipPreviousIcon />
+          </Button>
+          <Button
+            onClick={togglePlay}
+            color="primary"
+            variant="outlined"
+            disabled={!isButtonEnabled}
+          >
+            {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+          </Button>
+          <Button
+            onClick={skipToNext}
+            color="primary"
+            variant="outlined"
+            disabled={!isButtonEnabled}
+          >
+            <SkipNextIcon />
+          </Button>
+          <div className={styles.progressBar} onClick={handleProgressBarClick}>
+            <div
+              className={styles.progress}
+              style={{ width: `${(currentTime / duration) * 100}%` }}
+            />
+          </div>
+          <span className={styles.timeText}>
+            {Math.floor(currentTime / 60)}:
+            {String(Math.floor(currentTime % 60)).padStart(2, "0")}
+          </span>
         </div>
-        <span className={styles.timeText}>
-          {Math.floor(currentTime / 60)}:
-          {String(Math.floor(currentTime % 60)).padStart(2, "0")}
-        </span>
-      </div>
+      )}
     </div>
   );
 };
