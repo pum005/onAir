@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import NavBar from "../../component/Common/Navbar";
-// import { musicDummyData } from "./MusicDummy";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AddCircleOutline from "@mui/icons-material/AddCircleOutline";
 import styles from "./MyMusicPlayer.module.css";
@@ -18,6 +17,8 @@ import axios from "axios";
 import YouTube from "react-youtube";
 import Swal from "sweetalert2";
 import 흥애 from "../../resources/흥애.png";
+import store, { setMusicDataTemp } from "../../store";
+import { useDispatch } from "react-redux";
 
 type YouTubePlayer = {
   getCurrentTime: () => number;
@@ -50,6 +51,8 @@ export const MyMusicPlayer = () => {
 
   const [refreshKey, setRefreshKey] = useState(false);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (playlistMetaId) {
       requestWithTokenRefresh(() => {
@@ -67,6 +70,8 @@ export const MyMusicPlayer = () => {
           // 이부분 message 안뜸
           if (response.data) {
             setMusicData(response.data);
+            const musicDataArray: MusicInfo[] = response.data;
+            store.dispatch(setMusicDataTemp(musicDataArray));
           } else {
             Swal.fire({
               icon: "error",
@@ -100,6 +105,8 @@ export const MyMusicPlayer = () => {
             setMusicData([]);
           } else {
             setMusicData(response.data.musicInfo);
+            const musicDataArray: MusicInfo[] = response.data.musicInfo;
+            store.dispatch(setMusicDataTemp(musicDataArray));
           }
         })
         .catch((error) => {
