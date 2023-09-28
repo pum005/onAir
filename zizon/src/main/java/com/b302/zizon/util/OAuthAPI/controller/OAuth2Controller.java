@@ -9,6 +9,7 @@ import com.b302.zizon.util.response.DataResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,20 +55,24 @@ public class OAuth2Controller {
         return ResponseEntity.status(200).body(result);
     }
 
-    @PostMapping("oauth/logout/kakao")
-    public ResponseEntity<?> LogoutKakao(){
+    // 소셜 로그아웃
+    @PostMapping("oauth/social/logout")
+    public ResponseEntity<?> LogoutKakao(HttpServletRequest request, HttpServletResponse response){
 
-        Map<String, Object> result = userService.socialLogout();
-
+        Map<String, Object> result = userService.socialLogout(request, response);
+        
         return ResponseEntity.ok(result);
     }
 
+    // 우리 서비스 로그아웃
     @GetMapping("oauth/logout")
-    public ResponseEntity<?> Logout(HttpServletRequest request){
-        System.out.println("로그아웃");
-        Map<String, Object> logout = userService.logout(request);
+    public ResponseEntity<?> Logout(HttpServletRequest request, HttpServletResponse response){
+        System.out.println("들어옴");
+        Map<String, Object> result = userService.logout(request, response);
+        URI redirectUri = URI.create("http://localhost:3000");
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(redirectUri);
 
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return new ResponseEntity<>(result, httpHeaders, HttpStatus.SEE_OTHER);
     }
-
 }

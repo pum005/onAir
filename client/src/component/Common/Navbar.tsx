@@ -10,7 +10,7 @@ import LogoutAlertModal from "./LogoutModal";
 import LoginIcon from "@mui/icons-material/Login";
 import Container from "@mui/material/Container";
 import AdbIcon from "@mui/icons-material/Adb";
-import { Link } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -72,7 +72,7 @@ function NavBar() {
   const handleConfirmLogout = () => {
     requestWithTokenRefresh(() => {
       return axios.post(
-        "http://localhost:8080/api/oauth/logout/kakao",
+        "http://localhost:8080/api/oauth/social/logout",
         {},
         {
           headers: {
@@ -83,8 +83,13 @@ function NavBar() {
       );
     })
       .then((response) => {
-        window.location.href = response.data.logoutUrl;
-        // localStorage.removeItem("accessToken"); // 액세스 토큰 제거
+        console.log(response)
+        if(response.data.logoutUrl){
+          window.location.href = response.data.logoutUrl;
+        }else if(response.data.naver) {
+          window.location.href = "http://localhost:3000";  // 메인 페이지로 리다이렉트
+      }
+        localStorage.removeItem("accessToken"); // 액세스 토큰 제거
         handleLogoutModalClose();
       })
       .catch((error) => {
