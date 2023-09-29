@@ -20,6 +20,7 @@ import Success from "./utils/Success";
 
 import store, { persistor } from "./store";
 import { PersistGate } from "redux-persist/integration/react";
+import { GlobalYouTubePlayer } from "./component/YoutubeMusicPlayer/GlobalYouTubePlayer";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
 
               <Route path="/Success" element={<Success />} />
             </Routes>
+            <GlobalYouTubePlayer></GlobalYouTubePlayer>
           </Router>
         </PersistGate>
       </Provider>
