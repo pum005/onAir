@@ -218,7 +218,7 @@ export const GlobalYouTubePlayer = () => {
         <Button
           onClick={handleToggleVisibility}
           className={
-            isVisible && videoId ? styles.albumButton : styles.albumTrueButton
+            isVisible && videoId ? styles.albumTrueButton : styles.albumButton
           }
         >
           <BiSolidAlbum color="white" size="40px" />
@@ -244,77 +244,73 @@ export const GlobalYouTubePlayer = () => {
           }}
         />
       )}
-      {isVisible ||
-        (videoId && (
-          <div className={styles.audioControls}>
-            <Button
-              onClick={skipToPrevious}
-              color="primary"
-              variant="outlined"
-              disabled={!isButtonEnabled}
-            >
-              <SkipPreviousIcon />
-            </Button>
-            <Button
-              onClick={togglePlay}
-              color="primary"
-              variant="outlined"
-              disabled={!isButtonEnabled || !videoId}
-            >
-              {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-            </Button>
-            <Button
-              onClick={() =>
-                dispatch(
-                  setSelectedMusicIndex(
-                    (currentMusicIndex + 1) % MusicDataArray.length
-                  )
+      {isVisible && videoId && (
+        <div className={styles.audioControls}>
+          <Button
+            onClick={skipToPrevious}
+            color="primary"
+            variant="outlined"
+            disabled={!isButtonEnabled}
+          >
+            <SkipPreviousIcon />
+          </Button>
+          <Button
+            onClick={togglePlay}
+            color="primary"
+            variant="outlined"
+            disabled={!isButtonEnabled || !videoId}
+          >
+            {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+          </Button>
+          <Button
+            onClick={() =>
+              dispatch(
+                setSelectedMusicIndex(
+                  (currentMusicIndex + 1) % MusicDataArray.length
                 )
-              }
-              color="primary"
-              variant="outlined"
-              disabled={!isButtonEnabled}
-            >
-              <SkipNextIcon />
-            </Button>
-            <Button
-              onClick={() => setIsRandom(!isRandom)}
-              color="primary"
-              variant="outlined"
-              disabled={!isButtonEnabled}
-            >
-              <ShuffleIcon color={isRandom ? "secondary" : "action"} />
-            </Button>
-            <Button
-              onClick={() => setIsLoop(!isLoop)}
-              color="primary"
-              variant="outlined"
-              disabled={!isButtonEnabled}
-            >
-              <LoopIcon color={isLoop ? "secondary" : "action"} />
-            </Button>
+              )
+            }
+            color="primary"
+            variant="outlined"
+            disabled={!isButtonEnabled}
+          >
+            <SkipNextIcon />
+          </Button>
+          <Button
+            onClick={() => setIsRandom(!isRandom)}
+            color="primary"
+            variant="outlined"
+            disabled={!isButtonEnabled}
+          >
+            <ShuffleIcon color={isRandom ? "secondary" : "action"} />
+          </Button>
+          <Button
+            onClick={() => setIsLoop(!isLoop)}
+            color="primary"
+            variant="outlined"
+            disabled={!isButtonEnabled}
+          >
+            <LoopIcon color={isLoop ? "secondary" : "action"} />
+          </Button>
+          <div className={styles.progressBar} onClick={handleProgressBarClick}>
             <div
-              className={styles.progressBar}
-              onClick={handleProgressBarClick}
-            >
-              <div
-                className={styles.progress}
-                style={{ width: `${(currentTime / duration) * 100}%` }}
-              />
-            </div>
-            <span className={styles.timeText}>
-              {Math.floor(currentTime / 60)}:
-              {String(Math.floor(currentTime % 60)).padStart(2, "0")}
-            </span>
-            <span className={styles.timeText}>
-              /{Math.floor(duration / 60)}:
-              {String(Math.floor(duration % 60)).padStart(2, "0")}
-            </span>
-            <Button onClick={redirectToPlaylist}>
-              여기 누르면 원래 노래 나오던 페이지
-            </Button>
+              className={styles.progress}
+              style={{ width: `${(currentTime / duration) * 100}%` }}
+            />
           </div>
-        ))}
+          <span className={styles.timeText}>
+            {Math.floor(currentTime / 60)}:
+            {String(Math.floor(currentTime % 60)).padStart(2, "0")}
+          </span>
+          <span className={styles.timeText}>
+            /{Math.floor(duration / 60)}:
+            {String(Math.floor(duration % 60)).padStart(2, "0")}
+          </span>
+          <Button onClick={redirectToPlaylist}>
+            여기 누르면 원래 노래 나오던 페이지
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
