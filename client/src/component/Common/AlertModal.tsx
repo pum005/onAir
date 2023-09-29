@@ -12,7 +12,8 @@ const AlertModal: React.FC<{
         <Typography 
         sx={{
           paddingTop: '10px',
-          paddingBottom: '30px'
+          paddingBottom: '30px',
+          fontSize: '30px'
         }}>{message}</Typography>
         <Button onClick={onClose} disableRipple variant="contained"
         sx={{
