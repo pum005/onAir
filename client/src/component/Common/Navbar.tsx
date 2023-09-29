@@ -83,13 +83,19 @@ function NavBar() {
       );
     })
       .then((response) => {
-        console.log(response)
-        if(response.data.logoutUrl){
+        console.log(response);
+        if (response.data.logoutUrl) {
           window.location.href = response.data.logoutUrl;
-        }else if(response.data.naver) {
-          window.location.href = "http://localhost:3000";  // 메인 페이지로 리다이렉트
-      }
+        } else if (response.data.naver) {
+          window.location.href = "http://localhost:3000"; // 메인 페이지로 리다이렉트
+        }
         localStorage.removeItem("accessToken"); // 액세스 토큰 제거
+        for (let key in localStorage) {
+          if (key.startsWith("persist:")) {
+            localStorage.removeItem(key);
+          }
+        }
+
         handleLogoutModalClose();
       })
       .catch((error) => {
