@@ -324,7 +324,19 @@ const selectedMusicIndexReducer = createReducer(
   }
 );
 
-//reducer 설정으로 키값과 내용
+/** 플레이리스트 주소 이동 */
+export const setPlaylistMetaId = createAction<number>("SET_PLAYLIST_META_ID");
+
+const initialPlaylistMetaIdState: number = 0;
+
+const playlistMetaIdReducer = createReducer(
+  initialPlaylistMetaIdState,
+  (builder) => {
+    builder.addCase(setPlaylistMetaId, (state, action) => {
+      return action.payload;
+    });
+  }
+);
 
 const store = configureStore({
   reducer: {
@@ -332,6 +344,7 @@ const store = configureStore({
     chat: chatReducer,
     music: persistedMusicReducer,
     selectedMusicIndex: selectedMusicIndexReducer,
+    playlistMetaId: playlistMetaIdReducer,
   },
 });
 
