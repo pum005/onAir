@@ -22,12 +22,10 @@
 }
 
 .modalButtonCancle{
-    background-color: #222222;
-    color: white;
-    border: none;
+    background-color: #EDEDED;
+    color: black;
     padding: 5px 10px;
-    border: 2px solid #fb0000;
-    border-radius: 20px;
+    border-radius: 10px;
     font-size: 1em;
     font-weight: 600;
     cursor: pointer;
@@ -35,18 +33,17 @@
 }
 
 .modalButtonCancle:hover {
-    background-color: #222222;
+    background-color: #bebebe;
     transform: scale(1.05);
-    border: 2px solid #fb0000;
+    border: none;
 }
 
 .modalButtonCreate {
-    background-color: #222222;
+    background-color: #DA0037;
     color: white;
     border: none;
     padding: 5px 10px;
-    border: 2px solid #5553f7;
-    border-radius: 20px;
+    border-radius: 10px;
     font-size: 1em;
     font-weight: 600;
     cursor: pointer;
@@ -54,7 +51,7 @@
 }
 
 .modalButtonCreate:hover {
-    background-color: #222222;
+    background-color: #a50029;
     transform: scale(1.05);
-    border: 2px solid #5553f7;
+    border: none;
 }

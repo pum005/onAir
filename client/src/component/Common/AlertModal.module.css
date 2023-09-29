@@ -18,6 +18,26 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 약간의 그림자 추가 */
 }
 
-.alertBox Typography {
-    font-size: 6em;
+.checkButton {
+    background-color: #6966FF;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.checkButton:hover {
+    background-color: #4c49fd;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transform: scale(1.05);
+    border: none;
 }

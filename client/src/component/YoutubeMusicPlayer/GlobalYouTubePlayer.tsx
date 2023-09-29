@@ -213,7 +213,7 @@ export const GlobalYouTubePlayer = () => {
   return (
     <div className={styles.audioContainer}>
       <Tooltip
-        title={videoId ? "Play Music" : "현재 재생 가능한 노래가 없습니다!"}
+        title={videoId ? "Play Music" : "현재 재생 가능한 음악이 없습니다!"}
       >
         <Button
           onClick={handleToggleVisibility}
