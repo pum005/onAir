@@ -9,6 +9,7 @@ import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
 import LoopIcon from "@mui/icons-material/Loop";
+
 import { useNavigate } from "react-router-dom";
 import styles from "./GlobalYouTubePlayer.module.css";
 
@@ -37,6 +38,8 @@ export const GlobalYouTubePlayer = () => {
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
   const [isRandom, setIsRandom] = useState(false);
   const [isLoop, setIsLoop] = useState(false);
+  const [isDebouncing, setIsDebouncing] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -87,6 +90,9 @@ export const GlobalYouTubePlayer = () => {
   };
 
   const togglePlay = () => {
+    if (isDebouncing) return; // 디바운싱 중이면 아무 것도 수행하지 않음
+    setIsDebouncing(true); // 디바운싱 시작
+    setTimeout(() => setIsDebouncing(false), 700);
     if (isPlaying) {
       player.pauseVideo();
     } else {
@@ -126,14 +132,32 @@ export const GlobalYouTubePlayer = () => {
 
   useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
-      if (event.key === "ArrowRight") {
-        dispatch(
-          setSelectedMusicIndex((currentMusicIndex + 1) % MusicDataArray.length)
-        );
-      } else if (event.key === "ArrowLeft") {
-        skipToPrevious();
-      } else if (event.key === " ") {
-        togglePlay();
+      if (!isVisible) {
+        return;
+      }
+      if (player) {
+        // player가 존재할 때만 실행
+        const jumpTime = 10; // 10초 앞뒤로 이동
+
+        if (event.key === "ArrowRight") {
+          const newTime = player.getCurrentTime() + jumpTime;
+          if (newTime < player.getDuration()) {
+            player.seekTo(newTime);
+          } else {
+            player.seekTo(player.getDuration()); // 끝까지 이동
+          }
+        } else if (event.key === "ArrowLeft") {
+          const newTime = player.getCurrentTime() - jumpTime;
+          if (newTime > 0) {
+            player.seekTo(newTime);
+          } else {
+            player.seekTo(0); // 시작점으로 이동
+          }
+        } else if (event.key === " ") {
+          // 스페이스바를 눌렀을 때
+          event.preventDefault(); // 브라우저 기본 동작(예: 스크롤)을 방지
+          togglePlay(); // 재생 및 일시정지 토글
+        }
       }
     };
 
@@ -179,10 +203,15 @@ export const GlobalYouTubePlayer = () => {
     }); // using navigate instead of history.push
   };
 
+  const handleToggleVisibility = () => {
+    setIsVisible(!isVisible);
+  };
+
   const videoId = MusicDataArray[currentMusicIndex]?.youtubeVideoId;
 
   return (
     <div className={styles.audioContainer}>
+      <Button onClick={handleToggleVisibility}> 응애버튼</Button>
       {videoId && (
         <YouTube
           key={videoId}
@@ -203,7 +232,7 @@ export const GlobalYouTubePlayer = () => {
           }}
         />
       )}
-      {videoId && (
+      {isVisible && videoId && (
         <div className={styles.audioControls}>
           <Button
             onClick={skipToPrevious}
@@ -260,6 +289,10 @@ export const GlobalYouTubePlayer = () => {
           <span className={styles.timeText}>
             {Math.floor(currentTime / 60)}:
             {String(Math.floor(currentTime % 60)).padStart(2, "0")}
+          </span>
+          <span className={styles.timeText}>
+            /{Math.floor(duration / 60)}:
+            {String(Math.floor(duration % 60)).padStart(2, "0")}
           </span>
           <Button onClick={redirectToPlaylist}>
             여기 누르면 원래 노래 나오던 페이지
