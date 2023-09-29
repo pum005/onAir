@@ -200,7 +200,7 @@ export const GlobalYouTubePlayer = () => {
         playlistMetaId: playlistMetaId,
         currentMusicIndex: currentMusicIndex,
       },
-    }); // using navigate instead of history.push
+    });
   };
 
   const handleToggleVisibility = () => {
