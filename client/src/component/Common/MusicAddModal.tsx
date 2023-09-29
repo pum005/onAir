@@ -19,12 +19,12 @@ function MusicAddModal({ isOpen, onClose }: MusicAddModalProps) {
     <Modal open={isOpen} onClose={onClose}>
       <Box className={styles.modalBox}>
         <Typography variant="h6" component="h2">
-          노래 추가
+          음악 추가
         </Typography>
         <input
           value={songSearch}
           onChange={(e) => setSongSearch(e.target.value)}
-          placeholder="노래 검색"
+          placeholder="음악 검색"
         />
         <Button
           onClick={() => {

@@ -206,7 +206,7 @@ function MusicCard({ refreshFlag }: any) {
                 if (data?.my_music_box === 0) {
                   Swal.fire({
                     icon: "error",
-                    title: "보관함에 노래가 없습니다!",
+                    title: "보관함에 음악이 없습니다!",
                     showConfirmButton: false,
                     timer: 1500,
                   });
@@ -225,7 +225,7 @@ function MusicCard({ refreshFlag }: any) {
                   if (data?.my_music_box === 0) {
                     Swal.fire({
                       icon: "error",
-                      title: "보관함에 노래가 없습니다!",
+                      title: "보관함에 음악이 없습니다!",
                       showConfirmButton: false,
                       timer: 1500,
                     });
@@ -253,7 +253,7 @@ function MusicCard({ refreshFlag }: any) {
               if (data?.my_music_box === 0) {
                 Swal.fire({
                   icon: "error",
-                  title: "재생할 노래가 없습니다!",
+                  title: "재생할 음악이 없습니다!",
                   showConfirmButton: false,
                   timer: 1500,
                 });
@@ -262,7 +262,7 @@ function MusicCard({ refreshFlag }: any) {
               }
             }}
           >
-            <PlayArrowIcon className={styles.PlayArrowIcon} />
+            <PlayArrowIcon className={styles.playArrowIcon} />
           </Button>
           <MusicDetailModal
             isOpen={isMusicDetailModalOpen}
@@ -294,7 +294,7 @@ function MusicCard({ refreshFlag }: any) {
                   if (Playlist.playlistCount === 0) {
                     Swal.fire({
                       icon: "error",
-                      title: "보관함에 노래가 없습니다!",
+                      title: "보관함에 음악이 없습니다!",
                       showConfirmButton: false,
                       timer: 1500,
                     });
@@ -315,7 +315,7 @@ function MusicCard({ refreshFlag }: any) {
                     if (Playlist.playlistCount === 0) {
                       Swal.fire({
                         icon: "error",
-                        title: "재생할 노래가 없습니다!",
+                        title: "재생할 음악이 없습니다!",
                         showConfirmButton: false,
                         timer: 1500,
                       });
@@ -352,7 +352,7 @@ function MusicCard({ refreshFlag }: any) {
                 if (Playlist.playlistCount === 0) {
                   Swal.fire({
                     icon: "error",
-                    title: "재생할 노래가 없습니다!",
+                    title: "재생할 음악이 없습니다!",
                     showConfirmButton: false,
                     timer: 1500,
                   });
@@ -361,7 +361,7 @@ function MusicCard({ refreshFlag }: any) {
                 }
               }}
             >
-              <PlayArrowIcon className={styles.PlayArrowIcon} />
+              <PlayArrowIcon className={styles.playArrowIcon} />
             </Button>
           </ListItem>
         ))}

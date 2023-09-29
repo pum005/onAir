@@ -150,12 +150,12 @@ function DeleteModal({
           <Box
             sx={{
               display: "flex",
-              justifyContent: "flex-end",
+              justifyContent: "center",
               gap: 2,
             }}
           >
             <Button
-              variant="outlined"
+              variant="contained"
               onClick={onClose}
               className={styles.modalButtonCancle}
             >

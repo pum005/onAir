@@ -78,8 +78,22 @@
   color: white;
 }
 
+.songTitle:hover {
+  animation: marquee 10s linear infinite; /* 전광판처럼 스크롤되게 하는 애니메이션 */
+}
+
+@keyframes marquee {
+  0%   { text-indent: 0%; }
+  100% { text-indent: -200%; }
+}
+
 .songTitle {
-  color: white; /* desiredColor를 원하는 색상 값으로 변경해주세요. 예: #FF5733 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 200px; 
+  position: relative;
+  color: white;
 }
 
 .artist {

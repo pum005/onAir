@@ -113,7 +113,7 @@ const PlayListMusicDetailModal: React.FC<MusicDetailModalProps> = ({
       <Modal open={isOpen} onClose={onClose}>
         <Box className={styles.modalBox}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            {title} 노래 목록
+            {title} 음악 목록
           </Typography>
           {songs.length > 0 ? (
             songs.map((song, index) => (
@@ -138,7 +138,7 @@ const PlayListMusicDetailModal: React.FC<MusicDetailModalProps> = ({
                   }}
                 />
                 <div style={{ flex: 2 }}>
-                  <div>{song.title}</div>
+                  <div className={styles.songTitle}>{song.title}</div>
                   <div style={{ color: "#888", fontSize: "0.9em" }}>
                     {song.artist}
                   </div>
@@ -153,7 +153,7 @@ const PlayListMusicDetailModal: React.FC<MusicDetailModalProps> = ({
               </div>
             ))
           ) : (
-            <div>노래가 없습니다.</div>
+            <div>음악이 없습니다.</div>
           )}
           <Menu
             anchorEl={anchorEl}
