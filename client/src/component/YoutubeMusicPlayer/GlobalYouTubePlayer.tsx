@@ -7,7 +7,9 @@ import PauseIcon from "@mui/icons-material/Pause";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-
+import ShuffleIcon from "@mui/icons-material/Shuffle";
+import LoopIcon from "@mui/icons-material/Loop";
+import { useNavigate } from "react-router-dom";
 import styles from "./GlobalYouTubePlayer.module.css";
 
 //파일 분리 완료
@@ -33,7 +35,11 @@ export const GlobalYouTubePlayer = () => {
   const [duration, setDuration] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
+  const [isRandom, setIsRandom] = useState(false);
+  const [isLoop, setIsLoop] = useState(false);
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const opts = {
     height: "0",
@@ -44,15 +50,29 @@ export const GlobalYouTubePlayer = () => {
   };
 
   const handleMusicEnd = useCallback(() => {
-    if (currentMusicIndex === MusicDataArray.length - 1) {
-      dispatch(setSelectedMusicIndex(0));
+    if (isLoop) {
       if (player) {
         player.playVideo();
       }
-    } else {
-      dispatch(setSelectedMusicIndex(currentMusicIndex + 1));
+      return;
     }
-  }, [currentMusicIndex, MusicDataArray, player, dispatch]);
+
+    let nextIndex;
+    if (isRandom) {
+      do {
+        nextIndex = Math.floor(Math.random() * MusicDataArray.length);
+      } while (nextIndex === currentMusicIndex && MusicDataArray.length > 1);
+    } else {
+      nextIndex =
+        currentMusicIndex === MusicDataArray.length - 1
+          ? 0
+          : currentMusicIndex + 1;
+    }
+    dispatch(setSelectedMusicIndex(nextIndex));
+    if (player) {
+      player.playVideo();
+    }
+  }, [currentMusicIndex, MusicDataArray, player, dispatch, isRandom, isLoop]);
 
   const onPlayerReady = (event: { target: YouTubePlayer }) => {
     setPlayer(event.target);
@@ -147,6 +167,18 @@ export const GlobalYouTubePlayer = () => {
     };
   }, [setCurrentMusicByMusicId]);
 
+  const playlistMetaId = useSelector(
+    (state: RootState) => state.playlistMetaId
+  );
+  const redirectToPlaylist = () => {
+    navigate("/MyMusicPlayer", {
+      state: {
+        playlistMetaId: playlistMetaId,
+        currentMusicIndex: currentMusicIndex,
+      },
+    }); // using navigate instead of history.push
+  };
+
   const videoId = MusicDataArray[currentMusicIndex]?.youtubeVideoId;
 
   return (
@@ -203,6 +235,22 @@ export const GlobalYouTubePlayer = () => {
           >
             <SkipNextIcon />
           </Button>
+          <Button
+            onClick={() => setIsRandom(!isRandom)}
+            color="primary"
+            variant="outlined"
+            disabled={!isButtonEnabled}
+          >
+            <ShuffleIcon color={isRandom ? "secondary" : "action"} />
+          </Button>
+          <Button
+            onClick={() => setIsLoop(!isLoop)}
+            color="primary"
+            variant="outlined"
+            disabled={!isButtonEnabled}
+          >
+            <LoopIcon color={isLoop ? "secondary" : "action"} />
+          </Button>
           <div className={styles.progressBar} onClick={handleProgressBarClick}>
             <div
               className={styles.progress}
@@ -213,6 +261,9 @@ export const GlobalYouTubePlayer = () => {
             {Math.floor(currentTime / 60)}:
             {String(Math.floor(currentTime % 60)).padStart(2, "0")}
           </span>
+          <Button onClick={redirectToPlaylist}>
+            여기 누르면 원래 노래 나오던 페이지
+          </Button>
         </div>
       )}
     </div>

@@ -13,6 +13,7 @@ import 흥애 from "../../resources/흥애.png";
 import store, {
   RootState,
   setMusicDataTemp,
+  setPlaylistMetaId,
   setSelectedMusicIndex,
 } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,12 +32,17 @@ export const MyMusicPlayer = () => {
   const selectedMusicIndex = useSelector(
     (state: RootState) => state.selectedMusicIndex
   ); // 리덕스 상태에서 selectedMusicIndex를 가져옵니다.
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+
   const [musicData, setMusicData] = useState<MusicInfo[]>([]);
 
   const location = useLocation();
   //받아와야함
+
   const playlistMetaId = location.state?.playlistMetaId;
+  const passedMusicIndex = location.state?.currentMusicIndex;
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(
+    passedMusicIndex || 0
+  );
 
   const [refreshKey, setRefreshKey] = useState(false);
 
@@ -49,9 +55,24 @@ export const MyMusicPlayer = () => {
     // selectedMusicIndex가 바뀔 때마다 currentTrackIndex를 동기화합니다.
     setCurrentTrackIndex(selectedMusicIndex);
   }, [selectedMusicIndex]);
+  //이건 플레이리스트를 관리하기 위한 useEffect
 
   useEffect(() => {
-    dispatch(setSelectedMusicIndex(0));
+    dispatch(setPlaylistMetaId(playlistMetaId));
+  }, [playlistMetaId, dispatch]);
+
+  useEffect(() => {
+    if (typeof passedMusicIndex === "number") {
+      setCurrentTrackIndex(passedMusicIndex);
+    }
+  }, [passedMusicIndex]);
+
+  console.log(passedMusicIndex);
+  useEffect(() => {
+    if (!passedMusicIndex) {
+      dispatch(setSelectedMusicIndex(0));
+    }
+
     if (playlistMetaId) {
       requestWithTokenRefresh(() => {
         return axios.get(
