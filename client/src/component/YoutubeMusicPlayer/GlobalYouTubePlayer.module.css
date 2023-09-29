@@ -162,7 +162,7 @@
   animation: spin 1s linear infinite;
 }
 
-.albumButton {
+button.albumButton {
   position: fixed;
   right: 10px;
   bottom: 10px; /* 맨 밑에서 조금 떨어진 위치 */
@@ -171,7 +171,7 @@
   z-index: 1001;
 }
 
-.albumTrueButton {
+button.albumTrueButton {
   position: fixed;
   right: 10px;
   bottom: 50px; /* 맨 밑에서 조금 떨어진 위치 */
