@@ -9,9 +9,10 @@ import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
 import LoopIcon from "@mui/icons-material/Loop";
-
+import Tooltip from "@mui/material/Tooltip";
 import { useNavigate } from "react-router-dom";
 import styles from "./GlobalYouTubePlayer.module.css";
+import { BiSolidAlbum } from "react-icons/bi";
 
 //파일 분리 완료
 type YouTubePlayer = {
@@ -211,7 +212,16 @@ export const GlobalYouTubePlayer = () => {
 
   return (
     <div className={styles.audioContainer}>
-      <Button onClick={handleToggleVisibility}> 응애버튼</Button>
+      <Tooltip
+        title={videoId ? "Play Music" : "현재 재생 가능한 노래가 없습니다!"}
+      >
+        <Button
+          onClick={handleToggleVisibility}
+          className={isVisible ? styles.albumTrueButton : styles.albumButton}
+        >
+          <BiSolidAlbum color="white" size="40px" />
+        </Button>
+      </Tooltip>
       {videoId && (
         <YouTube
           key={videoId}

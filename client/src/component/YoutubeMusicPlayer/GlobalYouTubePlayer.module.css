@@ -141,3 +141,41 @@
 .timeText {
   color: #ffffff;
 }
+
+/** 여기서부터는 Album 이미지 회전 */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.albumButton,
+.albumTrueButton {
+  transition: transform 0.5s ease-in-out;
+}
+
+.albumButton:hover,
+.albumTrueButton:hover {
+  animation: spin 1s linear infinite;
+}
+
+.albumButton {
+  position: fixed;
+  right: 10px;
+  bottom: 10px; /* 맨 밑에서 조금 떨어진 위치 */
+  width: 50px;
+  height: 50px;
+  z-index: 1001;
+}
+
+.albumTrueButton {
+  position: fixed;
+  right: 10px;
+  bottom: 50px; /* 맨 밑에서 조금 떨어진 위치 */
+  width: 50px;
+  height: 50px;
+  z-index: 1001;
+}
