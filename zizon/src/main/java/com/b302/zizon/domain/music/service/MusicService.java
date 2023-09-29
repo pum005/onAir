@@ -71,7 +71,7 @@ public class MusicService {
         return responseEntity.getBody().getAccess_token();
     }
 
-    // 스포티파이 검색 결과 가져오기
+    // 스포티파이 제목 검색 결과 가져오기
     public List<SpotifySearchResultDTO> searchSpotifyMusicList(String query) {
 
         User user = getUser.getUser();
@@ -92,13 +92,13 @@ public class MusicService {
         }
 
         ResponseEntity<SearchResponseDTO> responseEntity = restTemplate.exchange(
-                "https://api.spotify.com/v1/search?q={query}&type=track&limit=10&market=KR&locale=ko-KR",
+                "https://api.spotify.com/v1/search?q={query}&type=track&limit=50&market=KR&locale=ko-KR",
                 HttpMethod.GET,
                 requestEntity,
                 SearchResponseDTO.class,
                 query);
         ResponseEntity<SearchResponseDTO> responseEntityEn = restTemplate.exchange(
-                "https://api.spotify.com/v1/search?q={query}&type=track&limit=10&market=KR&",
+                "https://api.spotify.com/v1/search?q={query}&type=track&limit=50&market=KR&",
                 HttpMethod.GET,
                 requestEntity,
                 SearchResponseDTO.class,
