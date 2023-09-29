@@ -183,11 +183,19 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
             keepMounted
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
+            slotProps={{
+              paper: {
+                style: {
+                  backgroundColor: '#282828', // 예: '#333333'
+                  color: '#ffffff'
+                },
+              },
+            }}
           >
-            <MenuItem onClick={handleMoveToOtherBox}>
+            <MenuItem onClick={handleMoveToOtherBox} className={styles.menuItems}>
               다른 플레이리스트로 이동
             </MenuItem>
-            <MenuItem onClick={handleDeleteSong}>삭제하기</MenuItem>
+            <MenuItem onClick={handleDeleteSong} className={styles.menuItems}>삭제하기</MenuItem>
           </Menu>
         </Box>
       </Modal>
