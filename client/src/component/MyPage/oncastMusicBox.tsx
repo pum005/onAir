@@ -122,7 +122,7 @@ export default function  oncastMusicBox() {
           aria-label="basic tabs example"
           
           sx={{
-            paddingLeft: "220px",
+            paddingLeft: "250px",
             ".Mui-selected": {
               // 활성 Tab 스타일
               color: "#000",

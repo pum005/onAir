@@ -94,7 +94,7 @@ export const MyMusicPlayer = () => {
           } else {
             Swal.fire({
               icon: "error",
-              title: "보관함에 노래가 없습니다!",
+              title: "보관함에 음악이 없습니다!",
               showConfirmButton: false,
               timer: 1500,
             });
@@ -114,10 +114,10 @@ export const MyMusicPlayer = () => {
         });
       })
         .then((response) => {
-          if (response.data.message === "보관함에 노래가 없습니다.") {
+          if (response.data.message === "보관함에 음악이 없습니다.") {
             Swal.fire({
               icon: "error",
-              title: "보관함에 노래가 없습니다!",
+              title: "보관함에 음악이 없습니다!",
               showConfirmButton: false,
               timer: 1500,
             });

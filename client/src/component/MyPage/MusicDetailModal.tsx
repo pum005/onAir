@@ -130,7 +130,7 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
               </div>
               <div>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                  {title} 노래 목록
+                  {title} 음악 목록
                 </Typography>
               </div>
             </div>
@@ -175,7 +175,7 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
                 </div>
               ))
             ) : (
-              <div>노래가 없습니다.</div>
+              <div>음악이 없습니다.</div>
             )}
           </div>
           <Menu

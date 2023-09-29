@@ -109,9 +109,9 @@ const SearchModal: React.FC<SearchModalProps> = ({
     })
       .then((response) => {
         setIsAddLoading(false);
-        if (response.data.message === "이미 보관함에 추가된 노래입니다.") {
+        if (response.data.message === "이미 보관함에 추가된 음악입니다.") {
           setOpen(false);
-          setAlertMessage("이미 보관함에 추가된 노래입니다.");
+          setAlertMessage("이미 보관함에 추가된 음악입니다.");
           setIsAlertOpen(true);
           console.log(response.data.musicId);
           console.log(playlistId);
@@ -228,14 +228,14 @@ const SearchModal: React.FC<SearchModalProps> = ({
                 />
               </div>
               <div>
-                <Typography variant="h6">노래 검색</Typography>
+                <Typography variant="h6">음악 검색</Typography>
               </div>
             </div>
           </div>
           <div className={styles.textFieldContainer}>
             <TextField
               id="standard-basic"
-              placeholder="노래 제목을 입력해주세요"
+              placeholder="음악 제목을 입력해주세요"
               variant="standard"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}

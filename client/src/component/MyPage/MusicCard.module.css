@@ -11,6 +11,7 @@
   transition: opacity 0.3s, transform 0.3s;
 }
 
+
 .hoverableListItem:hover .playButton {
   opacity: 1; /* 호버 상태에서 완전 불투명 */
   transform: translateY(-50%) scale(1.1); /* 약간 확대되는 효과를 위한 scale 추가 */
@@ -40,9 +41,13 @@
   transform: translateY(-50%) scale(1.1); /* 약간 확대되는 효과를 위한 scale 추가 */
 }
 
-.PlayArrowIcon:hover {
+.playArrowIcon:hover {
   opacity: 1; /* 호버 상태에서 완전 불투명 */
   color: rgb(52, 129, 246);
+}
+
+.playArrowIcon{
+  font-size: 30px;
 }
 
 .hoverableListItem:hover {

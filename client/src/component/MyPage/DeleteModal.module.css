@@ -13,7 +13,7 @@
     align-items: center;
     background-color: #222222;
     color: white;
-    padding: 40px 30px 40px 30px;
+    padding: 40px 100px 40px 100px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -24,12 +24,11 @@
 }
 
 .modalButtonDelete {
-    background-color: #222222;
+    background-color: #DA0037;
     color: white;
     border: none;
     padding: 5px 10px;
-    border: 2px solid #5553f7;
-    border-radius: 20px;
+    border-radius: 10px;
     font-size: 1em;
     font-weight: 600;
     cursor: pointer;
@@ -37,18 +36,16 @@
 }
 
 .modalButtonDelete:hover {
-    background-color: #222222;
+    background-color: #a50029;
     transform: scale(1.05);
-    border: 2px solid #5553f7;
+    border: none;
 }
 
 .modalButtonCancle{
-    background-color: #222222;
-    color: white;
-    border: none;
+    background-color: #EDEDED;
+    color: black;
     padding: 5px 10px;
-    border: 2px solid #fb0000;
-    border-radius: 20px;
+    border-radius: 10px;
     font-size: 1em;
     font-weight: 600;
     cursor: pointer;
@@ -56,7 +53,7 @@
 }
 
 .modalButtonCancle:hover {
-    background-color: #222222;
+    background-color: #bebebe;
     transform: scale(1.05);
-    border: 2px solid #fb0000;
+    border: none;
 }
