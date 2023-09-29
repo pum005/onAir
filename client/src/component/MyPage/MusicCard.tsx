@@ -22,8 +22,9 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DeleteModal from "./DeleteModal";
-import PlayListMusicDetailModal from "./PlayListMusicDetailModal";
+import MusicBoxMusicListModal from "./MusicBoxMusicListModal";
 import { useNavigate } from "react-router-dom";
+import AlertModal from "../Common/AlertModal";
 
 type ApiResponseType = {
   my_music_box: number;
@@ -129,6 +130,9 @@ function MusicCard({ refreshFlag }: any) {
     navigate("/MyMusicPlayer", { state: { playlistMetaId: playlistMetaId } });
   };
 
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+
   /** axios */
   //음악 보관함리스트 가져오기
   React.useEffect(() => {
@@ -178,7 +182,7 @@ function MusicCard({ refreshFlag }: any) {
             style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
           >
             <Typography className={styles.textPrimary} style={{}}>
-              플레이리스트 추가
+              플레이리스트 생성
             </Typography>
           </ListItemText>
         </ListItem>
@@ -202,7 +206,7 @@ function MusicCard({ refreshFlag }: any) {
                 if (data?.my_music_box === 0) {
                   Swal.fire({
                     icon: "error",
-                    title: "보관함에 노래가 없습니다!",
+                    title: "보관함에 음악이 없습니다!",
                     showConfirmButton: false,
                     timer: 1500,
                   });
@@ -221,7 +225,7 @@ function MusicCard({ refreshFlag }: any) {
                   if (data?.my_music_box === 0) {
                     Swal.fire({
                       icon: "error",
-                      title: "보관함에 노래가 없습니다!",
+                      title: "보관함에 음악이 없습니다!",
                       showConfirmButton: false,
                       timer: 1500,
                     });
@@ -249,7 +253,7 @@ function MusicCard({ refreshFlag }: any) {
               if (data?.my_music_box === 0) {
                 Swal.fire({
                   icon: "error",
-                  title: "재생할 노래가 없습니다!",
+                  title: "재생할 음악이 없습니다!",
                   showConfirmButton: false,
                   timer: 1500,
                 });
@@ -258,7 +262,7 @@ function MusicCard({ refreshFlag }: any) {
               }
             }}
           >
-            <PlayArrowIcon className={styles.PlayArrowIcon} />
+            <PlayArrowIcon className={styles.playArrowIcon} />
           </Button>
           <MusicDetailModal
             isOpen={isMusicDetailModalOpen}
@@ -290,7 +294,7 @@ function MusicCard({ refreshFlag }: any) {
                   if (Playlist.playlistCount === 0) {
                     Swal.fire({
                       icon: "error",
-                      title: "보관함에 노래가 없습니다!",
+                      title: "보관함에 음악이 없습니다!",
                       showConfirmButton: false,
                       timer: 1500,
                     });
@@ -311,7 +315,7 @@ function MusicCard({ refreshFlag }: any) {
                     if (Playlist.playlistCount === 0) {
                       Swal.fire({
                         icon: "error",
-                        title: "재생할 노래가 없습니다!",
+                        title: "재생할 음악이 없습니다!",
                         showConfirmButton: false,
                         timer: 1500,
                       });
@@ -348,7 +352,7 @@ function MusicCard({ refreshFlag }: any) {
                 if (Playlist.playlistCount === 0) {
                   Swal.fire({
                     icon: "error",
-                    title: "재생할 노래가 없습니다!",
+                    title: "재생할 음악이 없습니다!",
                     showConfirmButton: false,
                     timer: 1500,
                   });
@@ -357,11 +361,11 @@ function MusicCard({ refreshFlag }: any) {
                 }
               }}
             >
-              <PlayArrowIcon className={styles.PlayArrowIcon} />
+              <PlayArrowIcon className={styles.playArrowIcon} />
             </Button>
           </ListItem>
         ))}
-        <PlayListMusicDetailModal
+        <MusicBoxMusicListModal
           isOpen={isMusicDetailModalOpenTwo}
           onClose={closeMusicDetailModalTwo}
           title={selectedPlaylistTitleTwo}
@@ -378,6 +382,11 @@ function MusicCard({ refreshFlag }: any) {
         onClose={closeDeleteModal}
         playlistId={removeList}
         refresh={() => setRefreshKey((prevKey) => !prevKey)}
+      />
+      <AlertModal
+        open={showAlert}
+        message={alertMessage}
+        onClose={() => setShowAlert(false)}
       />
     </div>
   );

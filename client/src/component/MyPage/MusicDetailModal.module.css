@@ -5,28 +5,25 @@
 
 /* 스크롤바의 핸들 부분 */
 .musicList::-webkit-scrollbar-thumb {
-  background-color: darkgrey;
-  border-radius: 10px;
+  background-color: #999999;
+  border-radius: 0px;
 }
 
 /* 스크롤바의 트랙 부분 */
 .musicList::-webkit-scrollbar-track {
-  background-color: lightgrey;
-  border-radius: 10px;
+  background-color: #222222;
 }
 
 .musicList {
   max-height: 200px;
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: darkgrey lightgrey;
 }
 
 .musicList .songItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #A3A3A3;
   padding: 10px;
 }
 
@@ -81,8 +78,22 @@
   color: white;
 }
 
+.songTitle:hover {
+  animation: marquee 10s linear infinite; /* 전광판처럼 스크롤되게 하는 애니메이션 */
+}
+
+@keyframes marquee {
+  0%   { text-indent: 0%; }
+  100% { text-indent: -200%; }
+}
+
 .songTitle {
-  color: white; /* desiredColor를 원하는 색상 값으로 변경해주세요. 예: #FF5733 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 200px; 
+  position: relative;
+  color: white;
 }
 
 .artist {
@@ -94,4 +105,8 @@
   text-align: right;
   color: #bbb;
   margin-right: 20px; /* desiredColor를 원하는 색상 값으로 변경해주세요. 예: #FF5733 */
+}
+
+.menuItems:hover{
+  background-color: #3b3a3a;
 }

@@ -2,11 +2,11 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { DeleteConfirm } from "./DeleteConfirmModal";
 import React from "react";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import styles from "./DeleteModal.module.css";
+import AlertModal from "../Common/AlertModal";
 
 type DeleteModalProps = {
   isOpen: boolean;
@@ -29,6 +29,9 @@ function DeleteModal({
 }: DeleteModalProps) {
   const [showConfirm, setShowConfirm] = React.useState(false);
 
+  const [showAlertModal, setShowAlertModal] = React.useState(false);
+  const [alertMessage, setAlertMessage] = React.useState("");
+
   const handleDelete = () => {
     const headers = {
       Authorization: "Bearer " + localStorage.getItem("accessToken"),
@@ -47,7 +50,8 @@ function DeleteModal({
       })
         .then((response) => {
           console.log("OnCast Update 성공!", response);
-          alert("삭제되었습니다.");
+          setAlertMessage("삭제되었습니다");
+          setShowAlertModal(true);
           if (setRefreshKey) {
             setRefreshKey();
           }
@@ -70,8 +74,8 @@ function DeleteModal({
         });
       })
         .then((response) => {
-          console.log("Deleted 성공!", response);
-          setShowConfirm(true);
+          setAlertMessage("삭제되었습니다");
+          setShowAlertModal(true);
           if (setRefreshKey) {
             setRefreshKey();
           }
@@ -89,8 +93,8 @@ function DeleteModal({
         });
       })
         .then((response) => {
-          console.log("Deleted 성공!", response);
-          setShowConfirm(true);
+          setAlertMessage("삭제되었습니다");
+          setShowAlertModal(true);
           if (setRefreshKey) {
             setRefreshKey();
           }
@@ -110,8 +114,8 @@ function DeleteModal({
         );
       })
         .then((response) => {
-          console.log("Deleted 성공!", response);
-          setShowConfirm(true);
+          setAlertMessage("삭제되었습니다");
+          setShowAlertModal(true);
           if (refresh) {
             refresh();
           }
@@ -146,24 +150,32 @@ function DeleteModal({
           <Box
             sx={{
               display: "flex",
-              justifyContent: "flex-end",
+              justifyContent: "center",
               gap: 2,
             }}
           >
-            <Button variant="outlined" onClick={onClose} className={styles.modalButton}>
+            <Button
+              variant="contained"
+              onClick={onClose}
+              className={styles.modalButtonCancle}
+            >
               취소
             </Button>
             <Button
               variant="contained"
               onClick={handleDelete}
-              className={styles.modalButton}
+              className={styles.modalButtonDelete}
             >
-              삭제
+              확인
             </Button>
           </Box>
         </Box>
       </Modal>
-      <DeleteConfirm show={showConfirm} onClose={handleConfirmClose} />
+      <AlertModal
+        open={showAlertModal}
+        message={alertMessage}
+        onClose={() => setShowAlertModal(false)}
+      />
     </>
   );
 }

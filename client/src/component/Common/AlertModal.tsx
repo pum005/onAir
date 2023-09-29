@@ -9,22 +9,19 @@ const AlertModal: React.FC<{
   return (
     <Modal open={open} onClose={onClose} className={styles.alertModalContainer}>
       <Box className={styles.alertBox}>
-        <Typography 
-        sx={{
-          paddingTop: '10px',
-          paddingBottom: '30px'
-        }}>{message}</Typography>
-        <Button onClick={onClose} disableRipple variant="contained"
-        sx={{
-          backgroundColor: '#6966FF',
-          color: 'white',
-          border: 'none',
-          padding: '5px 10px',
-          borderRadius: '13px',
-          fontSize: '1em',
-          fontWeight: 600,
-          cursor: 'pointer',
-      }}>
+        <Typography
+          sx={{
+            paddingTop: '10px',
+            paddingBottom: '30px',
+            fontSize: '30px'
+          }}>{message}</Typography>
+        <Button onClick={onClose} disableRipple variant="contained" className={styles.checkButton}
+        autoFocus
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              onClose();
+            }
+          }}>
           확인
         </Button>
       </Box>
