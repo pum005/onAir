@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Modal, TextField, Button, Box } from "@mui/material";
-import { CreatePlayListConfirm } from "./CreatePlayListConfirmModal";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import axios from "axios";
+import styles from "./CreatePlayList.module.css";
+import AlertModal from "./AlertModal";
 import { error } from "console";
 
 type Props = {
@@ -14,7 +15,7 @@ type Props = {
 const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
   /** state */
   const [playlistName, setPlaylistName] = useState("");
-  const [showConfirmModal, setShowConfirmModal] = useState(false); // 알림 모달창 상태 관리
+  const [showAlertModal, setShowAlertModal] = useState(false);  // State for AlertModal
 
   /** action */
   const handleConfirm = () => {
@@ -36,62 +37,78 @@ const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
           }
         );
       })
-        .then(response => {
+        .then((response) => {
           console.log(response);
           refresh();
 
-          setPlaylistName(""); // Reset the input
-          setShowConfirmModal(true); // 알림 모달창 띄우기
+          setPlaylistName("");
+          setShowAlertModal(true);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("통신에러 발생", error);
         });
     }
   };
 
-  const handleCloseConfirmModal = () => {
-    setShowConfirmModal(false);
+  const handleCloseAlertModal = () => {
+    setShowAlertModal(false);
     onClose();
   };
 
   return (
     <>
       <Modal open={isOpen} onClose={onClose}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
-          <h2>보관함 추가</h2>
+        <Box className={styles.modalContainer}>
+          <div className={styles.playlistTitle}>
+            <h2>플레이리스트 생성</h2>
+          </div>
           <TextField
-            label="플레이리스트 이름"
-            variant="outlined"
+            placeholder="제목을 입력해주세요"
+            variant="standard"
             fullWidth
             value={playlistName}
-            onChange={e => setPlaylistName(e.target.value)}
+            onChange={(e) => setPlaylistName(e.target.value)}
+            inputProps={{
+              style: { color: "#f5e9e9" }, // This style is applied to the actual input element
+            }}
+            style={{ width: "300px" }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleConfirm();
+              }
+            }}
           />
-          <Box mt={2}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              gap: 2,
+              marginTop: "20px"
+            }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={onClose}
+              className={styles.modalButtonCancle}
+            >
+              닫기
+            </Button>
             <Button
               variant="contained"
               color="primary"
               onClick={handleConfirm}
-              fullWidth
+              className={styles.modalButtonCreate}
             >
-              확인
+              생성하기
             </Button>
           </Box>
         </Box>
       </Modal>
-      <CreatePlayListConfirm
-        show={showConfirmModal}
-        onClose={handleCloseConfirmModal}
+      <AlertModal 
+        open={showAlertModal} 
+        message="플레이리스트가 성공적으로 생성되었습니다." 
+        onClose={handleCloseAlertModal}
       />
     </>
   );

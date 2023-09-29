@@ -7,15 +7,13 @@
 /* 스크롤바의 핸들 부분 */
 .modalContainer::-webkit-scrollbar-thumb,
 .searchResults::-webkit-scrollbar-thumb {
-  background-color: darkgrey;
-  border-radius: 10px;
+  background-color: #999999;
 }
 
 /* 스크롤바의 트랙 부분 */
 .modalContainer::-webkit-scrollbar-track,
 .searchResults::-webkit-scrollbar-track {
-  background-color: lightgrey;
-  border-radius: 10px;
+  background-color: #222222;
 }
 
 .searchResults {
@@ -94,7 +92,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 150px; 
+  width: 200px; 
   position: relative;
 }
 
@@ -104,7 +102,7 @@
 
 @keyframes marquee {
   0%   { text-indent: 0%; }
-  100% { text-indent: -400%; }
+  100% { text-indent: -200%; }
 }
 
 .artistName {
