@@ -75,8 +75,8 @@ public class UserService {
         cookie.setMaxAge(14 * 24 * 60 * 60);
 
         // optional properties
-        cookie.setSecure(false);
-        cookie.setHttpOnly(true);
+        cookie.setSecure(false); // 이거 https 적용해서 서버로 올리면 true로 바꿔야한다. 지금은 로컬에서 테스트라서 false로 해놓음
+        cookie.setHttpOnly(true); // http only로 설정해서 javascript로 접근 못하도록 막음
         cookie.setPath("/");
 
         // add cookie to response
