@@ -21,7 +21,7 @@
     color: #ffffff;
 }
 
-.modalButtonCancle{
+button.modalButtonCancle{
     background-color: #EDEDED;
     color: black;
     padding: 5px 10px;
@@ -32,13 +32,13 @@
     transition: background-color 0.3s, transform 0.2s;
 }
 
-.modalButtonCancle:hover {
+button.modalButtonCancle:hover {
     background-color: #bebebe;
     transform: scale(1.05);
     border: none;
 }
 
-.modalButtonCreate {
+button.modalButtonCreate {
     background-color: #DA0037;
     color: white;
     border: none;
@@ -50,7 +50,7 @@
     transition: background-color 0.3s, transform 0.2s;
 }
 
-.modalButtonCreate:hover {
+button.modalButtonCreate:hover {
     background-color: #a50029;
     transform: scale(1.05);
     border: none;

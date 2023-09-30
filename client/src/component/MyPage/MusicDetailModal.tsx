@@ -192,10 +192,10 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
               },
             }}
           >
-            <MenuItem onClick={handleMoveToOtherBox} className={styles.menuItems}>
+            <MenuItem onClick={handleMoveToOtherBox} className={styles.items}>
               다른 플레이리스트로 이동
             </MenuItem>
-            <MenuItem onClick={handleDeleteSong} className={styles.menuItems}>삭제하기</MenuItem>
+            <MenuItem onClick={handleDeleteSong} className={styles.items}>삭제하기</MenuItem>
           </Menu>
         </Box>
       </Modal>
