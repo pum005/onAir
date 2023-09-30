@@ -30,9 +30,22 @@ function NavBar() {
   const handleLoginAlertModalOpen = () => setLoginAlertModalOpen(true);
   const handleLoginAlertModalClose = () => setLoginAlertModalOpen(false);
 
-  const [logoutModalOpen, setLogoutModalOpen] = React.useState(false); // 2. 로그아웃 모달 관련 상태
-  const handleLogoutModalOpen = () => setLogoutModalOpen(true);
-  const handleLogoutModalClose = () => setLogoutModalOpen(false);
+  const handleLogoutModalOpen = () => {
+    Swal.fire({
+      title: "로그아웃 하시겠습니까?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#6966FF",
+      cancelButtonColor: "#DA0037",
+      confirmButtonText: "승인",
+      cancelButtonText: "취소",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleConfirmLogout(); // 사용자가 '승인'을 클릭하면 로그아웃 처리합니다.
+      }
+    });
+  };
 
   const userData = useSelector((state: RootState) => state.user); // 사용자 정보를 Redux store에서 가져옵니다.
   const [userImage, setUserImage] = useState<null | FileList>(null); // 사용자가 업로드한 이미지
@@ -52,14 +65,16 @@ function NavBar() {
 
     Swal.fire({
       title: "라이브에 참여하시겠습니까?",
-      text: "흥앵홍?",
-      icon: "warning",
+      icon: "question",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
+      confirmButtonColor: "#6966FF",
+      cancelButtonColor: "#DA0037",
       confirmButtonText: "승인",
       cancelButtonText: "취소",
       reverseButtons: true,
+      customClass: {
+        popup: "my-popup-class",
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         navigate("/LivePlayer");
@@ -95,8 +110,6 @@ function NavBar() {
             localStorage.removeItem(key);
           }
         }
-
-        handleLogoutModalClose();
       })
       .catch((error) => {
         console.log("통신에러발생", error);
@@ -119,16 +132,17 @@ function NavBar() {
               />
             </Button>
           </Link>
-          <Button onClick={handleLogoutModalOpen}>
-            <Typography variant="body1" style={{ color: "white" }}>
-              로그아웃
-            </Typography>
-          </Button>
+
           <h4 style={{ width: "135px", userSelect: "none" }}>
             환영합니다,
             <br />
             {displayNickname}님!
           </h4>
+          <Button onClick={handleLogoutModalOpen}>
+            <Typography variant="body1" style={{ color: "white" }}>
+              로그아웃
+            </Typography>
+          </Button>
         </div>
       );
     } else {
@@ -231,11 +245,6 @@ function NavBar() {
         open={loginModalOpen}
         handleClose={handleLoginModalClose}
       ></LoginModal>
-      <LogoutAlertModal
-        open={logoutModalOpen}
-        handleClose={handleLogoutModalClose}
-        handleConfirmLogout={handleConfirmLogout}
-      />
     </>
   );
 }
