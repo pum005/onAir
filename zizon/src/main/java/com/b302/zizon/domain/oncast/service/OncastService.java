@@ -86,13 +86,11 @@ public class OncastService {
 
 
         // 음악 추천받는 로직
-        Music[] oncastMusic = callFlaskService.getMusicData(request.getStory(),request.getTheme());
-
+        Music[] oncastMusic = callFlaskService.getMusicData(request.getStory(), request.getTheme());
 
 
         String story = request.getStory();
         String[] script = new String[4];
-
 
 
         oncastMusic[0] = Music.builder()
@@ -120,9 +118,6 @@ public class OncastService {
                 .build();
 
 
-
-
-
         QuestionRequest questionRequest = new QuestionRequest();
         questionRequest.setQuestion(
                 "아래의 예시에 몇가지 조건을 더해서 스크립트를 만들어줘\n" +
@@ -133,10 +128,10 @@ public class OncastService {
                         "        5. 음악 세개가 다 끝나고 이야기를 다 하면 마무리 인사를 하고 끝나면 돼\n" +
                         "        6. 각 음악이 들어갈 자리엔 @@ 을 넣어줘. 이부분을 체크해서 단락을 나누고 음악을 재생시키려고 하는거니까 음악이 들어가는 부분에 딱 한번만 해야하는거야\n" +
                         "        7. 밑에 내가 준 예시를 보고 \"노래\" 와 [[story]] 를 바꾸고 내용도 그에 맞게 바꿔서 주면 돼 \n" +
-                        "        - story: [["+ request.getStory()+"]]\n" +
-                        "        - 음악1: ("+ oncastMusic[0].getArtist()+" 의 "+ oncastMusic[0].getTitle()+")\n" +
-                        "        - 음악2: ("+ oncastMusic[1].getArtist()+" 의 "+ oncastMusic[1].getTitle()+")\n" +
-                        "        - 음악3:("+ oncastMusic[2].getArtist()+" 의 "+ oncastMusic[2].getTitle()+")\n" +
+                        "        - story: [[" + request.getStory() + "]]\n" +
+                        "        - 음악1: (" + oncastMusic[0].getArtist() + " 의 " + oncastMusic[0].getTitle() + ")\n" +
+                        "        - 음악2: (" + oncastMusic[1].getArtist() + " 의 " + oncastMusic[1].getTitle() + ")\n" +
+                        "        - 음악3:(" + oncastMusic[2].getArtist() + " 의 " + oncastMusic[2].getTitle() + ")\n" +
                         "        예시 : \n" +
                         "        안녕하세요, 여러분! 오늘 하루도 고생 정말 많으셨어요. \n" +
                         "        오늘의 이야기를 들어볼까요? \n" +
@@ -169,12 +164,10 @@ public class OncastService {
                 String str = naverTTSService.generateTTS(s, request.getDjName());
 
                 f.add(str);
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-
 
 
         Oncast oncast = Oncast.builder()
@@ -252,7 +245,7 @@ public class OncastService {
 
         Optional<Oncast> byOncast = oncastRepository.findById(oncastId);
 
-        if(byOncast.isEmpty()) {
+        if (byOncast.isEmpty()) {
             throw new OncastNotFoundException("존재하지 않는 온캐스트입니다.");
         }
 
@@ -299,16 +292,16 @@ public class OncastService {
     }
 
     // 온캐스트 재생하기(정보 제공)
-    public Map<String, Object> playOncast(Long oncastId){
+    public Map<String, Object> playOncast(Long oncastId) {
         Map<String, Object> result = new HashMap<>();
         User user = getUser.getUser();
 
         Optional<Oncast> byOncast = oncastRepository.findById(oncastId);
-        if(byOncast.isEmpty()){
+        if (byOncast.isEmpty()) {
             throw new OncastNotFoundException("온캐스트 정보가 없습니다.");
         }
 
-        if(!byOncast.get().getUser().getUserId().equals(user.getUserId())){
+        if (!byOncast.get().getUser().getUserId().equals(user.getUserId())) {
             throw new UnauthorizedOncastAccessException("해당 유저의 온캐스트가 아닙니다.");
         }
 
@@ -365,19 +358,20 @@ public class OncastService {
     }
 
     // 라이브큐 정보 가져오기
-    public Map<String, Object> getLiveQueueList(){
+    public Map<String, Object> getLiveQueueList() {
         Map<String, Object> result = new HashMap<>();
         User user = getUser.getUser();
 
         List<LiveQueue> listQueueList = liveQueueRepository.findAll();
 
         List<GetLiveQueueDTO> list = new ArrayList<>();
-        for(LiveQueue q : listQueueList){
+        for (LiveQueue q : listQueueList) {
 
             List<MusicDTO> musicList = new ArrayList<>();
 
             if (q.getOncast().getMusic1() != null) {
                 musicList.add(MusicDTO.builder()
+                        .musicId(q.getOncast().getMusic1().getMusicId())
                         .albumCoverUrl(q.getOncast().getMusic1().getAlbumCoverUrl())
                         .title(q.getOncast().getMusic1().getTitle())
                         .artist(q.getOncast().getMusic1().getArtist())
@@ -385,27 +379,29 @@ public class OncastService {
             }
 
             if (q.getOncast().getMusic2() != null) {
-            musicList.add(MusicDTO.builder()
-                .albumCoverUrl(q.getOncast().getMusic2().getAlbumCoverUrl())
-                .title(q.getOncast().getMusic2().getTitle())
-                .artist(q.getOncast().getMusic2().getArtist())
-                .build());
+                musicList.add(MusicDTO.builder()
+                        .musicId(q.getOncast().getMusic2().getMusicId())
+                        .albumCoverUrl(q.getOncast().getMusic2().getAlbumCoverUrl())
+                        .title(q.getOncast().getMusic2().getTitle())
+                        .artist(q.getOncast().getMusic2().getArtist())
+                        .build());
             }
 
             if (q.getOncast().getMusic3() != null) {
-            musicList.add(MusicDTO.builder()
-                .albumCoverUrl(q.getOncast().getMusic3().getAlbumCoverUrl())
-                .title(q.getOncast().getMusic3().getTitle())
-                .artist(q.getOncast().getMusic3().getArtist())
-                .build());
+                musicList.add(MusicDTO.builder()
+                        .musicId(q.getOncast().getMusic3().getMusicId())
+                        .albumCoverUrl(q.getOncast().getMusic3().getAlbumCoverUrl())
+                        .title(q.getOncast().getMusic3().getTitle())
+                        .artist(q.getOncast().getMusic3().getArtist())
+                        .build());
             }
 
             GetLiveQueueDTO liveQueueDTO = GetLiveQueueDTO.builder()
-            .nickname(q.getUser().getNickname())
-            .profileImage(q.getUser().getProfileImage())
-            .title(q.getOncast().getOncastCreateData().getTitle())
-            .musicList(musicList)
-            .build();
+                    .nickname(q.getUser().getNickname())
+                    .profileImage(q.getUser().getProfileImage())
+                    .title(q.getOncast().getOncastCreateData().getTitle())
+                    .musicList(musicList)
+                    .build();
 
             list.add(liveQueueDTO);
         }
