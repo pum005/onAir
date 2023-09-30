@@ -26,7 +26,7 @@ type YouTubePlayer = {
 export const GlobalYouTubePlayer = () => {
   const MusicData = useSelector((state: RootState) => state.music);
   const MusicDataArray: MusicInfo[] = Object.values(MusicData).filter(
-    (item) => item.musicId
+    item => item.musicId
   );
 
   const [player, setPlayer] = useState<any>(null);
@@ -175,7 +175,7 @@ export const GlobalYouTubePlayer = () => {
   ]);
 
   const setCurrentMusicByMusicId = (musicId: number) => {
-    const newIndex = MusicDataArray.findIndex((m) => m.musicId === musicId);
+    const newIndex = MusicDataArray.findIndex(m => m.musicId === musicId);
     if (newIndex !== -1) {
       dispatch(setSelectedMusicIndex(newIndex));
     }
@@ -231,7 +231,7 @@ export const GlobalYouTubePlayer = () => {
           opts={opts}
           onEnd={handleMusicEnd}
           onReady={onPlayerReady}
-          onStateChange={(event) => {
+          onStateChange={event => {
             if (player) {
               setCurrentTime(player.getCurrentTime());
               setDuration(player.getDuration());

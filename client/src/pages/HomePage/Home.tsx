@@ -45,7 +45,7 @@ export const Home = () => {
 
         {showRadioButton && (
           <div
-            style={{userSelect: "none"}}
+            style={{ userSelect: "none" }}
             onClick={navigateToCreateRadio}
             className={`${styles.verticalAlign} ${styles.fadeInGif}`}
           >

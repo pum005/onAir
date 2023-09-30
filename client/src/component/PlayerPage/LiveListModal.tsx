@@ -1,16 +1,15 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import { Modal, Backdrop, Fade } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import AlertDialog from "../Common/AddFullList";
 import styles from "./LiveListModal.module.css";
+import axios from "axios";
+import AlertModal from "../Common/AlertModal";
+import React from "react";
 
 type MusicItem = {
-  musicId: number;
   albumCoverUrl: string;
   artist: string;
   title: string;
+  musicId: number; // 이 부분을 추가했습니다.
 };
 
 type OncastItem = {
@@ -24,51 +23,50 @@ type LiveListModalProps = {
   isOpen: boolean;
   onClose: () => void;
   oncastList: OncastItem[];
+  currentStory: number; // 현재 재생 중인 사연의 순서
 };
 
 export const LiveListModal: React.FC<LiveListModalProps> = ({
   isOpen,
   onClose,
   oncastList,
+  currentStory,
 }) => {
-  const [open, setOpen] = useState(false);
-  const [selectedMusicId, setSelectedMusicId] = useState<number | null>(null);
+  const [alertModalOpen, setAlertModalOpen] = React.useState(false);
+  const [alertMessage, setAlertMessage] = React.useState("");
 
-  const handleClickOpen = (musicId: number) => {
-    setSelectedMusicId(musicId);
-    console.log("플러스 버튼 누름");
-  };
-
-  useEffect(() => {
-    if (selectedMusicId) {
-      requestWithTokenRefresh(() => {
-        return axios.post(
-          "http://localhost:8080/api/my-musicbox",
-          { musicId: selectedMusicId },
-          {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("accessToken"),
-            },
-            withCredentials: true,
-          }
-        );
-      })
-        .then(response => {
-          if (response.data.message === "음악 추가 완료") {
-            setOpen(true);
-          }
-          if (response.data.message === "이미 보관함에 있는 음악입니다.") {
-            alert("이미 보관함에 있는 음악입니다.");
-          }
-        })
-        .catch(error => {
-          console.error("에러발생", error);
-        });
+  const handleAddClick = (musicId: number) => {
+    if (!musicId) {
+      console.error("No musicId provided!");
+      return;
     }
-  }, [selectedMusicId]);
-
-  const handleClose = () => {
-    setOpen(false);
+    axios
+      .post(
+        "http://localhost:8080/api/playlist/music",
+        {
+          musicId: musicId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        }
+      )
+      .then(response => {
+        if (
+          response.data.message === "이미 플레이리스트에 추가된 음악입니다."
+        ) {
+          setAlertMessage("이미 플레이리스트에 추가된 음악입니다.");
+          setAlertModalOpen(true);
+        } else {
+          setAlertMessage("추가되었습니다.");
+          setAlertModalOpen(true);
+        }
+      })
+      .catch(error => {
+        console.error("Error adding music to playlist", error);
+      });
   };
 
   return (
@@ -91,7 +89,12 @@ export const LiveListModal: React.FC<LiveListModalProps> = ({
             <hr />
             <div className={styles.oncastList}>
               {oncastList.map((oncast, index) => (
-                <div key={index} className={styles.oncastItem}>
+                <div
+                  key={index}
+                  className={`${styles.oncastItem} ${
+                    index === currentStory ? styles.currentOncast : ""
+                  }`}
+                >
                   <div className={styles.profileAndDetails}>
                     <img
                       src={oncast.profileImage}
@@ -119,7 +122,7 @@ export const LiveListModal: React.FC<LiveListModalProps> = ({
                         </div>
                         <AddCircleOutlineIcon
                           className={styles.addIcon}
-                          onClick={() => handleClickOpen(music.musicId)}
+                          onClick={() => handleAddClick(music.musicId)}
                         />
                       </li>
                     ))}
@@ -130,7 +133,11 @@ export const LiveListModal: React.FC<LiveListModalProps> = ({
           </div>
         </Fade>
       </Modal>
-      <AlertDialog open={open} handleClose={handleClose} />;
+      <AlertModal
+        open={alertModalOpen}
+        message={alertMessage}
+        onClose={() => setAlertModalOpen(false)}
+      />
     </>
   );
 };
