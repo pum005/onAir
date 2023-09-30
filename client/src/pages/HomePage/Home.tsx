@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import NavBar from "../../component/Common/Navbar";
+// import NavBar from "../../component/Common/Navbar";
 import styles from "./Home.module.css";
 import React, { useState, useEffect } from "react";
 import LoginAlertModal from "../../component/Common/NoLoginModal";
@@ -35,7 +35,7 @@ export const Home = () => {
       className={styles.background}
       style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
     >
-      <NavBar />
+      {/* <NavBar /> */}
       <div className={styles.centerContent}>
         {showText && (
           <h2 className={styles.fadeInOutText}>
@@ -45,7 +45,7 @@ export const Home = () => {
 
         {showRadioButton && (
           <div
-            style={{userSelect: "none"}}
+            style={{ userSelect: "none" }}
             onClick={navigateToCreateRadio}
             className={`${styles.verticalAlign} ${styles.fadeInGif}`}
           >

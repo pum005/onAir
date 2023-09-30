@@ -46,7 +46,7 @@
   width: auto;
   position: absolute;
   /* position: fixed; */
-  /* left: -7%; */
+  left: -7%;
   flex-direction: row;
   align-items: centers;
 }

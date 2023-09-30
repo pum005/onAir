@@ -30,26 +30,6 @@ function NavBar() {
   const handleLoginAlertModalOpen = () => setLoginAlertModalOpen(true);
   const handleLoginAlertModalClose = () => setLoginAlertModalOpen(false);
 
-  const handleLogoutModalOpen = () => {
-    Swal.fire({
-      title: "로그아웃 하시겠습니까?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#6966FF",
-      cancelButtonColor: "#DA0037",
-      confirmButtonText: "승인",
-      cancelButtonText: "취소",
-      reverseButtons: true,
-      customClass: {
-        // popup: "colored-toast",
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        handleConfirmLogout(); // 사용자가 '승인'을 클릭하면 로그아웃 처리합니다.
-      }
-    });
-  };
-
   const userData = useSelector((state: RootState) => state.user); // 사용자 정보를 Redux store에서 가져옵니다.
   const [userImage, setUserImage] = useState<null | FileList>(null); // 사용자가 업로드한 이미지
 
@@ -87,38 +67,6 @@ function NavBar() {
     });
   };
 
-  const handleConfirmLogout = () => {
-    requestWithTokenRefresh(() => {
-      return axios.post(
-        "http://localhost:8080/api/oauth/social/logout",
-        {},
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("accessToken"),
-          },
-          withCredentials: true,
-        }
-      );
-    })
-      .then((response) => {
-        console.log(response);
-        if (response.data.logoutUrl) {
-          window.location.href = response.data.logoutUrl;
-        } else if (response.data.naver) {
-          window.location.href = "http://localhost:3000"; // 메인 페이지로 리다이렉트
-        }
-        localStorage.removeItem("accessToken"); // 액세스 토큰 제거
-        for (let key in localStorage) {
-          if (key.startsWith("persist:")) {
-            localStorage.removeItem(key);
-          }
-        }
-      })
-      .catch((error) => {
-        console.log("통신에러발생", error);
-      });
-  };
-
   const isLoggedIn = Boolean(localStorage.getItem("accessToken"));
 
   const renderUserIcon = () => {
@@ -141,11 +89,6 @@ function NavBar() {
             <br />
             {displayNickname}님!
           </h4>
-          <Button onClick={handleLogoutModalOpen}>
-            <Typography variant="body1" style={{ color: "white" }}>
-              로그아웃
-            </Typography>
-          </Button>
         </div>
       );
     } else {

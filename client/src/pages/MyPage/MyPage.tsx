@@ -15,7 +15,7 @@ export const MyPage = () => {
         alignItems: "center",
       }}
     >
-      <NavBar />
+      {/* <NavBar /> */}
       <InfoModify />
       <p></p>
       <BasicTabs />
