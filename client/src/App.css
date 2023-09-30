@@ -95,8 +95,8 @@
 }
 
 .swal2-popup {
-  background-color: rgb(55, 55, 55);
-  color: white;
+  background-color: rgb(55, 55, 55) !important;
+  color: white !important;
 }
 
 .swal2-question {
@@ -116,3 +116,7 @@
   border-color: #ed6c02 !important;
   color: #ed6c02 !important;
 }
+
+/* .colored-toast.swal2-icon-warning {
+  background-color: #ed6c02 !important;
+} */

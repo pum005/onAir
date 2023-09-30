@@ -40,6 +40,9 @@ function NavBar() {
       confirmButtonText: "승인",
       cancelButtonText: "취소",
       reverseButtons: true,
+      customClass: {
+        // popup: "colored-toast",
+      },
     }).then((result) => {
       if (result.isConfirmed) {
         handleConfirmLogout(); // 사용자가 '승인'을 클릭하면 로그아웃 처리합니다.

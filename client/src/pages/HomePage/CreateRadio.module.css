@@ -115,7 +115,7 @@
 
 .createButton {
   margin-right: 10px;
-  background-color: #6966ff !important;
+  background-color: #4f4dbd !important;
   color: white !important;
   font-family: "Shilla_Gothic-Bold" !important;
 }
@@ -137,3 +137,11 @@
 .djName {
   font-family: "Shilla_Gothic-Bold" !important;
 }
+
+/* .swal2-warning {
+  border-color: #ed6c02 !important;
+  color: #ed6c02 !important;
+} */
+/* .colored-toast.swal2-icon-warning {
+  background-color: #ed6c02 !important;
+} */
