@@ -167,7 +167,7 @@ public class MusicService {
 
         YoutubeSearchResultDTO result = new YoutubeSearchResultDTO();
 
-        String query = title + " " + artist + "음원";
+        String query = title + " " + artist + " " + "음원";
         YouTube.Search.List searchRequest;
         try {
             searchRequest = youtubeApi.search().list(Arrays.asList("id", "snippet"));
@@ -216,7 +216,7 @@ public class MusicService {
                 // 재생 시간 검증 (+,- 10초)
                 long playTime = convertTime.convertDurationToMillis(
                         video.getContentDetails().getDuration());
-                if (Math.abs(spotifyMusicDuration - playTime) > 10000) {
+                if (Math.abs(spotifyMusicDuration - playTime) > 3000) {
                     continue;
                 }
                 playTimeYoutube = playTime;
@@ -224,7 +224,7 @@ public class MusicService {
                 // 조회수 가장 많은 동영상 1개 리턴
                 BigInteger viewCount = video.getStatistics().getViewCount();
                 if (viewCount.compareTo(maxViews) > 0
-                        && viewCount.compareTo(BigInteger.valueOf(100000)) > 0) {
+                        && viewCount.compareTo(BigInteger.valueOf(10000)) > 0) {
                     maxViews = viewCount;
                     result.setMusicYoutubeId(musicYoutubeId);
                     result.setMusicLength(playTimeYoutube);
