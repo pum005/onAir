@@ -18,7 +18,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 약간의 그림자 추가 */
 }
 
-.checkButton {
+button.checkButton {
     background-color: #6966FF;
     color: white;
     border: none;
@@ -29,7 +29,7 @@
     cursor: pointer;
 }
 
-.checkButton:hover {
+button.checkButton:hover {
     background-color: #4c49fd;
     color: white;
     border: none;
