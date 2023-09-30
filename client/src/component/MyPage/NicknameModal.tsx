@@ -30,6 +30,10 @@ function NickNameModal({
   };
   //아
   const handleUpdateNickName = () => {
+    if (newNickName.length > 10) {
+      alert("10글자를 초과하였습니다.");
+      return;
+    }
     setSubmitClicked(!submitClicked);
   };
 
@@ -46,7 +50,7 @@ function NickNameModal({
           withCredentials: true,
         });
       })
-        .then(Response => {
+        .then((Response) => {
           if (Response.data === false) {
             return axios
               .put(
@@ -72,7 +76,7 @@ function NickNameModal({
             setSubmitClicked(false);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("닉네임 변경 에러 발생", error);
           setSubmitClicked(false);
         });
