@@ -13,7 +13,7 @@ const AlertModal: React.FC<{
           sx={{
             paddingTop: '10px',
             paddingBottom: '30px',
-            fontSize: '30px'
+            fontSize: '25px'
           }}>{message}</Typography>
         <Button onClick={onClose} disableRipple variant="contained" className={styles.checkButton}
         autoFocus

@@ -120,7 +120,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
               </div>
               <div>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                  내 플레이리스트
+                  플레이리스트
                 </Typography>
               </div>
             </div>
@@ -146,7 +146,6 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
                   </Typography>
                   <Typography
                     variant="body2"
-                    color="textSecondary"
                     className={styles.songCount}
                   >
                     현재 음악 : {playlist.playlistCount}개
