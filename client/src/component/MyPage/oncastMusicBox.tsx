@@ -165,7 +165,7 @@ export default function  oncastMusicBox() {
           >
             <SearchIcon />
             <Typography 
-            className={styles.musicSearch}>음악검색</Typography>
+            className={styles.musicSearch} >음악검색</Typography>
           </div>
         )}
       </Box>
