@@ -28,36 +28,23 @@
   font-family: "GangwonEduPowerExtraBoldA" !important;
 }
 
-/* @font-face {
-  font-family: "Ramche";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/Ramche.woff2")
-    format("woff2");
-  font-weight: normal;
-  font-style: normal;
-}
-
+/* Input 글씨체  */
 @font-face {
-  font-family: "intelone-mono-font-family-regular";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/intelone-mono-font-family-regular.woff2")
-    format("woff2");
+  font-family: "Pretendard-SemiBold";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-SemiBold.woff")
+    format("woff");
   font-weight: 400;
   font-style: normal;
 }
 
+/* Input 굵은글씨체  */
 @font-face {
-  font-family: "SUITE-Regular";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/SUITE-Regular.woff2")
-    format("woff2");
-  font-weight: 400;
+  font-family: "Pretendard-ExtraBold";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraBold.woff")
+    format("woff");
+  font-weight: 600;
   font-style: normal;
 }
-@font-face {
-  font-family: "IAMAPLAYER";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/IAMAPLAYER.woff2")
-    format("woff2");
-  font-weight: normal;
-  font-style: normal;
-} */
 
 /* 강원도 굵은 글씨체 영어(제목) */
 @font-face {
@@ -84,7 +71,7 @@
   font-size: 1rem;
   background-color: transparent;
   color: white !important;
-  font-family: "GangwonEduPowerExtraBoldA" !important;
+  font-family: "Pretendard-SemiBold" !important;
   border: 1px solid white;
   border-radius: 4px;
   resize: none; /* textarea 크기 조절 방지 */
@@ -116,7 +103,7 @@
   gap: 0.5rem;
 }
 .theme {
-  font-family: "GangwonEduPowerExtraBoldA" !important;
+  font-family: "Pretendard-ExtraBold" !important;
   color: #ededed !important;
   /* font-family: "IAMAPLAYER" !important; */
   /* font-family: "SUITE-Regular" !important; */
