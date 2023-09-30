@@ -154,10 +154,6 @@ export const GlobalYouTubePlayer = () => {
           } else {
             player.seekTo(0); // 시작점으로 이동
           }
-        } else if (event.key === " ") {
-          // 스페이스바를 눌렀을 때
-          event.preventDefault(); // 브라우저 기본 동작(예: 스크롤)을 방지
-          togglePlay(); // 재생 및 일시정지 토글
         }
       }
     };
