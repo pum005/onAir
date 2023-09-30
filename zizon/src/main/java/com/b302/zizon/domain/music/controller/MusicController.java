@@ -1,5 +1,6 @@
 package com.b302.zizon.domain.music.controller;
 
+import com.b302.zizon.domain.music.dto.request.MusicRecommendRequestDTO;
 import com.b302.zizon.domain.music.dto.response.MusicInfoResponseDTO;
 import com.b302.zizon.domain.music.dto.request.MyMusicBoxAddRequestDTO;
 import com.b302.zizon.domain.music.dto.response.SpotifySearchResultDTO;
@@ -57,6 +58,14 @@ public class MusicController {
     @GetMapping("/search/spotify")
     public List<SpotifySearchResultDTO> searchMusic(@RequestParam String title) {
         return musicService.searchSpotifyMusicList(title);
+    }
+
+    // 스포티파이 고유값으로 음악 검색
+    @PostMapping("/search/spotify")
+    public Map<String, Object> searchMusicList(@RequestBody MusicRecommendRequestDTO musicRecommendRequestDTO){
+        Map<String, Object> result = musicService.recommendMusic(musicRecommendRequestDTO);
+
+        return result;
     }
 
     // 유튜브 검색
