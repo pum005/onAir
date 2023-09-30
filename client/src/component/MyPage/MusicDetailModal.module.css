@@ -107,6 +107,6 @@
   margin-right: 20px; /* desiredColor를 원하는 색상 값으로 변경해주세요. 예: #FF5733 */
 }
 
-.menuItems:hover{
-  background-color: #3b3a3a;
+menuItem.items:hover{
+  background-color: #b93131;
 }
