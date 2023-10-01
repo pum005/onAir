@@ -92,8 +92,13 @@
         }
 
         // 온캐스트 생성하면 true로 변경
-        public void updateCreateCheck(){
+        public void updateCreateCheckTrue(){
             this.createCheck = true;
+        }
+
+        // 00시 되면 온캐스트 생성 여부 false로 변경
+        public void updateCreateCheckFalse(){
+            this.createCheck = false;
         }
 
 
