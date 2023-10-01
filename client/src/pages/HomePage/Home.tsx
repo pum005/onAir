@@ -72,6 +72,7 @@ export const Home = () => {
           </div>
         )}
 
+        {/* 여기부분수정 */}
         {/* <LoginAlertModal
           open={loginAlertModalOpen}
           handleClose={() => setLoginAlertModalOpen(false)}
