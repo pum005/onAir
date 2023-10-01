@@ -1,4 +1,4 @@
-import NavBar from "../../component/Common/Navbar";
+// import NavBar from "../../component/Common/Navbar";
 import PlayListModal from "../../component/PlayerPage/PlayListModal";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import React, { useEffect, useState } from "react";
@@ -37,7 +37,7 @@ export const LivePlayer = () => {
         }
       },
       // 두 번째 콜백: 채팅 데이터를 처리합니다.
-      chatData => {
+      (chatData) => {
         dispatch(
           addChatMessage({
             content: chatData.content,
@@ -58,7 +58,7 @@ export const LivePlayer = () => {
     <div
       style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
     >
-      <NavBar />
+      {/* <NavBar /> */}
       <div style={{ position: "absolute", top: "125px", right: "150px" }}>
         <ChatIcon
           style={{ fontSize: "2.3rem", color: "white", cursor: "pointer" }}

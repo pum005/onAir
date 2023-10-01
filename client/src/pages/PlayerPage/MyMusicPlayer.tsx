@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import NavBar from "../../component/Common/Navbar";
+// import NavBar from "../../component/Common/Navbar";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AddCircleOutline from "@mui/icons-material/AddCircleOutline";
 import styles from "./MyMusicPlayer.module.css";
@@ -161,7 +161,7 @@ export const MyMusicPlayer = () => {
 
   return (
     <div className={styles.root}>
-      <NavBar />
+      {/* <NavBar /> */}
       <div className={styles.container}>
         <div className={styles.songDisplayContainer}>
           <div className={styles.coverImageContainer}>
