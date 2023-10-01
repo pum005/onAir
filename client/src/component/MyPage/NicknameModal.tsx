@@ -1,13 +1,13 @@
 // nickNameModal.tsx
 import React, { useEffect, useState } from "react";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import { Modal, TextField, Button, Box } from "@mui/material";
+
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import { setNickName } from "../../store";
 import { error } from "console";
+import styles from "./NicknameModal.module.css";
 
 type NickNameModalProps = {
   isOpen: boolean;
@@ -85,30 +85,40 @@ function NickNameModal({
 
   return (
     <Modal open={isOpen} onClose={onClose}>
-      <Box
-        sx={{
-          position: "absolute",
-          width: 400,
-          backgroundColor: "white",
-          border: "2px solid #000",
-          boxShadow: 24,
-          p: 2,
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-        }}
-      >
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          닉네임 변경
-        </Typography>
-        <input
-          type="text"
-          value={newNickName}
+      <Box className={styles.modalContainer}>
+        <div className={styles.nickNameModifyTitle}>
+          <h2>닉네임 변경</h2>
+        </div>
+        <TextField
+          placeholder="닉네임을 입력해주세요"
+          variant="standard"
+          fullWidth
+          // value={newNickName}
           onChange={handleNickNameChange}
-          style={{ display: "block" }}
-        />
-        <Button onClick={handleUpdateNickName}>저장</Button>{" "}
-        <Button onClick={onClose}>닫기</Button>
+          inputProps={{
+            style: { color: "#f5e9e9" }, // This style is applied to the actual input element
+          }}
+          style={{ width: "300px" }}
+          className={styles.TextField}
+        ></TextField>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 2,
+            marginTop: "20px",
+          }}
+        >
+          <Button
+            className={styles.nickNamePersist}
+            onClick={handleUpdateNickName}
+          >
+            저장
+          </Button>{" "}
+          <Button className={styles.nickNameModalClose} onClick={onClose}>
+            취소
+          </Button>
+        </Box>
       </Box>
     </Modal>
   );
