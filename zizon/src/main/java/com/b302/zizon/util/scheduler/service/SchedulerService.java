@@ -96,7 +96,7 @@ public class SchedulerService {
     }
 
     // 라이브 서버 17시마다 off
-    @Scheduled(cron = "0 38 21 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 17 * * *", zone = "Asia/Seoul")
     @Transactional
     public void liveServerOff(){
         log.info("라이브 서버 off");

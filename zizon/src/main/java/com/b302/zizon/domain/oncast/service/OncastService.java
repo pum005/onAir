@@ -1,7 +1,9 @@
 package com.b302.zizon.domain.oncast.service;
 
+import com.b302.zizon.domain.music.dto.request.MusicRecommendRequestDTO;
 import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.music.entity.ThemeEnum;
+import com.b302.zizon.domain.music.service.MusicService;
 import com.b302.zizon.domain.oncast.dto.request.OncastRequestDto;
 import com.b302.zizon.domain.oncast.dto.response.*;
 import com.b302.zizon.domain.oncast.entity.LiveQueue;
@@ -52,6 +54,7 @@ public class OncastService {
     private final LiveQueueRepository liveQueueRepository;
     private final CallFlaskService callFlaskService;
     private final RedisTemplate<String, String> redisTemplate;
+    private final MusicService musicService;
 
     // 음악dto 변환
     private GetMusicDTO convertToDTO(Music music) {
@@ -93,7 +96,20 @@ public class OncastService {
 
 
         // 음악 추천받는 로직
-        Music[] oncastMusic = callFlaskService.getMusicData(request.getStory(), request.getTheme());
+
+        SongIdsResponse ids = callFlaskService.getMusicData(request.getStory(),request.getTheme());
+
+        Map<String,Object> RecommendResult = musicService.recommendMusic(new MusicRecommendRequestDTO(ids.getSong_ids()));
+        // ids로 데이터셋에서 조회해서 음악배열 완성하는 로직 넣기
+
+        RecommendResult.get("song1");
+        RecommendResult.get("song2");
+        RecommendResult.get("song3");
+        // 해종
+
+
+        Music[] oncastMusic = new Music[3];
+
 
 
         String story = request.getStory();
@@ -419,6 +435,7 @@ public class OncastService {
         result.put("oncast", list);
         return result;
     }
+
 
     // 라이브 서버 상태 가져오기
     public Map<String, Object> getLiveServerStatus(){
