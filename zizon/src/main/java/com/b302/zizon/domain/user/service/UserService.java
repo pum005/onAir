@@ -1,6 +1,7 @@
 package com.b302.zizon.domain.user.service;
 
 import com.b302.zizon.domain.user.GetUser;
+import com.b302.zizon.domain.user.dto.UserLoginResponseDTO;
 import com.b302.zizon.domain.user.dto.UserUpdateRequestDTO;
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.exception.UserNotFoundException;
@@ -54,7 +55,7 @@ public class UserService {
 
     // 소셜 로그인
     @Transactional
-    public Map<String, Object> oauthLogin(String privateAccess, HttpServletResponse response) {
+    public UserLoginResponseDTO oauthLogin(String privateAccess, HttpServletResponse response) {
 
         Optional<User> byPrivateAccess = userRepository.findByPrivateAccess(privateAccess);
 
@@ -85,12 +86,14 @@ public class UserService {
 
         Map<String, Object> result = new HashMap<>();
 
-        result.put("accessToken", accessToken);
-        result.put("refreshToken", refreshToken);
-        result.put("accountType", user.getAccountType());
-        result.put("nickname", user.getNickname());
-        result.put("profileImage", user.getProfileImage());
-        result.put("userId", user.getUserId());
+        UserLoginResponseDTO build = UserLoginResponseDTO.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .nickname(user.getNickname())
+                .profileImage(user.getProfileImage())
+                .accountType(user.getAccountType())
+                .uesrId(user.getUserId())
+                .createCheck(user.isCreateCheck()).build();
 
         if (user.getAccountType().equals("kakao")) {
             result.put("message", "카카오 로그인 성공");
@@ -98,7 +101,7 @@ public class UserService {
             result.put("message", "네이버 로그인 성공");
         }
 
-        return result;
+        return build;
     }
 
     // 소셜 로그아웃
