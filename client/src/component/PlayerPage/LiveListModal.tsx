@@ -4,6 +4,8 @@ import styles from "./LiveListModal.module.css";
 import axios from "axios";
 import AlertModal from "../Common/AlertModal";
 import React from "react";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import PlayListModal from "../Common/PlayListModal";
 
 type MusicItem = {
   albumCoverUrl: string;
@@ -34,40 +36,46 @@ export const LiveListModal: React.FC<LiveListModalProps> = ({
 }) => {
   const [alertModalOpen, setAlertModalOpen] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState("");
+  const [selectedMusicId, setSelectedMusicId] = React.useState<number | null>(
+    null
+  );
+  const [playListModalOpen, setPlayListModalOpen] = React.useState(false);
 
-  const handleAddClick = (musicId: number) => {
-    if (!musicId) {
-      console.error("No musicId provided!");
-      return;
-    }
-    axios
-      .post(
-        "http://localhost:8080/api/playlist/music",
-        {
-          musicId: musicId,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("accessToken"),
-          },
-          withCredentials: true,
-        }
-      )
-      .then(response => {
-        if (
-          response.data.message === "이미 플레이리스트에 추가된 음악입니다."
-        ) {
-          setAlertMessage("이미 플레이리스트에 추가된 음악입니다.");
-          setAlertModalOpen(true);
-        } else {
-          setAlertMessage("추가되었습니다.");
-          setAlertModalOpen(true);
-        }
-      })
-      .catch(error => {
-        console.error("Error adding music to playlist", error);
-      });
+  const handleClickOpen = (musicId: number) => {
+    setSelectedMusicId(musicId);
   };
+
+  React.useEffect(() => {
+    if (selectedMusicId) {
+      requestWithTokenRefresh(() => {
+        return axios.post(
+          "http://localhost:8080/api/my-musicbox",
+          { musicId: selectedMusicId },
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+            withCredentials: true,
+          }
+        );
+      })
+        .then(response => {
+          if (response.data.message === "음악 추가 완료") {
+            setAlertMessage("추가되었습니다.");
+            setAlertModalOpen(true);
+            // setPlayListModalOpen(true); 이 줄을 제거합니다.
+          } else if (
+            response.data.message === "이미 보관함에 있는 음악입니다."
+          ) {
+            setAlertMessage("이미 보관함에 있는 음악입니다.");
+            setAlertModalOpen(true);
+          }
+        })
+        .catch(error => {
+          console.error("에러발생", error);
+        });
+    }
+  }, [selectedMusicId]);
 
   return (
     <>
@@ -122,7 +130,7 @@ export const LiveListModal: React.FC<LiveListModalProps> = ({
                         </div>
                         <AddCircleOutlineIcon
                           className={styles.addIcon}
-                          onClick={() => handleAddClick(music.musicId)}
+                          onClick={() => handleClickOpen(music.musicId)}
                         />
                       </li>
                     ))}
@@ -136,7 +144,15 @@ export const LiveListModal: React.FC<LiveListModalProps> = ({
       <AlertModal
         open={alertModalOpen}
         message={alertMessage}
-        onClose={() => setAlertModalOpen(false)}
+        onClose={() => {
+          setAlertModalOpen(false);
+          setPlayListModalOpen(true); // AlertModal이 닫힐 때 PlayListModal을 엽니다.
+        }}
+      />
+      <PlayListModal
+        musicId={selectedMusicId}
+        isOpen={playListModalOpen}
+        onClose={() => setPlayListModalOpen(false)}
       />
     </>
   );

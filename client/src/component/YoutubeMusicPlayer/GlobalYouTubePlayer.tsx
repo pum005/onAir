@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import YouTube from "react-youtube";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, MusicInfo, setSelectedMusicIndex } from "../../store";
@@ -13,6 +13,9 @@ import Tooltip from "@mui/material/Tooltip";
 import { useNavigate } from "react-router-dom";
 import styles from "./GlobalYouTubePlayer.module.css";
 import { BiSolidAlbum } from "react-icons/bi";
+import { Paper, styled } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import MusicEqualizer from "../PlayerPage/MusicEqualizer";
 
 //파일 분리 완료
 type YouTubePlayer = {
@@ -22,6 +25,14 @@ type YouTubePlayer = {
   playVideo: () => void;
   pauseVideo: () => void;
 };
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
 
 export const GlobalYouTubePlayer = () => {
   const MusicData = useSelector((state: RootState) => state.music);
@@ -41,7 +52,7 @@ export const GlobalYouTubePlayer = () => {
   const [isLoop, setIsLoop] = useState(false);
   const [isDebouncing, setIsDebouncing] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-
+  const audioRef = useRef<HTMLAudioElement>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -207,7 +218,10 @@ export const GlobalYouTubePlayer = () => {
   const videoId = MusicDataArray[currentMusicIndex]?.youtubeVideoId;
 
   return (
-    <div className={styles.audioContainer}>
+    <div
+      className={styles.audioContainer}
+      style={isVisible ? {} : { width: "0px", overflow: "hidden" }}
+    >
       <Tooltip
         title={videoId ? "Play Music" : "현재 재생 가능한 음악이 없습니다!"}
       >
@@ -217,9 +231,10 @@ export const GlobalYouTubePlayer = () => {
             isVisible && videoId ? styles.albumTrueButton : styles.albumButton
           }
         >
-          <BiSolidAlbum color="white" size="40px" />
+          <BiSolidAlbum color="white" size="200px" />
         </Button>
       </Tooltip>
+
       {videoId && (
         <YouTube
           key={videoId}
@@ -240,71 +255,95 @@ export const GlobalYouTubePlayer = () => {
           }}
         />
       )}
+
       {isVisible && videoId && (
         <div className={styles.audioControls}>
-          <Button
-            onClick={skipToPrevious}
-            color="primary"
-            variant="outlined"
-            disabled={!isButtonEnabled}
-          >
-            <SkipPreviousIcon />
-          </Button>
-          <Button
-            onClick={togglePlay}
-            color="primary"
-            variant="outlined"
-            disabled={!isButtonEnabled || !videoId}
-          >
-            {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-          </Button>
-          <Button
-            onClick={() =>
-              dispatch(
-                setSelectedMusicIndex(
-                  (currentMusicIndex + 1) % MusicDataArray.length
-                )
-              )
-            }
-            color="primary"
-            variant="outlined"
-            disabled={!isButtonEnabled}
-          >
-            <SkipNextIcon />
-          </Button>
-          <Button
-            onClick={() => setIsRandom(!isRandom)}
-            color="primary"
-            variant="outlined"
-            disabled={!isButtonEnabled}
-          >
-            <ShuffleIcon color={isRandom ? "secondary" : "action"} />
-          </Button>
-          <Button
-            onClick={() => setIsLoop(!isLoop)}
-            color="primary"
-            variant="outlined"
-            disabled={!isButtonEnabled}
-          >
-            <LoopIcon color={isLoop ? "secondary" : "action"} />
-          </Button>
           <div className={styles.progressBar} onClick={handleProgressBarClick}>
             <div
               className={styles.progress}
               style={{ width: `${(currentTime / duration) * 100}%` }}
             />
           </div>
-          <span className={styles.timeText}>
-            {Math.floor(currentTime / 60)}:
-            {String(Math.floor(currentTime % 60)).padStart(2, "0")}
-          </span>
-          <span className={styles.timeText}>
-            /{Math.floor(duration / 60)}:
-            {String(Math.floor(duration % 60)).padStart(2, "0")}
-          </span>
-          <Button onClick={redirectToPlaylist}>
-            여기 누르면 원래 노래 나오던 페이지
-          </Button>
+
+          <Grid container spacing={3} className={styles.gridContainer}>
+            <Grid item xs>
+              <div className={styles.controlButtons}>
+                <Button onClick={skipToPrevious} disabled={!isButtonEnabled}>
+                  <SkipPreviousIcon />
+                </Button>
+                <Button
+                  onClick={togglePlay}
+                  disabled={!isButtonEnabled || !videoId}
+                >
+                  {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+                </Button>
+                <Button
+                  onClick={() =>
+                    dispatch(
+                      setSelectedMusicIndex(
+                        (currentMusicIndex + 1) % MusicDataArray.length
+                      )
+                    )
+                  }
+                  disabled={!isButtonEnabled}
+                >
+                  <SkipNextIcon />
+                </Button>
+              </div>
+            </Grid>
+
+            <Grid item xs>
+              <div className={styles.timeInfo}>
+                <span>
+                  {Math.floor(currentTime / 60)}:
+                  {String(Math.floor(currentTime % 60)).padStart(2, "0")}
+                </span>
+                <span> / </span>
+                <span>
+                  {Math.floor(duration / 60)}:
+                  {String(Math.floor(duration % 60)).padStart(2, "0")}
+                </span>
+              </div>
+            </Grid>
+
+            <Grid item xs>
+              <div className={styles.currentSongInfo}>
+                <img
+                  src={MusicDataArray[currentMusicIndex]?.albumCoverUrl}
+                  alt="Album Cover"
+                  width="50"
+                  height="50"
+                  style={{ marginRight: "10px" }}
+                />
+                <div>
+                  <span className={styles.currentSongTitle}>
+                    {MusicDataArray[currentMusicIndex]?.title}
+                  </span>
+                  <br />
+                  <span className={styles.currentSongArtist}>
+                    {MusicDataArray[currentMusicIndex]?.artist}
+                  </span>
+                </div>
+              </div>
+            </Grid>
+
+            <Grid item xs>
+              <div className={styles.iconControls}>
+                <Button
+                  onClick={() => setIsRandom(!isRandom)}
+                  disabled={!isButtonEnabled}
+                >
+                  <ShuffleIcon color={isRandom ? "secondary" : "action"} />
+                </Button>
+                <Button
+                  onClick={() => setIsLoop(!isLoop)}
+                  disabled={!isButtonEnabled}
+                >
+                  <LoopIcon color={isLoop ? "secondary" : "action"} />
+                </Button>
+              </div>
+            </Grid>
+          </Grid>
         </div>
       )}
     </div>
