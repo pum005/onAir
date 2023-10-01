@@ -32,7 +32,7 @@ import java.util.Optional;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 @Slf4j
-public class OAuth2Controller {
+public class  OAuth2Controller {
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -47,6 +47,7 @@ public class OAuth2Controller {
     private final JwtUtil jwtUtil;
     private final UserService userService;
 
+    // 소셜 로그인
     @PostMapping("oauth/login")
     public ResponseEntity<?> Login(@RequestBody Map<String, Object> data, HttpServletResponse response) throws IOException {
 

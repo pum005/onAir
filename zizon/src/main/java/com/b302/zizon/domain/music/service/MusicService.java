@@ -223,7 +223,7 @@ public class MusicService {
 
         YoutubeSearchResultDTO result = new YoutubeSearchResultDTO();
 
-        String query = title + " " + artist + " " + "music";
+        String query = artist + " " + title + " " + "음악";
         YouTube.Search.List searchRequest;
         System.out.println(query);
         System.out.println(spotifyMusicDuration);
@@ -268,7 +268,8 @@ public class MusicService {
                         videoTitle.contains("무대") || videoDescription.contains("무대") ||
                         videoTitle.contains("live") || videoDescription.contains("live") ||
                         videoTitle.contains("performance") || videoDescription.contains("performance") ||
-                        videoTitle.contains("MV") || videoDescription.contains("MV")
+                        videoTitle.contains("MV") || videoDescription.contains("MV") ||
+                        videoTitle.contains("practice") || videoDescription.contains("practice")
                 ) {
                     continue;
                 }
@@ -283,7 +284,7 @@ public class MusicService {
                 // 재생 시간 검증 (+,- 10초)
                 long playTime = convertTime.convertDurationToMillis(
                         video.getContentDetails().getDuration());
-                if (Math.abs(spotifyMusicDuration - playTime) > 3000) {
+                if (Math.abs(spotifyMusicDuration - playTime) > 5000) {
                     continue;
                 }
                 playTimeYoutube = playTime;
