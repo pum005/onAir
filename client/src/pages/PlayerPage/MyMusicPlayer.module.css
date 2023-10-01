@@ -81,7 +81,7 @@
 
 .songList {
   overflow-y: auto;
-  max-height: 80vh;
+  height: 300px;
 }
 
 .albumImage {
