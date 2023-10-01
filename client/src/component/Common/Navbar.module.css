@@ -42,13 +42,11 @@
 }
 
 .liveImage {
-  height: 40px;
+  height: 100px;
   width: auto;
   position: absolute;
-  /* position: fixed; */
-  left: -7%;
   flex-direction: row;
-  align-items: centers;
+  align-items: center;
 }
 
 .userProfileImage {
@@ -61,10 +59,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background-image: linear-gradient(to right, red,orange,yellow,green,blue,navy, purple)!important; */
-  background-image: url("../../../public/images/밤하늘에펄.jpg");
-  box-shadow: none;
-  position: relative;
+  /* background-image: url("../../../public/images/밤하늘에펄.jpg"); */
+  background-color: rgba(35, 35, 35, 0.5) !important;
 }
 
 .userNickName {
@@ -74,14 +70,20 @@
   /* flex-direction: row; */
 }
 
-.selectNone {
-  user-select: none;
+@media (min-width: 600px) {
+  .selectNone {
+    min-height: 64px;
+    box-shadow: 0px 1px 15px rgba(100, 100, 100, 0.5);
+  }
 }
 .textRed {
   color: red;
 }
 
-/* .swal2-warning {
-  border-color: #ed6c02 !important;
-  color: #ed6c02 !important;
+/* .my-title-class {
+  font-family: "Shilla_Gothic-Bold" !important;
+} */
+/* 
+.my-popup-class .swal2-popup {
+  background-color: black !important;
 } */

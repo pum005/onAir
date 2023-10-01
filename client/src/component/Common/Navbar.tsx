@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LoginModal from "./LoginModal";
 import LogoutAlertModal from "./LogoutModal";
 import LoginIcon from "@mui/icons-material/Login";
@@ -19,6 +17,9 @@ import LoginAlertModal from "./NoLoginModal";
 import style from "./Navbar.module.css";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MenuIcon from "@mui/icons-material/Menu";
 
 function NavBar() {
   const navigate = useNavigate();
@@ -33,6 +34,18 @@ function NavBar() {
   const userData = useSelector((state: RootState) => state.user); // 사용자 정보를 Redux store에서 가져옵니다.
   const [userImage, setUserImage] = useState<null | FileList>(null); // 사용자가 업로드한 이미지
 
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null); //햄버거 버튼 상태 관리
+
+  //메뉴 버튼 클릭
+  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  //햄버거 버튼 닫기
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   const displayNickname =
     userData.nickname.length > 6
       ? userData.nickname.substring(0, 6) + "..."
@@ -42,7 +55,20 @@ function NavBar() {
   ) => {
     if (!isLoggedIn) {
       event.preventDefault();
-      handleLoginAlertModalOpen();
+      Swal.fire({
+        icon: "error",
+        title: "로그인 후 이용 가능합니다!",
+        confirmButtonColor: "6966FF",
+        confirmButtonText: "확인",
+        customClass: {
+          popup: "my-popup-class",
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          handleLoginModalOpen();
+        }
+      });
+      // handleLoginAlertModalOpen();
       return;
     }
 
@@ -50,11 +76,10 @@ function NavBar() {
       title: "라이브에 참여하시겠습니까?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonColor: "#6966FF",
       cancelButtonColor: "#DA0037",
+      confirmButtonColor: "#6966FF",
       confirmButtonText: "승인",
       cancelButtonText: "취소",
-      reverseButtons: true,
       customClass: {
         popup: "my-popup-class",
       },
@@ -69,21 +94,99 @@ function NavBar() {
 
   const isLoggedIn = Boolean(localStorage.getItem("accessToken"));
 
+  const handleLogout = () => {
+    Swal.fire({
+      title: "로그아웃 하시겠습니까?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#6966FF",
+      cancelButtonColor: "#DA0037",
+      confirmButtonText: "승인",
+      cancelButtonText: "취소",
+      customClass: {
+        // popup: "colored-toast",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleConfirmLogout(); // 사용자가 '승인'을 클릭하면 로그아웃 처리합니다.
+      }
+    });
+  };
+
+  const handleConfirmLogout = () => {
+    requestWithTokenRefresh(() => {
+      return axios.post(
+        "http://localhost:8080/api/oauth/social/logout",
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        }
+      );
+    })
+      .then((response) => {
+        console.log(response);
+        if (response.data.logoutUrl) {
+          window.location.href = response.data.logoutUrl;
+        } else if (response.data.naver) {
+          window.location.href = "http://localhost:3000"; // 메인 페이지로 리다이렉트
+        }
+        localStorage.removeItem("accessToken"); // 액세스 토큰 제거
+        for (let key in localStorage) {
+          if (key.startsWith("persist:")) {
+            localStorage.removeItem(key);
+          }
+        }
+      })
+      .catch((error) => {
+        console.log("통신에러발생", error);
+      });
+  };
+
   const renderUserIcon = () => {
     if (isLoggedIn) {
       return (
         <div className={style.userNickName}>
-          <Link to="/MyPage">
-            <Button>
-              <img
-                src={userData.profileImage}
-                alt="User Profile"
-                style={{ borderRadius: "50%", width: "35px", height: "35px" }}
-                className={style.userProfileImagerIcon}
-              />
-            </Button>
-          </Link>
-
+          <Button onClick={handleMenuClick}>
+            <img
+              src={userData.profileImage}
+              alt="User Profile"
+              style={{ borderRadius: "50%", width: "35px", height: "35px" }}
+              className={style.userProfileImagerIcon}
+            />
+          </Button>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem
+              onClick={() => {
+                navigate("/MyPage", { state: { tabValue: 0 } });
+                handleMenuClose();
+              }}
+            >
+              온캐스트
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate("/MyPage", { state: { tabValue: 1 } });
+                handleMenuClose();
+              }}
+            >
+              음악 보관함
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                handleLogout();
+                handleMenuClose();
+              }}
+            >
+              로그아웃
+            </MenuItem>
+          </Menu>
           <h4 style={{ width: "135px", userSelect: "none" }}>
             환영합니다,
             <br />
@@ -93,20 +196,20 @@ function NavBar() {
       );
     } else {
       return (
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginRight: "50px",
+            marginLeft: "70px",
+          }}
+        >
           <Button onClick={handleMyPageClick}>
-            <Link
-              to="#"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginRight: "145px",
-              }}
-            >
-              <AccountCircleIcon
+            <Link to="#">
+              <LoginIcon
                 style={{
-                  marginTop: "17px",
-                  marginBottom: "17px",
+                  marginTop: "14px",
+                  marginBottom: "14px",
                   fontSize: 35,
                   color: "white",
                 }}
@@ -137,7 +240,7 @@ function NavBar() {
           <Toolbar disableGutters className={style.selectNone}>
             <Box
               sx={{
-                flexGrow: 1,
+                flex: 1,
                 display: "flex",
                 justifyContent: "flex-start",
                 alignItems: "center",
@@ -154,8 +257,8 @@ function NavBar() {
 
             <Box
               sx={{
+                flex: 1,
                 display: "flex",
-
                 justifyContent: "center",
                 alignItems: "center",
                 width: "100%",
@@ -163,7 +266,7 @@ function NavBar() {
             >
               <Button onClick={handleImageClick}>
                 <img
-                  src="images/unlive.png"
+                  src="images/LiveLogo.png"
                   alt="unlive"
                   className={style.liveImage}
                 />
@@ -172,7 +275,7 @@ function NavBar() {
 
             <Box
               sx={{
-                flexGrow: 1,
+                flex: 1,
                 display: "flex",
                 justifyContent: "flex-end",
                 alignItems: "center",

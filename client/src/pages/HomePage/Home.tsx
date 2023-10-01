@@ -3,12 +3,17 @@ import { useNavigate } from "react-router";
 import styles from "./Home.module.css";
 import React, { useState, useEffect } from "react";
 import LoginAlertModal from "../../component/Common/NoLoginModal";
+import Swal from "sweetalert2";
+import LoginModal from "../../component/Common/LoginModal";
 
 export const Home = () => {
   /** state 관리 */
   const [showText, setShowText] = useState(true);
   const [showRadioButton, setShowRadioButton] = useState(false);
-  const [loginAlertModalOpen, setLoginAlertModalOpen] = useState(false);
+  // const [loginAlertModalOpen, setLoginAlertModalOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = React.useState(false);
+  const handleLoginModalOpen = () => setLoginModalOpen(true);
+  const handleLoginModalClose = () => setLoginModalOpen(false);
 
   //페이지 이동 함수 생성.
   const navigate = useNavigate();
@@ -26,7 +31,15 @@ export const Home = () => {
     if (isLoggedIn) {
       navigate("./CreateRadio");
     } else {
-      setLoginAlertModalOpen(true);
+      Swal.fire({
+        icon: "error",
+        title: "로그인 후 이용 가능합니다!",
+        confirmButtonColor: "6966FF",
+        confirmButtonText: "확인",
+        customClass: {
+          popup: "my-popup-class",
+        },
+      });
     }
   };
 
@@ -59,10 +72,10 @@ export const Home = () => {
           </div>
         )}
 
-        <LoginAlertModal
+        {/* <LoginAlertModal
           open={loginAlertModalOpen}
           handleClose={() => setLoginAlertModalOpen(false)}
-        />
+        /> */}
       </div>
     </div>
   );

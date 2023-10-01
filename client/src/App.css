@@ -116,7 +116,35 @@
   border-color: #ed6c02 !important;
   color: #ed6c02 !important;
 }
+.swal2-error {
+  border-color: #d32f2f !important;
+  /* color: #c62828 !important; */
+}
+
+div:where(.swal2-icon).swal2-error [class^="swal2-x-mark-line"] {
+  display: block;
+  position: absolute;
+  top: 2.3125em;
+  width: 2.9375em;
+  height: 0.3125em;
+  border-radius: 0.125em;
+  background-color: #d32f2f !important; /* 변경된 부분 */
+}
 
 /* .colored-toast.swal2-icon-warning {
   background-color: #ed6c02 !important;
 } */
+
+/* Container 오버라이드 */
+.css-19r6kue-MuiContainer-root {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* AppBar 오버라이드 */
+.css-hip9hq-MuiPaper-root-MuiAppBar-root {
+  margin: 0 !important;
+  padding: 0 !important;
+}
