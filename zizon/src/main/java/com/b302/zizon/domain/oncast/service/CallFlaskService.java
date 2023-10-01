@@ -33,7 +33,7 @@ public class CallFlaskService {
         requestBody.put("tempo", theme.getTheme().getTempo());
 
         // 플라스크 서버 엔드포인트
-        String flaskEndpoint = "http://13.125.211.179:5000/songs";
+        String flaskEndpoint = "http://13.124.105.159:5000/songs";
 
         // HTTP 요청 보내기
         ResponseEntity<SongIdsResponse> response = restTemplate.postForEntity(flaskEndpoint, requestBody, SongIdsResponse.class);
@@ -45,6 +45,7 @@ public class CallFlaskService {
         SongIdsResponse ids =response.getBody();
         System.out.println("음악추천 완료");
         System.out.println(ids);
+        System.out.println("끝");
         for (String s : ids.getSong_ids()){
             System.out.println(s);
         }
