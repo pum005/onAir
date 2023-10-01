@@ -3,6 +3,7 @@ package com.b302.zizon.util.exception.controller;
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.b302.zizon.domain.music.exception.MusicBoxNotFoundException;
 import com.b302.zizon.domain.music.exception.MusicNotFoundException;
+import com.b302.zizon.domain.oncast.exception.OncastAlreadyCreateException;
 import com.b302.zizon.domain.oncast.exception.OncastNotFoundException;
 import com.b302.zizon.domain.oncast.exception.UnauthorizedOncastAccessException;
 import com.b302.zizon.domain.playlist.exception.PlaylistMusicNotFoundException;
@@ -70,6 +71,12 @@ public class ExceptionController {
     @ExceptionHandler(PlaylistNotFoundException.class)
     public ResponseEntity<Object> handlePlaylistNotFoundAccess(PlaylistNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    // 해당 유저가 이미 온캐스트를 만들었을 경우
+    @ExceptionHandler(OncastAlreadyCreateException.class)
+    public ResponseEntity<Object> handleOncastAlreadyCreateException(OncastAlreadyCreateException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)
