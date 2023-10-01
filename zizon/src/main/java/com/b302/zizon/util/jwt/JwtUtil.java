@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class JwtUtil {
 
-    private static Long acExpiredMs = 1000 * 60 * 60 * 24 * 14L; // 액세스 토큰의 만료 시간(60분)
+    private static Long acExpiredMs = 1000 * 60 * 60 * 24 * 14L; // 액세스 토큰의 만료 시간(10분)
     private static Long rfExpiredMs = 1000 * 60 * 60 * 24 * 14L; // 리프레쉬 토큰의 만료 시간(14일)
     private final RedisTemplate<String, String> redisTemplate;
 
@@ -34,6 +34,7 @@ public class JwtUtil {
     // 토큰 만료 체크
     public static boolean isExpired(String token, String secretKey){
         try {
+            System.out.println("시발");
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return false;  // 토큰 파싱에 성공하면, 만료되지 않았으므로 false를 반환.
         } catch (ExpiredJwtException e) {
@@ -42,6 +43,7 @@ public class JwtUtil {
         }
     }
 
+    // 리프레시 토큰 체크
     public String checkRefreshToken(String refreshToken, Long userId){
         try {
             String redisRefreshToken = redisTemplate.opsForValue().get(String.valueOf(userId));
@@ -72,7 +74,7 @@ public class JwtUtil {
     }
 
     // 리프레쉬 토큰 생성
-    public String createRefreshToken(String secretKey, User user){
+    public String createRefreshToken(Long userId, String secretKey){
 
         Claims claims = Jwts.claims();
 
@@ -85,7 +87,7 @@ public class JwtUtil {
 
         // redis에 저장
         redisTemplate.opsForValue().set(
-                String.valueOf(user.getUserId()), // 사용자의 이름을 key로 사용
+                String.valueOf(userId), // 사용자의 이름을 key로 사용
                 refreshToken,             // 리프레쉬 토큰을 value로 사용
                 rfExpiredMs,              // 리프레쉬 토큰의 만료 시간
                 TimeUnit.MILLISECONDS
@@ -93,6 +95,5 @@ public class JwtUtil {
 
 
         return refreshToken;
-
     }
 }
