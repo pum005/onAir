@@ -1,4 +1,4 @@
-import NavBar from "../../component/Common/Navbar";
+// import NavBar from "../../component/Common/Navbar";
 import { Music } from "../../component/PlayerPage/Music";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import Modal from "../../component/PlayerPage/PlayListModal";
@@ -11,7 +11,7 @@ export const MusicPlayer = () => {
 
   return (
     <div style={{ backgroundColor: "#000104", height: "90vh", color: "white" }}>
-      <NavBar />
+      {/* <NavBar /> */}
       <div style={{ position: "absolute", top: "120px", right: "100px" }}>
         <QueueMusicIcon
           style={{ fontSize: "2.5rem", color: "white", cursor: "pointer" }}

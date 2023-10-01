@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import axios from "axios";
-import NavBar from "../../component/Common/Navbar";
+// import NavBar from "../../component/Common/Navbar";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import { Radio } from "../../component/PlayerPage/Radio";
 import { Music } from "../../component/PlayerPage/Music";
@@ -112,7 +112,7 @@ export const Player = (): ReactElement => {
     <div
       style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
     >
-      <NavBar />
+      {/* <NavBar /> */}
       <div style={{ position: "absolute", top: "120px", right: "100px" }}>
         <QueueMusicIcon
           style={{ fontSize: "2.5rem", color: "white", cursor: "pointer" }}
