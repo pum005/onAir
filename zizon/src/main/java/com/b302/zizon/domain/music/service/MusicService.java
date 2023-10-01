@@ -186,7 +186,7 @@ public class MusicService {
         for (int i = 0; i < 3; i++) {
             SpotifySearchResultDTO dto = results.get(i);
             Map<String, Object> video = findVideo(dto.getMusicTitle(), dto.getMusicArtist(), dto.getSpotifyMusicDuration(), dto.getMusicAlbum(), dto.getExternalIds());
-            response.put("song", video);
+            response.put("song"+(i+1), video);
         }
         return response;
     }
