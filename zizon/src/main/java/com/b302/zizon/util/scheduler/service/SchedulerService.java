@@ -8,6 +8,7 @@ import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class SchedulerService {
     private final OncastRepository oncastRepository;
     private final LiveQueueRepository liveQueueRepository;
     private final UserRepository userRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
     // 채택하기 라이브큐
     @Scheduled(cron = "0 35 09 * * *", zone = "Asia/Seoul")
@@ -80,5 +82,27 @@ public class SchedulerService {
         for(User u : all){
             u.updateCreateCheckFalse();
         }
+    }
+
+    // 라이브 서버 11시마다 on
+    @Scheduled(cron = "0 0 11 * * *", zone = "Asia/Seoul")
+    @Transactional
+    public void liveServerOn(){
+        log.info("라이브 서버 on");
+        redisTemplate.opsForValue().set(
+                "server-status",
+                "true"
+        );
+    }
+
+    // 라이브 서버 17시마다 off
+    @Scheduled(cron = "0 0 17 * * *", zone = "Asia/Seoul")
+    @Transactional
+    public void liveServerOff(){
+        log.info("라이브 서버 off");
+        redisTemplate.opsForValue().set(
+                "server-status",
+                "false"
+        );
     }
 }

@@ -25,6 +25,7 @@ import com.b302.zizon.util.gpt.service.ChatGptService;
 import com.b302.zizon.util.tts.service.NaverTTSService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,7 @@ public class OncastService {
     private final GetUser getUser;
     private final LiveQueueRepository liveQueueRepository;
     private final CallFlaskService callFlaskService;
+    private final RedisTemplate<String, String> redisTemplate;
     private final MusicService musicService;
 
     // 음악dto 변환
@@ -434,4 +436,19 @@ public class OncastService {
         return result;
     }
 
+
+    // 라이브 서버 상태 가져오기
+    public Map<String, Object> getLiveServerStatus(){
+
+        User user = getUser.getUser();
+
+        String status = redisTemplate.opsForValue().get("server-status");
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("server-status", status);
+
+        return result;
+    }
+
 }
+
