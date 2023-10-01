@@ -3,6 +3,7 @@ package com.b302.zizon.domain.oncast.service;
 import com.b302.zizon.domain.music.dto.request.MusicRecommendRequestDTO;
 import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.music.entity.ThemeEnum;
+import com.b302.zizon.domain.music.repository.MusicRepository;
 import com.b302.zizon.domain.music.service.MusicService;
 import com.b302.zizon.domain.oncast.dto.request.OncastRequestDto;
 import com.b302.zizon.domain.oncast.dto.response.*;
@@ -55,6 +56,7 @@ public class OncastService {
     private final CallFlaskService callFlaskService;
     private final RedisTemplate<String, String> redisTemplate;
     private final MusicService musicService;
+    private final MusicRepository musicRepository;
 
     // 음악dto 변환
     private GetMusicDTO convertToDTO(Music music) {
@@ -102,42 +104,56 @@ public class OncastService {
         Map<String,Object> RecommendResult = musicService.recommendMusic(new MusicRecommendRequestDTO(ids.getSong_ids()));
         // ids로 데이터셋에서 조회해서 음악배열 완성하는 로직 넣기
 
-        RecommendResult.get("song1");
-        RecommendResult.get("song2");
-        RecommendResult.get("song3");
-        // 해종
+        Object song1 = RecommendResult.get("song1");
+        Object song2 = RecommendResult.get("song2");
+        Object song3 = RecommendResult.get("song3");
 
+        Map<String, Object> song1Map = (Map<String, Object>) song1;
+        Long musicId1 = (Long) song1Map.get("musicId");
+        Optional<Music> byId1 = musicRepository.findById(musicId1);
+        Music music1 = byId1.get();
+
+        Map<String, Object> song2Map = (Map<String, Object>) song2;
+        Long musicId2 = (Long) song2Map.get("musicId");
+        Optional<Music> byId2 = musicRepository.findById(musicId2);
+        Music music2 = byId2.get();
+
+        Map<String, Object> song3Map = (Map<String, Object>) song3;
+        Long musicId3 = (Long) song3Map.get("musicId");
+        Optional<Music> byId3 = musicRepository.findById(musicId3);
+        Music music3 = byId3.get();
 
         Music[] oncastMusic = new Music[3];
-
-
 
         String story = request.getStory();
         String[] script = new String[4];
 
 
         oncastMusic[0] = Music.builder()
-                .artist("뉴진스")
-                .title("hype boy")
-                .youtubeVideoId("Rrf8uQFvICE")
-                .duration(151373L)
-                .albumCoverUrl("oo")
+                .artist(music1.getArtist())
+                .title(music1.getTitle())
+                .youtubeVideoId(music1.getYoutubeVideoId())
+                .duration(music1.getDuration())
+                .albumCoverUrl(music1.getAlbumCoverUrl())
+                .spotifyId(music1.getSpotifyId())
                 .build();
 
         oncastMusic[1] = Music.builder()
-                .artist("뉴진스")
-                .title("ETA")
-                .youtubeVideoId("jOTfBlKSQYY")
-                .duration(151373L)
-                .albumCoverUrl("oo")
+                .artist(music2.getArtist())
+                .title(music2.getTitle())
+                .youtubeVideoId(music2.getYoutubeVideoId())
+                .duration(music2.getDuration())
+                .albumCoverUrl(music2.getAlbumCoverUrl())
+                .spotifyId(music2.getSpotifyId())
                 .build();
 
         oncastMusic[2] = Music.builder()
-                .artist("뉴진스")
-                .title("ASAP")
-                .youtubeVideoId("dJdqn5v4Dkw")
-                .duration(151373L)
-                .albumCoverUrl("oo")
+                .artist(music3.getArtist())
+                .title(music3.getTitle())
+                .youtubeVideoId(music3.getYoutubeVideoId())
+                .duration(music3.getDuration())
+                .albumCoverUrl(music3.getAlbumCoverUrl())
+                .spotifyId(music3.getSpotifyId())
                 .build();
 
 
