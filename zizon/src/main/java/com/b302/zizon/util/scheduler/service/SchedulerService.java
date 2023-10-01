@@ -4,6 +4,8 @@ import com.b302.zizon.domain.oncast.entity.LiveQueue;
 import com.b302.zizon.domain.oncast.repository.LiveQueueRepository;
 import com.b302.zizon.domain.oncast.entity.Oncast;
 import com.b302.zizon.domain.oncast.repository.OncastRepository;
+import com.b302.zizon.domain.user.entity.User;
+import com.b302.zizon.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,6 +22,7 @@ public class SchedulerService {
 
     private final OncastRepository oncastRepository;
     private final LiveQueueRepository liveQueueRepository;
+    private final UserRepository userRepository;
 
     // 채택하기 라이브큐
     @Scheduled(cron = "0 35 09 * * *", zone = "Asia/Seoul")
@@ -67,4 +70,15 @@ public class SchedulerService {
 //            liveQueueRepository.delete(q);
 //        }
 //    }
+
+    // 모든 유저의 온캐스트 생성 여부 false로 초기화
+    @Scheduled(cron = "0 04 21 * * *", zone = "Asia/Seoul")
+    @Transactional
+    public void resetUserOncastCreate(){
+        log.info("유저의 온캐스트 생성 제한 해제");
+        List<User> all = userRepository.findAll();
+        for(User u : all){
+            u.updateCreateCheckFalse();
+        }
+    }
 }
