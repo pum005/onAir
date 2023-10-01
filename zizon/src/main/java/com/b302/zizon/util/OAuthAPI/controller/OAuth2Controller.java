@@ -1,6 +1,7 @@
 package com.b302.zizon.util.OAuthAPI.controller;
 
 import com.b302.zizon.domain.refreshtoken.repository.RefreshTokenRepository;
+import com.b302.zizon.domain.user.dto.UserLoginResponseDTO;
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.repository.UserRepository;
 import com.b302.zizon.domain.user.service.UserService;
@@ -47,12 +48,13 @@ public class  OAuth2Controller {
     private final JwtUtil jwtUtil;
     private final UserService userService;
 
+    // 소셜 로그인
     @PostMapping("oauth/login")
     public ResponseEntity<?> Login(@RequestBody Map<String, Object> data, HttpServletResponse response) throws IOException {
 
-        Map<String, Object> result = userService.oauthLogin((String) data.get("access"), response);
+        UserLoginResponseDTO user = userService.oauthLogin((String) data.get("access"), response);
 
-        return ResponseEntity.status(200).body(result);
+        return ResponseEntity.status(200).body(user);
     }
 
     // 소셜 로그아웃

@@ -9,7 +9,7 @@ import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import SearchIcon from "@mui/icons-material/Search";
 import SearchModal from "../Common/SearchMusicModal";
-import styles from './oncastMusicBox.module.css';
+import styles from "./oncastMusicBox.module.css";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -57,13 +57,20 @@ function a11yProps(index: number) {
   };
 }
 
-export default function  oncastMusicBox() {
-  const [value, setValue] = React.useState(0);
+export default function oncastMusicBox({ initialValue = 0 }) {
+  const [value, setValue] = React.useState(initialValue);
+
+  console.log(value);
+
   const [oncasts, setOncasts] = React.useState<OncastType>([]);
   const [message, setMessage] = React.useState<string | null>(null);
   const [refreshFlag, setRefreshFlag] = React.useState(false);
 
   const [refreshKey, setRefreshKey] = React.useState(false);
+
+  React.useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
 
   const refresh = () => {
     setRefreshKey((prevKey) => !prevKey);
@@ -107,7 +114,6 @@ export default function  oncastMusicBox() {
   return (
     <Box sx={{ width: "100%" }}>
       <Box
-      
         sx={{
           borderBottom: 1,
           borderColor: "divider",
@@ -120,7 +126,6 @@ export default function  oncastMusicBox() {
           value={value}
           onChange={handleChange}
           aria-label="basic tabs example"
-          
           sx={{
             paddingLeft: "250px",
             ".Mui-selected": {
@@ -164,8 +169,7 @@ export default function  oncastMusicBox() {
             onClick={handleSearchModalOpen}
           >
             <SearchIcon />
-            <Typography 
-            className={styles.musicSearch}>음악검색</Typography>
+            <Typography className={styles.musicSearch}>음악검색</Typography>
           </div>
         )}
       </Box>

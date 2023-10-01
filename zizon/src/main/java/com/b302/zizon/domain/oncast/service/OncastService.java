@@ -7,6 +7,7 @@ import com.b302.zizon.domain.oncast.dto.response.*;
 import com.b302.zizon.domain.oncast.entity.LiveQueue;
 import com.b302.zizon.domain.oncast.entity.Oncast;
 import com.b302.zizon.domain.oncast.entity.OncastCreateData;
+import com.b302.zizon.domain.oncast.exception.OncastAlreadyCreateException;
 import com.b302.zizon.domain.oncast.exception.OncastNotFoundException;
 import com.b302.zizon.domain.oncast.exception.UnauthorizedOncastAccessException;
 import com.b302.zizon.domain.oncast.repository.LiveQueueRepository;
@@ -72,6 +73,10 @@ public class OncastService {
     public Oncast saveOncast(OncastRequestDto request) {
 
         User user = getUser.getUser();
+
+        if(user.isDeleteCheck()){
+            throw new OncastAlreadyCreateException("오늘은 이미 온캐스트를 생성하셨습니다. 00시 이후로 다시 만들어주세요.");
+        }
 
 //        String exstory = "오늘 하루종일 비가 와서 너무 힘들었습니다. 비가 오는날마다 너무 습하고 밖을 못돌아다녀서요. " +
 //                "저는 밖에서 산책하고 사람들을 만나는걸 좋아하기 때문이에요.\n" +
@@ -194,6 +199,7 @@ public class OncastService {
         oncastRepository.save(oncast);
         System.out.println("db에 온캐스트 저장 완료");
 
+        user.updateCreateCheck();
 
         return oncast;
     }
@@ -365,6 +371,7 @@ public class OncastService {
         List<LiveQueue> listQueueList = liveQueueRepository.findAll();
 
         List<GetLiveQueueDTO> list = new ArrayList<>();
+        int count = 1;
         for (LiveQueue q : listQueueList) {
 
             List<MusicDTO> musicList = new ArrayList<>();
@@ -397,6 +404,7 @@ public class OncastService {
             }
 
             GetLiveQueueDTO liveQueueDTO = GetLiveQueueDTO.builder()
+                    .index(count++)
                     .nickname(q.getUser().getNickname())
                     .profileImage(q.getUser().getProfileImage())
                     .title(q.getOncast().getOncastCreateData().getTitle())

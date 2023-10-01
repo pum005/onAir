@@ -1,4 +1,6 @@
-import NavBar from "../../component/Common/Navbar";
+// import NavBar from "../../component/Common/Navbar";
+import PlayListModal from "../../component/PlayerPage/PlayListModal";
+import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import React, { useEffect, useState } from "react";
 import { socketConnection, MusicData } from "../../utils/socket.atom";
 import SocketManager from "../../utils/socket";
@@ -111,7 +113,7 @@ export const LivePlayer = () => {
     <div
       style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
     >
-      <NavBar />
+      {/* <NavBar /> */}
       <div style={{ position: "absolute", top: "125px", right: "150px" }}>
         <ChatIcon
           style={{ fontSize: "2.3rem", color: "white", cursor: "pointer" }}
