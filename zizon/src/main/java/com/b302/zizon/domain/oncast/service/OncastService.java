@@ -371,6 +371,7 @@ public class OncastService {
         List<LiveQueue> listQueueList = liveQueueRepository.findAll();
 
         List<GetLiveQueueDTO> list = new ArrayList<>();
+        int count = 1;
         for (LiveQueue q : listQueueList) {
 
             List<MusicDTO> musicList = new ArrayList<>();
@@ -403,6 +404,7 @@ public class OncastService {
             }
 
             GetLiveQueueDTO liveQueueDTO = GetLiveQueueDTO.builder()
+                    .index(count++)
                     .nickname(q.getUser().getNickname())
                     .profileImage(q.getUser().getProfileImage())
                     .title(q.getOncast().getOncastCreateData().getTitle())

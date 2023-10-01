@@ -30,7 +30,6 @@ public class OncastController {
 
         Oncast oncast = oncastService.saveOncast(request);
 
-
         return ResponseEntity.status(200).body("Oncast 생성 성공!");
     }
 

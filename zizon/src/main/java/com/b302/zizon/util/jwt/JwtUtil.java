@@ -34,7 +34,6 @@ public class JwtUtil {
     // 토큰 만료 체크
     public static boolean isExpired(String token, String secretKey){
         try {
-            System.out.println("시발");
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return false;  // 토큰 파싱에 성공하면, 만료되지 않았으므로 false를 반환.
         } catch (ExpiredJwtException e) {
