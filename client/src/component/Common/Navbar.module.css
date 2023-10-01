@@ -80,10 +80,8 @@
   color: red;
 }
 
-/* .my-title-class {
-  font-family: "Shilla_Gothic-Bold" !important;
-} */
-/* 
-.my-popup-class .swal2-popup {
-  background-color: black !important;
-} */
+.welcome {
+  width: 135px;
+  font-family: "Shilla_Gothic-Bold";
+  user-select: none;
+}

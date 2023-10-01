@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router";
-// import NavBar from "../../component/Common/Navbar";
 import styles from "./Home.module.css";
 import React, { useState, useEffect } from "react";
-import LoginAlertModal from "../../component/Common/NoLoginModal";
 import Swal from "sweetalert2";
 import LoginModal from "../../component/Common/LoginModal";
 
@@ -10,7 +8,6 @@ export const Home = () => {
   /** state 관리 */
   const [showText, setShowText] = useState(true);
   const [showRadioButton, setShowRadioButton] = useState(false);
-  // const [loginAlertModalOpen, setLoginAlertModalOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = React.useState(false);
   const handleLoginModalOpen = () => setLoginModalOpen(true);
   const handleLoginModalClose = () => setLoginModalOpen(false);
@@ -39,6 +36,10 @@ export const Home = () => {
         customClass: {
           popup: "my-popup-class",
         },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          handleLoginModalOpen();
+        }
       });
     }
   };
@@ -48,7 +49,6 @@ export const Home = () => {
       className={styles.background}
       style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
     >
-      {/* <NavBar /> */}
       <div className={styles.centerContent}>
         {showText && (
           <h2 className={styles.fadeInOutText}>
@@ -71,12 +71,10 @@ export const Home = () => {
             <div className={styles.centerText}>MAKE A ONCAST</div>
           </div>
         )}
-
-        {/* 여기부분수정 */}
-        {/* <LoginAlertModal
-          open={loginAlertModalOpen}
-          handleClose={() => setLoginAlertModalOpen(false)}
-        /> */}
+        <LoginModal
+          open={loginModalOpen}
+          handleClose={handleLoginModalClose}
+        ></LoginModal>
       </div>
     </div>
   );
