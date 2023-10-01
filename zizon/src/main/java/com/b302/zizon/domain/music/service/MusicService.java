@@ -184,9 +184,16 @@ public class MusicService {
         Map<String, Object> response = new HashMap<>();
 
         for (int i = 0; i < 3; i++) {
+            int count = 0;
             SpotifySearchResultDTO dto = results.get(i);
             Map<String, Object> video = findVideo(dto.getMusicTitle(), dto.getMusicArtist(), dto.getSpotifyMusicDuration(), dto.getMusicAlbum(), dto.getExternalIds());
-            response.put("song"+(i+1), video);
+            if(video.containsKey("musicId")){
+                response.put("song"+(count+1), video);
+                count++;
+            }
+            if(count == 3){
+                break;
+            }
         }
         return response;
     }
@@ -366,6 +373,8 @@ public class MusicService {
 
         return build;
     }
+
+
 
 //    // 크롤링
 //    private String getLyricsFromMelon(String title, String artist) throws InterruptedException {
