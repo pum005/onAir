@@ -67,7 +67,7 @@ public class UserService {
 
         // 로그인 성공
         String accessToken = jwtUtil.createAccessJwt(user.getUserId(), secretKey); // 토큰 발급해서 넘김
-        String refreshToken = jwtUtil.createRefreshToken(secretKey, user); // 리프레시 토큰 발급해서 넘김
+        String refreshToken = jwtUtil.createRefreshToken(user.getUserId(), secretKey); // 리프레시 토큰 발급해서 넘김
 
         // create a cookie
         Cookie cookie = new Cookie("refreshToken", refreshToken);

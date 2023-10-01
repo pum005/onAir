@@ -32,9 +32,6 @@ public class OncastController {
 
 
         return ResponseEntity.status(200).body("Oncast 생성 성공!");
-
-
-
     }
 
     // oncast 정보 가져오기
