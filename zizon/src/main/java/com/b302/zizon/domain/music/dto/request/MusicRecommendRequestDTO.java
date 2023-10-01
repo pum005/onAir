@@ -6,5 +6,9 @@ import java.util.List;
 
 @Data
 public class MusicRecommendRequestDTO {
-    private List<String> songId;
+    private String[] songId;
+
+    public MusicRecommendRequestDTO(String[] songId){
+        this.songId = songId;
+    }
 }
