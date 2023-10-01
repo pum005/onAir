@@ -89,7 +89,6 @@ function InfoModify() {
         </h5>
       </div>
 
-      {/* 닉네임 변경 버튼 클릭 시 모달 열기 */}
       <ImgModal
         isOpen={isImgModalOpen}
         onClose={imgModalClose}
@@ -110,3 +109,4 @@ function InfoModify() {
 }
 
 export default InfoModify;
+//
