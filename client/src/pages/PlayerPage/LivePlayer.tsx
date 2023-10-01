@@ -10,20 +10,52 @@ import ChatIcon from "@mui/icons-material/Chat";
 import ChatModal from "../../component/PlayerPage/ChatModal";
 import { useDispatch } from "react-redux";
 import { addChatMessage } from "../../store";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import axios from "axios";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import { LiveListModal } from "../../component/PlayerPage/LiveListModal";
 
 type LivePlayerProps = {};
 
 export const LivePlayer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [musicData, setMusicData] = useState<MusicData | null>(null);
-  const [isChatModalOpen, setIsChatModalOpen] = useState(false); // 채팅 모달의 상태
+  const [isChatModalOpen, setIsChatModalOpen] = useState(false);
+  const [oncastList, setOncastList] = useState<any[]>([]); // 사연의 순서를 추적하기 위한 상태
+  const [storyCount, setStoryCount] = useState<number>(() => {
+    // 초기 상태 설정: 로컬 저장소에서 storyCount 읽기
+    return Number(localStorage.getItem("storyCount") || 0);
+  });
+  // 라디오와 음악의 순서를 추적하기 위한 상태
+  const [sequenceCount, setSequenceCount] = useState<number>(() => {
+    // 초기 상태 설정: 로컬 저장소에서 sequenceCount 읽기
+    return Number(localStorage.getItem("sequenceCount") || 0);
+  });
 
   let socketManager = SocketManager.getInstance();
-
   const dispatch = useDispatch();
 
   useEffect(() => {
     console.log("라이브 페이지 들어옴");
+
+    const fetchOncastList = async () => {
+      try {
+        const response = await requestWithTokenRefresh(() => {
+          return axios.get("http://localhost:8080/api/oncast/livelist", {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+            withCredentials: true,
+          });
+        });
+        setOncastList(response.data.oncast);
+        console.log(response.data.oncast);
+      } catch (error) {
+        console.error("Error fetching oncast data:", error);
+      }
+    };
+
+    fetchOncastList();
 
     socketConnection(
       // 첫 번째 콜백: 음악 데이터를 처리합니다.
@@ -32,12 +64,25 @@ export const LivePlayer = () => {
         console.log("Received Data:", data);
         if (data && typeof data === "object" && "data" in data) {
           setMusicData(data);
+
+          // 데이터를 받을 때마다 sequenceCount 증가
+          setSequenceCount(prevCount => {
+            const newCount = prevCount + 1;
+
+            // sequenceCount가 7이 되면 storyCount 증가 및 sequenceCount 초기화
+            if (newCount === 7) {
+              setStoryCount(prevStory => prevStory + 1);
+              return 0; // sequenceCount 초기화
+            }
+
+            return newCount; // 그렇지 않으면 sequenceCount 증가
+          });
         } else {
           console.error("Invalid data received:", data);
         }
       },
       // 두 번째 콜백: 채팅 데이터를 처리합니다.
-      (chatData) => {
+      chatData => {
         dispatch(
           addChatMessage({
             content: chatData.content,
@@ -52,7 +97,17 @@ export const LivePlayer = () => {
     return () => {
       socketManager.disconnect();
     };
-  }, []); // 빈 배열을 dependency로 전달하여 한 번만 실행되도록 함
+  }, []);
+
+  useEffect(() => {
+    // storyCount 상태가 변경될 때마다 로컬 저장소에 저장
+    localStorage.setItem("storyCount", String(storyCount));
+  }, [storyCount]);
+
+  useEffect(() => {
+    // sequenceCount 상태가 변경될 때마다 로컬 저장소에 저장
+    localStorage.setItem("sequenceCount", String(sequenceCount));
+  }, [sequenceCount]);
 
   return (
     <div
@@ -66,7 +121,7 @@ export const LivePlayer = () => {
         />
       </div>
       <div style={{ position: "absolute", top: "120px", right: "100px" }}>
-        <QueueMusicIcon
+        <FormatListBulletedIcon
           style={{ fontSize: "2.5rem", color: "white", cursor: "pointer" }}
           onClick={() => setIsModalOpen(true)}
         />
@@ -84,10 +139,14 @@ export const LivePlayer = () => {
           playedTime={musicData.data.playedTime}
         />
       )}
-      <PlayListModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      {isModalOpen && (
+        <LiveListModal
+          isOpen={isModalOpen}
+          oncastList={oncastList}
+          onClose={() => setIsModalOpen(false)}
+          currentStory={storyCount} // 현재 재생 중인 사연의 순서를 전달
+        />
+      )}
       <ChatModal
         isOpen={isChatModalOpen}
         onClose={() => setIsChatModalOpen(false)}
