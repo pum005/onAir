@@ -199,7 +199,7 @@ public class OncastService {
         oncastRepository.save(oncast);
         System.out.println("db에 온캐스트 저장 완료");
 
-        user.updateCreateCheck();
+        user.updateCreateCheckTrue();
 
         return oncast;
     }
