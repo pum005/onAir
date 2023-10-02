@@ -45,7 +45,7 @@ public class RadioService {
     private Queue<PlayListDto> playlist = new LinkedList<PlayListDto>();
 
     //
-    private long seq = 0L;
+    private long seq = 1L;
     private long idleTimer = 0L;
     private long chatTimer = 0L;
 
@@ -219,6 +219,7 @@ public class RadioService {
                 .artist(artist)
                 .image(image)
                 .script(script)
+                .seq(seq)
                 .build();
         return currentSound;
     }

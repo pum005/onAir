@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 
 import { ButtonProps } from "@mui/material/Button";
-import NavBar from "../../component/Common/Navbar";
+// import NavBar from "../../component/Common/Navbar";
 import styles from "./OncastCreateComplete.module.css";
 
 const CreateButton = styled(Button)<ButtonProps>(({ theme }) => ({
@@ -42,7 +42,7 @@ const OncastCreateComplete: React.FC = () => {
 
   return (
     <div>
-      <NavBar />
+      {/* <NavBar /> */}
       <Grid
         container
         spacing={0}

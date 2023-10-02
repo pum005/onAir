@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import NavBar from "../../component/Common/Navbar";
+// import NavBar from "../../component/Common/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import styles from "./CreateRadio.module.css";
-import { resetIndices, setMusicInfo, setRadioDummyData } from "../../store";
 import DJSelector from "../../component/Radio/DJSelector";
 import ThemeSelector from "../../component/Radio/ThemeSelector";
 import axios from "axios";
@@ -15,6 +14,8 @@ import { Loading } from "../../pages/PlayerPage/Loading";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import { Grid, Button, Typography, styled } from "@mui/material";
 import { ButtonProps } from "@mui/material/Button";
+import Swal from "sweetalert2";
+
 const CreateRadio = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -45,19 +46,72 @@ const CreateRadio = () => {
     const inputDJ = selectedDJ;
 
     if (!inputTitle.trim()) {
-      alert("제목을 입력해주세요!");
-      return;
-    }
-    if (!inputContent.trim()) {
-      alert("내용을 입력해주세요");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        customClass: {
+          popup: "swal2-popup",
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "제목을 입력해주세요!",
+      });
       return;
     }
     if (!inputTheme.trim()) {
-      alert("테마를 선택해주세요");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        customClass: {
+          popup: "swal2-popup",
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "테마를 입력해 주세요!",
+      });
       return;
     }
+    if (!inputContent.trim()) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        customClass: {
+          popup: "swal2-popup",
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "내용을 입력해 주세요!",
+      });
+      return;
+    }
+
     if (!inputDJ.trim()) {
-      alert("DJ를 선택해주세요");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        customClass: {
+          popup: "swal2-popup",
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "DJ를 선택해 주세요!",
+      });
       return;
     }
 
@@ -111,7 +165,7 @@ const CreateRadio = () => {
         }
       );
     })
-      .then((response) => {
+      .then(response => {
         console.log(response);
         if (response.status === 200) {
           setIsLoading(false);
@@ -120,7 +174,7 @@ const CreateRadio = () => {
           alert("온캐스트 생성에 실패했습니다.");
         }
       })
-      .catch((error) => {
+      .catch(error => {
         setIsLoading(false);
 
         console.log("통신에러 발생", error);
@@ -128,7 +182,7 @@ const CreateRadio = () => {
   };
   return (
     <div>
-      <NavBar />
+      {/* <NavBar /> */}
       {isLoading ? (
         <Loading />
       ) : (
@@ -144,7 +198,7 @@ const CreateRadio = () => {
                 <Grid item xs={9.5}>
                   <textarea
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={e => setTitle(e.target.value)}
                     className={styles.titleInput}
                   />
                 </Grid>

@@ -1,11 +1,11 @@
-.tabOnMusic{
+.tabOnMusic {
   font-family: "Ramche";
 }
 
-.musicSearch{
+.musicSearch {
   display: "flex";
   align-items: "center";
-  margin-right : "15%";
+  margin-right: "15%";
   cursor: "pointer";
   font-family: "Ramche";
   font-size: 40px;

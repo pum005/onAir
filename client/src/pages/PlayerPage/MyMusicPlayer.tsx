@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import NavBar from "../../component/Common/Navbar";
+// import NavBar from "../../component/Common/Navbar";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AddCircleOutline from "@mui/icons-material/AddCircleOutline";
 import styles from "./MyMusicPlayer.module.css";
@@ -17,6 +17,8 @@ import store, {
   setSelectedMusicIndex,
 } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
+import { togglePlayerVisibility } from "../../store";
+import { GlobalYouTubePlayer } from "../../component/YoutubeMusicPlayer/GlobalYouTubePlayer";
 
 type MusicInfo = {
   musicId: number;
@@ -29,6 +31,9 @@ type MusicInfo = {
 
 export const MyMusicPlayer = () => {
   const dispatch = useDispatch();
+  const isPlayerVisible = useSelector(
+    (state: RootState) => state.isPlayerVisible
+  );
   const selectedMusicIndex = useSelector(
     (state: RootState) => state.selectedMusicIndex
   ); // 리덕스 상태에서 selectedMusicIndex를 가져옵니다.
@@ -50,6 +55,8 @@ export const MyMusicPlayer = () => {
     // 선택된 음악의 musicId를 사용하여 사용자 지정 이벤트를 발송합니다.
     const event = new CustomEvent("musicSelect", { detail: { musicId } });
     window.dispatchEvent(event);
+    // 음악 아이템을 클릭할 때 플레이어 바의 가시성을 토글합니다.
+    dispatch(togglePlayerVisibility());
   };
   useEffect(() => {
     // selectedMusicIndex가 바뀔 때마다 currentTrackIndex를 동기화합니다.
@@ -85,7 +92,7 @@ export const MyMusicPlayer = () => {
           }
         );
       })
-        .then((response) => {
+        .then(response => {
           // 이부분 message 안뜸
           if (response.data) {
             setMusicData(response.data);
@@ -101,7 +108,7 @@ export const MyMusicPlayer = () => {
             setMusicData([]);
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("axios 에러", error);
         });
     } else {
@@ -113,7 +120,7 @@ export const MyMusicPlayer = () => {
           withCredentials: true,
         });
       })
-        .then((response) => {
+        .then(response => {
           if (response.data.message === "보관함에 음악이 없습니다.") {
             Swal.fire({
               icon: "error",
@@ -128,7 +135,7 @@ export const MyMusicPlayer = () => {
             store.dispatch(setMusicDataTemp(musicDataArray));
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("axios 에러", error);
         });
     }
@@ -159,9 +166,22 @@ export const MyMusicPlayer = () => {
     handleDeleteModalOpen();
   };
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
+    const target = e.target as HTMLImageElement;
+    const width = target.offsetWidth;
+    const mouseX = e.clientX - target.offsetLeft;
+    const rotateY = (mouseX / width - 0.5) * 40;
+    target.style.transform = `rotateY(${rotateY}deg)`;
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLImageElement>) => {
+    const target = e.target as HTMLImageElement;
+    target.style.transform = `rotateY(0deg)`;
+  };
+
   return (
     <div className={styles.root}>
-      <NavBar />
+      {/* <NavBar /> */}
       <div className={styles.container}>
         <div className={styles.songDisplayContainer}>
           <div className={styles.coverImageContainer}>
@@ -178,6 +198,8 @@ export const MyMusicPlayer = () => {
                   : musicData[currentTrackIndex]?.title
               }
               className={styles.coverImage}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
             />
           </div>
           <div className={styles.songListContainer}>
@@ -213,7 +235,7 @@ export const MyMusicPlayer = () => {
                   <div className={styles.songLength}>
                     <DeleteOutlineIcon
                       className={styles.deleteIcon}
-                      onClick={(event) => {
+                      onClick={event => {
                         event.stopPropagation();
                         handleDeleteIconClick(song.musicId); // pass the song ID to be deleted
                       }}
@@ -232,15 +254,16 @@ export const MyMusicPlayer = () => {
         isOpen={isSearchModalOpen}
         onClose={handleSearchModalClose} // 모달 바깥쪽을 클릭하면 모달을 닫는다.
         playlistId={playlistMetaId}
-        setRefreshKey={() => setRefreshKey((prev) => !prev)}
+        setRefreshKey={() => setRefreshKey(prev => !prev)}
       />
       <DeleteModal
         isOpen={isDeleteModalOpen}
         onClose={handleDeleteModalClose} // 모달 바깥쪽을 클릭하면 모달을 닫는다.
         musicId={deletingMusicId}
         playlistId={playlistMetaId}
-        setRefreshKey={() => setRefreshKey((prev) => !prev)}
+        setRefreshKey={() => setRefreshKey(prev => !prev)}
       />
+      <GlobalYouTubePlayer />
     </div>
   );
 };

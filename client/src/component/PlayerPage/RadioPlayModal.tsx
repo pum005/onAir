@@ -7,7 +7,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setMusicInfo, setRadioDummyData } from "../../store"; // 필요한 액션들을 임포트합니다.
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import { Navigate, useNavigate } from "react-router-dom";
 

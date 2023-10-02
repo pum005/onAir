@@ -1,5 +1,4 @@
 // InfoModify.tsx
-
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
@@ -7,7 +6,6 @@ import ImgModal from "./ImgModal";
 import NickNameModal from "./NicknameModal";
 import { setNickName } from "../../store";
 import { setImage } from "../../store";
-import axios from "axios";
 import styles from "./InfoModify.module.css";
 
 function InfoModify() {
@@ -91,7 +89,6 @@ function InfoModify() {
         </h5>
       </div>
 
-      {/* 닉네임 변경 버튼 클릭 시 모달 열기 */}
       <ImgModal
         isOpen={isImgModalOpen}
         onClose={imgModalClose}
@@ -112,3 +109,4 @@ function InfoModify() {
 }
 
 export default InfoModify;
+//
