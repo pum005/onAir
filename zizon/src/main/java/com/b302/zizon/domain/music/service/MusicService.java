@@ -221,7 +221,6 @@ public class MusicService {
 
                 myMusicBoxRepository.save(build);
 
-
                 out.put("message", "보관함에 음악 추가 성공");
                 out.put("musicId", music.getMusicId());
             }
