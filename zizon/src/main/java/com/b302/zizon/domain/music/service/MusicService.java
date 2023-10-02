@@ -184,7 +184,7 @@ public class MusicService {
         }
         Map<String, Object> response = new HashMap<>();
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 10; i++) {
             int count = 0;
             SpotifySearchResultDTO dto = results.get(i);
             Map<String, Object> video = findVideo(dto.getMusicTitle(), dto.getMusicArtist(), dto.getSpotifyMusicDuration(), dto.getMusicAlbum(), dto.getExternalIds());
