@@ -162,6 +162,7 @@ function DeleteModal({
               variant="contained"
               onClick={handleDelete}
               className={styles.modalButtonDelete}
+              style={{ fontFamily: "Shilla_Gothic-Bold" }}
             >
               확인
             </Button>
@@ -169,6 +170,7 @@ function DeleteModal({
               variant="contained"
               onClick={onClose}
               className={styles.modalButtonCancle}
+              style={{ fontFamily: "Shilla_Gothic-Bold" }}
             >
               취소
             </Button>

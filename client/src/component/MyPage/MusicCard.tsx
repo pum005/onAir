@@ -378,7 +378,7 @@ function MusicCard({ refreshFlag }: any) {
                   setRemoveList(Playlist.playlistMetaId);
                   openDeleteModal();
                 }}
-                style={{ color: "#ffffff91" }}
+                style={{ color: "rgba(228, 224, 224, 0.197)" }}
               />
               <Button
                 className={styles.playButton}

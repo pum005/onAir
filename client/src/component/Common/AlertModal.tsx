@@ -30,6 +30,7 @@ const AlertModal: React.FC<{
               onClose();
             }
           }}
+          style={{ fontFamily: "Shilla_Gothic-Bold" }}
         >
           확인
         </Button>
