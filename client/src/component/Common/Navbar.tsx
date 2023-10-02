@@ -187,7 +187,7 @@ function NavBar() {
               로그아웃
             </MenuItem>
           </Menu>
-          <h4 style={{ width: "135px", userSelect: "none" }}>
+          <h4 className={style.welcome}>
             환영합니다,
             <br />
             {displayNickname}님!

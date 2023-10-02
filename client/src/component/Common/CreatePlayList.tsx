@@ -15,7 +15,7 @@ type Props = {
 const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
   /** state */
   const [playlistName, setPlaylistName] = useState("");
-  const [showAlertModal, setShowAlertModal] = useState(false);  // State for AlertModal
+  const [showAlertModal, setShowAlertModal] = useState(false); // State for AlertModal
 
   /** action */
   const handleConfirm = () => {
@@ -71,7 +71,7 @@ const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
             inputProps={{
               style: { color: "#f5e9e9" }, // This style is applied to the actual input element
             }}
-            style={{ width: "300px" }}
+            style={{ width: "300px", marginBottom: "10px" }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 handleConfirm();
@@ -83,17 +83,9 @@ const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
               display: "flex",
               justifyContent: "center",
               gap: 2,
-              marginTop: "20px"
+              marginTop: "20px",
             }}
           >
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={onClose}
-              className={styles.modalButtonCancle}
-            >
-              닫기
-            </Button>
             <Button
               variant="contained"
               color="primary"
@@ -102,12 +94,20 @@ const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
             >
               생성하기
             </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={onClose}
+              className={styles.modalButtonCancle}
+            >
+              닫기
+            </Button>
           </Box>
         </Box>
       </Modal>
-      <AlertModal 
-        open={showAlertModal} 
-        message="플레이리스트가 성공적으로 생성되었습니다." 
+      <AlertModal
+        open={showAlertModal}
+        message="플레이리스트가 성공적으로 생성되었습니다."
         onClose={handleCloseAlertModal}
       />
     </>
