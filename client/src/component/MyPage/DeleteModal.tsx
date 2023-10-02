@@ -146,7 +146,7 @@ function DeleteModal({
             className={styles.modalTypography}
             style={{
               fontFamily: "GangwonEduPowerExtraBoldA",
-              fontSize: "20px",
+              fontSize: "25px",
             }}
           >
             삭제하시겠습니까 ?
