@@ -109,9 +109,9 @@ const SearchModal: React.FC<SearchModalProps> = ({
     })
       .then((response) => {
         setIsAddLoading(false);
-        if (response.data.message === "이미 보관함에 추가된 음악입니다.") {
+        if (response.data.message === "이미 보관함에 추가된 노래입니다.") {
           setOpen(false);
-          setAlertMessage("이미 보관함에 추가된 음악입니다.");
+          setAlertMessage("이미 보관함에 추가된 음악입니다 !");
           setIsAlertOpen(true);
           console.log(response.data.musicId);
           console.log(playlistId);
@@ -135,7 +135,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                 .then((response) => {
                   if (
                     response.data.message ===
-                    "이미 플레이리스트에 추가된 음악입니다."
+                    "이미 플레이리스트에 추가된 노래입니다."
                   ) {
                     alert("이미 플레이리스트에 추가된 음악입니다.!");
                   } else {

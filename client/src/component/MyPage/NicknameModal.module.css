@@ -36,7 +36,7 @@ button.nickNameModalClose {
 }
 
 button.nickNameModalClose:hover {
-  background-color: #a50029;
+  background-color: #a50029 !important;
   transform: scale(1.05);
   border: none;
 }
@@ -54,7 +54,7 @@ button.nickNamePersist {
 }
 
 button.nickNamePersist:hover {
-  background-color: rgb(92, 90, 249);
+  background-color: rgb(92, 90, 249) !important;
   transform: scale(1.05);
   border: none;
 }
