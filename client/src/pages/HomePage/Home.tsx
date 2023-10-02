@@ -3,6 +3,7 @@ import styles from "./Home.module.css";
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import LoginModal from "../../component/Common/LoginModal";
+import MainLogo from "../../resources/MainLogo.png";
 
 export const Home = () => {
   /** state 관리 */
@@ -51,9 +52,21 @@ export const Home = () => {
     >
       <div className={styles.centerContent}>
         {showText && (
-          <h2 className={styles.fadeInOutText}>
-            당신의 이야기로 음악을 추천해드립니다
-          </h2>
+          <>
+            <h2 className={styles.fadeInOutText} style={{ fontSize: "30px" }}>
+              <img
+                src={MainLogo}
+                alt="MainLogo"
+                className={styles.customImage}
+              />
+              <div className={styles.underline}></div>
+              <div className={styles.textBelowLine}>
+                <span className={styles.grayText}>당신만의 </span>
+                <span className={styles.whiteText}>" ONCAST "</span>
+                <span className={styles.grayText}> 를 만들어 보세요!</span>
+              </div>
+            </h2>
+          </>
         )}
 
         {showRadioButton && (
