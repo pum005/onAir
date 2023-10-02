@@ -388,10 +388,7 @@ function MusicCard({ refreshFlag }: any) {
                 }
               }}
             >
-              <PlayArrowIcon
-                className={styles.playArrowIcon}
-                // style={{ color: "rgb(75, 75, 75)" }}
-              />
+              <PlayArrowIcon className={styles.playArrowIcon} />
             </Button>
           </ListItem>
         ))}
