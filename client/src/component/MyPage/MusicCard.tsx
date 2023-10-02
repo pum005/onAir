@@ -113,12 +113,12 @@ function MusicCard({ refreshFlag }: any) {
 
   // 음악 리스트상세보기 모달 닫기 함수
   const closeMusicDetailModal = () => {
-    setRefreshKey(prevKey => !prevKey);
+    setRefreshKey((prevKey) => !prevKey);
     setMusicDetailModalOpen(false);
   };
 
   const closeMusicDetailModalTwo = () => {
-    setRefreshKeyTwo(prevKey => !prevKey);
+    setRefreshKeyTwo((prevKey) => !prevKey);
     setMusicDetailModalOpenTwo(false);
   };
 
@@ -144,7 +144,7 @@ function MusicCard({ refreshFlag }: any) {
         withCredentials: true,
       });
     })
-      .then(response => {
+      .then((response) => {
         // 데이터 정규화
         const normalizedData: ApiResponseType = {
           my_music_box: response.data.my_music_box,
@@ -152,14 +152,14 @@ function MusicCard({ refreshFlag }: any) {
         };
         setData(normalizedData);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("데이터 가져오기 오류:", error);
       });
   }, [refreshPlaylist, refreshKey, refreshFlag, refreshKeyTwo]);
 
   return (
     <div style={{ width: "70%", margin: "0 auto" }}>
-      <List>
+      <List style={{ paddingTop: "0" }}>
         <ListItem
           alignItems="center"
           className={styles.hoverableListItem}
@@ -173,15 +173,25 @@ function MusicCard({ refreshFlag }: any) {
             }}
           >
             <AddIcon
-              color="primary"
               className={styles.audiotrackIcon}
-              style={{ cursor: "pointer", fontSize: "40px" }}
+              style={{
+                cursor: "pointer",
+                fontSize: "40px",
+                color: "white",
+              }}
             />
           </ListItemAvatar>
           <ListItemText
-            style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              cursor: "pointer",
+            }}
           >
-            <Typography className={styles.textPrimary} style={{}}>
+            <Typography
+              className={styles.textPrimary}
+              style={{ fontFamily: "Pretendard-Medium" }}
+            >
               플레이리스트 생성
             </Typography>
           </ListItemText>
@@ -200,7 +210,6 @@ function MusicCard({ refreshFlag }: any) {
             }}
           >
             <AudiotrackIcon
-              color="primary"
               className={styles.audiotrackIcon}
               onClick={() => {
                 if (data?.my_music_box === 0) {
@@ -214,7 +223,13 @@ function MusicCard({ refreshFlag }: any) {
                   openMusicDetailModal("전체보관함");
                 }
               }}
-              style={{ cursor: "pointer", fontSize: "40px" }}
+              style={{
+                cursor: "pointer",
+                fontSize: "40px",
+                color: "white",
+                borderRadius: "5px",
+                border: "1px solid #626262",
+              }}
             />
           </ListItemAvatar>
           <ListItemText
@@ -233,7 +248,11 @@ function MusicCard({ refreshFlag }: any) {
                     openMusicDetailModal("전체보관함");
                   }
                 }}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  fontFamily: "Pretendard-Medium",
+                  color: "white",
+                }}
               >
                 전체보관함
               </Typography>
@@ -262,7 +281,10 @@ function MusicCard({ refreshFlag }: any) {
               }
             }}
           >
-            <PlayArrowIcon className={styles.playArrowIcon} />
+            <PlayArrowIcon
+              className={styles.playArrowIcon}
+              style={{ color: "rgb(75, 75, 75)" }}
+            />
           </Button>
           <MusicDetailModal
             isOpen={isMusicDetailModalOpen}
@@ -311,6 +333,7 @@ function MusicCard({ refreshFlag }: any) {
               primary={
                 <Typography
                   className={styles.textPrimary}
+                  style={{ fontFamily: "Pretendard-Medium" }}
                   onClick={() => {
                     if (Playlist.playlistCount === 0) {
                       Swal.fire({
@@ -335,7 +358,11 @@ function MusicCard({ refreshFlag }: any) {
               className={styles.textSecondary}
               component="span"
               variant="body2"
-              style={{ marginRight: "30%", marginLeft: "auto" }} // 여기에서 스타일을 조절하여 곡 수를 원하는 위치에 배치합니다.
+              style={{
+                marginRight: "30%",
+                marginLeft: "auto",
+                fontFamily: "Pretendard-Medium",
+              }} // 여기에서 스타일을 조절하여 곡 수를 원하는 위치에 배치합니다.
             >
               {Playlist.playlistCount} 곡
             </Typography>
@@ -348,7 +375,7 @@ function MusicCard({ refreshFlag }: any) {
             />
             <Button
               className={styles.playButton}
-              onClick={event => {
+              onClick={(event) => {
                 if (Playlist.playlistCount === 0) {
                   Swal.fire({
                     icon: "error",
@@ -361,7 +388,10 @@ function MusicCard({ refreshFlag }: any) {
                 }
               }}
             >
-              <PlayArrowIcon className={styles.playArrowIcon} />
+              <PlayArrowIcon
+                className={styles.playArrowIcon}
+                // style={{ color: "rgb(75, 75, 75)" }}
+              />
             </Button>
           </ListItem>
         ))}
@@ -381,7 +411,7 @@ function MusicCard({ refreshFlag }: any) {
         isOpen={isDeleteModal}
         onClose={closeDeleteModal}
         playlistId={removeList}
-        refresh={() => setRefreshKey(prevKey => !prevKey)}
+        refresh={() => setRefreshKey((prevKey) => !prevKey)}
       />
       <AlertModal
         open={showAlert}
