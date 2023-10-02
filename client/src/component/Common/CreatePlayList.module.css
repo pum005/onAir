@@ -24,6 +24,10 @@
   color: #ffffff;
 }
 
+.playlistTitle h2 {
+  font-size: 30px;
+}
+
 button.modalButtonCancle {
   background-color: #da0037;
   color: rgb(255, 255, 255);

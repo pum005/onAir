@@ -5,6 +5,7 @@ import axios from "axios";
 import styles from "./CreatePlayList.module.css";
 import AlertModal from "./AlertModal";
 import { error } from "console";
+import Swal from "sweetalert2";
 
 type Props = {
   isOpen: boolean;
@@ -20,7 +21,22 @@ const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
   /** action */
   const handleConfirm = () => {
     if (playlistName === "") {
-      alert("제목을 작성해주세요.");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        customClass: {
+          popup: "swal2-popup",
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "제목을 작성해주세요!",
+      });
+      onClose();
+
       return;
     } else {
       requestWithTokenRefresh(() => {
@@ -40,9 +56,17 @@ const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
         .then((response) => {
           console.log(response);
           refresh();
-
           setPlaylistName("");
-          setShowAlertModal(true);
+          Swal.fire({
+            icon: "success",
+            title: "플레이리스트가 생성되었습니다!",
+            confirmButtonColor: "6966FF",
+            confirmButtonText: "확인",
+            customClass: {
+              popup: "my-popup-class",
+            },
+          });
+          onClose();
         })
         .catch((error) => {
           console.log("통신에러 발생", error);
