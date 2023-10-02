@@ -18,7 +18,9 @@ public class GetUser {
 
     public User getUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication.toString());
         Object principal = authentication.getPrincipal();
+        System.out.println(principal.toString());
         Long userId = (Long) principal;
 
         Optional<User> byUserId = Optional.ofNullable(userRepository.findByUserId(userId)
