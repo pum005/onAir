@@ -7,7 +7,6 @@ import NickNameModal from "./NicknameModal";
 import { setNickName } from "../../store";
 import { setImage } from "../../store";
 import styles from "./InfoModify.module.css";
-import Swal from "sweetalert2";
 
 function InfoModify() {
   const userData = useSelector((state: RootState) => state.user); // 사용자 정보를 Redux store에서 가져옵니다.
