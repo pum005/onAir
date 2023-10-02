@@ -195,7 +195,6 @@ export default function oncastMusicBox({ initialValue = 0 }) {
               display: "flex",
               flexWrap: "wrap",
               overflowY: "auto",
-              maxHeight: "500px",
             }}
           >
             {oncasts.map((data, idx) => (
