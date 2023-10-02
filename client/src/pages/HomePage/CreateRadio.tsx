@@ -3,7 +3,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import styles from "./CreateRadio.module.css";
-import { resetIndices, setMusicInfo, setRadioDummyData } from "../../store";
 import DJSelector from "../../component/Radio/DJSelector";
 import ThemeSelector from "../../component/Radio/ThemeSelector";
 import axios from "axios";
@@ -166,7 +165,7 @@ const CreateRadio = () => {
         }
       );
     })
-      .then((response) => {
+      .then(response => {
         console.log(response);
         if (response.status === 200) {
           setIsLoading(false);
@@ -175,7 +174,7 @@ const CreateRadio = () => {
           alert("온캐스트 생성에 실패했습니다.");
         }
       })
-      .catch((error) => {
+      .catch(error => {
         setIsLoading(false);
 
         console.log("통신에러 발생", error);
@@ -199,7 +198,7 @@ const CreateRadio = () => {
                 <Grid item xs={9.5}>
                   <textarea
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={e => setTitle(e.target.value)}
                     className={styles.titleInput}
                   />
                 </Grid>

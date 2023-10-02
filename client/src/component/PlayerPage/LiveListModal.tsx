@@ -11,7 +11,7 @@ type MusicItem = {
   albumCoverUrl: string;
   artist: string;
   title: string;
-  musicId: number; // 이 부분을 추가했습니다.
+  musicId: number;
 };
 
 type OncastItem = {
@@ -25,14 +25,14 @@ type LiveListModalProps = {
   isOpen: boolean;
   onClose: () => void;
   oncastList: OncastItem[];
-  currentStory: number; // 현재 재생 중인 사연의 순서
+  currentSeq: number | null;
 };
 
 export const LiveListModal: React.FC<LiveListModalProps> = ({
   isOpen,
   onClose,
   oncastList,
-  currentStory,
+  currentSeq,
 }) => {
   const [alertModalOpen, setAlertModalOpen] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState("");
@@ -100,7 +100,7 @@ export const LiveListModal: React.FC<LiveListModalProps> = ({
                 <div
                   key={index}
                   className={`${styles.oncastItem} ${
-                    index === currentStory ? styles.currentOncast : ""
+                    index === currentSeq ? styles.currentOncast : ""
                   }`}
                 >
                   <div className={styles.profileAndDetails}>

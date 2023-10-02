@@ -63,7 +63,7 @@ function NavBar() {
         customClass: {
           popup: "my-popup-class",
         },
-      }).then((result) => {
+      }).then(result => {
         if (result.isConfirmed) {
           handleLoginModalOpen();
         }
@@ -83,7 +83,7 @@ function NavBar() {
       customClass: {
         popup: "my-popup-class",
       },
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
         navigate("/LivePlayer");
       } else {
@@ -106,7 +106,7 @@ function NavBar() {
       customClass: {
         // popup: "colored-toast",
       },
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
         handleConfirmLogout(); // 사용자가 '승인'을 클릭하면 로그아웃 처리합니다.
       }
@@ -126,7 +126,7 @@ function NavBar() {
         }
       );
     })
-      .then((response) => {
+      .then(response => {
         console.log(response);
         if (response.data.logoutUrl) {
           window.location.href = response.data.logoutUrl;
@@ -140,7 +140,7 @@ function NavBar() {
           }
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log("통신에러발생", error);
       });
   };
