@@ -71,46 +71,66 @@
 
 .chatMessage {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   margin-bottom: 10px;
+}
+
+.senderInfo {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 5px;
 }
 
 .chatMessage img {
   width: 40px;
   height: 40px;
   border-radius: 20px;
-  margin-right: 10px;
-  object-fit: cover; /* 이미지의 비율을 유지하면서 컨테이너에 맞게 조정 */
+  object-fit: cover;
 }
 
-/* 사용자 닉네임 스타일 */
 .chatMessage .username {
   font-weight: bold;
-  margin-right: 5px;
+  margin-right: 10px; /* 이미지와의 간격 조정 */
 }
 
 .message_content {
-  flex: 1;
-  word-wrap: break-word; /* 긴 텍스트가 있을 경우 줄 바꿈 */
+  word-wrap: break-word;
+  max-width: 85%;
+  padding: 8px 12px; /* 텍스트와 테두리 간의 간격 */
+  border-radius: 15px; /* 둥근 모서리 */
+  background-color: #525051; /* 기본 배경색 (받는 사람의 메시지) */
 }
 
 .chatMessage.sent {
-  flex-direction: row-reverse; /* 닉네임, 메시지, 프로필 이미지의 순서를 뒤집습니다 */
+  align-items: flex-end; /* 보내는 사람의 메시지를 왼쪽 정렬 */
+}
+
+.chatMessage.sent .senderInfo {
+  justify-content: flex-end; /* 보내는 사람의 이미지와 닉네임을 왼쪽으로 정렬 */
 }
 
 .chatMessage.received {
-  justify-content: flex-start; /* 메시지를 왼쪽으로 정렬 */
-}
-
-.chatMessage.sent {
-  flex-direction: row-reverse; /* 요소의 순서를 뒤집습니다 */
+  align-items: flex-start;
 }
 
 .chatMessage.sent .message_content {
-  flex-grow: 1; /* 메시지를 오른쪽으로 밀어냅니다 */
-  text-align: right; /* 메시지 텍스트를 오른쪽으로 정렬합니다 */
+  background-color: #525051; /* 보내는 사람의 메시지 배경색 */
+  text-align: left;
+}
+
+.chatMessage.received .message_content {
+  text-align: left;
+}
+
+.chatMessage .username {
+  font-weight: bold;
+  margin-right: 10px; /* 이미지와의 간격 조정 */
 }
 
 .chatMessage.sent .username {
-  margin: 0 10px; /* 이미지와의 간격 조정 */
+  margin-left: 10px; /* 보내는 사람의 경우, 닉네임을 사진의 왼쪽에 위치 */
+  margin-right: 0; /* 기존의 오른쪽 마진 제거 */
+  flex: none; /* 이 속성을 추가해서 닉네임이 전체 너비를 차지하는 것을 방지 */
 }

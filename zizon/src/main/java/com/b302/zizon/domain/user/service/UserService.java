@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
+import retrofit2.http.HEAD;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -51,7 +52,6 @@ public class UserService {
     private final GetUser getUser;
     @Autowired
     private RestTemplate restTemplate;
-
 
     // 소셜 로그인
     @Transactional
@@ -148,11 +148,13 @@ public class UserService {
     @Transactional
     public Map<String, Object> logout(HttpServletRequest request, HttpServletResponse response) {
 
+        User user = getUser.getUser();
+
         // 세션에서 유저 ID 꺼내기
         HttpSession session = request.getSession();
         Long userId = (Long) session.getAttribute("userId");
 
-        redisTemplate.delete(String.valueOf(userId));
+        redisTemplate.delete(String.valueOf(user.getUserId()));
 
         Map<String, Object> result = new HashMap<>();
         result.put("message", "로그아웃 성공");

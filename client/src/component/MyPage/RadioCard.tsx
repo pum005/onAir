@@ -50,8 +50,6 @@ export default function RecipeReviewCard({
   //이건 토글로 두어야 계속 불러볼 수 있음.
   const [isPulsButtonClicked, setIsPlusButtonClicked] = React.useState(false);
 
-  /** action */
-
   //음악 보관함에 추가
   const handleClickOpen = (musicId: number) => {
     setSelectedMusicId(musicId);
@@ -109,7 +107,7 @@ export default function RecipeReviewCard({
           }
         );
       })
-        .then((response) => {
+        .then(response => {
           console.log(response.data);
           if (response.data.message === "음악 추가 완료") {
             setOpen(true);
@@ -119,7 +117,7 @@ export default function RecipeReviewCard({
             alert("이미 보관함에 있는 음악입니다.");
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("에러발생", error);
         });
     }
