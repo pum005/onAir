@@ -297,15 +297,26 @@ const SearchModal: React.FC<SearchModalProps> = ({
                         }
                       }}
                     >
-                      <span>{music.musicTitle}</span>
+                      <span style={{ fontFamily: "Pretendard-SemiBold" }}>
+                        {music.musicTitle}
+                      </span>
                     </div>
-                    <div className={styles.artistName}>{music.musicArtist}</div>
+                    <div
+                      style={{ fontFamily: "Pretendard-SemiBold" }}
+                      className={styles.artistName}
+                    >
+                      {music.musicArtist}
+                    </div>
                   </div>
-                  <div className={styles.musicDuration}>
+                  <div
+                    style={{ fontFamily: "Pretendard-SemiBold" }}
+                    className={styles.musicDuration}
+                  >
                     {formatTime(music.spotifyMusicDuration)}
                   </div>
                   <AddCircleOutlineIcon
-                    style={{ marginLeft: "8px", color: "#ffffff80" }}
+                    style={{ marginLeft: "8px" }}
+                    className={styles.addCircleButtonClick}
                     cursor="pointer"
                     onClick={() => handleAddMusic(music)}
                   />
