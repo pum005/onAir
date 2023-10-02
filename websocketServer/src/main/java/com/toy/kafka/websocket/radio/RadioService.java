@@ -33,7 +33,7 @@ public class RadioService {
 
     private long logTimer = 0L;
 
-    private String type = "none";
+    private String type = "End";
     private String path = "";
     private long length = 0L;
     private String title = "";
@@ -306,7 +306,7 @@ public class RadioService {
 
     private void resetInfo() {
         seq = 0L;
-        type = "none";
+        type = "End";
         path = "";
         title = "";
         artist = "";
