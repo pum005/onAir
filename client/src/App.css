@@ -309,3 +309,14 @@ div:where(.swal2-icon).swal2-success {
 .MuiInput-underline:after {
   border-bottom: 2px solid rgb(180, 180, 180) !important;
 }
+
+.MusicCard_playArrowIcon__xps9j:hover {
+  color: #7066e0 !important;
+  /* background-color: white !important; */
+}
+
+.css-1e6y48t-MuiButtonBase-root-MuiButton-root:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: transparent !important;
+}
