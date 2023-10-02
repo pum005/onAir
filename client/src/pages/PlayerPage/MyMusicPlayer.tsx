@@ -17,8 +17,6 @@ import store, {
   setSelectedMusicIndex,
 } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
-import { togglePlayerVisibility } from "../../store";
-import { GlobalYouTubePlayer } from "../../component/YoutubeMusicPlayer/GlobalYouTubePlayer";
 
 type MusicInfo = {
   musicId: number;
@@ -31,9 +29,6 @@ type MusicInfo = {
 
 export const MyMusicPlayer = () => {
   const dispatch = useDispatch();
-  const isPlayerVisible = useSelector(
-    (state: RootState) => state.isPlayerVisible
-  );
   const selectedMusicIndex = useSelector(
     (state: RootState) => state.selectedMusicIndex
   ); // 리덕스 상태에서 selectedMusicIndex를 가져옵니다.
@@ -55,8 +50,6 @@ export const MyMusicPlayer = () => {
     // 선택된 음악의 musicId를 사용하여 사용자 지정 이벤트를 발송합니다.
     const event = new CustomEvent("musicSelect", { detail: { musicId } });
     window.dispatchEvent(event);
-    // 음악 아이템을 클릭할 때 플레이어 바의 가시성을 토글합니다.
-    dispatch(togglePlayerVisibility());
   };
   useEffect(() => {
     // selectedMusicIndex가 바뀔 때마다 currentTrackIndex를 동기화합니다.
@@ -263,7 +256,6 @@ export const MyMusicPlayer = () => {
         playlistId={playlistMetaId}
         setRefreshKey={() => setRefreshKey(prev => !prev)}
       />
-      <GlobalYouTubePlayer />
     </div>
   );
 };
