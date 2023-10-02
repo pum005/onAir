@@ -166,13 +166,25 @@ export const MyMusicPlayer = () => {
     handleDeleteModalOpen();
   };
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
+    const target = e.target as HTMLImageElement;
+    const width = target.offsetWidth;
+    const mouseX = e.clientX - target.offsetLeft;
+    const rotateY = (mouseX / width - 0.5) * 40;
+    target.style.transform = `rotateY(${rotateY}deg)`;
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLImageElement>) => {
+    const target = e.target as HTMLImageElement;
+    target.style.transform = `rotateY(0deg)`;
+  };
+
   return (
     <div className={styles.root}>
       {/* <NavBar /> */}
       <div className={styles.container}>
         <div className={styles.songDisplayContainer}>
           <div className={styles.coverImageContainer}>
-            {/* 이부분 노래가 아무것도 없을때 기본 이미지 설정 가능 */}
             <img
               src={
                 musicData.length === 0
@@ -185,6 +197,8 @@ export const MyMusicPlayer = () => {
                   : musicData[currentTrackIndex]?.title
               }
               className={styles.coverImage}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
             />
           </div>
           <div className={styles.songListContainer}>
@@ -248,7 +262,7 @@ export const MyMusicPlayer = () => {
         playlistId={playlistMetaId}
         setRefreshKey={() => setRefreshKey(prev => !prev)}
       />
-      {isPlayerVisible && <GlobalYouTubePlayer />}
+      <GlobalYouTubePlayer />
     </div>
   );
 };

@@ -226,6 +226,13 @@ export const GlobalYouTubePlayer = () => {
 
   const videoId = MusicDataArray[currentMusicIndex]?.youtubeVideoId;
 
+  useEffect(() => {
+    if (videoId && player) {
+      player.loadVideoById(videoId);
+      player.playVideo();
+    }
+  }, [videoId, player]);
+
   return (
     <div
       className={styles.audioContainer}
