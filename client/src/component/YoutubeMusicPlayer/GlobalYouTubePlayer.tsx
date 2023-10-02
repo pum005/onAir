@@ -8,14 +8,14 @@ import SkipNextIcon from "@mui/icons-material/SkipNext";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
-import LoopIcon from "@mui/icons-material/Loop";
 import Tooltip from "@mui/material/Tooltip";
 import { useNavigate } from "react-router-dom";
 import styles from "./GlobalYouTubePlayer.module.css";
 import { BiSolidAlbum } from "react-icons/bi";
 import { Paper, styled } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import MusicEqualizer from "../PlayerPage/MusicEqualizer";
+import RepeatOneIcon from "@mui/icons-material/RepeatOne";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 //파일 분리 완료
 type YouTubePlayer = {
@@ -215,6 +215,15 @@ export const GlobalYouTubePlayer = () => {
     setIsVisible(!isVisible);
   };
 
+  const handleToggleStop = () => {
+    // 노래가 재생 중이면 일시정지
+    if (isPlaying && player) {
+      player.pauseVideo();
+      setIsPlaying(false);
+    }
+    setIsVisible(!isVisible);
+  };
+
   const videoId = MusicDataArray[currentMusicIndex]?.youtubeVideoId;
 
   return (
@@ -307,24 +316,29 @@ export const GlobalYouTubePlayer = () => {
             </Grid>
 
             <Grid item xs>
-              <div className={styles.currentSongInfo}>
-                <img
-                  src={MusicDataArray[currentMusicIndex]?.albumCoverUrl}
-                  alt="Album Cover"
-                  width="50"
-                  height="50"
-                  style={{ marginRight: "10px" }}
-                />
-                <div>
-                  <span className={styles.currentSongTitle}>
-                    {MusicDataArray[currentMusicIndex]?.title}
-                  </span>
-                  <br />
-                  <span className={styles.currentSongArtist}>
-                    {MusicDataArray[currentMusicIndex]?.artist}
-                  </span>
+              <Button
+                onClick={redirectToPlaylist}
+                style={{ textTransform: "none" }}
+              >
+                <div className={styles.currentSongInfo}>
+                  <img
+                    src={MusicDataArray[currentMusicIndex]?.albumCoverUrl}
+                    alt="Album Cover"
+                    width="50"
+                    height="50"
+                    style={{ marginRight: "10px" }}
+                  />
+                  <div>
+                    <span className={styles.currentSongTitle}>
+                      {MusicDataArray[currentMusicIndex]?.title}
+                    </span>
+                    <br />
+                    <span className={styles.currentSongArtist}>
+                      {MusicDataArray[currentMusicIndex]?.artist}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              </Button>
             </Grid>
 
             <Grid item xs>
@@ -339,7 +353,15 @@ export const GlobalYouTubePlayer = () => {
                   onClick={() => setIsLoop(!isLoop)}
                   disabled={!isButtonEnabled}
                 >
-                  <LoopIcon color={isLoop ? "secondary" : "action"} />
+                  <RepeatOneIcon color={isLoop ? "secondary" : "action"} />
+                </Button>
+              </div>
+            </Grid>
+
+            <Grid item xs>
+              <div className={styles.closeIconContainer}>
+                <Button onClick={handleToggleStop}>
+                  <HighlightOffIcon />
                 </Button>
               </div>
             </Grid>
