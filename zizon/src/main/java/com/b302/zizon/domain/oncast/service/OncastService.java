@@ -1,16 +1,16 @@
 package com.b302.zizon.domain.oncast.service;
 
+import com.b302.zizon.domain.music.dto.request.MusicRecommendRequestDTO;
 import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.music.entity.ThemeEnum;
+import com.b302.zizon.domain.music.repository.MusicRepository;
+import com.b302.zizon.domain.music.service.MusicService;
 import com.b302.zizon.domain.oncast.dto.request.OncastRequestDto;
 import com.b302.zizon.domain.oncast.dto.response.*;
 import com.b302.zizon.domain.oncast.entity.LiveQueue;
 import com.b302.zizon.domain.oncast.entity.Oncast;
 import com.b302.zizon.domain.oncast.entity.OncastCreateData;
-<<<<<<< HEAD
 import com.b302.zizon.domain.oncast.exception.OncastAlreadyCreateException;
-=======
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
 import com.b302.zizon.domain.oncast.exception.OncastNotFoundException;
 import com.b302.zizon.domain.oncast.exception.UnauthorizedOncastAccessException;
 import com.b302.zizon.domain.oncast.repository.LiveQueueRepository;
@@ -26,6 +26,7 @@ import com.b302.zizon.util.gpt.service.ChatGptService;
 import com.b302.zizon.util.tts.service.NaverTTSService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -52,10 +53,10 @@ public class OncastService {
     private final OncastCreateDataRepository oncastCreateDataRepository;
     private final GetUser getUser;
     private final LiveQueueRepository liveQueueRepository;
-<<<<<<< HEAD
     private final CallFlaskService callFlaskService;
-=======
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
+    private final RedisTemplate<String, String> redisTemplate;
+    private final MusicService musicService;
+    private final MusicRepository musicRepository;
 
     // 음악dto 변환
     private GetMusicDTO convertToDTO(Music music) {
@@ -80,7 +81,6 @@ public class OncastService {
 
         User user = getUser.getUser();
 
-<<<<<<< HEAD
         if(user.isDeleteCheck()){
             throw new OncastAlreadyCreateException("오늘은 이미 온캐스트를 생성하셨습니다. 00시 이후로 다시 만들어주세요.");
         }
@@ -98,85 +98,65 @@ public class OncastService {
 
 
         // 음악 추천받는 로직
-        Music[] oncastMusic = callFlaskService.getMusicData(request.getStory(), request.getTheme());
-=======
-//        String exstory = "오늘 하루종일 비가 와서 너무 힘들었습니다. 비가 오는날마다 너무 습하고 밖을 못돌아다녀서요. " +
-//                "저는 밖에서 산책하고 사람들을 만나는걸 좋아하기 때문이에요.\n" +
-//                "비오는날에도 행복할 수 있게 비를 맘껏 즐길 수 있는 하루가 되었으면 좋겠어요!";
 
-        OncastCreateData ocd = OncastCreateData.builder()
-                .title(request.getTitle())
-                .theme(request.getTheme())
-                .story(request.getStory())
-                .djName(request.getDjName())
-                .build();
+        SongIdsResponse ids = callFlaskService.getMusicData(request.getStory(),request.getTheme());
 
+        Map<String,Object> RecommendResult = musicService.recommendMusic(new MusicRecommendRequestDTO(ids.getSong_ids()));
+        // ids로 데이터셋에서 조회해서 음악배열 완성하는 로직 넣기
 
-        // 음악 추천받는 로직
+        Object song1 = RecommendResult.get("song1");
+        Object song2 = RecommendResult.get("song2");
+        Object song3 = RecommendResult.get("song3");
+
+        Map<String, Object> song1Map = (Map<String, Object>) song1;
+        Long musicId1 = (Long) song1Map.get("musicId");
+        Optional<Music> byId1 = musicRepository.findById(musicId1);
+        Music music1 = byId1.get();
+
+        Map<String, Object> song2Map = (Map<String, Object>) song2;
+        Long musicId2 = (Long) song2Map.get("musicId");
+        Optional<Music> byId2 = musicRepository.findById(musicId2);
+        Music music2 = byId2.get();
+
+        Map<String, Object> song3Map = (Map<String, Object>) song3;
+        Long musicId3 = (Long) song3Map.get("musicId");
+        Optional<Music> byId3 = musicRepository.findById(musicId3);
+        Music music3 = byId3.get();
+
         Music[] oncastMusic = new Music[3];
-
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
-
 
         String story = request.getStory();
         String[] script = new String[4];
 
 
-<<<<<<< HEAD
+
         oncastMusic[0] = Music.builder()
-                .artist("뉴진스")
-                .title("hype boy")
-                .youtubeVideoId("Rrf8uQFvICE")
-                .duration(151373L)
-                .albumCoverUrl("oo")
+                .artist(music1.getArtist())
+                .title(music1.getTitle())
+                .youtubeVideoId(music1.getYoutubeVideoId())
+                .duration(music1.getDuration())
+                .albumCoverUrl(music1.getAlbumCoverUrl())
+                .spotifyId(music1.getSpotifyId())
                 .build();
 
         oncastMusic[1] = Music.builder()
-                .artist("뉴진스")
-                .title("ETA")
-                .youtubeVideoId("jOTfBlKSQYY")
-                .duration(151373L)
-                .albumCoverUrl("oo")
+                .artist(music2.getArtist())
+                .title(music2.getTitle())
+                .youtubeVideoId(music2.getYoutubeVideoId())
+                .duration(music2.getDuration())
+                .albumCoverUrl(music2.getAlbumCoverUrl())
+                .spotifyId(music2.getSpotifyId())
                 .build();
 
         oncastMusic[2] = Music.builder()
-                .artist("뉴진스")
-                .title("ASAP")
-                .youtubeVideoId("dJdqn5v4Dkw")
-                .duration(151373L)
-                .albumCoverUrl("oo")
+                .artist(music3.getArtist())
+                .title(music3.getTitle())
+                .youtubeVideoId(music3.getYoutubeVideoId())
+                .duration(music3.getDuration())
+                .albumCoverUrl(music3.getAlbumCoverUrl())
+                .spotifyId(music3.getSpotifyId())
                 .build();
 
-=======
-
-        oncastMusic[0] = Music.builder()
-                .artist("뉴진스")
-                .title("hype boy")
-                .youtubeVideoId("Rrf8uQFvICE")
-                .duration(151373L)
-                .albumCoverUrl("oo")
-                .build();
-
-        oncastMusic[1] = Music.builder()
-                .artist("뉴진스")
-                .title("ETA")
-                .youtubeVideoId("jOTfBlKSQYY")
-                .duration(151373L)
-                .albumCoverUrl("oo")
-                .build();
-
-        oncastMusic[2] = Music.builder()
-                .artist("뉴진스")
-                .title("ASAP")
-                .youtubeVideoId("dJdqn5v4Dkw")
-                .duration(151373L)
-                .albumCoverUrl("oo")
-                .build();
-
-
-
-
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
 
         QuestionRequest questionRequest = new QuestionRequest();
         questionRequest.setQuestion(
@@ -188,17 +168,10 @@ public class OncastService {
                         "        5. 음악 세개가 다 끝나고 이야기를 다 하면 마무리 인사를 하고 끝나면 돼\n" +
                         "        6. 각 음악이 들어갈 자리엔 @@ 을 넣어줘. 이부분을 체크해서 단락을 나누고 음악을 재생시키려고 하는거니까 음악이 들어가는 부분에 딱 한번만 해야하는거야\n" +
                         "        7. 밑에 내가 준 예시를 보고 \"노래\" 와 [[story]] 를 바꾸고 내용도 그에 맞게 바꿔서 주면 돼 \n" +
-<<<<<<< HEAD
                         "        - story: [[" + request.getStory() + "]]\n" +
                         "        - 음악1: (" + oncastMusic[0].getArtist() + " 의 " + oncastMusic[0].getTitle() + ")\n" +
                         "        - 음악2: (" + oncastMusic[1].getArtist() + " 의 " + oncastMusic[1].getTitle() + ")\n" +
                         "        - 음악3:(" + oncastMusic[2].getArtist() + " 의 " + oncastMusic[2].getTitle() + ")\n" +
-=======
-                        "        - story: [["+ request.getStory()+"]]\n" +
-                        "        - 음악1: ("+ oncastMusic[0].getArtist()+" 의 "+ oncastMusic[0].getTitle()+")\n" +
-                        "        - 음악2: ("+ oncastMusic[1].getArtist()+" 의 "+ oncastMusic[1].getTitle()+")\n" +
-                        "        - 음악3:("+ oncastMusic[2].getArtist()+" 의 "+ oncastMusic[2].getTitle()+")\n" +
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
                         "        예시 : \n" +
                         "        안녕하세요, 여러분! 오늘 하루도 고생 정말 많으셨어요. \n" +
                         "        오늘의 이야기를 들어볼까요? \n" +
@@ -237,11 +210,6 @@ public class OncastService {
         }
 
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
         Oncast oncast = Oncast.builder()
                 .user(user)
                 .oncastCreateData(ocd)
@@ -262,17 +230,11 @@ public class OncastService {
                 .build();
 
         oncastCreateDataRepository.save(ocd);
-<<<<<<< HEAD
-=======
-
-        oncastRepository.save(oncast);
-        System.out.println("db에 온캐스트 저장 완료");
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
 
         oncastRepository.save(oncast);
         System.out.println("db에 온캐스트 저장 완료");
 
-        user.updateCreateCheck();
+        user.updateCreateCheckTrue();
 
         return oncast;
     }
@@ -324,11 +286,7 @@ public class OncastService {
 
         Optional<Oncast> byOncast = oncastRepository.findById(oncastId);
 
-<<<<<<< HEAD
         if (byOncast.isEmpty()) {
-=======
-        if(byOncast.isEmpty()) {
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
             throw new OncastNotFoundException("존재하지 않는 온캐스트입니다.");
         }
 
@@ -380,19 +338,11 @@ public class OncastService {
         User user = getUser.getUser();
 
         Optional<Oncast> byOncast = oncastRepository.findById(oncastId);
-<<<<<<< HEAD
         if (byOncast.isEmpty()) {
             throw new OncastNotFoundException("온캐스트 정보가 없습니다.");
         }
 
         if (!byOncast.get().getUser().getUserId().equals(user.getUserId())) {
-=======
-        if(byOncast.isEmpty()){
-            throw new OncastNotFoundException("온캐스트 정보가 없습니다.");
-        }
-
-        if(!byOncast.get().getUser().getUserId().equals(user.getUserId())){
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
             throw new UnauthorizedOncastAccessException("해당 유저의 온캐스트가 아닙니다.");
         }
 
@@ -449,32 +399,21 @@ public class OncastService {
     }
 
     // 라이브큐 정보 가져오기
-<<<<<<< HEAD
     public Map<String, Object> getLiveQueueList() {
-=======
-    public Map<String, Object> getLiveQueueList(){
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
         Map<String, Object> result = new HashMap<>();
         User user = getUser.getUser();
 
         List<LiveQueue> listQueueList = liveQueueRepository.findAll();
 
         List<GetLiveQueueDTO> list = new ArrayList<>();
-<<<<<<< HEAD
         int count = 1;
         for (LiveQueue q : listQueueList) {
-=======
-        for(LiveQueue q : listQueueList){
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
 
             List<MusicDTO> musicList = new ArrayList<>();
 
             if (q.getOncast().getMusic1() != null) {
                 musicList.add(MusicDTO.builder()
-<<<<<<< HEAD
                         .musicId(q.getOncast().getMusic1().getMusicId())
-=======
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
                         .albumCoverUrl(q.getOncast().getMusic1().getAlbumCoverUrl())
                         .title(q.getOncast().getMusic1().getTitle())
                         .artist(q.getOncast().getMusic1().getArtist())
@@ -482,7 +421,6 @@ public class OncastService {
             }
 
             if (q.getOncast().getMusic2() != null) {
-<<<<<<< HEAD
                 musicList.add(MusicDTO.builder()
                         .musicId(q.getOncast().getMusic2().getMusicId())
                         .albumCoverUrl(q.getOncast().getMusic2().getAlbumCoverUrl())
@@ -507,34 +445,25 @@ public class OncastService {
                     .title(q.getOncast().getOncastCreateData().getTitle())
                     .musicList(musicList)
                     .build();
-=======
-            musicList.add(MusicDTO.builder()
-                .albumCoverUrl(q.getOncast().getMusic2().getAlbumCoverUrl())
-                .title(q.getOncast().getMusic2().getTitle())
-                .artist(q.getOncast().getMusic2().getArtist())
-                .build());
-            }
-
-            if (q.getOncast().getMusic3() != null) {
-            musicList.add(MusicDTO.builder()
-                .albumCoverUrl(q.getOncast().getMusic3().getAlbumCoverUrl())
-                .title(q.getOncast().getMusic3().getTitle())
-                .artist(q.getOncast().getMusic3().getArtist())
-                .build());
-            }
-
-            GetLiveQueueDTO liveQueueDTO = GetLiveQueueDTO.builder()
-            .nickname(q.getUser().getNickname())
-            .profileImage(q.getUser().getProfileImage())
-            .title(q.getOncast().getOncastCreateData().getTitle())
-            .musicList(musicList)
-            .build();
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
 
             list.add(liveQueueDTO);
         }
 
         result.put("oncast", list);
+        return result;
+    }
+
+
+    // 라이브 서버 상태 가져오기
+    public Map<String, Object> getLiveServerStatus(){
+
+        User user = getUser.getUser();
+
+        String status = redisTemplate.opsForValue().get("server-status");
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("server-status", status);
+
         return result;
     }
 
