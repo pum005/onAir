@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import NavBar from "../../component/Common/Navbar";
 import styles from "./Loading.module.css";
 
 export const Loading = () => {

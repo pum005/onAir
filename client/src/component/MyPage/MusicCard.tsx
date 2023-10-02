@@ -113,12 +113,12 @@ function MusicCard({ refreshFlag }: any) {
 
   // 음악 리스트상세보기 모달 닫기 함수
   const closeMusicDetailModal = () => {
-    setRefreshKey((prevKey) => !prevKey);
+    setRefreshKey(prevKey => !prevKey);
     setMusicDetailModalOpen(false);
   };
 
   const closeMusicDetailModalTwo = () => {
-    setRefreshKeyTwo((prevKey) => !prevKey);
+    setRefreshKeyTwo(prevKey => !prevKey);
     setMusicDetailModalOpenTwo(false);
   };
 
@@ -144,7 +144,7 @@ function MusicCard({ refreshFlag }: any) {
         withCredentials: true,
       });
     })
-      .then((response) => {
+      .then(response => {
         // 데이터 정규화
         const normalizedData: ApiResponseType = {
           my_music_box: response.data.my_music_box,
@@ -152,7 +152,7 @@ function MusicCard({ refreshFlag }: any) {
         };
         setData(normalizedData);
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("데이터 가져오기 오류:", error);
       });
   }, [refreshPlaylist, refreshKey, refreshFlag, refreshKeyTwo]);
@@ -348,7 +348,7 @@ function MusicCard({ refreshFlag }: any) {
             />
             <Button
               className={styles.playButton}
-              onClick={(event) => {
+              onClick={event => {
                 if (Playlist.playlistCount === 0) {
                   Swal.fire({
                     icon: "error",
@@ -381,7 +381,7 @@ function MusicCard({ refreshFlag }: any) {
         isOpen={isDeleteModal}
         onClose={closeDeleteModal}
         playlistId={removeList}
-        refresh={() => setRefreshKey((prevKey) => !prevKey)}
+        refresh={() => setRefreshKey(prevKey => !prevKey)}
       />
       <AlertModal
         open={showAlert}
