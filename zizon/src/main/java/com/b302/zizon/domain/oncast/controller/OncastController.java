@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import retrofit2.http.GET;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -29,14 +30,6 @@ public class OncastController {
     public ResponseEntity<?> registOncast(@RequestBody OncastRequestDto request) {
 
         Oncast oncast = oncastService.saveOncast(request);
-<<<<<<< HEAD
-=======
-
-
-        return ResponseEntity.status(200).body("Oncast 생성 성공!");
-
-
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
 
         return ResponseEntity.status(200).body("Oncast 생성 성공!");
     }
@@ -77,6 +70,14 @@ public class OncastController {
     @GetMapping("oncast/livelist")
     public ResponseEntity<?> getLiveQueueList(){
         Map<String, Object> result = oncastService.getLiveQueueList();
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    // 라이브 서버 상태 가져오기
+    @GetMapping("oncast/live-server")
+    public ResponseEntity<?> getLiveServerStatus(){
+        Map<String, Object> result = oncastService.getLiveServerStatus();
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
