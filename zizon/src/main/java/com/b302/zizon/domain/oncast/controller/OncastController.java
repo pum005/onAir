@@ -29,6 +29,14 @@ public class OncastController {
     public ResponseEntity<?> registOncast(@RequestBody OncastRequestDto request) {
 
         Oncast oncast = oncastService.saveOncast(request);
+<<<<<<< HEAD
+=======
+
+
+        return ResponseEntity.status(200).body("Oncast 생성 성공!");
+
+
+>>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
 
         return ResponseEntity.status(200).body("Oncast 생성 성공!");
     }

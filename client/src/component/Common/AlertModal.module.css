@@ -1,43 +1,43 @@
 .alertModalContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .alertBox {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #222222;
-    color: white;
-    padding: 30px 100px 30px 100px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 약간의 그림자 추가 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #222222;
+  color: white;
+  padding: 30px 100px 30px 100px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 약간의 그림자 추가 */
 }
 
 button.checkButton {
-    background-color: #6966FF;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 10px;
-    font-size: 1em;
-    font-weight: 600;
-    cursor: pointer;
+  background-color: #6966ff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 button.checkButton:hover {
-    background-color: #4c49fd;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 10px;
-    font-size: 1em;
-    font-weight: 600;
-    cursor: pointer;
-    transform: scale(1.05);
-    border: none;
+  background-color: #4c49fd;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transform: scale(1.05);
+  border: none;
 }

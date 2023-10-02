@@ -73,7 +73,7 @@ export default function oncastMusicBox({ initialValue = 0 }) {
   }, [initialValue]);
 
   const refresh = () => {
-    setRefreshKey((prevKey) => !prevKey);
+    setRefreshKey(prevKey => !prevKey);
   };
 
   //라디오 list axios
@@ -86,14 +86,14 @@ export default function oncastMusicBox({ initialValue = 0 }) {
         withCredentials: true,
       });
     })
-      .then((response) => {
+      .then(response => {
         if (response.data.message) {
           setMessage(response.data.message);
         } else {
           setOncasts(response.data.oncasts);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("통신에러 발생", error);
       });
   }, [refreshKey]);
@@ -205,7 +205,7 @@ export default function oncastMusicBox({ initialValue = 0 }) {
                   shareCheck={data.shareCheck}
                   selectCheck={data.selectCheck}
                   refreshkey={refresh}
-                  songs={data.musicList.map((song) => ({
+                  songs={data.musicList.map(song => ({
                     musicId: song.musicId,
                     songTitle: song.title,
                     artist: song.artist,
@@ -227,7 +227,7 @@ export default function oncastMusicBox({ initialValue = 0 }) {
         isOpen={isSearchModalOpen}
         onClose={() => {
           handleSearchModalClose();
-          setRefreshFlag((prev) => !prev);
+          setRefreshFlag(prev => !prev);
         }}
       />
     </Box>
