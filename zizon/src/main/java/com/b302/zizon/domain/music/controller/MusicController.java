@@ -75,6 +75,7 @@ public class MusicController {
                                                   @RequestParam String musicImageUrl, @RequestParam String spotifyId) {
         Map<String, Object> result = musicService.findVideo(musicTitle, musicArtist, spotifyMusicDuration, musicImageUrl, spotifyId);
 
+        System.out.println(result);
         if(result.containsKey("code")){
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }else{

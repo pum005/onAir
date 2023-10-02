@@ -91,7 +91,7 @@ button.imgModifyConfirmButton {
 }
 
 button.imgModifyConfirmButton:hover {
-  background-color: rgb(92, 90, 249);
+  background-color: rgb(92, 90, 249) !important;
   transform: scale(1.05);
   border: none;
 }
@@ -109,7 +109,7 @@ button.ImgModalCloseButton {
 }
 
 button.ImgModalCloseButton:hover {
-  background-color: #a50029;
+  background-color: #a50029 !important;
   transform: scale(1.05);
   border: none;
 }
