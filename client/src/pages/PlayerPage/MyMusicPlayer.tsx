@@ -185,6 +185,7 @@ export const MyMusicPlayer = () => {
       <div className={styles.container}>
         <div className={styles.songDisplayContainer}>
           <div className={styles.coverImageContainer}>
+            {/* 이부분 노래가 아무것도 없을때 기본 이미지 설정 가능 */}
             <img
               src={
                 musicData.length === 0

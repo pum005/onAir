@@ -17,6 +17,7 @@ export type MusicData = {
     artist: string;
     image: string;
     script: string;
+    seq: number;
   };
 };
 
