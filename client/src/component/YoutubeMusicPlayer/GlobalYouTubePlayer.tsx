@@ -214,6 +214,19 @@ export const GlobalYouTubePlayer = () => {
   };
 
   const handleToggleVisibility = () => {
+    const persistedMusicValue = localStorage.getItem("persist:music");
+    if (!persistedMusicValue) return; // 값이 없으면 아무것도 하지 않습니다.
+
+    const parsedValue = JSON.parse(persistedMusicValue);
+    const musicEntries = Object.entries(parsedValue).filter(
+      ([key, value]) => key !== "_persist"
+    );
+
+    // 재생할 곡이 없으면 함수를 종료
+    if (!musicEntries.length) {
+      return;
+    }
+
     setIsVisible(!isVisible);
   };
 
