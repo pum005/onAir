@@ -115,6 +115,7 @@ const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
               color="primary"
               onClick={handleConfirm}
               className={styles.modalButtonCreate}
+              style={{ fontFamily: "Shilla_Gothic-Bold" }}
             >
               생성하기
             </Button>
@@ -123,6 +124,7 @@ const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
               color="primary"
               onClick={onClose}
               className={styles.modalButtonCancle}
+              style={{ fontFamily: "Shilla_Gothic-Bold" }}
             >
               닫기
             </Button>

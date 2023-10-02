@@ -44,6 +44,9 @@
   opacity: 1; /* 호버 상태에서 완전 불투명 */
   color: rgb(52, 129, 246);
 }
+.DeleteOutlineIcon:hover {
+  color: #da0037 !important;
+}
 
 .playArrowIcon {
   font-size: 30px;
