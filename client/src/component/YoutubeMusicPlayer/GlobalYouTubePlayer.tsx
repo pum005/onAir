@@ -213,9 +213,18 @@ export const GlobalYouTubePlayer = () => {
     });
   };
 
+  // Tooltip에 표시할 메시지를 결정하는 함수
+  const getTooltipMessage = () => {
+    if (!isLoggedIn) return "로그인 후 사용 가능합니다";
+    return videoId ? "Play Music" : "현재 재생 가능한 음악이 없습니다!";
+  };
+
   const handleToggleVisibility = () => {
+    // 로그인이 되지 않은 상태라면 아무것도 하지 않음
+    if (!isLoggedIn) return;
+
     const persistedMusicValue = localStorage.getItem("persist:music");
-    if (!persistedMusicValue) return; // 값이 없으면 아무것도 하지 않습니다.
+    if (!persistedMusicValue) return; // 값이 없으면 아무것도 하지 않음
 
     const parsedValue = JSON.parse(persistedMusicValue);
     const musicEntries = Object.entries(parsedValue).filter(
@@ -248,16 +257,12 @@ export const GlobalYouTubePlayer = () => {
     }
   }, [videoId, player]);
 
-  if (!isLoggedIn) return null;
-
   return (
     <div
       className={styles.audioContainer}
       style={isVisible ? {} : { width: "0px", overflow: "hidden" }}
     >
-      <Tooltip
-        title={videoId ? "Play Music" : "현재 재생 가능한 음악이 없습니다!"}
-      >
+      <Tooltip title={getTooltipMessage()}>
         <Button
           onClick={handleToggleVisibility}
           className={
