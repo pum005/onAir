@@ -60,6 +60,9 @@
   margin-bottom: 10px;
   color: #ffffff;
 }
+.ImgModifyTitle h2 {
+  font-size: 20px;
+}
 
 .fileUpload {
   background-color: #e3e3e3;
