@@ -128,6 +128,8 @@ export const GlobalYouTubePlayer = () => {
     }
   };
 
+  const isLoggedIn = !!localStorage.getItem("accessToken");
+
   useEffect(() => {
     const interval = setInterval(updateProgress, 1000);
     return () => clearInterval(interval);
@@ -232,6 +234,8 @@ export const GlobalYouTubePlayer = () => {
       player.playVideo();
     }
   }, [videoId, player]);
+
+  if (!isLoggedIn) return null;
 
   return (
     <div
