@@ -17,6 +17,19 @@ import { ButtonProps } from "@mui/material/Button";
 import Swal from "sweetalert2";
 
 const CreateRadio = () => {
+  const DJNameMapping = {
+    아라: "vara",
+    이안: "nian",
+    고은: "ngoeun",
+    규원: "nkyuwon",
+    기효: "nes_c_kihyo",
+    나오미: "nnaomi",
+    정영화: "nyounghwa",
+    상도: "nsangdo",
+    안나: "danna",
+    원탁: "nwontak",
+  };
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
@@ -148,6 +161,8 @@ const CreateRadio = () => {
 
   const CreateOncast = () => {
     setIsLoading(true);
+    const djEnglishName =
+      DJNameMapping[selectedDJ as keyof typeof DJNameMapping];
     requestWithTokenRefresh(() => {
       return axios.post(
         "http://localhost:8080/api/oncast/create",
@@ -155,7 +170,7 @@ const CreateRadio = () => {
           title: title,
           theme: selectedTheme,
           story: content,
-          djName: selectedDJ,
+          djName: djEnglishName,
         },
         {
           headers: {

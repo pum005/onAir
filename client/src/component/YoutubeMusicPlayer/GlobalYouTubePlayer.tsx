@@ -51,7 +51,7 @@ export const GlobalYouTubePlayer = () => {
   const [isRandom, setIsRandom] = useState(false);
   const [isLoop, setIsLoop] = useState(false);
   const [isDebouncing, setIsDebouncing] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
