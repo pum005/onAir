@@ -147,13 +147,21 @@ export default function oncastMusicBox({ initialValue = 0 }) {
           <Tab
             label="온캐스트"
             className={styles.tabOnMusic}
-            style={{ fontSize: "larger", font: "bolder", color: "white" }}
+            style={{
+              fontSize: "larger",
+              color: "white",
+              fontFamily: "GangwonEduPowerExtraBoldA",
+            }}
             {...a11yProps(0)}
           />
           <Tab
             label="음악 보관함"
             className={styles.tabOnMusic}
-            style={{ fontSize: "larger", font: "bolder", color: "white" }}
+            style={{
+              fontSize: "larger",
+              color: "white",
+              fontFamily: "GangwonEduPowerExtraBoldA",
+            }}
             {...a11yProps(1)}
           />
         </Tabs>
