@@ -8,6 +8,7 @@ import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import { setNickName } from "../../store";
 import { error } from "console";
 import styles from "./NicknameModal.module.css";
+import Swal from "sweetalert2";
 
 type NickNameModalProps = {
   isOpen: boolean;
@@ -31,7 +32,22 @@ function NickNameModal({
   //아
   const handleUpdateNickName = () => {
     if (newNickName.length > 10) {
-      alert("10글자를 초과하였습니다.");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        customClass: {
+          popup: "swal2-popup",
+        },
+      });
+      Toast.fire({
+        icon: "error",
+        title: "10글자를 초과하였습니다!",
+      });
+      onClose();
+      // alert("10글자를 초과하였습니다.");
       return;
     }
     setSubmitClicked(!submitClicked);
@@ -69,10 +85,33 @@ function NickNameModal({
               .then(() => {
                 setSubmitClicked(false);
                 onUpdateNickName(newNickName);
+                Swal.fire({
+                  icon: "success",
+                  title: "닉네임 변경이 완료되었습니다!",
+                  confirmButtonColor: "6966FF",
+                  confirmButtonText: "확인",
+                  customClass: {
+                    popup: "my-popup-class",
+                  },
+                });
                 onClose();
               });
           } else {
-            alert("닉네임 중복이 발생했습니다.");
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top",
+              showConfirmButton: false,
+              timer: 1500,
+              timerProgressBar: true,
+              customClass: {
+                popup: "swal2-popup",
+              },
+            });
+            Toast.fire({
+              icon: "error",
+              title: "닉네임 중복이 발생했습니다!",
+            });
+            onClose();
             setSubmitClicked(false);
           }
         })
