@@ -1,10 +1,7 @@
 package com.b302.zizon.domain.user.service;
 
 import com.b302.zizon.domain.user.GetUser;
-<<<<<<< HEAD
 import com.b302.zizon.domain.user.dto.UserLoginResponseDTO;
-=======
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
 import com.b302.zizon.domain.user.dto.UserUpdateRequestDTO;
 import com.b302.zizon.domain.user.entity.User;
 import com.b302.zizon.domain.user.exception.UserNotFoundException;
@@ -22,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
+import retrofit2.http.HEAD;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -52,12 +50,8 @@ public class UserService {
     private final RedisTemplate<String, String> redisTemplate;
     private final S3UploadService s3UploadService;
     private final GetUser getUser;
-<<<<<<< HEAD
     @Autowired
     private RestTemplate restTemplate;
-
-=======
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
 
     // 소셜 로그인
     @Transactional
@@ -65,11 +59,7 @@ public class UserService {
 
         Optional<User> byPrivateAccess = userRepository.findByPrivateAccess(privateAccess);
 
-<<<<<<< HEAD
         if (byPrivateAccess.isEmpty()) {
-=======
-        if(byPrivateAccess.isEmpty()){
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
             throw new UserNotFoundException("해당 유저가 존재하지 않습니다.");
         }
 
@@ -156,16 +146,13 @@ public class UserService {
 
     // 로그아웃
     @Transactional
-<<<<<<< HEAD
     public Map<String, Object> logout(HttpServletRequest request, HttpServletResponse response) {
+
+        User user = getUser.getUser();
 
         // 세션에서 유저 ID 꺼내기
         HttpSession session = request.getSession();
         Long userId = (Long) session.getAttribute("userId");
-=======
-    public Map<String, Object> logout(){
-        User user = getUser.getUser();
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
 
         redisTemplate.delete(String.valueOf(user.getUserId()));
 
@@ -179,11 +166,7 @@ public class UserService {
 
     // 유저 닉네임 변경
     @Transactional
-<<<<<<< HEAD
     public Map<String, Object> userNicknameUpdate(UserUpdateRequestDTO userUpdateRequestDTO) {
-=======
-    public Map<String, Object> userNicknameUpdate(UserUpdateRequestDTO userUpdateRequestDTO){
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
         User user = getUser.getUser();
 
         user.updateNickname(userUpdateRequestDTO.getNickname());
@@ -195,11 +178,7 @@ public class UserService {
     }
 
     // 유저 닉네임 중복체크
-<<<<<<< HEAD
     public boolean userCheckNickname(String nickname) {
-=======
-    public boolean userCheckNickname(String nickname){
->>>>>>> 0f4dfd7587064bf4367ea96fc18d2056ceb36abc
         User user = getUser.getUser();
 
         boolean flag = userRepository.existsByNickname(nickname);
