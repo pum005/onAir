@@ -40,7 +40,6 @@ public class RadioService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger logger = LoggerFactory.getLogger(RadioService.class);
-
     private String currentState = "";
 
     public int millisecondsToRoundedSeconds(Long milliseconds) {
@@ -86,10 +85,11 @@ public class RadioService {
 
         Pageable pageable = PageRequest.of(0, 1);
         List<LiveQueue> liveQueue = liveQueueRepository.findLiveQueue(pageable);
+        Long liveSequence = liveQueueRepository.findLiveSequence() + 1;
 
         if (liveQueue.isEmpty()) {
             logger.info("live empty!!!");
-            return new Data("End", 0, null);
+            return new Data("End", -1, null);
         }
 
         logger.info(liveQueue.toString());
@@ -134,7 +134,8 @@ public class RadioService {
 
         PlayListDto playListDto = new PlayListDto(ttsOneDto, musicOneDto, ttsTwoDto, musicTwoDto, ttsThreeDto, musicThreeDto, ttsFourDto);
 
-        Data data = new Data("oncast", findLiveQueue.getLiveQueueId().intValue(), playListDto);
+
+        Data data = new Data("oncast", liveSequence, playListDto);
 
         logger.info(data.toString());
 

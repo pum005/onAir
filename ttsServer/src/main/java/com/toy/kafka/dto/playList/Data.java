@@ -9,6 +9,6 @@ import lombok.ToString;
 public class Data {
 
     private String state;
-    private int seq;
+    private long seq;
     private PlayListDto playListDto;
 }

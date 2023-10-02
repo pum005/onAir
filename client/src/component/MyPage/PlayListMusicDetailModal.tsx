@@ -12,7 +12,6 @@ import DeleteModal from "./DeleteModal";
 import { useEffect } from "react";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
-import CloseIcon from "@mui/icons-material/Close";
 
 type MusicInfoType = {
   musicId: number;
@@ -30,7 +29,7 @@ type MusicDetailModalProps = {
   playlistMetaId?: number | null;
 };
 
-const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
+const PlayListMusicDetailModal: React.FC<MusicDetailModalProps> = ({
   isOpen,
   onClose,
   title,
@@ -40,30 +39,28 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
   const [playlistSongs, setPlaylistSongs] = useState<MusicInfoType[]>([]);
   const [refreshKey, setRefreshKey] = useState(false);
 
-  console.log(playlistMetaId);
   useEffect(() => {
-    if (!isOpen) return; // isOpen이 false면 아무 작업도 수행하지 않습니다.
+    if (!isOpen || !playlistMetaId) return; // isOpen이 false거나 playlistMetaId가 없으면 아무 작업도 수행하지 않습니다.
 
     requestWithTokenRefresh(() => {
-      console.log("재렌더링 몇번?");
-      return axios.get("http://localhost:8080/api/my-musicbox/info", {
+      return axios.get(`http://localhost:8080/api/playlist/${playlistMetaId}`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },
         withCredentials: true,
       });
     })
-      .then(response => {
-        if (response.data.message || !response.data.musicInfo) {
+      .then((response) => {
+        if (response.data?.length === 0 || !response.data) {
           setSongs([]);
         } else {
-          setSongs(response.data.musicInfo);
+          setSongs(response.data);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("데이터 가져오기 오류", error);
       });
-  }, [isOpen, refreshKey]);
+  }, [isOpen, playlistMetaId, refreshKey]);
 
   const formatTime = (milliseconds: number) => {
     const totalSeconds = Math.round(milliseconds / 1000);
@@ -113,96 +110,63 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
 
   return (
     <>
-      <Modal
-        open={isOpen}
-        onClose={onClose}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+      <Modal open={isOpen} onClose={onClose}>
         <Box className={styles.modalBox}>
-          <div className={styles.header}>
-            <div>
-              <div>
-                <CloseIcon onClick={onClose} className={styles.closeIcon} />
-              </div>
-              <div>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  {title} 음악 목록
-                </Typography>
-              </div>
-            </div>
-          </div>
-          <div className={styles.musicList}>
-            {songs.length > 0 ? (
-              songs.map((song, index) => (
-                <div key={index} className={styles.songItem}>
-                  <div className={styles.albumCoverUrl}>
-                    <img
-                      src={song.albumCoverUrl}
-                      alt="Album Cover"
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        marginRight: "10px",
-                      }}
-                    />
-                  </div>
-                  <div style={{ flex: 2 }}>
-                    <div className={styles.songTitle}>{song.title}</div>
-                    <div style={{ color: "#888", fontSize: "0.9em" }}>
-                      <div className={styles.artist}>{song.artist}</div>
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      flex: 1,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "flex-end",
-                    }}
-                  >
-                    <div className={styles.duration}>
-                      {formatTime(song.duration)}
-                    </div>
-                    <MoreVertIcon
-                      style={{
-                        marginLeft: "8px",
-                        cursor: "pointer",
-                        color: "white",
-                      }}
-                      onClick={event => handleMenuOpen(event, index)}
-                    />
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            {title} 노래 목록
+          </Typography>
+          {songs.length > 0 ? (
+            songs.map((song, index) => (
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginTop: "10px",
+                  borderBottom: "1px solid #e5e5e5",
+                  paddingBottom: "5px",
+                }}
+              >
+                <img
+                  src={song.albumCoverUrl}
+                  alt="Album Cover"
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    marginRight: "10px",
+                  }}
+                />
+                <div style={{ flex: 2 }}>
+                  <div>{song.title}</div>
+                  <div style={{ color: "#888", fontSize: "0.9em" }}>
+                    {song.artist}
                   </div>
                 </div>
-              ))
-            ) : (
-              <div>음악이 없습니다.</div>
-            )}
-          </div>
+                <div style={{ flex: 1, textAlign: "right" }}>
+                  {formatTime(song.duration)}
+                  <MoreVertIcon
+                    style={{ marginLeft: "8px", cursor: "pointer" }}
+                    onClick={(event) => handleMenuOpen(event, index)}
+                  />
+                </div>
+              </div>
+            ))
+          ) : (
+            <div>노래가 없습니다.</div>
+          )}
           <Menu
             anchorEl={anchorEl}
             keepMounted
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
-            slotProps={{
-              paper: {
-                style: {
-                  backgroundColor: "#282828", // 예: '#333333'
-                  color: "#ffffff",
-                },
-              },
-            }}
           >
-            <MenuItem onClick={handleMoveToOtherBox} className={styles.items}>
-              다른 플레이리스트로 이동
+            <MenuItem onClick={handleMoveToOtherBox}>
+              다른 보관함으로 이동
             </MenuItem>
-            <MenuItem onClick={handleDeleteSong} className={styles.items}>
-              삭제하기
-            </MenuItem>
+            <MenuItem onClick={handleDeleteSong}>삭제하기</MenuItem>
           </Menu>
+          <Button onClick={onClose}>닫기</Button>
         </Box>
       </Modal>
       <PlayListModal
@@ -217,10 +181,11 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
           setDeleteListModalOpen(false);
           setSelectedSong(null);
         }}
-        setRefreshKey={() => setRefreshKey(prev => !prev)}
+        setRefreshKey={() => setRefreshKey((prev) => !prev)}
+        playlistId={playlistMetaId}
       />
     </>
   );
 };
 
-export default MusicDetailModal;
+export default PlayListMusicDetailModal;

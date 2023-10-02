@@ -20,6 +20,9 @@ public interface LiveQueueRepository extends JpaRepository<LiveQueue, Long> {
       @Query("select l from LiveQueue l join fetch l.oncast o where l.readCheck = false order by l.liveQueueId")
       List<LiveQueue> findLiveQueue(Pageable pageable);
 
+      @Query("select count(l) from LiveQueue l where l.readCheck = true")
+      Long findLiveSequence();
+
 }
 
 
