@@ -1,5 +1,4 @@
 import SocketManager from "./socket";
-import { addChatMessage, setMusicInfo } from "../store";
 import { useDispatch } from "react-redux";
 
 let socketManager = SocketManager.getInstance();
@@ -18,6 +17,7 @@ export type MusicData = {
     artist: string;
     image: string;
     script: string;
+    seq: number;
   };
 };
 

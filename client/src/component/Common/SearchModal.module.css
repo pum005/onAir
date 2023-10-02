@@ -92,7 +92,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 200px; 
+  width: 200px;
   position: relative;
 }
 
@@ -101,8 +101,12 @@
 }
 
 @keyframes marquee {
-  0%   { text-indent: 0%; }
-  100% { text-indent: -200%; }
+  0% {
+    text-indent: 0%;
+  }
+  100% {
+    text-indent: -200%;
+  }
 }
 
 .artistName {

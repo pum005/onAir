@@ -23,7 +23,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #A3A3A3;
+  border-bottom: 1px solid #a3a3a3;
   padding: 10px;
 }
 
@@ -83,15 +83,19 @@
 }
 
 @keyframes marquee {
-  0%   { text-indent: 0%; }
-  100% { text-indent: -200%; }
+  0% {
+    text-indent: 0%;
+  }
+  100% {
+    text-indent: -200%;
+  }
 }
 
 .songTitle {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 200px; 
+  width: 200px;
   position: relative;
   color: white;
 }
@@ -107,6 +111,6 @@
   margin-right: 20px; /* desiredColor를 원하는 색상 값으로 변경해주세요. 예: #FF5733 */
 }
 
-menuItem.items:hover{
+menuItem.items:hover {
   background-color: #b93131;
 }

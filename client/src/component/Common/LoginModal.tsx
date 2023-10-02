@@ -41,14 +41,14 @@ export default function LoginModal({ open, handleOpen, handleClose }: any) {
         <Fade in={open}>
           <Box className={styles.modalContent}>
             <img src="onAIr.png" alt="Logo" className={styles.tempLogo} />
-            <h2 className={styles.modalTitle}>로그인</h2>
+            <h2 className={styles.modalTitle}></h2>
             <Button
               variant="contained"
               onClick={redirectToKakaoLogin} // 카카오 로그인 함수 추가
               style={{
                 backgroundColor: "#FEE500",
                 fontWeight: "bold",
-                padding: "10px 90px",
+                padding: "10px 50px",
                 marginBottom: "20px",
                 color: "black",
                 fontSize: "large",
@@ -61,7 +61,7 @@ export default function LoginModal({ open, handleOpen, handleClose }: any) {
                 />
               }
             >
-              카카오톡으로 로그인하기
+              카카오로 로그인하기
             </Button>
             <Button
               variant="contained"
@@ -69,7 +69,7 @@ export default function LoginModal({ open, handleOpen, handleClose }: any) {
               style={{
                 backgroundColor: "#00C73C",
                 fontWeight: "bold",
-                padding: "10px 108px",
+                padding: "10px 50px",
                 marginBottom: "20px",
                 color: "white",
                 fontSize: "large",

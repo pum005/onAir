@@ -6,6 +6,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import styles from "./ImgModal.module.css";
+import CachedIcon from "@mui/icons-material/Cached";
 
 type ImgModalProps = {
   isOpen: boolean;
@@ -55,7 +57,7 @@ function ImgModal({
           onImageConfirm();
           setSubmitClicked(false);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("이미지 변경 실패:", error);
           setSubmitClicked(false);
         });
@@ -73,42 +75,55 @@ function ImgModal({
 
   return (
     <Modal open={isOpen} onClose={onClose}>
-      <Box
-        sx={{
-          position: "absolute",
-          width: 400,
-          backgroundColor: "white",
-          border: "2px solid #000",
-          boxShadow: 24,
-          p: 2,
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-        }}
-      >
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          이미지 변경
-        </Typography>
-        <img
-          src={fileURL || profileImage}
-          alt="프로필 이미지"
-          style={{
-            width: "180px",
-            height: "180px",
-            objectFit: "cover",
+      <Box className={styles.modalContainer}>
+        <div className={styles.ImgModifyTitle}>
+          <h2>이미지 변경</h2>
+        </div>
+        <div className={styles.ImgContainer}>
+          <img src={fileURL || profileImage} alt="프로필 이미지" />
+          <Button className={styles.ImgModifyButton} onClick={onImageRemove}>
+            <CachedIcon sx={{ fontSize: 80 }} style={{ fill: "white" }} />
+          </Button>
+        </div>
+        <Box>
+          <label className={styles.fileUpload}>
+            <input
+              type="file"
+              hidden
+              accept="image/*"
+              onChange={onImageChange}
+            />
+            <Button
+              sx={{
+                color: "#000000",
+                fontFamily: '"Shilla_Gothic-Bold"',
+                marginTop: "5px",
+                marginBottom: "5px",
+              }}
+              component="span"
+            >
+              파일 업로드
+            </Button>
+          </label>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 2,
+            marginTop: "10px",
           }}
-        />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={onImageChange}
-          style={{ display: "block" }}
-        />
-        <Button type="button" onClick={onImageRemove}>
-          이미지 삭제
-        </Button>
-        <Button onClick={handleUpdateImg}>변경</Button>{" "}
-        <Button onClick={onClose}>x</Button>
+        >
+          <Button
+            className={styles.imgModifyConfirmButton}
+            onClick={handleUpdateImg}
+          >
+            변경하기
+          </Button>
+          <Button className={styles.ImgModalCloseButton} onClick={onClose}>
+            닫기
+          </Button>
+        </Box>
       </Box>
     </Modal>
   );
