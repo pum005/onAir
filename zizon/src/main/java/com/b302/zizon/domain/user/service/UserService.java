@@ -148,13 +148,11 @@ public class UserService {
     @Transactional
     public Map<String, Object> logout(HttpServletRequest request, HttpServletResponse response) {
 
-        User user = getUser.getUser();
-
         // 세션에서 유저 ID 꺼내기
         HttpSession session = request.getSession();
         Long userId = (Long) session.getAttribute("userId");
 
-        redisTemplate.delete(String.valueOf(user.getUserId()));
+        redisTemplate.delete(String.valueOf(userId));
 
         Map<String, Object> result = new HashMap<>();
         result.put("message", "로그아웃 성공");
