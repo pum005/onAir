@@ -45,7 +45,7 @@ export const Music = ({ musicFiles, onFinish, onMusicChange }: MusicProps) => {
       setCurrentMusicIndex(nextMusicIndex);
     } else {
       setCurrentMusicIndex(0);
-      onFinish(); // 음악 재생 완료 후 콜백 함수 호출
+      onFinish();
     }
   };
 

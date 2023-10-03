@@ -8,10 +8,11 @@
   borderradius: 5px;
   transition: background-color 0.3s ease;
   font-family: "Pretendard-SemiBold", sans-serif;
+  border-bottom: 1px solid #a3a3a3;
 }
 
 .playlistItem:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: #1f1e1e71;
 }
 
 .songListHeader div {
@@ -25,19 +26,18 @@
   transition: transform 0.3s ease;
 }
 
-.DeleteOutlineIcon:hover {
-  color: red;
-  transform: scale(1.2);
-  transition: transform 0.3s ease;
+.deleteIcon:hover {
+  color: red !important;
 }
 
 .playlistItemActive {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: #222222;
 }
 
 /* 기존 스타일에 추가 */
 .playlistItem .deleteIcon {
   display: none; /* 기본적으로 아이콘을 숨깁니다. */
+
   margin-right: 10px;
 }
 
@@ -46,7 +46,7 @@
 }
 
 .root {
-  background: linear-gradient(45deg, #000104, #1a1a2e);
+  /* background: linear-gradient(45deg, #000104, #1a1a2e); */
   height: 100vh;
   overflow: hidden;
   color: white;
@@ -81,20 +81,22 @@
 .coverImage {
   width: 500px;
   height: 500px;
+  margin-top: 50px;
   transition: transform 0.3s ease; /* 부드러운 변환 효과를 위해 추가합니다. */
-  box-shadow: 0px 20px 50px rgba(255, 255, 255, 0.5); /* 그림자 효과를 추가합니다. */
+  box-shadow: 0px 0px 50px rgba(255, 255, 255, 0.5); /* 그림자 효과를 추가합니다. */
   transform: rotateY(0deg); /* 초기 상태는 회전 없음 */
-  border-radius: 20px; /* 이미지의 모서리를 둥글게 만들어 줍니다. */
+  border-radius: 5px; /* 이미지의 모서리를 둥글게 만들어 줍니다. */
+  margin-left: 0px;
 }
 
 .coverImageContainer:hover .coverImage {
-  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0px 50px rgba(255, 255, 255, 0.6);
 }
 
 .songListContainer {
-  flex: 0.4;
-  padding-right: 20px;
-  margin-left: 20%;
+  flex: 0.7;
+  padding-right: 80px;
+  margin-left: 10%;
 }
 
 .songListHeader {
@@ -102,13 +104,37 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 50px;
   margin-bottom: 20px;
   padding: 10px 0;
 }
 
 .songList {
   overflow-y: auto;
-  height: 300px;
+
+  height: 450px;
+}
+
+.songTitle:hover {
+  animation: marquee 10s linear infinite; /* 전광판처럼 스크롤되게 하는 애니메이션 */
+}
+
+.songTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 200px;
+  position: relative;
+  color: white;
+}
+
+@keyframes marquee {
+  0% {
+    text-indent: 0%;
+  }
+  100% {
+    text-indent: -200%;
+  }
 }
 
 .albumImage {
@@ -172,5 +198,5 @@
 
 /* 스크롤바의 트랙 부분 */
 .songList::-webkit-scrollbar-track {
-  background-color: rgb(37, 37, 37);
+  background-color: rgb(0, 0, 0);
 }

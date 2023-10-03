@@ -25,7 +25,6 @@ public class OncastController {
 
     private final OncastService oncastService;
 
-    @Transactional
     @PostMapping("/oncast/create")
     public ResponseEntity<?> registOncast(@RequestBody OncastRequestDto request) {
 

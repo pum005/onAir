@@ -81,7 +81,7 @@ public class OncastService {
 
         User user = getUser.getUser();
 
-        if(user.isDeleteCheck()){
+        if(user.isCreateCheck()){
             throw new OncastAlreadyCreateException("오늘은 이미 온캐스트를 생성하셨습니다. 00시 이후로 다시 만들어주세요.");
         }
 
@@ -390,7 +390,7 @@ public class OncastService {
                 .scriptOne(oncast.getScriptOne())
                 .scriptTwo(oncast.getScriptTwo())
                 .scriptThree(oncast.getScriptThree())
-                .scriptFour(oncast.getTtsFour())
+                .scriptFour(oncast.getScriptFour())
                 .music(getMusicDTOS)
                 .djName(oncastCreateData.getDjName()).build();
 
