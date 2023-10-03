@@ -38,7 +38,7 @@ const Item = styled(Paper)(({ theme }) => ({
 export const GlobalYouTubePlayer = () => {
   const MusicData = useSelector((state: RootState) => state.music);
   const MusicDataArray: MusicInfo[] = Object.values(MusicData).filter(
-    (item) => item.musicId
+    item => item.musicId
   );
 
   const [player, setPlayer] = useState<any>(null);
@@ -76,7 +76,7 @@ export const GlobalYouTubePlayer = () => {
         // 애니메이션이 끝나면 다음 노래로 넘어갑니다.
         setAnimate(false);
 
-        setOneSeconds((prevIndex) => (prevIndex + 1) % MusicDataArray.length);
+        setOneSeconds(prevIndex => (prevIndex + 1) % MusicDataArray.length);
 
         // 다음 노래를 보여주기 시작할 때만 애니메이션을 시작합니다.
         setTimeout(() => {
@@ -218,7 +218,7 @@ export const GlobalYouTubePlayer = () => {
   ]);
 
   const setCurrentMusicByMusicId = (musicId: number) => {
-    const newIndex = MusicDataArray.findIndex((m) => m.musicId === musicId);
+    const newIndex = MusicDataArray.findIndex(m => m.musicId === musicId);
     if (newIndex !== -1) {
       dispatch(setSelectedMusicIndex(newIndex));
     }
@@ -314,7 +314,7 @@ export const GlobalYouTubePlayer = () => {
           opts={opts}
           onEnd={handleMusicEnd}
           onReady={onPlayerReady}
-          onStateChange={(event) => {
+          onStateChange={event => {
             if (player) {
               setCurrentTime(player.getCurrentTime());
               setDuration(player.getDuration());
