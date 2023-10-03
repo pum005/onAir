@@ -1,5 +1,6 @@
 .tabOnMusic {
   font-family: "GangwonEduPowerExtraBoldA";
+  margin-right: 15px;
 }
 
 .musicSearch {
@@ -11,8 +12,19 @@
   font-size: 15px;
 }
 
-.recipeReviewCard{
+.recipeReviewCard {
   background-color: aqua;
+}
+
+.container {
+  margin-left: 213px;
+  margin-right: 213px;
+  /* margin: "0px 225px 0px 225px", */
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+
+  overflow-y: auto;
 }
 
 /* // */

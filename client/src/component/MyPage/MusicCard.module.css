@@ -93,7 +93,8 @@
 
 .listScrollbar {
   height: 500px;
-  border-radius: 5px;
+  /* border-radius: 5px; */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
+  margin-bottom: 100px;
 }
