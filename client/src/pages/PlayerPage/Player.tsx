@@ -116,12 +116,22 @@ export const Player = (): ReactElement => {
   const musicFiles = oncasts.music;
 
   const handleFinished = () => {
+    console.log(
+      "handleFinished called. currentIndex:",
+      currentIndex,
+      "playState:",
+      playState
+    );
+
+    // 체크: 현재 상태가 TTS이고, currentIndex가 3이면
+    if (playState === "TTS" && currentIndex === 3) {
+      console.log("currentIndex is 3 and playState is TTS. Showing modal...");
+      setShowModal(true);
+      return;
+    }
+
+    // 체크: 현재 상태가 TTS이면
     if (playState === "TTS") {
-      if (currentIndex === 3) {
-        // 마지막 TTS 체크
-        setShowModal(true);
-        return;
-      }
       setPlayState("MUSIC");
     } else {
       const nextIndex = currentIndex + 1;

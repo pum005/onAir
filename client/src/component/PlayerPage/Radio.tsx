@@ -37,14 +37,16 @@ export const Radio = ({
 
   const handleAudioEnd = () => {
     const nextIndex = currentTTSIndex + 1;
-    setCurrentTTSIndex(nextIndex);
 
-    if (nextIndex === 4) {
-      setCurrentTTSIndex(0);
+    // 마지막 TTS 파일이 아니면
+    if (nextIndex < ttsFiles.length) {
+      setCurrentTTSIndex(nextIndex);
     } else {
-      onFinish(); // TTS 재생 완료 후 콜백 함수 호출
+      onFinish(); // 마지막 TTS 파일이 끝나면 onFinish 콜백을 호출합니다.
     }
   };
+
+  const currentScript = scriptFiles[currentTTSIndex] || "";
 
   return (
     <div
@@ -74,7 +76,7 @@ export const Radio = ({
         Your browser does not support the audio element.
       </audio>
       <RadioScripts
-        script={scriptFiles[currentTTSIndex].slice(0, charIndex)}
+        script={currentScript.slice(0, charIndex)}
         djName={djName}
       />
     </div>
