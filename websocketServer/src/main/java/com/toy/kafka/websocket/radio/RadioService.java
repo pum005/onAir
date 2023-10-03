@@ -42,6 +42,8 @@ public class RadioService {
     private long typeStartTime = System.currentTimeMillis();
     private long startTime = System.currentTimeMillis();
     private String script = "";
+
+    private String djName = "";
     private Queue<PlayListDto> playlist = new LinkedList<PlayListDto>();
 
     //
@@ -81,10 +83,23 @@ public class RadioService {
 
             updateState(jsonNode);
             updateSeq(jsonNode);
+            updateDjName(jsonNode);
             updatePlaylist(jsonNode);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * kafka로부터 받아온 메세지를 파싱하여 라디오 DJ Name에 저장합니다.
+     *
+     * @param message
+     */
+    private void updateDjName(JsonNode jsonNode) {
+        if (jsonNode.has("djName")) {
+            JsonNode currentSeqNode = jsonNode.get("djName");
+            djName = currentSeqNode.asText();
         }
     }
 
@@ -156,7 +171,7 @@ public class RadioService {
     /**
      * 1초마다 라디오 상태를 갱신하는 로직입니다. idle 상태가 지속되면 강제로 finishState에 메세지를 보냅니다.
      */
-    @Scheduled(cron = "0 0 11 * * *")// 매일 11시부터 13시까지 1초 간격으로 실
+    @Scheduled(cron = "0 0 11 * * *", zone = "Asia/Seoul")// 매일 11시부터 13시까지 1초 간격으로 실
     public void startServer() {
         currentState = "idle";
     }
@@ -164,7 +179,7 @@ public class RadioService {
     /**
      * 매일 00시 마다, 라이브 시작 전 상태로 변경.
      */
-    @Scheduled(cron = "0 0 0 * * *")// 매일 11시부터 13시까지 1초 간격으로 실
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")// 매일 11시부터 13시까지 1초 간격으로 실
     public void setServerStatusToBefore() {
         currentState = "Before";
     }
@@ -233,6 +248,7 @@ public class RadioService {
                 .image(image)
                 .script(script)
                 .seq(seq)
+                .djName(djName)
                 .build();
         return currentSound;
     }
@@ -325,6 +341,7 @@ public class RadioService {
         artist = "";
         image = "";
         script = "";
+        djName = "";
         startTime = System.currentTimeMillis();
         length = 0L;
         playlist.clear();
@@ -342,9 +359,9 @@ public class RadioService {
         logTimer++;
         if (logTimer % 1 == 0) {
             logger.info(
-                    "라디오 상태: {} | 음원 타입: {} | 음원 경로: {} | 경과 시간: {} | 음원 길이: {} | 현재 큐에 들어있는 음원 수: {}",
+                    "라디오 상태: {} | 음원 타입: {} | 음원 경로: {} | 경과 시간: {} | 음원 길이: {} | 현재 큐에 들어있는 음원 수: {} | djName: {}",
                     currentState, type, path, System.currentTimeMillis() - startTime, length,
-                    playlist.size());
+                    playlist.size(), djName);
         }
     }
 

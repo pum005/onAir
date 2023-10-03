@@ -9,6 +9,10 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import { Navigate, useNavigate } from "react-router-dom";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import styles from "./RadioPlayModal.module.css";
 
 type RadioPlayModalProps = {
   open: boolean;
@@ -32,30 +36,48 @@ const RadioPlayModal: React.FC<RadioPlayModalProps> = ({
   };
 
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle id="alert-dialog-title">라디오 플레이어</DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          {radioName
-            ? `${radioName} 라디오를 들으시겠습니까?`
-            : "전체 플레이리스트에 추가되었습니다."}{" "}
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleConfirm} color="primary">
-          확인
-        </Button>
-        <Button onClick={handleClose} color="secondary">
-          취소
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <Modal open={open} onClose={handleClose} className={styles.modalContainer}>
+      <Box className={styles.modalBox}>
+        <Typography
+          id="modal-modal-title"
+          variant="h6"
+          component="h2"
+          marginBottom={2}
+          className={styles.modalTypography}
+          style={{
+            fontFamily: "GangwonEduPowerExtraBoldA",
+            fontSize: "25px",
+          }}
+        >
+          {radioName}을(를) 들으시겠습니까?
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 2,
+          }}
+        >
+          <Button
+            variant="contained"
+            onClick={handleConfirm}
+            className={styles.modalButtonDelete}
+            style={{ fontFamily: "Shilla_Gothic-Bold" }}
+          >
+            확인
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleClose}
+            className={styles.modalButtonCancle}
+            style={{ fontFamily: "Shilla_Gothic-Bold" }}
+          >
+            취소
+          </Button>
+        </Box>
+      </Box>
+    </Modal>
   );
 };
-
+//
 export default RadioPlayModal;

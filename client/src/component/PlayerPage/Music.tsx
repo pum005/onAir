@@ -115,9 +115,23 @@ export const Music = ({ musicFiles, onFinish, onMusicChange }: MusicProps) => {
       }}
     >
       {/* Album Info */}
-      <div style={{ textAlign: "center", zIndex: 2 }}>
-        <h2>{currentMusic.title}</h2>
-        <p>{currentMusic.artist}</p>
+      <div style={{ textAlign: "center", zIndex: 2, marginBottom: "20px" }}>
+        <h2
+          style={{
+            fontWeight: "bold",
+            fontFamily: "Pretendard-ExtraBold",
+          }}
+        >
+          {currentMusic.title}
+        </h2>
+        <p
+          style={{
+            opacity: 0.7,
+            fontFamily: "Pretendard-Medium",
+          }}
+        >
+          {currentMusic.artist}
+        </p>
       </div>
 
       {/* 진행 바, 현재/전체 시간, 재생/일시정지 아이콘 */}
