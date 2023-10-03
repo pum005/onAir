@@ -41,7 +41,7 @@
 }
 
 .playArrowIcon:hover {
-  color: #6966ff;
+  color: #6966ff !important;
 }
 .DeleteOutlineIcon:hover {
   color: #da0037 !important;
