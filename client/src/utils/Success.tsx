@@ -35,6 +35,7 @@ const Login: React.FC = () => {
 
     const data = await response.json(); // 서버의 응답을 JSON 형태로 파싱합니다.
     console.log(data);
+    console.log(data);
 
     // accessToken을 localStorage에 저장
     localStorage.setItem("accessToken", data.accessToken);
