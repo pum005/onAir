@@ -109,9 +109,9 @@ const SearchModal: React.FC<SearchModalProps> = ({
     })
       .then((response) => {
         setIsAddLoading(false);
-        if (response.data.message === "이미 보관함에 추가된 음악입니다.") {
+        if (response.data.message === "이미 보관함에 추가된 노래입니다.") {
           setOpen(false);
-          setAlertMessage("이미 보관함에 추가된 음악입니다.");
+          setAlertMessage("이미 보관함에 추가된 음악입니다 !");
           setIsAlertOpen(true);
           console.log(response.data.musicId);
           console.log(playlistId);
@@ -135,7 +135,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                 .then((response) => {
                   if (
                     response.data.message ===
-                    "이미 플레이리스트에 추가된 음악입니다."
+                    "이미 플레이리스트에 추가된 노래입니다."
                   ) {
                     alert("이미 플레이리스트에 추가된 음악입니다.!");
                   } else {
@@ -297,15 +297,26 @@ const SearchModal: React.FC<SearchModalProps> = ({
                         }
                       }}
                     >
-                      <span>{music.musicTitle}</span>
+                      <span style={{ fontFamily: "Pretendard-SemiBold" }}>
+                        {music.musicTitle}
+                      </span>
                     </div>
-                    <div className={styles.artistName}>{music.musicArtist}</div>
+                    <div
+                      style={{ fontFamily: "Pretendard-SemiBold" }}
+                      className={styles.artistName}
+                    >
+                      {music.musicArtist}
+                    </div>
                   </div>
-                  <div className={styles.musicDuration}>
+                  <div
+                    style={{ fontFamily: "Pretendard-SemiBold" }}
+                    className={styles.musicDuration}
+                  >
                     {formatTime(music.spotifyMusicDuration)}
                   </div>
                   <AddCircleOutlineIcon
-                    style={{ marginLeft: "8px", color: "#ffffff80" }}
+                    style={{ marginLeft: "8px" }}
+                    className={styles.addCircleButtonClick}
                     cursor="pointer"
                     onClick={() => handleAddMusic(music)}
                   />

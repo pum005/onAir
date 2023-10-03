@@ -1,8 +1,36 @@
 .fadeInOutText {
   animation: fadeInOut 3s;
   opacity: 0;
-  font-family: "BookkGothic-Bd" !important;
+  font-family: "GangwonEduPowerExtraBoldA" !important;
+  margin-top: 100px;
+
   /* font-family: "LINESeedKR-Bd" !important; */
+}
+
+.underline {
+  width: 100%; /* 혹은 원하는 넓이로 설정 */
+  height: 2px; /* 줄의 높이 설정 */
+  background-color: white;
+  margin-top: 10px; /* 텍스트와 줄 사이의 간격 조정 */
+  margin-bottom: 10px; /* 줄과 이미지 사이의 간격 조정 */
+}
+.customImage {
+  width: 300px; /* 원하는 이미지 넓이로 설정 */
+  height: 200px;
+  height: auto;
+  display: block;
+  margin: 0 auto; /* 이미지를 중앙 정렬하기 위함 */
+}
+.textBelowLine {
+  padding-top: 10px;
+}
+
+.grayText {
+  color: rgb(62, 62, 62);
+}
+
+.whiteText {
+  color: white;
 }
 
 @font-face {
@@ -60,7 +88,7 @@
 .centerContent {
   display: grid;
   place-items: center;
-  height: 80vh;
+  height: 90vh;
 }
 
 .centerText {
