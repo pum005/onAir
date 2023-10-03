@@ -110,7 +110,7 @@ export default function RecipeReviewCard({
           }
         );
       })
-        .then((response) => {
+        .then(response => {
           console.log(response.data);
           if (response.data.message === "음악 추가 완료") {
             const Toast = Swal.mixin({
@@ -146,7 +146,7 @@ export default function RecipeReviewCard({
             });
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("에러발생", error);
         });
     }
@@ -233,7 +233,8 @@ export default function RecipeReviewCard({
           open={radioplayModalOpen}
           handleClose={handlePlayModalClose}
           radioName={subheader}
-          oncastId={oncastId}
+          // oncastId={oncastId}
+          oncastId={57}
         />
       </Card>
     </div>
