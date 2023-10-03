@@ -390,7 +390,7 @@ public class OncastService {
                 .scriptOne(oncast.getScriptOne())
                 .scriptTwo(oncast.getScriptTwo())
                 .scriptThree(oncast.getScriptThree())
-                .scriptFour(oncast.getTtsFour())
+                .scriptFour(oncast.getScriptFour())
                 .music(getMusicDTOS)
                 .djName(oncastCreateData.getDjName()).build();
 
