@@ -41,7 +41,7 @@ public class  OAuth2Controller {
     private String kakaoClientId;
 //    @Value("${kakao.logout-redirect-uri}")
 //    private String kakaoLogoutRedirectUri = "http://localhost:8080/api/oauth/logout";
-    private String kakaoLogoutRedirectUri = "https://j9b302.p.ssafy.io:8080/api/oauth/logout";
+    private String kakaoLogoutRedirectUri = "https://j9b302.p.ssafy.io/api/oauth/logout";
 
 
     private final UserRepository userRepository;
