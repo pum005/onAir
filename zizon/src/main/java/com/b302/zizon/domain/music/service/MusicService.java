@@ -18,6 +18,7 @@ import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MusicService {
 
     @Value("${spotify.client.id}")
@@ -184,8 +186,9 @@ public class MusicService {
         }
         Map<String, Object> response = new HashMap<>();
 
+        int count = 0;
+
         for (int i = 0; i < 10; i++) {
-            int count = 0;
             SpotifySearchResultDTO dto = results.get(i);
             Map<String, Object> video = findVideo(dto.getMusicTitle(), dto.getMusicArtist(), dto.getSpotifyMusicDuration(), dto.getMusicAlbum(), dto.getExternalIds());
             if(video.containsKey("musicId")){
@@ -195,6 +198,7 @@ public class MusicService {
             if(count == 3){
                 break;
             }
+            System.out.println(video);
         }
         return response;
     }
@@ -221,6 +225,7 @@ public class MusicService {
                         .music(bySpotifyId.get()).build();
 
                 myMusicBoxRepository.save(build);
+                log.info("노래 추가됨");
 
                 out.put("message", "보관함에 음악 추가 성공");
                 out.put("musicId", music.getMusicId());
@@ -336,11 +341,13 @@ public class MusicService {
 
                 myMusicBoxRepository.save(myMusicBox);
             } else {
+                log.info("이미 보관함에 있는 노래");
                 out.put("message", "이미 보관함에 추가된 노래입니다.");
                 out.put("musicId", savedMusic.getMusicId());
                 return out;
             }
 
+            log.info("노래 추가됨");
             out.put("message", "보관함에 음악 추가 성공");
             out.put("musicId", savedMusic.getMusicId());
             return out;
