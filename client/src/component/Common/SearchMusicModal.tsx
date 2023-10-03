@@ -12,6 +12,7 @@ import SearchLoading from "./SearchLoading";
 import styles from "./SearchModal.module.css";
 import SearchIcon from "@mui/icons-material/Search";
 import AlertModal from "./AlertModal";
+import Swal from "sweetalert2";
 
 type SearchModalProps = {
   isOpen: boolean;
@@ -133,13 +134,42 @@ const SearchModal: React.FC<SearchModalProps> = ({
                   }
                 )
                 .then((response) => {
+                  console.log(response.data.message);
                   if (
                     response.data.message ===
-                    "이미 플레이리스트에 추가된 노래입니다."
+                    "이미 플레이리스트에 추가된 음악입니다."
                   ) {
-                    alert("이미 플레이리스트에 추가된 음악입니다.!");
+                    const Toast = Swal.mixin({
+                      toast: true,
+                      position: "top",
+                      showConfirmButton: false,
+                      timer: 1500,
+                      timerProgressBar: true,
+                      customClass: {
+                        popup: "swal2-popup",
+                      },
+                    });
+                    Toast.fire({
+                      icon: "error",
+                      title: "이미 플레이리스트에 추가된 음악입니다.!",
+                    });
+                    // alert("이미 플레이리스트에 추가된 음악입니다.!");
                   } else {
-                    alert("현재 플레이 리스트에 음악이 추가되었습니다.!");
+                    const Toast = Swal.mixin({
+                      toast: true,
+                      position: "top",
+                      showConfirmButton: false,
+                      timer: 1500,
+                      timerProgressBar: true,
+                      customClass: {
+                        popup: "swal2-popup",
+                      },
+                    });
+                    Toast.fire({
+                      icon: "success",
+                      title: "현재 플레이 리스트에 음악이 추가되었습니다.!",
+                    });
+
                     if (setRefreshKey) {
                       setRefreshKey();
                     }
@@ -156,6 +186,9 @@ const SearchModal: React.FC<SearchModalProps> = ({
           setIsAlertOpen(true);
         } else {
           setAlertMessage("전체보관함에 추가되었습니다.");
+          if (setRefreshKey) {
+            setRefreshKey();
+          }
           setOpen(true);
           if (response.data.musicId && playlistId) {
             requestWithTokenRefresh(() => {
@@ -179,9 +212,35 @@ const SearchModal: React.FC<SearchModalProps> = ({
                     response.data.message ===
                     "이미 플레이리스트에 추가된 음악입니다."
                   ) {
-                    alert("이미 플레이리스트에 추가된 음악입니다.!");
+                    const Toast = Swal.mixin({
+                      toast: true,
+                      position: "top",
+                      showConfirmButton: false,
+                      timer: 1500,
+                      timerProgressBar: true,
+                      customClass: {
+                        popup: "swal2-popup",
+                      },
+                    });
+                    Toast.fire({
+                      icon: "error",
+                      title: "이미 플레이리스트에 추가된 음악입니다!",
+                    });
                   } else {
-                    alert("현재 플레이 리스트에 음악이 추가되었습니다.!");
+                    const Toast = Swal.mixin({
+                      toast: true,
+                      position: "top",
+                      showConfirmButton: false,
+                      timer: 1500,
+                      timerProgressBar: true,
+                      customClass: {
+                        popup: "swal2-popup",
+                      },
+                    });
+                    Toast.fire({
+                      icon: "success",
+                      title: "현재 플레이 리스트에 음악이 추가되었습니다.!",
+                    });
                     if (setRefreshKey) {
                       setRefreshKey();
                     }
