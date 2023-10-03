@@ -17,6 +17,19 @@ import { ButtonProps } from "@mui/material/Button";
 import Swal from "sweetalert2";
 
 const CreateRadio = () => {
+  const DJNameMapping = {
+    아라: "vara",
+    이안: "nian",
+    고은: "ngoeun",
+    규원: "nkyuwon",
+    기효: "nes_c_kihyo",
+    나오미: "nnaomi",
+    정영화: "nyounghwa",
+    상도: "nsangdo",
+    안나: "danna",
+    원탁: "nwontak",
+  };
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
@@ -25,7 +38,7 @@ const CreateRadio = () => {
   const [selectedDJ, setSelectedDJ] = useState("");
   const navigate = useNavigate();
   const [showButton, setShowButton] = useState(false);
-  const [contentMaxLengthReached, setContentMaxLengthReached] = useState(false); // 추가: 텍스트 최대 길이 도달 여부
+  const [contentMaxLengthReached, setContentMaxLengthReached] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -148,6 +161,8 @@ const CreateRadio = () => {
 
   const CreateOncast = () => {
     setIsLoading(true);
+    const djEnglishName =
+      DJNameMapping[selectedDJ as keyof typeof DJNameMapping];
     requestWithTokenRefresh(() => {
       return axios.post(
         "http://localhost:8080/api/oncast/create",
@@ -155,7 +170,7 @@ const CreateRadio = () => {
           title: title,
           theme: selectedTheme,
           story: content,
-          djName: selectedDJ,
+          djName: djEnglishName,
         },
         {
           headers: {
@@ -165,7 +180,7 @@ const CreateRadio = () => {
         }
       );
     })
-      .then(response => {
+      .then((response) => {
         console.log(response);
         if (response.status === 200) {
           setIsLoading(false);
@@ -174,7 +189,7 @@ const CreateRadio = () => {
           alert("온캐스트 생성에 실패했습니다.");
         }
       })
-      .catch(error => {
+      .catch((error) => {
         setIsLoading(false);
 
         console.log("통신에러 발생", error);
@@ -198,7 +213,7 @@ const CreateRadio = () => {
                 <Grid item xs={9.5}>
                   <textarea
                     value={title}
-                    onChange={e => setTitle(e.target.value)}
+                    onChange={(e) => setTitle(e.target.value)}
                     className={styles.titleInput}
                   />
                 </Grid>

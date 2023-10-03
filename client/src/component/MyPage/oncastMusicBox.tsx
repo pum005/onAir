@@ -192,16 +192,19 @@ export default function oncastMusicBox({ initialValue = 0 }) {
         ) : (
           <div
             style={{
+              margin: "0px 150px 0px 150px",
               display: "flex",
               flexWrap: "wrap",
               overflowY: "auto",
-              maxHeight: "500px",
             }}
           >
             {oncasts.map((data, idx) => (
               <div
                 key={idx}
-                style={{ margin: "10px", width: "calc(25% - 20px)" }}
+                style={{
+                  margin: "10px",
+                  width: "calc(25% - 20px)",
+                }}
               >
                 <RecipeReviewCard
                   oncastId={data.oncastId}

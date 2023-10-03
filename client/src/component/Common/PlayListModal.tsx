@@ -10,7 +10,7 @@ import AlertDialog from "./AddPlayList";
 import React, { useEffect } from "react";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
-import 흥애 from "../../resources/흥애.png";
+import nullImg from "../../resources/LogoDesign.png";
 import CloseIcon from "@mui/icons-material/Close";
 import AlertModal from "./AlertModal";
 
@@ -76,11 +76,6 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
       });
   };
 
-  const handleAlertClose = () => {
-    setAlertOpen(false);
-    setRefreshKey((prevKey) => !prevKey);
-  };
-
   //내 보관함 불러오기 아직
   useEffect(() => {
     if (isOpen) {
@@ -119,7 +114,14 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
                 <CloseIcon onClick={onClose} className={styles.closeIcon} />
               </div>
               <div>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
+                <Typography
+                  id="modal-modal-title"
+                  component="h2"
+                  style={{
+                    fontFamily: "GangwonEduPowerExtraBoldA",
+                    fontSize: "25px",
+                  }}
+                >
                   플레이리스트
                 </Typography>
               </div>
@@ -131,7 +133,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
               <Box key={playlist.playlistMetaId} className={styles.playlist}>
                 <div className={styles.albumCoverUrl}>
                   <img
-                    src={playlist.playlistImage || 흥애}
+                    src={playlist.playlistImage || nullImg}
                     alt={playlist.playlistName}
                     style={{
                       width: "40px",
@@ -141,14 +143,19 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
                   />
                 </div>
                 <div>
-                  <Typography variant="subtitle1" className={styles.songTitle}>
+                  <Typography
+                    variant="subtitle1"
+                    className={styles.songTitle}
+                    style={{ fontFamily: "Pretendard-SemiBold" }}
+                  >
                     {playlist.playlistName}
                   </Typography>
                   <Typography
                     variant="body2"
                     className={styles.songCount}
+                    style={{ fontFamily: "Pretendard-SemiBold" }}
                   >
-                    현재 음악 : {playlist.playlistCount}개
+                    음악 : {playlist.playlistCount}곡
                   </Typography>
                 </div>
                 <Box sx={{ marginLeft: "auto", cursor: "pointer" }}>
@@ -170,7 +177,10 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
       <AlertModal
         open={alertModalOpen}
         message={alertMessage}
-        onClose={() => setAlertModalOpen(false)}
+        onClose={() => {
+          setAlertModalOpen(false);
+          setRefreshKey((prevKey) => !prevKey);
+        }}
       />
     </>
   );

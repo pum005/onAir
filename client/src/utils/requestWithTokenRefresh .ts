@@ -9,7 +9,6 @@ export const requestWithTokenRefresh = async (
       const newToken = error.response.data.accessToken;
       localStorage.setItem("accessToken", newToken);
 
-      // 재요청
       return requestCallback();
     } else {
       throw error;

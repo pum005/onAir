@@ -14,6 +14,7 @@ const AlertModal: React.FC<{
             paddingTop: "10px",
             paddingBottom: "30px",
             fontSize: "25px",
+            fontFamily: "GangwonEduPowerExtraBoldA",
           }}
         >
           {message}
@@ -24,11 +25,12 @@ const AlertModal: React.FC<{
           variant="contained"
           className={styles.checkButton}
           autoFocus
-          onKeyDown={e => {
+          onKeyDown={(e) => {
             if (e.key === "Enter") {
               onClose();
             }
           }}
+          style={{ fontFamily: "Shilla_Gothic-Bold" }}
         >
           확인
         </Button>
