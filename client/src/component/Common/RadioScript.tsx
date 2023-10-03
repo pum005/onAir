@@ -11,9 +11,9 @@ type RadioScriptsProps = {
 export const RadioScripts = ({ djName, script }: RadioScriptsProps) => {
   return (
     <div className={styles.container}>
-      <h2>{djName}</h2> {/* djName을 props에서 가져옴 */}
+      <h2>{djName}</h2>
       <hr className={styles.hrStyle} />
-      <p>{script}</p> {/* script를 props에서 가져옴 */}
+      <p>{script}</p>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 package com.toy.kafka.domain.live.entity;
 
 import com.toy.kafka.domain.oncast.entity.Oncast;
+import com.toy.kafka.domain.oncast.entity.OncastCreateData;
 import com.toy.kafka.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,11 @@ public class LiveQueue {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "oncast_id")
     private Oncast oncast;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "oncast_create_data_id")
+    private OncastCreateData oncastCreateData;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

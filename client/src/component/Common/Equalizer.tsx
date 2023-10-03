@@ -4,11 +4,41 @@ import React, { useRef, useEffect } from "react";
 // audioElement라는 prop을 받아와서 이를 사용하는 Equalizer 컴포넌트의 Props 타입을 정의합니다.
 type EqualizerProps = {
   audioElement: HTMLAudioElement;
+  djName: string;
 };
 
-const Equalizer: React.FC<EqualizerProps> = ({ audioElement }) => {
+type DjColorMap = {
+  [djName: string]: {
+    color: string;
+    backgroundColor: string;
+  };
+};
+
+const djColors: DjColorMap = {
+  아라: { color: "orange", backgroundColor: "#b386001f" },
+  상도: { color: "orange", backgroundColor: "#b386001f" },
+  이안: { color: "blue", backgroundColor: "#1a1a2e" },
+  규원: { color: "blue", backgroundColor: "#1a1a2e" },
+  고은: { color: "green", backgroundColor: "#007aa741" },
+  나오미: { color: "green", backgroundColor: "#007aa741" },
+  정영화: { color: "pink", backgroundColor: "#8b00001c" },
+  안나: { color: "pink", backgroundColor: "#8b00001c" },
+  기효: { color: "yellow", backgroundColor: "#228b2224" },
+  원탁: { color: "yellow", backgroundColor: "#228b2224" },
+};
+
+export function getColorByDjName(djName: string): {
+  color: string;
+  backgroundColor: string;
+} {
+  return djColors[djName] || { color: "white", backgroundColor: "#FFFFFF" };
+}
+
+const Equalizer: React.FC<EqualizerProps> = ({ audioElement, djName }) => {
   // canvas 요소에 접근하기 위한 ref를 생성합니다.
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const { color: equalizerColor } = getColorByDjName(djName);
 
   // 컴포넌트가 마운트되거나 audioElement가 변경될 때 실행되는 useEffect 훅입니다.
   useEffect(() => {
@@ -37,6 +67,7 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioElement }) => {
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     const baseRadius = 30; // 원의 기본 반지름을 설정합니다.
+    const color = getColorByDjName(djName);
 
     // 주기적으로 화면을 다시 그려주는 함수입니다.
     function renderFrame() {
@@ -66,7 +97,7 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioElement }) => {
       for (let i = dataLength - 1; i >= 0; i--) {
         const barHeight = frequencyData[i];
         const radian = (Math.PI * 2) / dataLength;
-        const radius = innerBaseRadius + barHeight / 4;
+        const radius = innerBaseRadius + barHeight / 7;
         const x = centerX + Math.cos(radian * i) * radius;
         const y = centerY + Math.sin(radian * i) * radius;
         ctx!.lineTo(x, y);
@@ -76,7 +107,7 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioElement }) => {
       ctx!.closePath();
 
       // 두 원 사이의 공간을 노란색으로 채웁니다.
-      ctx!.fillStyle = "yellow";
+      ctx!.fillStyle = equalizerColor;
       ctx!.fill();
 
       // 원의 테두리를 그립니다.
@@ -86,7 +117,7 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioElement }) => {
 
     // renderFrame 함수를 처음 호출하여 애니메이션을 시작합니다.
     renderFrame();
-  }, [audioElement]);
+  }, [audioElement, djName]);
 
   // 캔버스 요소를 반환합니다.
   return (
