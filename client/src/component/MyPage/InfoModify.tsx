@@ -1,5 +1,4 @@
 // InfoModify.tsx
-
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
@@ -7,7 +6,7 @@ import ImgModal from "./ImgModal";
 import NickNameModal from "./NicknameModal";
 import { setNickName } from "../../store";
 import { setImage } from "../../store";
-import axios from "axios";
+import styles from "./InfoModify.module.css";
 
 function InfoModify() {
   const userData = useSelector((state: RootState) => state.user); // 사용자 정보를 Redux store에서 가져옵니다.
@@ -76,38 +75,20 @@ function InfoModify() {
   };
 
   return (
-    <div>
+    <div className={styles.infoContainer}>
       <img
         src={userData.profileImage}
         alt="프로필 이미지"
         onClick={imgModalOpen}
-        style={{
-          // display: "flex",
-          // alignItems: "center",
-          cursor: "pointer",
-          width: "180px",
-          height: "180px",
-          objectFit: "cover",
-          borderRadius: "50%", // 동그랗게 만들기
-          border: "4px solid white", // 테두리 추가
-          boxShadow: "0 0 0 3px #385285", // 외부 테두리 (인스타그램처럼)
-        }}
+        className={styles.profileImage}
       />
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-        }}
-      >
-        <h3 style={{ marginRight: "15px" }}>{userData.nickname}</h3>
-        <h5 onClick={nickNameModalOpen} style={{ cursor: "pointer" }}>
+      <div className={styles.nicknameWrapper}>
+        <div className={styles.nickname}>{userData.nickname}</div>
+        <h5 onClick={nickNameModalOpen} className={styles.changeNickname}>
           변경
         </h5>
       </div>
 
-      {/* 닉네임 변경 버튼 클릭 시 모달 열기 */}
       <ImgModal
         isOpen={isImgModalOpen}
         onClose={imgModalClose}
@@ -128,3 +109,4 @@ function InfoModify() {
 }
 
 export default InfoModify;
+//

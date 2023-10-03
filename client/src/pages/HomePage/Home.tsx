@@ -1,14 +1,17 @@
 import { useNavigate } from "react-router";
-import NavBar from "../../component/Common/Navbar";
 import styles from "./Home.module.css";
 import React, { useState, useEffect } from "react";
-import LoginAlertModal from "../../component/Common/NoLoginModal";
+import Swal from "sweetalert2";
+import LoginModal from "../../component/Common/LoginModal";
+import MainLogo from "../../resources/MainLogo.png";
 
 export const Home = () => {
   /** state 관리 */
   const [showText, setShowText] = useState(true);
   const [showRadioButton, setShowRadioButton] = useState(false);
-  const [loginAlertModalOpen, setLoginAlertModalOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = React.useState(false);
+  const handleLoginModalOpen = () => setLoginModalOpen(true);
+  const handleLoginModalClose = () => setLoginModalOpen(false);
 
   //페이지 이동 함수 생성.
   const navigate = useNavigate();
@@ -26,7 +29,19 @@ export const Home = () => {
     if (isLoggedIn) {
       navigate("./CreateRadio");
     } else {
-      setLoginAlertModalOpen(true);
+      Swal.fire({
+        icon: "error",
+        title: "로그인 후 이용 가능합니다!",
+        confirmButtonColor: "6966FF",
+        confirmButtonText: "확인",
+        customClass: {
+          popup: "my-popup-class",
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          handleLoginModalOpen();
+        }
+      });
     }
   };
 
@@ -35,17 +50,28 @@ export const Home = () => {
       className={styles.background}
       style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
     >
-      <NavBar />
       <div className={styles.centerContent}>
         {showText && (
-          <h2 className={styles.fadeInOutText}>
-            당신의 이야기로 음악을 추천해드립니다
-          </h2>
+          <>
+            <h2 className={styles.fadeInOutText} style={{ fontSize: "30px" }}>
+              <img
+                src={MainLogo}
+                alt="MainLogo"
+                className={styles.customImage}
+              />
+              <div className={styles.underline}></div>
+              <div className={styles.textBelowLine}>
+                <span className={styles.grayText}>당신만의 </span>
+                <span className={styles.whiteText}>" ONCAST "</span>
+                <span className={styles.grayText}> 를 만들어 보세요!</span>
+              </div>
+            </h2>
+          </>
         )}
 
         {showRadioButton && (
           <div
-            style={{userSelect: "none"}}
+            style={{ userSelect: "none" }}
             onClick={navigateToCreateRadio}
             className={`${styles.verticalAlign} ${styles.fadeInGif}`}
           >
@@ -58,11 +84,10 @@ export const Home = () => {
             <div className={styles.centerText}>MAKE A ONCAST</div>
           </div>
         )}
-
-        <LoginAlertModal
-          open={loginAlertModalOpen}
-          handleClose={() => setLoginAlertModalOpen(false)}
-        />
+        <LoginModal
+          open={loginModalOpen}
+          handleClose={handleLoginModalClose}
+        ></LoginModal>
       </div>
     </div>
   );

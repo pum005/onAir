@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import AlertDialog from "./AddFullList";
 import AddLoading from "./AddLoading";
 import SearchLoading from "./SearchLoading";
 import styles from "./SearchModal.module.css";
 import SearchIcon from "@mui/icons-material/Search";
 import AlertModal from "./AlertModal";
+import Swal from "sweetalert2";
 
 type SearchModalProps = {
   isOpen: boolean;
@@ -36,6 +35,8 @@ const SearchModal: React.FC<SearchModalProps> = ({
   setRefreshKey,
   playlistId,
 }) => {
+  const titleRefs = useRef<(HTMLDivElement | null)[]>([]);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<MusucType[]>([]); //검색 관리 state
   const [isSearchLoading, setIsSearchLoading] = useState(false);
@@ -111,7 +112,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
         setIsAddLoading(false);
         if (response.data.message === "이미 보관함에 추가된 노래입니다.") {
           setOpen(false);
-          setAlertMessage("이미 보관함에 추가된 노래입니다.");
+          setAlertMessage("이미 보관함에 추가된 음악입니다 !");
           setIsAlertOpen(true);
           console.log(response.data.musicId);
           console.log(playlistId);
@@ -133,13 +134,42 @@ const SearchModal: React.FC<SearchModalProps> = ({
                   }
                 )
                 .then((response) => {
+                  console.log(response.data.message);
                   if (
                     response.data.message ===
                     "이미 플레이리스트에 추가된 음악입니다."
                   ) {
-                    alert("이미 플레이리스트에 추가된 음악입니다.!");
+                    const Toast = Swal.mixin({
+                      toast: true,
+                      position: "top",
+                      showConfirmButton: false,
+                      timer: 1500,
+                      timerProgressBar: true,
+                      customClass: {
+                        popup: "swal2-popup",
+                      },
+                    });
+                    Toast.fire({
+                      icon: "error",
+                      title: "이미 플레이리스트에 추가된 음악입니다.!",
+                    });
+                    // alert("이미 플레이리스트에 추가된 음악입니다.!");
                   } else {
-                    alert("현재 플레이 리스트에 음악이 추가되었습니다.!");
+                    const Toast = Swal.mixin({
+                      toast: true,
+                      position: "top",
+                      showConfirmButton: false,
+                      timer: 1500,
+                      timerProgressBar: true,
+                      customClass: {
+                        popup: "swal2-popup",
+                      },
+                    });
+                    Toast.fire({
+                      icon: "success",
+                      title: "현재 플레이 리스트에 음악이 추가되었습니다.!",
+                    });
+
                     if (setRefreshKey) {
                       setRefreshKey();
                     }
@@ -155,6 +185,10 @@ const SearchModal: React.FC<SearchModalProps> = ({
           setAlertMessage(response.data.message);
           setIsAlertOpen(true);
         } else {
+          setAlertMessage("전체보관함에 추가되었습니다.");
+          if (setRefreshKey) {
+            setRefreshKey();
+          }
           setOpen(true);
           if (response.data.musicId && playlistId) {
             requestWithTokenRefresh(() => {
@@ -178,9 +212,35 @@ const SearchModal: React.FC<SearchModalProps> = ({
                     response.data.message ===
                     "이미 플레이리스트에 추가된 음악입니다."
                   ) {
-                    alert("이미 플레이리스트에 추가된 음악입니다.!");
+                    const Toast = Swal.mixin({
+                      toast: true,
+                      position: "top",
+                      showConfirmButton: false,
+                      timer: 1500,
+                      timerProgressBar: true,
+                      customClass: {
+                        popup: "swal2-popup",
+                      },
+                    });
+                    Toast.fire({
+                      icon: "error",
+                      title: "이미 플레이리스트에 추가된 음악입니다!",
+                    });
                   } else {
-                    alert("현재 플레이 리스트에 음악이 추가되었습니다.!");
+                    const Toast = Swal.mixin({
+                      toast: true,
+                      position: "top",
+                      showConfirmButton: false,
+                      timer: 1500,
+                      timerProgressBar: true,
+                      customClass: {
+                        popup: "swal2-popup",
+                      },
+                    });
+                    Toast.fire({
+                      icon: "success",
+                      title: "현재 플레이 리스트에 음악이 추가되었습니다.!",
+                    });
                     if (setRefreshKey) {
                       setRefreshKey();
                     }
@@ -227,14 +287,21 @@ const SearchModal: React.FC<SearchModalProps> = ({
                 />
               </div>
               <div>
-                <Typography variant="h6">노래 검색</Typography>
+                <Typography
+                  className={styles.musicSearchTitle}
+                  variant="h5"
+                  fontFamily="GangwonEduPowerExtraBoldA"
+                  marginBottom="10px"
+                >
+                  음악 검색
+                </Typography>
               </div>
             </div>
           </div>
           <div className={styles.textFieldContainer}>
             <TextField
               id="standard-basic"
-              placeholder="노래 제목을 입력해주세요"
+              placeholder="음악 제목을 입력해주세요"
               variant="standard"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -243,7 +310,6 @@ const SearchModal: React.FC<SearchModalProps> = ({
                   handleSearch();
                 }
               }}
-              className={styles.searchField}
               InputProps={{
                 endAdornment: (
                   <SearchIcon
@@ -268,21 +334,60 @@ const SearchModal: React.FC<SearchModalProps> = ({
                     className={styles.musicImage}
                   />
                   <div className={styles.musicDetails}>
-                    <div>{music.musicTitle}</div>
-                    <div className={styles.artistName}>{music.musicArtist}</div>
+                    <div
+                      ref={(el) => (titleRefs.current[index] = el)}
+                      className={styles.musicTitle}
+                      title={music.musicTitle}
+                      onMouseOver={() => {
+                        const titleEl = titleRefs.current[index];
+                        const spanEl = titleEl?.querySelector("span"); // span 요소를 가져옵니다.
+                        if (
+                          spanEl &&
+                          titleEl &&
+                          spanEl.scrollWidth > titleEl.clientWidth
+                        ) {
+                          titleEl.classList.add("longTitle");
+                        }
+                      }}
+                      onMouseOut={() => {
+                        const el = titleRefs.current[index];
+                        if (el) {
+                          el.classList.remove("longTitle");
+                        }
+                      }}
+                    >
+                      <span style={{ fontFamily: "Pretendard-SemiBold" }}>
+                        {music.musicTitle}
+                      </span>
+                    </div>
+                    <div
+                      style={{ fontFamily: "Pretendard-SemiBold" }}
+                      className={styles.artistName}
+                    >
+                      {music.musicArtist}
+                    </div>
                   </div>
-                  <div className={styles.musicDuration}>
+                  <div
+                    style={{ fontFamily: "Pretendard-SemiBold" }}
+                    className={styles.musicDuration}
+                  >
                     {formatTime(music.spotifyMusicDuration)}
                   </div>
                   <AddCircleOutlineIcon
-                    style={{ marginLeft: "8px", color: "white" }}
+                    style={{ marginLeft: "8px" }}
+                    className={styles.addCircleButtonClick}
                     cursor="pointer"
                     onClick={() => handleAddMusic(music)}
                   />
                 </div>
               ))}
           </div>
-          <AlertDialog open={open} handleClose={handleClose} />
+
+          <AlertModal
+            open={open}
+            onClose={handleClose}
+            message={alertMessage}
+          ></AlertModal>
         </Box>
       </Modal>
       <AlertModal

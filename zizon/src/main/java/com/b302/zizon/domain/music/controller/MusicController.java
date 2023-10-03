@@ -1,5 +1,6 @@
 package com.b302.zizon.domain.music.controller;
 
+import com.b302.zizon.domain.music.dto.request.MusicRecommendRequestDTO;
 import com.b302.zizon.domain.music.dto.response.MusicInfoResponseDTO;
 import com.b302.zizon.domain.music.dto.request.MyMusicBoxAddRequestDTO;
 import com.b302.zizon.domain.music.dto.response.SpotifySearchResultDTO;
@@ -59,6 +60,14 @@ public class MusicController {
         return musicService.searchSpotifyMusicList(title);
     }
 
+    // 스포티파이 고유값으로 음악 검색
+    @PostMapping("/search/spotify")
+    public Map<String, Object> searchMusicList(@RequestBody MusicRecommendRequestDTO musicRecommendRequestDTO){
+        Map<String, Object> result = musicService.recommendMusic(musicRecommendRequestDTO);
+
+        return result;
+    }
+
     // 유튜브 검색
     @GetMapping("/search/youtube")
     public ResponseEntity<?> searchMusicByYoutube(@RequestParam String musicTitle,
@@ -66,6 +75,7 @@ public class MusicController {
                                                   @RequestParam String musicImageUrl, @RequestParam String spotifyId) {
         Map<String, Object> result = musicService.findVideo(musicTitle, musicArtist, spotifyMusicDuration, musicImageUrl, spotifyId);
 
+        System.out.println(result);
         if(result.containsKey("code")){
             return ResponseEntity.status(HttpStatus.OK).body(result);
         }else{

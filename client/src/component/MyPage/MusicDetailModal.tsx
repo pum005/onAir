@@ -129,8 +129,15 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
                 <CloseIcon onClick={onClose} className={styles.closeIcon} />
               </div>
               <div>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  {title} 노래 목록
+                <Typography
+                  id="modal-modal-title"
+                  component="h2"
+                  style={{
+                    fontFamily: "GangwonEduPowerExtraBoldA",
+                    fontSize: "25px",
+                  }}
+                >
+                  {title} 음악 목록
                 </Typography>
               </div>
             </div>
@@ -168,14 +175,30 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
                       {formatTime(song.duration)}
                     </div>
                     <MoreVertIcon
-                      style={{ marginLeft: "8px", cursor: "pointer", color: "white"}}
+                      style={{
+                        marginLeft: "8px",
+                        cursor: "pointer",
+                        color: "white",
+                      }}
                       onClick={(event) => handleMenuOpen(event, index)}
                     />
                   </div>
                 </div>
               ))
             ) : (
-              <div>노래가 없습니다.</div>
+              <div
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontFamily: "Pretendard-ExtraBold",
+                  fontSize: "30px",
+                  color: "#a3a3a3",
+                }}
+              >
+                음악이 없습니다.
+              </div>
             )}
           </div>
           <Menu
@@ -183,11 +206,21 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
             keepMounted
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
+            slotProps={{
+              paper: {
+                style: {
+                  backgroundColor: "#282828", // 예: '#333333'
+                  color: "#ffffff",
+                },
+              },
+            }}
           >
-            <MenuItem onClick={handleMoveToOtherBox}>
+            <MenuItem onClick={handleMoveToOtherBox} className={styles.items}>
               다른 플레이리스트로 이동
             </MenuItem>
-            <MenuItem onClick={handleDeleteSong}>삭제하기</MenuItem>
+            <MenuItem onClick={handleDeleteSong} className={styles.items}>
+              삭제하기
+            </MenuItem>
           </Menu>
         </Box>
       </Modal>

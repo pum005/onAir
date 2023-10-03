@@ -20,6 +20,8 @@ import Success from "./utils/Success";
 
 import store, { persistor } from "./store";
 import { PersistGate } from "redux-persist/integration/react";
+import { GlobalYouTubePlayer } from "./component/YoutubeMusicPlayer/GlobalYouTubePlayer";
+import NavBar from "./component/Common/Navbar";
 
 function App() {
   return (
@@ -27,6 +29,7 @@ function App() {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <Router>
+            <NavBar></NavBar>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/CreateRadio" element={<CreateRadio />} />
@@ -44,10 +47,12 @@ function App() {
 
               <Route path="/Success" element={<Success />} />
             </Routes>
+            <GlobalYouTubePlayer></GlobalYouTubePlayer>
           </Router>
         </PersistGate>
       </Provider>
     </div>
+    //ㅏㅓㅏ
   );
 }
 

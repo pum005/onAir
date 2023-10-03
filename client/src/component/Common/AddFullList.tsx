@@ -9,9 +9,10 @@ import Button from "@mui/material/Button";
 type AlertDialogProps = {
   open: boolean;
   handleClose: () => void;
+  message?:string;
 };
 
-const AlertDialog: React.FC<AlertDialogProps> = ({ open, handleClose }) => {
+const AlertDialog: React.FC<AlertDialogProps> = ({ open, handleClose,message }) => {
   return (
     <Dialog
       open={open}
@@ -22,7 +23,7 @@ const AlertDialog: React.FC<AlertDialogProps> = ({ open, handleClose }) => {
       <DialogTitle id="alert-dialog-title">알림</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          전체 플레이리스트에 추가되었습니다.
+          {message}
         </DialogContentText>
       </DialogContent>
       <DialogActions>

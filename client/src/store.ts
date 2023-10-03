@@ -3,6 +3,8 @@ import {
   configureStore,
   createAction,
   createReducer,
+  createSlice,
+  PayloadAction,
 } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
@@ -25,28 +27,6 @@ export const setUserData = createAction<{
   userId: number;
 }>("SET_USER_DATA");
 
-export const setRadioDummyData = createAction<{
-  tts_one: string;
-  tts_two: string;
-  tts_three: string;
-  tts_four: string;
-  script_one: string;
-  script_two: string;
-  script_three: string;
-  script_four: string;
-  oncast_music_one: string;
-  oncast_music_two: string;
-  oncast_music_three: string;
-  djName: string;
-}>("SET_RADIO_DUMMY_DATA");
-
-export const setMusicInfo = createAction<{
-  musicTitle: string[];
-  musicArtist: string[];
-  musicLength: number[];
-  musicCover: string[];
-}>("SET_MUSIC_INFO");
-
 // 채팅 메시지를 추가하는 액션 생성자
 export const addChatMessage = createAction<{
   content: string;
@@ -59,6 +39,8 @@ export const resetChatMessages = createAction("RESET_CHAT_MESSAGES");
 export const incrementTTSIndex = createAction("INCREMENT_TTS_INDEX");
 export const incrementMusicIndex = createAction("INCREMENT_MUSIC_INDEX");
 export const resetIndices = createAction("RESET_INDICES");
+//마이 음악 페이지에서 노래를 눌렀을 때 바로 하단 바가 나오도록
+export const togglePlayerVisibility = createAction("TOGGLE_PLAYER_VISIBILITY");
 
 // 2. Reducer 생성
 
@@ -98,31 +80,11 @@ const initialState: User = {
   userId: 0,
 };
 
-const initialDummyState: RadioDummyData = {
-  djName: "",
-  tts_one: "",
-  tts_two: "",
-  tts_three: "",
-  tts_four: "",
-  script_one: "",
-  script_two: "",
-  script_three: "",
-  script_four: "",
-  oncast_music_one: "",
-  oncast_music_two: "",
-  oncast_music_three: "",
-  currentTTSIndex: 0,
-  currentMusicIndex: 0,
-  musicTitle: [],
-  musicArtist: [],
-  musicLength: [],
-  musicCover: [],
-};
 // liveDummyState
 const initialLiveRadioDummyState: RadioDummyData[] = [];
 
 // 리듀서를 정의합니다. 리듀서는 액션에 따라 상태를 변경하는 함수입니다.
-const userReducer = createReducer(initialState, builder => {
+const userReducer = createReducer(initialState, (builder) => {
   // setUserData 액션이 디스패치될 때 상태를 어떻게 변경할지 정의합니다.
   builder.addCase(setNickName, (state, action) => {
     state.nickname = action.payload.nickname;
@@ -137,92 +99,34 @@ const userReducer = createReducer(initialState, builder => {
   });
 });
 
-const radiodummyReducer = createReducer(initialDummyState, builder => {
-  builder
-    .addCase(setRadioDummyData, (state, action) => {
-      state.tts_one = action.payload.tts_one;
-      state.tts_two = action.payload.tts_two;
-      state.tts_three = action.payload.tts_three;
-      state.tts_four = action.payload.tts_four;
-      state.script_one = action.payload.script_one;
-      state.script_two = action.payload.script_two;
-      state.script_three = action.payload.script_three;
-      state.script_four = action.payload.script_four;
-      state.oncast_music_one = action.payload.oncast_music_one;
-      state.oncast_music_two = action.payload.oncast_music_two;
-      state.oncast_music_three = action.payload.oncast_music_three;
-      state.djName = action.payload.djName;
-    })
-    .addCase(setMusicInfo, (state, action) => {
-      state.musicTitle = action.payload.musicTitle;
-      state.musicArtist = action.payload.musicArtist;
+// 초기 상태값 설정
+const initialPlayerVisibilityState: boolean = false;
 
-      // 밀리초를 초로 변환하여 저장
-      state.musicLength = action.payload.musicLength.map(length =>
-        Math.round(length / 1000)
-      );
-
-      state.musicCover = action.payload.musicCover;
-    })
-    .addCase(incrementTTSIndex, state => {
-      state.currentTTSIndex++;
-    })
-    .addCase(incrementMusicIndex, state => {
-      state.currentMusicIndex++;
+// 리듀서 정의
+const playerVisibilityReducer = createReducer(
+  initialPlayerVisibilityState,
+  (builder) => {
+    builder.addCase(togglePlayerVisibility, (state) => {
+      return !state; // 현재 상태를 반전시킵니다.
     });
-  builder.addCase(resetIndices, state => {
-    state.currentTTSIndex = 0;
-    state.currentMusicIndex = 0;
-  });
-});
-//수정필요
+  }
+);
+
 const liveRadioDummyReducer = createReducer(
   initialLiveRadioDummyState,
-  builder => {
+  (builder) => {
     builder
-      .addCase(setRadioDummyData, (state, action) => {
-        state.push({
-          djName: action.payload.djName,
-          tts_one: action.payload.tts_one,
-          tts_two: action.payload.tts_two,
-          tts_three: action.payload.tts_three,
-          tts_four: action.payload.tts_four,
-          script_one: action.payload.script_one,
-          script_two: action.payload.script_two,
-          script_three: action.payload.script_three,
-          script_four: action.payload.script_four,
-          oncast_music_one: action.payload.oncast_music_one,
-          oncast_music_two: action.payload.oncast_music_two,
-          oncast_music_three: action.payload.oncast_music_three,
-          currentTTSIndex: 0,
-          currentMusicIndex: 0,
-          musicTitle: [],
-          musicArtist: [],
-          musicLength: [],
-          musicCover: [],
-        });
-      })
-      .addCase(setMusicInfo, (state, action) => {
-        // 마지막 원소에 대해 데이터 업데이트 (또는 원하는 인덱스에 대해 업데이트)
-        const lastItem = state[state.length - 1];
-        lastItem.musicTitle = action.payload.musicTitle;
-        lastItem.musicArtist = action.payload.musicArtist;
-        lastItem.musicLength = action.payload.musicLength.map(length =>
-          Math.round(length / 1000)
-        );
-        lastItem.musicCover = action.payload.musicCover;
-      })
-      .addCase(incrementTTSIndex, state => {
+      .addCase(incrementTTSIndex, (state) => {
         // 마지막 원소의 TTS 인덱스 증가 (또는 원하는 인덱스의 TTS 인덱스 증가)
         const lastItem = state[state.length - 1];
         lastItem.currentTTSIndex++;
       })
-      .addCase(incrementMusicIndex, state => {
+      .addCase(incrementMusicIndex, (state) => {
         // 마지막 원소의 음악 인덱스 증가 (또는 원하는 인덱스의 음악 인덱스 증가)
         const lastItem = state[state.length - 1];
         lastItem.currentMusicIndex++;
       })
-      .addCase(resetIndices, state => {
+      .addCase(resetIndices, (state) => {
         // 마지막 원소의 인덱스 리셋 (또는 원하는 인덱스의 인덱스 리셋)
         const lastItem = state[state.length - 1];
         lastItem.currentTTSIndex = 0;
@@ -242,7 +146,7 @@ export type ChatMessage = {
 const initialChatState: ChatMessage[] = [];
 
 // 리듀서 정의
-const chatReducer = createReducer(initialChatState, builder => {
+const chatReducer = createReducer(initialChatState, (builder) => {
   builder
     .addCase(addChatMessage, (state, action) => {
       console.log("State before push:", action.payload);
@@ -250,38 +154,11 @@ const chatReducer = createReducer(initialChatState, builder => {
       console.log("Is state an array?", Array.isArray(state));
       state.push(action.payload); // state.push 대신 spread 연산자를 사용하여 배열에 추가
     })
-    .addCase(resetChatMessages, state => {
+    .addCase(resetChatMessages, (state) => {
       // 채팅 메시지 초기화
       return initialChatState;
     });
 });
-
-// const userReducer = createReducer(initialState, builder => {
-//   // setUserData 액션이 디스패치될 때 상태를 어떻게 변경할지 정의합니다.
-//   builder.addCase(setNickName, (state, action) => {
-//     state.nickname = action.payload.nickname;
-//   });
-//   builder.addCase(setImage, (state, action) => {
-//     state.profileImage = action.payload.profileImage;
-//   });
-//   builder.addCase(setUserData, (state, action) => {
-//     state.nickname = action.payload.nickname;
-//     state.profileImage = action.payload.profileImage;
-//     state.userId = action.payload.userId;
-//   });
-// });
-
-// 3. Store 설정
-
-// Redux 스토어를 설정합니다. 스토어는 애플리케이션의 상태를 저장하고 관리하는 객체입니다.
-// const store = configureStore({
-//   reducer: {
-//     user: userReducer, // 'user'라는 키로 userReducer를 스토어에 추가합니다.
-//     radioDummy: radiodummyReducer,
-//     LiveRadioDummy: liveRadioDummyReducer,
-//     chat: chatReducer,
-//   },
-// });
 
 // RootState 타입을 정의합니다. 이 타입은 스토어의 전체 상태의 타입을 나타냅니다.
 export type RootState = ReturnType<typeof store.getState>;
@@ -292,19 +169,85 @@ const persistConfig = {
   storage,
 };
 
-const chatPersistConfig = {
-  key: "chat",
+const persistedUserReducer = persistReducer(persistConfig, userReducer);
+
+/** MusicPlayer */
+//MusicType
+export type MusicInfo = {
+  musicId: number;
+  title: string;
+  artist: string;
+  duration: number;
+  albumCoverUrl: string;
+  youtubeVideoId: string;
+};
+
+type MusicState = MusicInfo[];
+
+// 초기값 initialMusicState 정의
+const initialMusicState: MusicState = [];
+
+// 액션 생성자 정의
+export const setMusicDataTemp = createAction<MusicState>("SET_MUSIC_DATA");
+
+const musicReducer = createReducer(initialMusicState, (builder) => {
+  builder.addCase(
+    setMusicDataTemp,
+    (state, action: PayloadAction<MusicState>) => {
+      return action.payload;
+    }
+  );
+});
+
+const musicPersistConfig = {
+  key: "music",
   storage,
 };
 
-//reducer 설정으로 키값과 내용
-const persistedUserReducer = persistReducer(persistConfig, userReducer);
-const persistedChatReducer = persistReducer(chatPersistConfig, chatReducer);
+const persistedMusicReducer = persistReducer(musicPersistConfig, musicReducer);
+
+/** Music 상태 타입 (현재 어떤 인덱스의 노래를 듣는지)*/
+export type SelectedMusicIndexState = number;
+//초기 상태값
+const initialSelectedMusicIndexState: SelectedMusicIndexState = 0;
+
+//액션 생성자 정의
+export const setSelectedMusicIndex = createAction<number>(
+  "SET_SELECTED_MUSIC_INDEX"
+);
+
+//리듀서 정의
+const selectedMusicIndexReducer = createReducer(
+  initialSelectedMusicIndexState,
+  (builder) => {
+    builder.addCase(setSelectedMusicIndex, (state, action) => {
+      return action.payload; // 선택된 노래의 인덱스를 상태에 설정합니다.
+    });
+  }
+);
+
+/** 플레이리스트 주소 이동 */
+export const setPlaylistMetaId = createAction<number>("SET_PLAYLIST_META_ID");
+
+const initialPlaylistMetaIdState: number = 0;
+
+const playlistMetaIdReducer = createReducer(
+  initialPlaylistMetaIdState,
+  (builder) => {
+    builder.addCase(setPlaylistMetaId, (state, action) => {
+      return action.payload;
+    });
+  }
+);
 
 const store = configureStore({
   reducer: {
     user: persistedUserReducer,
     chat: chatReducer,
+    music: persistedMusicReducer,
+    selectedMusicIndex: selectedMusicIndexReducer,
+    isPlayerVisible: playerVisibilityReducer,
+    playlistMetaId: playlistMetaIdReducer,
   },
 });
 

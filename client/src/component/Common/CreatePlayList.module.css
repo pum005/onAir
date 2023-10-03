@@ -1,0 +1,73 @@
+.modalContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 가로 중앙 정렬 */
+  justify-content: center; /* 세로 중앙 정렬 (필요하다면) */
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 200px;
+  width: 400px;
+  background-color: #ffffff; /* background.paper 스타일에 해당 */
+  box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.15); /* boxShadow: 24에 해당 */
+  padding: 16px; /* p: 4에 해당 (MUI에서의 spacing 단위는 8이므로 4 x 8 = 32px) */
+  background-color: rgb(37, 37, 37);
+  border-radius: 10px;
+  border: 1px solid rgb(62, 62, 62);
+  font-family: "GangwonEduPowerExtraBoldA";
+}
+
+.playlistTitle {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.playlistTitle h2 {
+  font-size: 25px;
+}
+
+button.modalButtonCancle {
+  background-color: #da0037;
+  color: rgb(255, 255, 255);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button.modalButtonCancle:hover {
+  background-color: #a50029;
+  transform: scale(1.05);
+  border: none;
+}
+
+button.modalButtonCreate {
+  background-color: rgb(105, 102, 255);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button.modalButtonCreate:hover {
+  background-color: rgb(92, 90, 249);
+  transform: scale(1.05);
+  border: none;
+}
+
+/* 강원도 굵은 글씨체 영어(제목) */
+@font-face {
+  font-family: "GangwonEduPowerExtraBoldA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}

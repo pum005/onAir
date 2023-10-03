@@ -1,4 +1,4 @@
-import NavBar from "../../component/Common/Navbar";
+// import NavBar from "../../component/Common/Navbar";
 import PlayListModal from "../../component/PlayerPage/PlayListModal";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import React, { useEffect, useState } from "react";
@@ -10,20 +10,47 @@ import ChatIcon from "@mui/icons-material/Chat";
 import ChatModal from "../../component/PlayerPage/ChatModal";
 import { useDispatch } from "react-redux";
 import { addChatMessage } from "../../store";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import axios from "axios";
+import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import { LiveListModal } from "../../component/PlayerPage/LiveListModal";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 type LivePlayerProps = {};
 
 export const LivePlayer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [musicData, setMusicData] = useState<MusicData | null>(null);
-  const [isChatModalOpen, setIsChatModalOpen] = useState(false); // 채팅 모달의 상태
+  const [isChatModalOpen, setIsChatModalOpen] = useState(false);
+  const [oncastList, setOncastList] = useState<any[]>([]); // 사연의 순서를 추적하기 위한 상태
+  const [currentSeq, setCurrentSeq] = useState<number | null>(null);
 
   let socketManager = SocketManager.getInstance();
-
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("라이브 페이지 들어옴");
+
+    const fetchOncastList = async () => {
+      try {
+        const response = await requestWithTokenRefresh(() => {
+          return axios.get("http://localhost:8080/api/oncast/livelist", {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("accessToken"),
+            },
+            withCredentials: true,
+          });
+        });
+        setOncastList(response.data.oncast);
+        console.log(response.data.oncast);
+      } catch (error) {
+        console.error("Error fetching oncast data:", error);
+      }
+    };
+
+    fetchOncastList();
 
     socketConnection(
       // 첫 번째 콜백: 음악 데이터를 처리합니다.
@@ -32,6 +59,38 @@ export const LivePlayer = () => {
         console.log("Received Data:", data);
         if (data && typeof data === "object" && "data" in data) {
           setMusicData(data);
+          setCurrentSeq(data.data.seq); // seq 값을 저장
+
+          // operation 값이 'END'일 때 경고창 띄우기
+          if (data.operation === "END") {
+            Swal.fire({
+              icon: "error",
+              title: "지금은 라이브가 마쳤습니다!",
+              confirmButtonColor: "6966FF",
+              confirmButtonText: "확인",
+              customClass: {
+                popup: "my-popup-class",
+              },
+            }).then(result => {
+              if (result.isConfirmed) {
+                navigate("/"); // 홈페이지로 이동
+              }
+            });
+          } else if (data.operation === "BEFORE") {
+            Swal.fire({
+              icon: "error",
+              title: "지금은 라이브 시작 전입니다!",
+              confirmButtonColor: "6966FF",
+              confirmButtonText: "확인",
+              customClass: {
+                popup: "my-popup-class",
+              },
+            }).then(result => {
+              if (result.isConfirmed) {
+                navigate("/"); // 홈페이지로 이동
+              }
+            });
+          }
         } else {
           console.error("Invalid data received:", data);
         }
@@ -52,13 +111,13 @@ export const LivePlayer = () => {
     return () => {
       socketManager.disconnect();
     };
-  }, []); // 빈 배열을 dependency로 전달하여 한 번만 실행되도록 함
+  }, []);
 
   return (
     <div
       style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
     >
-      <NavBar />
+      {/* <NavBar /> */}
       <div style={{ position: "absolute", top: "125px", right: "150px" }}>
         <ChatIcon
           style={{ fontSize: "2.3rem", color: "white", cursor: "pointer" }}
@@ -66,7 +125,7 @@ export const LivePlayer = () => {
         />
       </div>
       <div style={{ position: "absolute", top: "120px", right: "100px" }}>
-        <QueueMusicIcon
+        <FormatListBulletedIcon
           style={{ fontSize: "2.5rem", color: "white", cursor: "pointer" }}
           onClick={() => setIsModalOpen(true)}
         />
@@ -84,9 +143,17 @@ export const LivePlayer = () => {
           playedTime={musicData.data.playedTime}
         />
       )}
-      <PlayListModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+      {isModalOpen && (
+        <LiveListModal
+          isOpen={isModalOpen}
+          oncastList={oncastList}
+          currentSeq={currentSeq}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
+      <ChatModal
+        isOpen={isChatModalOpen}
+        onClose={() => setIsChatModalOpen(false)}
       />
       <ChatModal
         isOpen={isChatModalOpen}

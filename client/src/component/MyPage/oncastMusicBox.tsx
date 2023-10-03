@@ -9,7 +9,7 @@ import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import SearchIcon from "@mui/icons-material/Search";
 import SearchModal from "../Common/SearchMusicModal";
-import styles from './oncastMusicBox.module.css';
+import styles from "./oncastMusicBox.module.css";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -57,13 +57,20 @@ function a11yProps(index: number) {
   };
 }
 
-export default function  oncastMusicBox() {
-  const [value, setValue] = React.useState(0);
+export default function oncastMusicBox({ initialValue = 0 }) {
+  const [value, setValue] = React.useState(initialValue);
+
+  console.log(value);
+
   const [oncasts, setOncasts] = React.useState<OncastType>([]);
   const [message, setMessage] = React.useState<string | null>(null);
   const [refreshFlag, setRefreshFlag] = React.useState(false);
 
   const [refreshKey, setRefreshKey] = React.useState(false);
+
+  React.useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
 
   const refresh = () => {
     setRefreshKey((prevKey) => !prevKey);
@@ -107,7 +114,6 @@ export default function  oncastMusicBox() {
   return (
     <Box sx={{ width: "100%" }}>
       <Box
-      
         sx={{
           borderBottom: 1,
           borderColor: "divider",
@@ -120,9 +126,8 @@ export default function  oncastMusicBox() {
           value={value}
           onChange={handleChange}
           aria-label="basic tabs example"
-          
           sx={{
-            paddingLeft: "220px",
+            paddingLeft: "250px",
             ".Mui-selected": {
               // 활성 Tab 스타일
               color: "#000",
@@ -142,13 +147,21 @@ export default function  oncastMusicBox() {
           <Tab
             label="온캐스트"
             className={styles.tabOnMusic}
-            style={{ fontSize: "larger", font: "bolder", color: "white" }}
+            style={{
+              fontSize: "larger",
+              color: "white",
+              fontFamily: "GangwonEduPowerExtraBoldA",
+            }}
             {...a11yProps(0)}
           />
           <Tab
             label="음악 보관함"
             className={styles.tabOnMusic}
-            style={{ fontSize: "larger", font: "bolder", color: "white" }}
+            style={{
+              fontSize: "larger",
+              color: "white",
+              fontFamily: "GangwonEduPowerExtraBoldA",
+            }}
             {...a11yProps(1)}
           />
         </Tabs>
@@ -164,8 +177,12 @@ export default function  oncastMusicBox() {
             onClick={handleSearchModalOpen}
           >
             <SearchIcon />
-            <Typography 
-            className={styles.musicSearch}>음악검색</Typography>
+            <Typography
+              style={{ marginRight: "5px" }}
+              className={styles.musicSearch}
+            >
+              음악검색
+            </Typography>
           </div>
         )}
       </Box>
@@ -175,16 +192,19 @@ export default function  oncastMusicBox() {
         ) : (
           <div
             style={{
+              margin: "0px 150px 0px 150px",
               display: "flex",
               flexWrap: "wrap",
               overflowY: "auto",
-              maxHeight: "500px",
             }}
           >
             {oncasts.map((data, idx) => (
               <div
                 key={idx}
-                style={{ margin: "10px", width: "calc(25% - 20px)" }}
+                style={{
+                  margin: "10px",
+                  width: "calc(25% - 20px)",
+                }}
               >
                 <RecipeReviewCard
                   oncastId={data.oncastId}

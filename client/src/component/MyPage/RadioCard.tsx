@@ -14,6 +14,8 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import ShareIcon from "@mui/icons-material/Share";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RadioPlayModal from "../PlayerPage/RadioPlayModal";
+import styles from "./RadioCard.module.css";
+import gifImage from "../../assets/lp.gif";
 
 type RecipeReviewCardProps = {
   oncastId: number;
@@ -49,8 +51,6 @@ export default function RecipeReviewCard({
   const [selectedMusicId, setSelectedMusicId] = React.useState(0);
   //이건 토글로 두어야 계속 불러볼 수 있음.
   const [isPulsButtonClicked, setIsPlusButtonClicked] = React.useState(false);
-
-  /** action */
 
   //음악 보관함에 추가
   const handleClickOpen = (musicId: number) => {
@@ -129,136 +129,86 @@ export default function RecipeReviewCard({
   React.useEffect(() => {});
 
   return (
-    <Card
-      sx={{
-        maxWidth: 345,
-        borderRadius: "12px",
-        boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
-        overflow: "auto",
-        height: "300px",
-      }}
-    >
-      <CardContent style={{ maxHeight: "300px" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Typography
-            variant="h6"
-            component="div"
-            style={{ textAlign: "left" }}
-          >
-            {title}
-          </Typography>
-          <Typography variant="h6" component="div" color="primary">
-            JOYFUL
-          </Typography>
-        </div>
-        <Typography
-          variant="h5"
-          color="text.secondary"
-          style={{ textAlign: "center" }}
-          component="div"
-        >
-          {subheader}
-        </Typography>
-        <hr />
-        {songs.map((song, idx) => (
-          <div
-            key={idx}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginTop: "10px",
-              borderBottom: "1px solid #e5e5e5",
-              paddingBottom: "5px",
-            }}
-          >
-            <img
-              src={song.albumCover}
-              alt={`${song.songTitle} cover`}
-              style={{ width: "40px", height: "40px", marginRight: "10px" }}
-            />
-            <div style={{ flex: 2 }}>
-              <div>{song.songTitle}</div>
-              <div style={{ color: "#888", fontSize: "0.9em" }}>
-                {song.artist}
-              </div>
+    <div className={styles.mainCard}>
+      <Card className={styles.cards}>
+        <CardContent>
+          <div className={styles.title}>{title}</div>
+          <div>
+            <div className={styles.gifImage}></div>
+            <div>
+              <Typography className={styles.subheader}>{subheader}</Typography>
             </div>
-            <div style={{ flex: 1, textAlign: "right" }}>{song.duration}</div>
-            <AddCircleOutlineIcon
-              style={{ marginLeft: "8px" }}
-              onClick={() => handleClickOpen(song.musicId)}
-              cursor="pointer"
-            />
           </div>
-        ))}
-        <div
-          style={{
-            marginTop: "10px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <div>
-            <ShareIcon
-              onClick={handleShareClick}
-              style={{ cursor: "pointer" }}
-            />
+          <hr></hr>
+          {songs.map((song, idx) => (
+            <div key={idx} className={styles.songRow}>
+              <img
+                src={song.albumCover}
+                alt={`${song.songTitle} cover`}
+                className={styles.songImage}
+              />
+              <div className={styles.songDetails}>
+                <div className={styles.songTitle}>{song.songTitle}</div>
+                <div className={styles.songArtist}>{song.artist}</div>
+              </div>
+              <div className={styles.songDuration}>{song.duration}</div>
+              <AddCircleOutlineIcon
+                className={styles.addIcon}
+                onClick={() => handleClickOpen(song.musicId)}
+              />
+            </div>
+          ))}
+          <div className={styles.actions}>
+            <div>
+              <ShareIcon
+                onClick={handleShareClick}
+                className={styles.shareIcon}
+              />
+            </div>
+            <div>
+              <PlayCircleIcon
+                onClick={handlePlayModalClick}
+                className={styles.playIcon}
+              />
+            </div>
+            <div>
+              <DeleteIcon
+                onClick={handleDeleteClick}
+                className={styles.deleteIcon}
+              />
+            </div>
           </div>
-          <div>
-            <PlayCircleIcon
-              onClick={handlePlayModalClick}
-              style={{ cursor: "pointer" }}
-            />
-          </div>
-          <div>
-            <DeleteIcon
-              onClick={handleDeleteClick}
-              style={{ cursor: "pointer" }}
-            />
-          </div>
-        </div>
 
-        <IconButton
-          sx={{
-            position: "absolute",
-            right: 8,
-            bottom: 8,
-            color: "#FF5C58",
-          }}
-          aria-label="add to favorites"
-        ></IconButton>
-      </CardContent>
-      <AlertDialog open={open} handleClose={handleClose} />
-      <PlayListModal
-        musicId={selectedMusicId}
-        isOpen={playListModalOpen}
-        onClose={handlePlayListModalClose}
-      />
-      <DeleteModal
-        setRefreshKey={refreshkey}
-        isOpen={deleteModalOpen}
-        onClose={handleDeleteModalClose}
-        oncastId={oncastId}
-      />
-      <ShareModal
-        isOpen={shareModalOpen}
-        onClose={handleShareModalClose}
-        oncastId={oncastId}
-      />
+          <IconButton
+            className={styles.favoriteButton}
+            aria-label="add to favorites"
+          ></IconButton>
+        </CardContent>
+        <AlertDialog open={open} handleClose={handleClose} />
+        <PlayListModal
+          musicId={selectedMusicId}
+          isOpen={playListModalOpen}
+          onClose={handlePlayListModalClose}
+        />
+        <DeleteModal
+          setRefreshKey={refreshkey}
+          isOpen={deleteModalOpen}
+          onClose={handleDeleteModalClose}
+          oncastId={oncastId}
+        />
+        <ShareModal
+          isOpen={shareModalOpen}
+          onClose={handleShareModalClose}
+          oncastId={oncastId}
+        />
 
-      <RadioPlayModal
-        open={radioplayModalOpen}
-        handleClose={handlePlayModalClose}
-        radioName={subheader}
-        oncastId={oncastId}
-      />
-    </Card>
+        <RadioPlayModal
+          open={radioplayModalOpen}
+          handleClose={handlePlayModalClose}
+          radioName={subheader}
+          oncastId={oncastId}
+        />
+      </Card>
+    </div>
   );
 }

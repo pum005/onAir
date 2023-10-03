@@ -1,31 +1,23 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
-import NavBar from "../../component/Common/Navbar";
-// import { musicDummyData } from "./MusicDummy";
+// import NavBar from "../../component/Common/Navbar";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import AddCircleOutline from "@mui/icons-material/AddCircleOutline";
 import styles from "./MyMusicPlayer.module.css";
 import SearchModal from "../../component/Common/SearchMusicModal";
 import DeleteModal from "../../component/MyPage/DeleteModal";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import PauseIcon from "@mui/icons-material/Pause";
-import SkipNextIcon from "@mui/icons-material/SkipNext";
-import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
-import Button from "@mui/material/Button";
 import { useLocation } from "react-router-dom";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import axios from "axios";
-import YouTube from "react-youtube";
 import Swal from "sweetalert2";
-import 흥애 from "../../resources/흥애.png";
-
-type YouTubePlayer = {
-  getCurrentTime: () => number;
-  getDuration: () => number;
-  seekTo: (seconds: number, allowSeekAhead?: boolean) => void;
-  playVideo: () => void;
-  pauseVideo: () => void;
-};
+import noMusicLogo from "../../resources/LogoDesign.png";
+import Typography from "@mui/material/Typography";
+import store, {
+  RootState,
+  setMusicDataTemp,
+  setPlaylistMetaId,
+  setSelectedMusicIndex,
+} from "../../store";
+import { useDispatch, useSelector } from "react-redux";
 
 type MusicInfo = {
   musicId: number;
@@ -36,21 +28,52 @@ type MusicInfo = {
   youtubeVideoId: string;
 };
 
-type ApiResponse = {
-  musicInfo: MusicInfo[];
-};
-
 export const MyMusicPlayer = () => {
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const dispatch = useDispatch();
+  const selectedMusicIndex = useSelector(
+    (state: RootState) => state.selectedMusicIndex
+  ); // 리덕스 상태에서 selectedMusicIndex를 가져옵니다.
+
   const [musicData, setMusicData] = useState<MusicInfo[]>([]);
 
   const location = useLocation();
   //받아와야함
+
   const playlistMetaId = location.state?.playlistMetaId;
+  const passedMusicIndex = location.state?.currentMusicIndex;
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(
+    passedMusicIndex || 0
+  );
 
   const [refreshKey, setRefreshKey] = useState(false);
 
+  const handlePlaylistItemClick = (musicId: number) => {
+    // 선택된 음악의 musicId를 사용하여 사용자 지정 이벤트를 발송합니다.
+    const event = new CustomEvent("musicSelect", { detail: { musicId } });
+    window.dispatchEvent(event);
+  };
   useEffect(() => {
+    // selectedMusicIndex가 바뀔 때마다 currentTrackIndex를 동기화합니다.
+    setCurrentTrackIndex(selectedMusicIndex);
+  }, [selectedMusicIndex]);
+  //이건 플레이리스트를 관리하기 위한 useEffect
+
+  useEffect(() => {
+    dispatch(setPlaylistMetaId(playlistMetaId));
+  }, [playlistMetaId, dispatch]);
+
+  useEffect(() => {
+    if (typeof passedMusicIndex === "number") {
+      setCurrentTrackIndex(passedMusicIndex);
+    }
+  }, [passedMusicIndex]);
+
+  console.log(passedMusicIndex);
+  useEffect(() => {
+    if (!passedMusicIndex) {
+      dispatch(setSelectedMusicIndex(0));
+    }
+
     if (playlistMetaId) {
       requestWithTokenRefresh(() => {
         return axios.get(
@@ -67,10 +90,12 @@ export const MyMusicPlayer = () => {
           // 이부분 message 안뜸
           if (response.data) {
             setMusicData(response.data);
+            const musicDataArray: MusicInfo[] = response.data;
+            store.dispatch(setMusicDataTemp(musicDataArray));
           } else {
             Swal.fire({
               icon: "error",
-              title: "보관함에 노래가 없습니다!",
+              title: "보관함에 음악이 없습니다!",
               showConfirmButton: false,
               timer: 1500,
             });
@@ -90,16 +115,18 @@ export const MyMusicPlayer = () => {
         });
       })
         .then((response) => {
-          if (response.data.message === "보관함에 노래가 없습니다.") {
+          if (response.data.message === "보관함에 음악이 없습니다.") {
             Swal.fire({
               icon: "error",
-              title: "보관함에 노래가 없습니다!",
+              title: "보관함에 음악이 없습니다!",
               showConfirmButton: false,
               timer: 1500,
             });
             setMusicData([]);
           } else {
             setMusicData(response.data.musicInfo);
+            const musicDataArray: MusicInfo[] = response.data.musicInfo;
+            store.dispatch(setMusicDataTemp(musicDataArray));
           }
         })
         .catch((error) => {
@@ -107,14 +134,6 @@ export const MyMusicPlayer = () => {
         });
     }
   }, [playlistMetaId, refreshKey]);
-
-  const handleSongEnd = () => {
-    if (currentTrackIndex < musicData.length - 1) {
-      setCurrentTrackIndex((prevIndex) => prevIndex + 1);
-    } else {
-      setCurrentTrackIndex(0);
-    }
-  };
 
   const [isSearchModalOpen, setIsSearchModalOpen] = React.useState(false); // 모달의 열림/닫힘 상태를 관리하는 상태 변수
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
@@ -134,96 +153,29 @@ export const MyMusicPlayer = () => {
     setIsDeleteModalOpen(false);
   };
 
-  const [isPlaying, setIsPlaying] = useState(true); // 현재 재생 상태를 저장
-  const [currentTime, setCurrentTime] = useState<number>(0);
-  console.log(currentTime);
-  const [duration, setDuration] = useState<number>(0);
-  const [player, setPlayer] = useState<any>(null);
   const [deletingMusicId, setDeletingMusicId] = useState<number | null>(null);
-  const [isButtonEnabled, setIsButtonEnabled] = useState(false);
-
-  const togglePlay = () => {
-    if (isPlaying) {
-      player.pauseVideo(); // YouTube 동영상 일시정지
-    } else {
-      player.playVideo(); // YouTube 동영상 재생
-    }
-    setIsPlaying(!isPlaying);
-  };
-
-  const skipToNext = () => {
-    handleSongEnd();
-  };
-
-  const skipToPrevious = () => {
-    if (currentTrackIndex === 0) {
-      setCurrentTrackIndex(musicData.length - 1);
-    } else {
-      setCurrentTrackIndex(currentTrackIndex - 1);
-    }
-  };
-
-  const opts = {
-    height: "0",
-    width: "0",
-    playerVars: {
-      autoplay: isPlaying ? 1 : 0,
-    },
-  };
-
-  const handleProgressBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!player) return;
-
-    // 클릭한 위치의 X 좌표
-    const clickX = e.nativeEvent.offsetX;
-    // 프로그레스 바의 전체 너비
-    const width = e.currentTarget.offsetWidth;
-
-    // 클릭한 위치의 비율
-    const clickRatio = clickX / width;
-    // 새로운 재생 위치 (초 단위)
-    const newTime = clickRatio * duration;
-
-    // YouTube 동영상의 재생 위치를 변경
-    player.seekTo(newTime);
-  };
-
-  const onPlayerReady = (event: { target: YouTubePlayer }) => {
-    setPlayer(event.target);
-  };
-  useEffect(() => {
-    // 버튼을 잠시 비활성화
-    setIsButtonEnabled(false);
-
-    // 1.5초 후 버튼을 활성화
-    const timer = setTimeout(() => {
-      setIsButtonEnabled(true);
-    }, 1500);
-
-    // 컴포넌트 unmount 혹은 effect가 재실행될 때 타이머를 클리어해주는 작업
-    return () => clearTimeout(timer);
-  }, [currentTrackIndex]);
-
-  const updateProgress = () => {
-    if (player) {
-      const newCurrentTime = player.getCurrentTime();
-      setCurrentTime(newCurrentTime);
-    }
-  };
-
-  useEffect(() => {
-    const interval = setInterval(updateProgress, 1000);
-    return () => clearInterval(interval);
-  }, [player]);
 
   const handleDeleteIconClick = (musicId: number) => {
     setDeletingMusicId(musicId);
     handleDeleteModalOpen();
   };
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
+    const target = e.target as HTMLImageElement;
+    const width = target.offsetWidth;
+    const mouseX = e.clientX - target.offsetLeft;
+    const rotateY = (mouseX / width - 0.5) * 40;
+    target.style.transform = `rotateY(${rotateY}deg)`;
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLImageElement>) => {
+    const target = e.target as HTMLImageElement;
+    target.style.transform = `rotateY(0deg)`;
+  };
+
   return (
     <div className={styles.root}>
-      <NavBar />
+      {/* <NavBar /> */}
       <div className={styles.container}>
         <div className={styles.songDisplayContainer}>
           <div className={styles.coverImageContainer}>
@@ -231,15 +183,17 @@ export const MyMusicPlayer = () => {
             <img
               src={
                 musicData.length === 0
-                  ? 흥애
+                  ? noMusicLogo
                   : musicData[currentTrackIndex]?.albumCoverUrl
               }
               alt={
                 musicData.length === 0
-                  ? "흥애"
+                  ? "noMusicLogo"
                   : musicData[currentTrackIndex]?.title
               }
               className={styles.coverImage}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
             />
           </div>
           <div className={styles.songListContainer}>
@@ -257,6 +211,7 @@ export const MyMusicPlayer = () => {
                   className={`${styles.playlistItem} ${
                     currentTrackIndex === index ? styles.playlistItemActive : ""
                   }`}
+                  onClick={() => handlePlaylistItemClick(song.musicId)}
                 >
                   <img
                     src={song.albumCoverUrl}
@@ -267,11 +222,33 @@ export const MyMusicPlayer = () => {
                     style={{ flex: 1 }}
                     onClick={() => setCurrentTrackIndex(index)}
                   >
-                    <strong>{song.title}</strong>
-                    <br />
-                    {song.artist}
+                    <Typography
+                      variant="subtitle1"
+                      style={{
+                        fontFamily: "Pretendard-SemiBold",
+                        color: "white",
+                      }}
+                      className={styles.songTitle}
+                    >
+                      {song.title}
+                    </Typography>
+                    <Typography
+                      style={{
+                        fontFamily: "Pretendard-SemiBold",
+                        color: "#a3a3a3",
+                      }}
+                      variant="body2"
+                    >
+                      {song.artist}
+                    </Typography>
                   </div>
-                  <div className={styles.songLength}>
+                  <div
+                    className={styles.songLength}
+                    style={{
+                      fontFamily: "Pretendard-SemiBold",
+                      color: "#a3a3a3",
+                    }}
+                  >
                     <DeleteOutlineIcon
                       className={styles.deleteIcon}
                       onClick={(event) => {
@@ -287,68 +264,8 @@ export const MyMusicPlayer = () => {
             </div>
           </div>
         </div>
-        <div className={styles.audioContainer}>
-          {/* 오디오 태그에 이벤트 핸들러 추가 */}
-          <YouTube
-            videoId={musicData[currentTrackIndex]?.youtubeVideoId}
-            opts={opts}
-            onEnd={handleSongEnd}
-            onReady={onPlayerReady}
-            onStateChange={(event) => {
-              if (player) {
-                setCurrentTime(player.getCurrentTime());
-                setDuration(player.getDuration());
-              }
-
-              if (event.data === YouTube.PlayerState.PLAYING) {
-                setIsPlaying(true);
-              } else if (event.data === YouTube.PlayerState.PAUSED) {
-                setIsPlaying(false);
-              }
-            }}
-          />
-          {/* 커스텀 오디오 컨트롤러 */}
-          <div className={styles.audioControls}>
-            <Button
-              onClick={skipToPrevious}
-              color="primary"
-              variant="outlined"
-              disabled={!isButtonEnabled}
-            >
-              <SkipPreviousIcon />
-            </Button>
-            <Button
-              onClick={togglePlay}
-              color="primary"
-              variant="outlined"
-              disabled={!isButtonEnabled}
-            >
-              {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-            </Button>
-            <Button
-              onClick={skipToNext}
-              color="primary"
-              variant="outlined"
-              disabled={!isButtonEnabled}
-            >
-              <SkipNextIcon />
-            </Button>
-            <div
-              className={styles.progressBar}
-              onClick={handleProgressBarClick}
-            >
-              <div
-                className={styles.progress}
-                style={{ width: `${(currentTime / duration) * 100}%` }}
-              />
-            </div>
-            <span>
-              {Math.floor(currentTime / 60)}:
-              {String(Math.floor(currentTime % 60)).padStart(2, "0")}
-            </span>
-          </div>
-        </div>
       </div>
+
       <SearchModal
         isOpen={isSearchModalOpen}
         onClose={handleSearchModalClose} // 모달 바깥쪽을 클릭하면 모달을 닫는다.

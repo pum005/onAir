@@ -16,7 +16,7 @@ export const Radio = ({ ttsFile, script, playedTime }: RadioProps) => {
   const handleAudioLoaded = () => {
     setIsAudioLoaded(true);
     if (audioRef.current) {
-      audioRef.current.currentTime = playedTime / 1000; // ms를 s로 변환
+      audioRef.current.currentTime = playedTime / 1000;
     }
   };
 

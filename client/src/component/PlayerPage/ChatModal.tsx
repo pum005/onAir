@@ -39,14 +39,6 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
       senderImage: profileImage,
     });
 
-    // dispatch(
-    //   addChatMessage({
-    //     content: message,
-    //     sender: nickname,
-    //     senderImage: profileImage,
-    //   })
-    // );
-
     setMessage("");
   };
 
@@ -75,8 +67,15 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
                   isCurrentUser ? styles.sent : styles.received
                 }`}
               >
-                <img src={msg.senderImage} alt={msg.sender} />
-                <span className={styles.username}>{msg.sender}</span>
+                <div className={styles.senderInfo}>
+                  {!isCurrentUser && (
+                    <img src={msg.senderImage} alt={msg.sender} />
+                  )}
+                  <span className={styles.username}>{msg.sender}</span>
+                  {isCurrentUser && (
+                    <img src={msg.senderImage} alt={msg.sender} />
+                  )}
+                </div>
                 <span className={styles.message_content}>{msg.content}</span>
               </div>
             );

@@ -4,6 +4,7 @@ import MusicDetailModal from "./MusicDetailModal";
 import AudiotrackIcon from "@mui/icons-material/Audiotrack";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import picture from "../../resources/흥애.png";
+import logoPicture from "../../resources/LogoDesign.png";
 import {
   List,
   ListItem,
@@ -22,8 +23,9 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DeleteModal from "./DeleteModal";
-import PlayListMusicDetailModal from "./PlayListMusicDetailModal";
+import MusicBoxMusicListModal from "./MusicBoxMusicListModal";
 import { useNavigate } from "react-router-dom";
+import AlertModal from "../Common/AlertModal";
 
 type ApiResponseType = {
   my_music_box: number;
@@ -129,6 +131,9 @@ function MusicCard({ refreshFlag }: any) {
     navigate("/MyMusicPlayer", { state: { playlistMetaId: playlistMetaId } });
   };
 
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+
   /** axios */
   //음악 보관함리스트 가져오기
   React.useEffect(() => {
@@ -155,73 +160,64 @@ function MusicCard({ refreshFlag }: any) {
 
   return (
     <div style={{ width: "70%", margin: "0 auto" }}>
-      <List>
-        <ListItem
-          alignItems="center"
-          className={styles.hoverableListItem}
-          style={{ height: "56.8px" }}
-          onClick={MusicBoxModalOpen}
-        >
-          <ListItemAvatar
-            style={{
-              display: "flex",
-              alignItems: "center",
-            }}
+      <div className={styles.listScrollbar}>
+        <List style={{ paddingTop: "0" }}>
+          <ListItem
+            alignItems="center"
+            className={styles.hoverableListItem}
+            style={{ height: "56.8px" }}
+            onClick={MusicBoxModalOpen}
           >
-            <AddIcon
-              color="primary"
-              className={styles.audiotrackIcon}
-              style={{ cursor: "pointer", fontSize: "40px" }}
-            />
-          </ListItemAvatar>
-          <ListItemText
-            style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
-          >
-            <Typography className={styles.textPrimary} style={{}}>
-              플레이리스트 추가
-            </Typography>
-          </ListItemText>
-        </ListItem>
-
-        {/* 전체보관함 */}
-        <ListItem
-          alignItems="center"
-          className={styles.hoverableListItem}
-          style={{ display: "flex", alignItems: "center", height: "56.8px" }} // 높이를 조정했습니다.
-        >
-          <ListItemAvatar
-            style={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <AudiotrackIcon
-              color="primary"
-              className={styles.audiotrackIcon}
-              onClick={() => {
-                if (data?.my_music_box === 0) {
-                  Swal.fire({
-                    icon: "error",
-                    title: "보관함에 노래가 없습니다!",
-                    showConfirmButton: false,
-                    timer: 1500,
-                  });
-                } else {
-                  openMusicDetailModal("전체보관함");
-                }
+            <ListItemAvatar
+              style={{
+                display: "flex",
+                alignItems: "center",
               }}
-              style={{ cursor: "pointer", fontSize: "40px" }}
-            />
-          </ListItemAvatar>
-          <ListItemText
-            primary={
+            >
+              <AddIcon
+                className={styles.audiotrackIcon}
+                style={{
+                  cursor: "pointer",
+                  fontSize: "40px",
+                  color: "white",
+                }}
+              />
+            </ListItemAvatar>
+            <ListItemText
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
+            >
               <Typography
                 className={styles.textPrimary}
+                style={{ fontFamily: "Pretendard-Medium" }}
+              >
+                플레이리스트 생성
+              </Typography>
+            </ListItemText>
+          </ListItem>
+
+          {/* 전체보관함 */}
+          <ListItem
+            alignItems="center"
+            className={styles.hoverableListItem}
+            style={{ display: "flex", alignItems: "center", height: "56.8px" }} // 높이를 조정했습니다.
+          >
+            <ListItemAvatar
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <AudiotrackIcon
+                className={styles.audiotrackIcon}
                 onClick={() => {
                   if (data?.my_music_box === 0) {
                     Swal.fire({
                       icon: "error",
-                      title: "보관함에 노래가 없습니다!",
+                      title: "보관함에 음악이 없습니다!",
                       showConfirmButton: false,
                       timer: 1500,
                     });
@@ -229,77 +225,12 @@ function MusicCard({ refreshFlag }: any) {
                     openMusicDetailModal("전체보관함");
                   }
                 }}
-                style={{ cursor: "pointer" }}
-              >
-                전체보관함
-              </Typography>
-            }
-          />
-          <Typography
-            className={styles.textSecondary}
-            component="span"
-            variant="body2"
-            style={{ marginRight: "30%", marginLeft: "auto" }} // 여기에서 스타일을 조절하여 곡 수를 원하는 위치에 배치합니다.
-          >
-            {data?.my_music_box} 곡
-          </Typography>
-          <Button
-            className={styles.playButton}
-            onClick={() => {
-              if (data?.my_music_box === 0) {
-                Swal.fire({
-                  icon: "error",
-                  title: "재생할 노래가 없습니다!",
-                  showConfirmButton: false,
-                  timer: 1500,
-                });
-              } else {
-                handlePlayButtonClick();
-              }
-            }}
-          >
-            <PlayArrowIcon className={styles.PlayArrowIcon} />
-          </Button>
-          <MusicDetailModal
-            isOpen={isMusicDetailModalOpen}
-            onClose={closeMusicDetailModal}
-            title={selectedPlaylistTitle}
-            playlistMetaId={null}
-          />
-        </ListItem>
-
-        <MusicAddModal
-          isOpen={isMusicAddModalOpen}
-          onClose={closeMusicAddModal}
-        />
-        {/* 플레이리스트  */}
-        {data?.playlist_info.map((Playlist, index) => (
-          <ListItem
-            key={index}
-            alignItems="center"
-            className={styles.hoverableListItem}
-            style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
-          >
-            <ListItemAvatar>
-              <Avatar
-                style={{ marginTop: "auto", marginBottom: "auto" }}
-                variant="square"
-                src={Playlist.playlistImage || picture}
-                alt={Playlist.playlistName}
-                onClick={() => {
-                  if (Playlist.playlistCount === 0) {
-                    Swal.fire({
-                      icon: "error",
-                      title: "보관함에 노래가 없습니다!",
-                      showConfirmButton: false,
-                      timer: 1500,
-                    });
-                  } else {
-                    openMusicDetailModalTwo(
-                      Playlist.playlistName,
-                      Playlist.playlistMetaId
-                    );
-                  }
+                style={{
+                  cursor: "pointer",
+                  fontSize: "40px",
+                  color: "white",
+                  borderRadius: "5px",
+                  border: "1px solid #626262",
                 }}
               />
             </ListItemAvatar>
@@ -308,10 +239,90 @@ function MusicCard({ refreshFlag }: any) {
                 <Typography
                   className={styles.textPrimary}
                   onClick={() => {
+                    if (data?.my_music_box === 0) {
+                      Swal.fire({
+                        icon: "error",
+                        title: "보관함에 음악이 없습니다!",
+                        showConfirmButton: false,
+                        timer: 1500,
+                      });
+                    } else {
+                      openMusicDetailModal("전체보관함");
+                    }
+                  }}
+                  style={{
+                    cursor: "pointer",
+                    fontFamily: "Pretendard-Medium",
+                    color: "white",
+                  }}
+                >
+                  전체보관함
+                </Typography>
+              }
+            />
+            <Typography
+              className={styles.textSecondary}
+              component="span"
+              variant="body2"
+              style={{ marginRight: "30%", marginLeft: "auto" }} // 여기에서 스타일을 조절하여 곡 수를 원하는 위치에 배치합니다.
+            >
+              {data?.my_music_box} 곡
+            </Typography>
+            <Button
+              className={styles.playButton}
+              onClick={() => {
+                if (data?.my_music_box === 0) {
+                  Swal.fire({
+                    icon: "error",
+                    title: "재생할 음악이 없습니다!",
+                    showConfirmButton: false,
+                    timer: 1500,
+                  });
+                } else {
+                  handlePlayButtonClick();
+                }
+              }}
+            >
+              <PlayArrowIcon
+                className={styles.playArrowIcon}
+                style={{ color: "rgb(75, 75, 75)" }}
+              />
+            </Button>
+            <MusicDetailModal
+              isOpen={isMusicDetailModalOpen}
+              onClose={closeMusicDetailModal}
+              title={selectedPlaylistTitle}
+              playlistMetaId={null}
+            />
+          </ListItem>
+
+          <MusicAddModal
+            isOpen={isMusicAddModalOpen}
+            onClose={closeMusicAddModal}
+          />
+          {/* 플레이리스트  */}
+          {data?.playlist_info.map((Playlist, index) => (
+            <ListItem
+              key={index}
+              alignItems="center"
+              className={styles.hoverableListItem}
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <ListItemAvatar>
+                <Avatar
+                  style={{ marginTop: "auto", marginBottom: "auto" }}
+                  variant="square"
+                  src={Playlist.playlistImage || logoPicture}
+                  alt={Playlist.playlistName}
+                  onClick={() => {
                     if (Playlist.playlistCount === 0) {
                       Swal.fire({
                         icon: "error",
-                        title: "재생할 노래가 없습니다!",
+                        title: "보관함에 음악이 없습니다!",
                         showConfirmButton: false,
                         timer: 1500,
                       });
@@ -322,63 +333,99 @@ function MusicCard({ refreshFlag }: any) {
                       );
                     }
                   }}
-                >
-                  {Playlist.playlistName}
-                </Typography>
-              }
-            />
-            <Typography
-              className={styles.textSecondary}
-              component="span"
-              variant="body2"
-              style={{ marginRight: "30%", marginLeft: "auto" }} // 여기에서 스타일을 조절하여 곡 수를 원하는 위치에 배치합니다.
-            >
-              {Playlist.playlistCount} 곡
-            </Typography>
-            <DeleteOutlineIcon // 2. 쓰레기통 아이콘 추가
-              className={styles.DeleteOutlineIcon}
-              onClick={() => {
-                setRemoveList(Playlist.playlistMetaId);
-                openDeleteModal();
-              }}
-            />
-            <Button
-              className={styles.playButton}
-              onClick={(event) => {
-                if (Playlist.playlistCount === 0) {
-                  Swal.fire({
-                    icon: "error",
-                    title: "재생할 노래가 없습니다!",
-                    showConfirmButton: false,
-                    timer: 1500,
-                  });
-                } else {
-                  handlePlayListPlayButtonClick(Playlist.playlistMetaId);
+                />
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <Typography
+                    className={styles.textPrimary}
+                    style={{ fontFamily: "Pretendard-Medium" }}
+                    onClick={() => {
+                      if (Playlist.playlistCount === 0) {
+                        Swal.fire({
+                          icon: "error",
+                          title: "재생할 음악이 없습니다!",
+                          showConfirmButton: false,
+                          timer: 1500,
+                        });
+                      } else {
+                        openMusicDetailModalTwo(
+                          Playlist.playlistName,
+                          Playlist.playlistMetaId
+                        );
+                      }
+                    }}
+                  >
+                    {Playlist.playlistName}
+                  </Typography>
                 }
-              }}
-            >
-              <PlayArrowIcon className={styles.PlayArrowIcon} />
-            </Button>
-          </ListItem>
-        ))}
-        <PlayListMusicDetailModal
-          isOpen={isMusicDetailModalOpenTwo}
-          onClose={closeMusicDetailModalTwo}
-          title={selectedPlaylistTitleTwo}
-          playlistMetaId={selectedPlaylistMetaId}
+              />
+              <Typography
+                className={styles.textSecondary}
+                component="span"
+                variant="body2"
+                style={{
+                  marginRight: "30%",
+                  marginLeft: "auto",
+                  fontFamily: "Pretendard-Medium",
+                }} // 여기에서 스타일을 조절하여 곡 수를 원하는 위치에 배치합니다.
+              >
+                {Playlist.playlistCount} 곡
+              </Typography>
+              <DeleteOutlineIcon // 2. 쓰레기통 아이콘 추가
+                className={styles.DeleteOutlineIcon}
+                onClick={() => {
+                  setRemoveList(Playlist.playlistMetaId);
+                  openDeleteModal();
+                }}
+                style={{ color: "rgba(228, 224, 224, 0.197)" }}
+              />
+              <Button
+                className={styles.playButton}
+                onClick={(event) => {
+                  if (Playlist.playlistCount === 0) {
+                    Swal.fire({
+                      icon: "error",
+                      title: "재생할 음악이 없습니다!",
+                      showConfirmButton: false,
+                      timer: 1500,
+                    });
+                  } else {
+                    handlePlayListPlayButtonClick(Playlist.playlistMetaId);
+                  }
+                }}
+              >
+                <PlayArrowIcon
+                  className={styles.playArrowIcon}
+                  style={{ color: "rgba(228, 224, 224, 0.197)" }}
+                />
+              </Button>
+            </ListItem>
+          ))}
+          <MusicBoxMusicListModal
+            isOpen={isMusicDetailModalOpenTwo}
+            onClose={closeMusicDetailModalTwo}
+            title={selectedPlaylistTitleTwo}
+            playlistMetaId={selectedPlaylistMetaId}
+          />
+        </List>
+        <MusicBoxAddModal
+          isOpen={isMusicBoxModalOpen}
+          onClose={MusicBoxModalClose}
+          refresh={() => setRefreshPlaylist(!refreshPlaylist)}
         />
-      </List>
-      <MusicBoxAddModal
-        isOpen={isMusicBoxModalOpen}
-        onClose={MusicBoxModalClose}
-        refresh={() => setRefreshPlaylist(!refreshPlaylist)}
-      />
-      <DeleteModal
-        isOpen={isDeleteModal}
-        onClose={closeDeleteModal}
-        playlistId={removeList}
-        refresh={() => setRefreshKey((prevKey) => !prevKey)}
-      />
+        <DeleteModal
+          isOpen={isDeleteModal}
+          onClose={closeDeleteModal}
+          playlistId={removeList}
+          refresh={() => setRefreshKey((prevKey) => !prevKey)}
+        />
+        <AlertModal
+          open={showAlert}
+          message={alertMessage}
+          onClose={() => setShowAlert(false)}
+        />
+      </div>
     </div>
   );
 }

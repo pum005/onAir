@@ -28,7 +28,6 @@ public class SecurityConfig{
     private PrincipalOauth2UserService principalOauth2UserService;
     private JwtUtil jwtUtil;
 
-    @Autowired
     public SecurityConfig(UserService userService, PrincipalOauth2UserService principalOauth2UserService, JwtUtil jwtUtil) {
         this.userService = userService;
         this.principalOauth2UserService = principalOauth2UserService;
@@ -46,8 +45,8 @@ public class SecurityConfig{
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                // jwt filter
-                .addFilterBefore(new JwtFilter(userService, secretKey, jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                // jwt filters
+                .addFilterBefore(new JwtFilter(userService, jwtUtil, secretKey), UsernamePasswordAuthenticationFilter.class)
                 // request authorization
                 .authorizeRequests()
                 .antMatchers("/api/oauth/login", "/login/**", "/oauth2/**", "/chat-gpt/question").permitAll() // 회원가입과 로그인은 언제나 가능

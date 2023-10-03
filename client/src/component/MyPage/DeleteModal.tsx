@@ -2,10 +2,11 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { DeleteConfirm } from "./DeleteConfirmModal";
 import React from "react";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import styles from "./DeleteModal.module.css";
+import AlertModal from "../Common/AlertModal";
 
 type DeleteModalProps = {
   isOpen: boolean;
@@ -28,6 +29,9 @@ function DeleteModal({
 }: DeleteModalProps) {
   const [showConfirm, setShowConfirm] = React.useState(false);
 
+  const [showAlertModal, setShowAlertModal] = React.useState(false);
+  const [alertMessage, setAlertMessage] = React.useState("");
+
   const handleDelete = () => {
     const headers = {
       Authorization: "Bearer " + localStorage.getItem("accessToken"),
@@ -46,7 +50,8 @@ function DeleteModal({
       })
         .then((response) => {
           console.log("OnCast Update 성공!", response);
-          alert("삭제되었습니다.");
+          setAlertMessage("삭제되었습니다");
+          setShowAlertModal(true);
           if (setRefreshKey) {
             setRefreshKey();
           }
@@ -69,8 +74,8 @@ function DeleteModal({
         });
       })
         .then((response) => {
-          console.log("Deleted 성공!", response);
-          setShowConfirm(true);
+          setAlertMessage("삭제되었습니다");
+          setShowAlertModal(true);
           if (setRefreshKey) {
             setRefreshKey();
           }
@@ -88,8 +93,8 @@ function DeleteModal({
         });
       })
         .then((response) => {
-          console.log("Deleted 성공!", response);
-          setShowConfirm(true);
+          setAlertMessage("삭제되었습니다");
+          setShowAlertModal(true);
           if (setRefreshKey) {
             setRefreshKey();
           }
@@ -109,8 +114,8 @@ function DeleteModal({
         );
       })
         .then((response) => {
-          console.log("Deleted 성공!", response);
-          setShowConfirm(true);
+          setAlertMessage("삭제되었습니다");
+          setShowAlertModal(true);
           if (refresh) {
             refresh();
           }
@@ -131,50 +136,52 @@ function DeleteModal({
 
   return (
     <>
-      <Modal open={isOpen} onClose={onClose}>
-        <Box
-          sx={{
-            position: "absolute",
-            width: 400,
-            backgroundColor: "white",
-            borderRadius: 2, // 모서리 둥글게
-            boxShadow: 3, // 그림자 효과
-            p: 3,
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        >
+      <Modal open={isOpen} onClose={onClose} className={styles.modalContainer}>
+        <Box className={styles.modalBox}>
           <Typography
             id="modal-modal-title"
             variant="h6"
             component="h2"
             marginBottom={2}
+            className={styles.modalTypography}
+            style={{
+              fontFamily: "GangwonEduPowerExtraBoldA",
+              fontSize: "25px",
+            }}
           >
             삭제하시겠습니까 ?
           </Typography>
           <Box
             sx={{
               display: "flex",
-              justifyContent: "flex-end",
+              justifyContent: "center",
               gap: 2,
             }}
           >
-            {/* 아래의 버튼에 스타일을 추가하였습니다. */}
-            <Button variant="outlined" color="primary" onClick={onClose}>
-              취소
+            <Button
+              variant="contained"
+              onClick={handleDelete}
+              className={styles.modalButtonDelete}
+              style={{ fontFamily: "Shilla_Gothic-Bold" }}
+            >
+              확인
             </Button>
             <Button
               variant="contained"
-              color="secondary"
-              onClick={handleDelete}
+              onClick={onClose}
+              className={styles.modalButtonCancle}
+              style={{ fontFamily: "Shilla_Gothic-Bold" }}
             >
-              삭제
+              취소
             </Button>
           </Box>
         </Box>
       </Modal>
-      <DeleteConfirm show={showConfirm} onClose={handleConfirmClose} />
+      <AlertModal
+        open={showAlertModal}
+        message={alertMessage}
+        onClose={() => setShowAlertModal(false)}
+      />
     </>
   );
 }

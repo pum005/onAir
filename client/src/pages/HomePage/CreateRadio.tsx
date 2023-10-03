@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import NavBar from "../../component/Common/Navbar";
+// import NavBar from "../../component/Common/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import styles from "./CreateRadio.module.css";
-import { resetIndices, setMusicInfo, setRadioDummyData } from "../../store";
 import DJSelector from "../../component/Radio/DJSelector";
 import ThemeSelector from "../../component/Radio/ThemeSelector";
 import axios from "axios";
@@ -13,16 +12,24 @@ import Box from "@mui/material/Box";
 import { Loading } from "../../pages/PlayerPage/Loading";
 
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
-import {
-  Grid,
-  TextField,
-  Button,
-  Typography,
-  styled,
-  makeStyles,
-} from "@mui/material";
+import { Grid, Button, Typography, styled } from "@mui/material";
 import { ButtonProps } from "@mui/material/Button";
+import Swal from "sweetalert2";
+
 const CreateRadio = () => {
+  const DJNameMapping = {
+    아라: "vara",
+    이안: "nian",
+    고은: "ngoeun",
+    규원: "nkyuwon",
+    기효: "nes_c_kihyo",
+    나오미: "nnaomi",
+    정영화: "nyounghwa",
+    상도: "nsangdo",
+    안나: "danna",
+    원탁: "nwontak",
+  };
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
@@ -31,7 +38,7 @@ const CreateRadio = () => {
   const [selectedDJ, setSelectedDJ] = useState("");
   const navigate = useNavigate();
   const [showButton, setShowButton] = useState(false);
-  const [contentMaxLengthReached, setContentMaxLengthReached] = useState(false); // 추가: 텍스트 최대 길이 도달 여부
+  const [contentMaxLengthReached, setContentMaxLengthReached] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -52,19 +59,72 @@ const CreateRadio = () => {
     const inputDJ = selectedDJ;
 
     if (!inputTitle.trim()) {
-      alert("제목을 입력해주세요!");
-      return;
-    }
-    if (!inputContent.trim()) {
-      alert("내용을 입력해주세요");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        customClass: {
+          popup: "swal2-popup",
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "제목을 입력해주세요!",
+      });
       return;
     }
     if (!inputTheme.trim()) {
-      alert("테마를 선택해주세요");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        customClass: {
+          popup: "swal2-popup",
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "테마를 입력해 주세요!",
+      });
       return;
     }
+    if (!inputContent.trim()) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        customClass: {
+          popup: "swal2-popup",
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "내용을 입력해 주세요!",
+      });
+      return;
+    }
+
     if (!inputDJ.trim()) {
-      alert("DJ를 선택해주세요");
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top",
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true,
+        customClass: {
+          popup: "swal2-popup",
+        },
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "DJ를 선택해 주세요!",
+      });
       return;
     }
 
@@ -101,6 +161,8 @@ const CreateRadio = () => {
 
   const CreateOncast = () => {
     setIsLoading(true);
+    const djEnglishName =
+      DJNameMapping[selectedDJ as keyof typeof DJNameMapping];
     requestWithTokenRefresh(() => {
       return axios.post(
         "http://localhost:8080/api/oncast/create",
@@ -108,7 +170,7 @@ const CreateRadio = () => {
           title: title,
           theme: selectedTheme,
           story: content,
-          djName: selectedDJ,
+          djName: djEnglishName,
         },
         {
           headers: {
@@ -135,7 +197,7 @@ const CreateRadio = () => {
   };
   return (
     <div>
-      <NavBar />
+      {/* <NavBar /> */}
       {isLoading ? (
         <Loading />
       ) : (

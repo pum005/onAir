@@ -40,11 +40,14 @@
         private boolean deleteCheck;
         @Column(nullable = false)
         private String accessToken;
+        @Column(nullable = false)
+        private boolean createCheck;
+
 
         public User() {
         }
 
-        public User(Long userId, String accountType, String email, String nickname, String profileImage, String privateAccess, LocalDateTime registDate, LocalDateTime lastLoginDate, boolean deleteCheck, String accessToken) {
+        public User(Long userId, String accountType, String email, String nickname, String profileImage, String privateAccess, LocalDateTime registDate, LocalDateTime lastLoginDate, boolean deleteCheck, String accessToken, boolean createCheck) {
             this.userId = userId;
             this.accountType = accountType;
             this.email = email;
@@ -55,6 +58,7 @@
             this.lastLoginDate = lastLoginDate;
             this.deleteCheck = deleteCheck;
             this.accessToken = accessToken;
+            this.createCheck = createCheck;
         }
 
         public void updateNickname(String newNickname) {
@@ -77,6 +81,24 @@
 
         public void updateLastLoginDate() {
             this.lastLoginDate = LocalDateTime.now();
+        }
+
+        public void updateAccessToken(String accessToken){
+            this.accessToken = accessToken;
+        }
+
+        public void updatePrivateAccessToken(String privateAccessToken){
+            this.privateAccess = privateAccessToken;
+        }
+
+        // 온캐스트 생성하면 true로 변경
+        public void updateCreateCheckTrue(){
+            this.createCheck = true;
+        }
+
+        // 00시 되면 온캐스트 생성 여부 false로 변경
+        public void updateCreateCheckFalse(){
+            this.createCheck = false;
         }
 
 

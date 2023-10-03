@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import NavBar from "../../component/Common/Navbar";
+// import NavBar from "../../component/Common/Navbar";
 import { Radio } from "../../component/PlayerPage/Radio";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import PlayListModal from "../../component/Common/PlayListModal";
@@ -20,7 +20,7 @@ export const RadioPlayer = () => {
         color: "white",
       }}
     >
-      <NavBar />
+      {/* <NavBar /> */}
       <div style={{ position: "absolute", top: "120px", right: "100px" }}>
         {/* QueueMusicIcon 클릭 시 모달 열기 */}
       </div>
