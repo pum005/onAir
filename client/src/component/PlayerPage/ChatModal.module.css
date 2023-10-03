@@ -9,6 +9,7 @@
   transition: right 0.3s;
   padding: 20px;
   overflow-y: auto;
+  z-index: 1000;
 }
 
 .chatHeader {
