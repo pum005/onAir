@@ -81,7 +81,7 @@ public class OncastService {
 
         User user = getUser.getUser();
 
-        if(user.isDeleteCheck()){
+        if(user.isCreateCheck()){
             throw new OncastAlreadyCreateException("오늘은 이미 온캐스트를 생성하셨습니다. 00시 이후로 다시 만들어주세요.");
         }
 
@@ -103,8 +103,6 @@ public class OncastService {
 
         Map<String,Object> RecommendResult = musicService.recommendMusic(new MusicRecommendRequestDTO(ids.getSong_ids()));
         // ids로 데이터셋에서 조회해서 음악배열 완성하는 로직 넣기
-
-        System.out.println(RecommendResult);
 
         Object song1 = RecommendResult.get("song1");
         Object song2 = RecommendResult.get("song2");
