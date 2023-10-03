@@ -1,8 +1,8 @@
 package com.toy.kafka.domain.music.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.Builder;
+import lombok.Getter;
 
 import javax.persistence.*;
 
