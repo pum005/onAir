@@ -1,10 +1,10 @@
 .playlistItem {
-  justifycontent: space-between;
-  alignitems: center;
+  /* justifycontent: space-between; */
+  /* alignitems: center; */
   padding: 10px;
-  marginbottom: 10px;
+  /* marginbottom: 10px; */
   cursor: pointer;
-  borderradius: 5px;
+  /* borderradius: 5px; */
   transition: background-color 0.3s ease;
 }
 
@@ -260,13 +260,6 @@ button.albumButton {
   width: 50px;
   height: 50px;
   z-index: 1001;
-}
-
-.gridContainer {
-  /* display: grid;
-  grid-template-columns: repeat(3, 1fr) 2fr;
-  gap: 20px; 
-  width: 100%; */
 }
 
 body .css-zow5z4-MuiGrid-root > .MuiGrid-item {
