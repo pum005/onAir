@@ -22,7 +22,7 @@ export const Radio = ({ ttsFile, script, playedTime }: RadioProps) => {
 
   return (
     <div className={styles.container}>
-      {isAudioLoaded && <Equalizer audioElement={audioRef.current!} />}
+      {/* {isAudioLoaded && <Equalizer audioElement={audioRef.current!} djName={djName} />} */}
       <audio
         ref={audioRef}
         controls

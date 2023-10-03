@@ -10,5 +10,6 @@ public class Data {
 
     private String state;
     private long seq;
+    private String djName;
     private PlayListDto playListDto;
 }
