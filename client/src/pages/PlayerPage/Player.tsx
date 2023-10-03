@@ -48,8 +48,8 @@ export const Player = (): ReactElement => {
 
   //이부분이 이제 재생했을때 하드코딩 되어있는 oncast가 아니라 location에서 가져오는 oncastId
   const location = useLocation();
-  // const { oncastId } = location.state;
-  const oncastId = 57;
+  const { oncastId } = location.state;
+  // const oncastId = 57;
 
   const [currentMusicList, setCurrentMusicList] = useState<
     Array<{
