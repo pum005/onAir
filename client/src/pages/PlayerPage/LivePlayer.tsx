@@ -30,6 +30,19 @@ export const LivePlayer = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const DJNameMappingReverse = {
+    vara: "아라",
+    nian: "이안",
+    ngoeun: "고은",
+    nkyuwon: "규원",
+    nes_c_kihyo: "기효",
+    nnaomi: "나오미",
+    nyounghwa: "정영화",
+    nsangdo: "상도",
+    danna: "안나",
+    nwontak: "원탁",
+  };
+
   useEffect(() => {
     console.log("라이브 페이지 들어옴");
 
@@ -59,7 +72,7 @@ export const LivePlayer = () => {
         console.log("Received Data:", data);
         if (data && typeof data === "object" && "data" in data) {
           setMusicData(data);
-          setCurrentSeq(data.data.seq); // seq 값을 저장
+          setCurrentSeq(data.data.seq - 1); // seq 값을 저장
 
           // operation 값이 'END'일 때 경고창 띄우기
           if (data.operation === "END") {
@@ -80,6 +93,34 @@ export const LivePlayer = () => {
             Swal.fire({
               icon: "error",
               title: "지금은 라이브 시작 전입니다!",
+              confirmButtonColor: "6966FF",
+              confirmButtonText: "확인",
+              customClass: {
+                popup: "my-popup-class",
+              },
+            }).then(result => {
+              if (result.isConfirmed) {
+                navigate("/"); // 홈페이지로 이동
+              }
+            });
+          } else if (data.operation === "BEFORE") {
+            Swal.fire({
+              icon: "error",
+              title: "지금은 라이브 시작 전입니다!",
+              confirmButtonColor: "6966FF",
+              confirmButtonText: "확인",
+              customClass: {
+                popup: "my-popup-class",
+              },
+            }).then(result => {
+              if (result.isConfirmed) {
+                navigate("/"); // 홈페이지로 이동
+              }
+            });
+          } else if (data.operation === "IDLE") {
+            Swal.fire({
+              icon: "info",
+              title: "라이브가 마무리되었습니다!",
               confirmButtonColor: "6966FF",
               confirmButtonText: "확인",
               customClass: {
@@ -141,6 +182,7 @@ export const LivePlayer = () => {
           ttsFile={musicData.data.path}
           script={musicData.data.script}
           playedTime={musicData.data.playedTime}
+          djName={musicData.data.djName}
         />
       )}
       {isModalOpen && (

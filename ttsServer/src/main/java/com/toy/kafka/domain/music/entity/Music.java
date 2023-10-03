@@ -1,6 +1,9 @@
 package com.toy.kafka.domain.music.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -45,8 +48,8 @@ public class Music {
     private int popularity;
     @Column(nullable = false)
     private String albumCoverUrl;
-    @Column(nullable = true, length = 2000)
-    private String lylics;
+    @Column(nullable = false)
+    private String spotifyId;
 
     public Music() {
     }

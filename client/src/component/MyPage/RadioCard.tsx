@@ -16,6 +16,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import RadioPlayModal from "../PlayerPage/RadioPlayModal";
 import styles from "./RadioCard.module.css";
 import gifImage from "../../assets/lp.gif";
+import Swal from "sweetalert2";
 
 type RecipeReviewCardProps = {
   oncastId: number;
@@ -109,17 +110,43 @@ export default function RecipeReviewCard({
           }
         );
       })
-        .then((response) => {
+        .then(response => {
           console.log(response.data);
           if (response.data.message === "음악 추가 완료") {
-            setOpen(true);
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top",
+              showConfirmButton: false,
+              timer: 1500,
+              timerProgressBar: true,
+              customClass: {
+                popup: "swal2-popup",
+              },
+            });
+            Toast.fire({
+              icon: "success",
+              title: "전체 보관함에 음악이 추가 되었습니다!",
+            });
           }
           if (response.data.message === "이미 보관함에 있는 음악입니다.") {
             setOpen(false);
-            alert("이미 보관함에 있는 음악입니다.");
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top",
+              showConfirmButton: false,
+              timer: 1500,
+              timerProgressBar: true,
+              customClass: {
+                popup: "swal2-popup",
+              },
+            });
+            Toast.fire({
+              icon: "error",
+              title: "이미 보관함에 있는 음악입니다.",
+            });
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("에러발생", error);
         });
     }
@@ -184,7 +211,6 @@ export default function RecipeReviewCard({
             aria-label="add to favorites"
           ></IconButton>
         </CardContent>
-        <AlertDialog open={open} handleClose={handleClose} />
         <PlayListModal
           musicId={selectedMusicId}
           isOpen={playListModalOpen}
@@ -197,6 +223,7 @@ export default function RecipeReviewCard({
           oncastId={oncastId}
         />
         <ShareModal
+          setRefreshKey={refreshkey}
           isOpen={shareModalOpen}
           onClose={handleShareModalClose}
           oncastId={oncastId}
@@ -207,6 +234,7 @@ export default function RecipeReviewCard({
           handleClose={handlePlayModalClose}
           radioName={subheader}
           oncastId={oncastId}
+          // oncastId={57}
         />
       </Card>
     </div>
