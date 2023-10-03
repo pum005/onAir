@@ -1,126 +1,206 @@
-/* .mainCard{
-    padding-left: 50px;
-    padding-right: 50px;
-} */
-
-
 .gifImage {
-    width: 200px;
-    height: 200px; /* GIF의 원래 높이에 맞게 설정하세요 */
-    margin: 10px auto;
-    background-image: url('../../assets/lp.png'); /* 첫 프레임 이미지의 경로 */
-    background-size: cover;
-    background-repeat: no-repeat;
+  width: 200px;
+  height: 200px;
+  /* GIF의 원래 높이에 맞게 설정하세요 */
+  margin: 10px auto;
+  background-image: url('../../assets/lp.png');
+  /* 첫 프레임 이미지의 경로 */
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .gifImage:hover {
-    background-image: url('../../assets/lp.gif'); /* 첫 프레임 이미지의 경로 */
+  background-image: url('../../assets/lp.gif');
+  /* 첫 프레임 이미지의 경로 */
 }
 
 
-.card {
-    background-color: #222222;
-    max-width: 290px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-    overflow: auto;
-    height: 550px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* 최대한의 간격을 줌 */
-    border: 1px solid #626262;
-  }
-  
-  .title {
-    color: white;
-    text-align: left;
-  }
-  
-  .subheader {
-    color: white;
-    font-size: 20px;
-    text-align: center;
-  }
-  
-  .songRow {
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
-    border-bottom: 1px solid #e5e5e5;
-    padding-bottom: 5px;
-  }
+div.cards {
+  background-color: #222222;
+  max-width: 290px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  height: 580px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* 최대한의 간격을 줌 */
+  border: 1px solid #626262;
+}
 
-  .songTitle{
-    overflow: hidden;
+.title {
+  color: white;
+  text-align: left;
+}
+
+.subheader {
+  padding: 15px 0px 15px 0px;
+  color: white;
+  font-size: 25px !important;
+  text-align: center;
+}
+
+.songRow {
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  border-bottom: 1px solid #626262;
+  padding-bottom: 5px;
+}
+
+.songTitle {
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 120px;
+  width: 110px;
   position: relative;
+}
+
+.songTitle:hover {
+  animation: marquee 10s linear infinite;
+  /* 전광판처럼 스크롤되게 하는 애니메이션 */
+}
+
+@keyframes marquee {
+  0% {
+    text-indent: 0%;
   }
 
-  .songTitle:hover{
-    animation: marquee 10s linear infinite; /* 전광판처럼 스크롤되게 하는 애니메이션 */
+  100% {
+    text-indent: -200%;
   }
+}
 
-  @keyframes marquee {
-    0% {
-      text-indent: 0%;
-    }
-    100% {
-      text-indent: -200%;
-    }
-  }
+.songArtist {
+  color: #a3a3a3;
+  font-size: 0.9em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 110px;
+  position: relative;
+}
 
-  .songArtist{
-    color: #888;
-    font-size: 0.9em;
-  }
-  
-  .songImage {
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
-  }
-  
-  .songDetails {
-    flex: 2;
-  }
-  
-  .songDuration {
-    flex: 1;
-    text-align: right;
-  }
-  
-  .addIcon {
-    margin-left: 8px;
-    cursor: pointer;
-  }
-  
-  .shareIcon {
-    cursor: pointer;
-  }
-  
-  .playIcon {
-    cursor: pointer;
-  }
-  
-  .deleteIcon {
-    cursor: pointer;
-  }
-  
-  .actions {
-    margin-top: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .favoriteButton {
-    position: absolute;
-    right: 8px;
-    bottom: 8px;
-    color: #FF5C58;
-  }
-  
+.songArtist:hover {
+  animation: marquee 10s linear infinite;
+  /* 전광판처럼 스크롤되게 하는 애니메이션 */
+}
+
+.songImage {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.songDetails {
+  flex: 2;
+}
+
+.songDuration {
+  color: #a3a3a3;
+  padding-right: 10px;
+}
+
+.addIcon {
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+.addIcon:hover {
+  cursor: pointer;
+  color: white;
+  transform: scale(1.10);
+}
+
+.shareIcon {
+  cursor: pointer;
+  color: white;
+}
+
+.shareIcon:hover {
+  cursor: pointer;
+  color: white;
+  transform: scale(1.10);
+}
+
+.playIcon {
+  cursor: pointer;
+  color: white;
+}
+
+.playIcon:hover {
+  cursor: pointer;
+  color: white;
+  transform: scale(1.10);
+}
+
+.deleteIcon {
+  cursor: pointer;
+  color: white;
+}
+
+.deleteIcon:hover {
+  cursor: pointer;
+  color: white;
+  transform: scale(1.10);
+}
+
+.actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.favoriteButton {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  color: #FF5C58;
+}
+
+/* Input 보통 글씨체  */
+@font-face {
+  font-family: "Pretendard-Medium";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Medium.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+/* Input 살짝 굵은 글씨체  */
+@font-face {
+  font-family: "Pretendard-SemiBold";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-SemiBold.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Input 굵은글씨체  */
+@font-face {
+  font-family: "Pretendard-ExtraBold";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraBold.woff")
+    format("woff");
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* 강원도 굵은 글씨체 영어(제목) */
+@font-face {
+  font-family: "GangwonEduPowerExtraBoldA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* 신라 고딕체 얇은 글씨 */
+@font-face {
+  font-family: "Shilla_Gothic-Bold";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/Shilla_Gothic-Bold.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
