@@ -9,7 +9,8 @@ import { useLocation } from "react-router-dom";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import axios from "axios";
 import Swal from "sweetalert2";
-import 흥애 from "../../resources/흥애.png";
+import noMusicLogo from "../../resources/LogoDesign.png";
+import Typography from "@mui/material/Typography";
 import store, {
   RootState,
   setMusicDataTemp,
@@ -85,7 +86,7 @@ export const MyMusicPlayer = () => {
           }
         );
       })
-        .then(response => {
+        .then((response) => {
           // 이부분 message 안뜸
           if (response.data) {
             setMusicData(response.data);
@@ -101,7 +102,7 @@ export const MyMusicPlayer = () => {
             setMusicData([]);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("axios 에러", error);
         });
     } else {
@@ -113,7 +114,7 @@ export const MyMusicPlayer = () => {
           withCredentials: true,
         });
       })
-        .then(response => {
+        .then((response) => {
           if (response.data.message === "보관함에 음악이 없습니다.") {
             Swal.fire({
               icon: "error",
@@ -128,7 +129,7 @@ export const MyMusicPlayer = () => {
             store.dispatch(setMusicDataTemp(musicDataArray));
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("axios 에러", error);
         });
     }
@@ -182,12 +183,12 @@ export const MyMusicPlayer = () => {
             <img
               src={
                 musicData.length === 0
-                  ? 흥애
+                  ? noMusicLogo
                   : musicData[currentTrackIndex]?.albumCoverUrl
               }
               alt={
                 musicData.length === 0
-                  ? "흥애"
+                  ? "noMusicLogo"
                   : musicData[currentTrackIndex]?.title
               }
               className={styles.coverImage}
@@ -221,14 +222,36 @@ export const MyMusicPlayer = () => {
                     style={{ flex: 1 }}
                     onClick={() => setCurrentTrackIndex(index)}
                   >
-                    <strong>{song.title}</strong>
-                    <br />
-                    {song.artist}
+                    <Typography
+                      variant="subtitle1"
+                      style={{
+                        fontFamily: "Pretendard-SemiBold",
+                        color: "white",
+                      }}
+                      className={styles.songTitle}
+                    >
+                      {song.title}
+                    </Typography>
+                    <Typography
+                      style={{
+                        fontFamily: "Pretendard-SemiBold",
+                        color: "#a3a3a3",
+                      }}
+                      variant="body2"
+                    >
+                      {song.artist}
+                    </Typography>
                   </div>
-                  <div className={styles.songLength}>
+                  <div
+                    className={styles.songLength}
+                    style={{
+                      fontFamily: "Pretendard-SemiBold",
+                      color: "#a3a3a3",
+                    }}
+                  >
                     <DeleteOutlineIcon
                       className={styles.deleteIcon}
-                      onClick={event => {
+                      onClick={(event) => {
                         event.stopPropagation();
                         handleDeleteIconClick(song.musicId); // pass the song ID to be deleted
                       }}
@@ -247,14 +270,14 @@ export const MyMusicPlayer = () => {
         isOpen={isSearchModalOpen}
         onClose={handleSearchModalClose} // 모달 바깥쪽을 클릭하면 모달을 닫는다.
         playlistId={playlistMetaId}
-        setRefreshKey={() => setRefreshKey(prev => !prev)}
+        setRefreshKey={() => setRefreshKey((prev) => !prev)}
       />
       <DeleteModal
         isOpen={isDeleteModalOpen}
         onClose={handleDeleteModalClose} // 모달 바깥쪽을 클릭하면 모달을 닫는다.
         musicId={deletingMusicId}
         playlistId={playlistMetaId}
-        setRefreshKey={() => setRefreshKey(prev => !prev)}
+        setRefreshKey={() => setRefreshKey((prev) => !prev)}
       />
     </div>
   );
