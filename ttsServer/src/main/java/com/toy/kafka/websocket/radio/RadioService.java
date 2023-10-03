@@ -89,13 +89,11 @@ public class RadioService {
 
         if (liveQueue.isEmpty()) {
             logger.info("live empty!!!");
-            return new Data("End", -1, null);
+            return new Data("End", -1, null, null);
         }
 
         logger.info(liveQueue.toString());
-
         LiveQueue findLiveQueue = liveQueue.get(0);
-        logger.info(findLiveQueue.toString());
         Oncast findOnCast = findLiveQueue.getOncast();
         findLiveQueue.updateReadCheck();
         liveQueueRepository.save(findLiveQueue);
@@ -132,10 +130,12 @@ public class RadioService {
         MusicDto musicTwoDto = new MusicDto("youtube", musicTwoId, musicTwoLength,musicTwo.getArtist(), musicTwo.getTitle(), musicThree.getAlbumCoverUrl());
         MusicDto musicThreeDto = new MusicDto("youtube", musicThreeId, musicThreeLength, musicThree.getArtist(), musicThree.getTitle(), musicThree.getAlbumCoverUrl());
 
+        String djName = findLiveQueue.getOncastCreateData().getDjName();
+
         PlayListDto playListDto = new PlayListDto(ttsOneDto, musicOneDto, ttsTwoDto, musicTwoDto, ttsThreeDto, musicThreeDto, ttsFourDto);
 
 
-        Data data = new Data("oncast", liveSequence, playListDto);
+        Data data = new Data("oncast", liveSequence, djName, playListDto);
 
         logger.info(data.toString());
 
