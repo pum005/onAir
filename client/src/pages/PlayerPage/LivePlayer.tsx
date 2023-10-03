@@ -14,6 +14,8 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import { LiveListModal } from "../../component/PlayerPage/LiveListModal";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 type LivePlayerProps = {};
 
@@ -26,6 +28,7 @@ export const LivePlayer = () => {
 
   let socketManager = SocketManager.getInstance();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("라이브 페이지 들어옴");
@@ -57,6 +60,37 @@ export const LivePlayer = () => {
         if (data && typeof data === "object" && "data" in data) {
           setMusicData(data);
           setCurrentSeq(data.data.seq); // seq 값을 저장
+
+          // operation 값이 'END'일 때 경고창 띄우기
+          if (data.operation === "END") {
+            Swal.fire({
+              icon: "error",
+              title: "지금은 라이브가 마쳤습니다!",
+              confirmButtonColor: "6966FF",
+              confirmButtonText: "확인",
+              customClass: {
+                popup: "my-popup-class",
+              },
+            }).then(result => {
+              if (result.isConfirmed) {
+                navigate("/"); // 홈페이지로 이동
+              }
+            });
+          } else if (data.operation === "BEFORE") {
+            Swal.fire({
+              icon: "error",
+              title: "지금은 라이브 시작 전입니다!",
+              confirmButtonColor: "6966FF",
+              confirmButtonText: "확인",
+              customClass: {
+                popup: "my-popup-class",
+              },
+            }).then(result => {
+              if (result.isConfirmed) {
+                navigate("/"); // 홈페이지로 이동
+              }
+            });
+          }
         } else {
           console.error("Invalid data received:", data);
         }

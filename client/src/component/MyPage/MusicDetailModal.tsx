@@ -53,14 +53,14 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
         withCredentials: true,
       });
     })
-      .then(response => {
+      .then((response) => {
         if (response.data.message || !response.data.musicInfo) {
           setSongs([]);
         } else {
           setSongs(response.data.musicInfo);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("데이터 가져오기 오류", error);
       });
   }, [isOpen, refreshKey]);
@@ -129,7 +129,14 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
                 <CloseIcon onClick={onClose} className={styles.closeIcon} />
               </div>
               <div>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
+                <Typography
+                  id="modal-modal-title"
+                  component="h2"
+                  style={{
+                    fontFamily: "GangwonEduPowerExtraBoldA",
+                    fontSize: "25px",
+                  }}
+                >
                   {title} 음악 목록
                 </Typography>
               </div>
@@ -173,13 +180,25 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
                         cursor: "pointer",
                         color: "white",
                       }}
-                      onClick={event => handleMenuOpen(event, index)}
+                      onClick={(event) => handleMenuOpen(event, index)}
                     />
                   </div>
                 </div>
               ))
             ) : (
-              <div>음악이 없습니다.</div>
+              <div
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontFamily: "Pretendard-ExtraBold",
+                  fontSize: "30px",
+                  color: "#a3a3a3",
+                }}
+              >
+                음악이 없습니다.
+              </div>
             )}
           </div>
           <Menu
@@ -217,7 +236,7 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
           setDeleteListModalOpen(false);
           setSelectedSong(null);
         }}
-        setRefreshKey={() => setRefreshKey(prev => !prev)}
+        setRefreshKey={() => setRefreshKey((prev) => !prev)}
       />
     </>
   );
