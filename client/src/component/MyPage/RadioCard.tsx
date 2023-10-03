@@ -15,7 +15,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RadioPlayModal from "../PlayerPage/RadioPlayModal";
 import styles from "./RadioCard.module.css";
-import gifImage from "../../assets/lp.gif"
+import gifImage from "../../assets/lp.gif";
 
 type RecipeReviewCardProps = {
   oncastId: number;
@@ -130,12 +130,16 @@ export default function RecipeReviewCard({
 
   return (
     <div className={styles.mainCard}>
-      <Card className={styles.card}>
+      <Card className={styles.cards}>
         <CardContent>
           <div className={styles.title}>{title}</div>
-          <div className={styles.gifImage}></div>
-          <Typography className={styles.subheader}>{subheader}</Typography>
-          <hr />
+          <div>
+            <div className={styles.gifImage}></div>
+            <div>
+              <Typography className={styles.subheader}>{subheader}</Typography>
+            </div>
+          </div>
+          <hr></hr>
           {songs.map((song, idx) => (
             <div key={idx} className={styles.songRow}>
               <img
