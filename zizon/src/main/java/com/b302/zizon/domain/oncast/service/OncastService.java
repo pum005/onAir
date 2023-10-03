@@ -104,6 +104,8 @@ public class OncastService {
         Map<String,Object> RecommendResult = musicService.recommendMusic(new MusicRecommendRequestDTO(ids.getSong_ids()));
         // ids로 데이터셋에서 조회해서 음악배열 완성하는 로직 넣기
 
+        System.out.println(RecommendResult);
+
         Object song1 = RecommendResult.get("song1");
         Object song2 = RecommendResult.get("song2");
         Object song3 = RecommendResult.get("song3");
