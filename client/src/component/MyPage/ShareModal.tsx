@@ -2,19 +2,25 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { ShareConfirm } from "./ShareConfirmModal";
 import React from "react";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import axios from "axios";
 import Swal from "sweetalert2";
+import styles from "./ShareModal.module.css";
 
 type ShareModalProps = {
   isOpen: boolean;
   onClose: () => void;
   oncastId: number;
+  setRefreshKey?: () => void;
 };
 
-function ShareModal({ isOpen, onClose, oncastId }: ShareModalProps) {
+function ShareModal({
+  isOpen,
+  onClose,
+  oncastId,
+  setRefreshKey,
+}: ShareModalProps) {
   const [showConfirm, setShowConfirm] = React.useState(false); // 상태 추가
 
   const handleDelete = () => {
@@ -42,7 +48,18 @@ function ShareModal({ isOpen, onClose, oncastId }: ShareModalProps) {
             timer: 1500,
           });
         }
-        if (response.data.message === "공유하기 성공.") setShowConfirm(true);
+        if (response.data.message === "공유하기 성공.") {
+          Swal.fire({
+            icon: "success",
+            title: "공유 되었습니다!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          // setShowConfirm(true);
+          if (setRefreshKey) {
+            setRefreshKey();
+          }
+        }
         if (response.data.message === "이미 삭제된 온캐스트입니다.") {
           Swal.fire({
             icon: "error",
@@ -73,46 +90,49 @@ function ShareModal({ isOpen, onClose, oncastId }: ShareModalProps) {
 
   return (
     <>
-      <Modal open={isOpen} onClose={onClose}>
-        <Box
-          sx={{
-            position: "absolute",
-            width: 400,
-            backgroundColor: "white",
-            borderRadius: 2, // 모서리 둥글게
-            boxShadow: 3, // 그림자 효과
-            p: 3,
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        >
+      <Modal open={isOpen} onClose={onClose} className={styles.modalContainer}>
+        <Box className={styles.modalBox}>
           <Typography
             id="modal-modal-title"
             variant="h6"
             component="h2"
             marginBottom={2}
+            className={styles.modalTypography}
+            style={{
+              fontFamily: "GangwonEduPowerExtraBoldA",
+              fontSize: "25px",
+            }}
           >
             공유하시겠습니까?
           </Typography>
           <Box
             sx={{
               display: "flex",
-              justifyContent: "flex-end",
+              justifyContent: "center",
               gap: 2,
             }}
           >
             {/* 아래의 버튼에 스타일을 추가하였습니다. */}
-            <Button variant="outlined" color="primary" onClick={onClose}>
-              취소
+            <Button
+              variant="contained"
+              onClick={handleDelete}
+              className={styles.modalButtonDelete}
+              style={{ fontFamily: "Shilla_Gothic-Bold" }}
+            >
+              확인
             </Button>
-            <Button variant="contained" color="primary" onClick={handleDelete}>
-              공유
+            <Button
+              variant="outlined"
+              onClick={onClose}
+              className={styles.modalButtonCancle}
+              style={{ fontFamily: "Shilla_Gothic-Bold" }}
+            >
+              취소
             </Button>
           </Box>
         </Box>
       </Modal>
-      <ShareConfirm show={showConfirm} onClose={handleConfirmClose} />
+      {/* <ShareConfirm show={showConfirm} onClose={handleConfirmClose} /> */}
     </>
   );
 }

@@ -18,6 +18,7 @@ export type MusicData = {
     image: string;
     script: string;
     seq: number;
+    djName: string;
   };
 };
 

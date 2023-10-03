@@ -25,4 +25,5 @@ public class CurrentSoundDto {
     private String image;
     private String script;
     private long seq;
+    private String djName;
 }

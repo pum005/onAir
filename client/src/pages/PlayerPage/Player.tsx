@@ -30,9 +30,26 @@ export const Player = (): ReactElement => {
   const [showModal, setShowModal] = useState(false); //
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const DJNameMappingReverse = {
+    vara: "아라",
+    nara: "아라",
+    nian: "이안",
+    ngoeun: "고은",
+    nkyuwon: "규원",
+    nes_c_kihyo: "기효",
+    nnaomi: "나오미",
+    nyounghwa: "정영화",
+    nsangdo: "상도",
+    danna: "안나",
+    nwontak: "원탁",
+  };
+
+  type DJNameEnglish = keyof typeof DJNameMappingReverse;
+
   //이부분이 이제 재생했을때 하드코딩 되어있는 oncast가 아니라 location에서 가져오는 oncastId
   const location = useLocation();
   const { oncastId } = location.state;
+  // const oncastId = 57;
 
   const [currentMusicList, setCurrentMusicList] = useState<
     Array<{
@@ -65,7 +82,12 @@ export const Player = (): ReactElement => {
     })
       .then(response => {
         console.log(response.data);
-        setOncasts(response.data.oncast);
+        const oncastData = response.data.oncast;
+        if (oncastData.djName in DJNameMappingReverse) {
+          oncastData.djName =
+            DJNameMappingReverse[oncastData.djName as DJNameEnglish];
+        }
+        setOncasts(oncastData);
       })
       .catch(error => {
         console.error("통신에러 발생", error);
@@ -94,12 +116,22 @@ export const Player = (): ReactElement => {
   const musicFiles = oncasts.music;
 
   const handleFinished = () => {
+    console.log(
+      "handleFinished called. currentIndex:",
+      currentIndex,
+      "playState:",
+      playState
+    );
+
+    // 체크: 현재 상태가 TTS이고, currentIndex가 3이면
+    if (playState === "TTS" && currentIndex === 3) {
+      console.log("currentIndex is 3 and playState is TTS. Showing modal...");
+      setShowModal(true);
+      return;
+    }
+
+    // 체크: 현재 상태가 TTS이면
     if (playState === "TTS") {
-      if (currentIndex === 3) {
-        // 마지막 TTS 체크
-        setShowModal(true);
-        return;
-      }
       setPlayState("MUSIC");
     } else {
       const nextIndex = currentIndex + 1;
@@ -110,10 +142,20 @@ export const Player = (): ReactElement => {
 
   return (
     <div
-      style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
+      style={{
+        backgroundColor: "#000104",
+        height: "100vh",
+        color: "white",
+      }}
     >
       {/* <NavBar /> */}
-      <div style={{ position: "absolute", top: "120px", right: "100px" }}>
+      <div
+        style={{
+          position: "absolute",
+          top: "120px",
+          right: "100px",
+        }}
+      >
         <QueueMusicIcon
           style={{ fontSize: "2.5rem", color: "white", cursor: "pointer" }}
           onClick={() => setIsModalOpen(true)}
