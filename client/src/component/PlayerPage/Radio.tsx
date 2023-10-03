@@ -20,6 +20,16 @@ export const Radio = ({
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isAudioLoaded, setIsAudioLoaded] = useState(false);
   const djColor = getColorByDjName(djName);
+  const [charIndex, setCharIndex] = useState(0); // 스크립트의 현재 글자 인덱스
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      // 재생 시간에 따른 글자 인덱스를 계산하는 로직
+      // 예시: 1초에 5글자를 표시하도록 설정
+      const currentSeconds = audioRef.current.currentTime;
+      setCharIndex(Math.floor(currentSeconds * 8));
+    }
+  };
 
   const handleAudioLoaded = () => {
     setIsAudioLoaded(true);
@@ -56,13 +66,17 @@ export const Radio = ({
         onLoadedMetadata={handleAudioLoaded}
         className={styles.audioStyle}
         crossOrigin="anonymous"
-        // style={{ width: "0px", height: "0px" }}
+        onTimeUpdate={handleTimeUpdate}
+        style={{ width: "0px", height: "0px" }}
       >
         <source src={ttsFiles[currentTTSIndex]} type="audio/mp3" />{" "}
         {/* props에서 가져오도록 수정 */}
         Your browser does not support the audio element.
       </audio>
-      <RadioScripts script={scriptFiles[currentTTSIndex]} djName={djName} />
+      <RadioScripts
+        script={scriptFiles[currentTTSIndex].slice(0, charIndex)}
+        djName={djName}
+      />
     </div>
   );
 };
