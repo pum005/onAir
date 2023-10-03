@@ -32,7 +32,8 @@ export const Player = (): ReactElement => {
 
   //이부분이 이제 재생했을때 하드코딩 되어있는 oncast가 아니라 location에서 가져오는 oncastId
   const location = useLocation();
-  const { oncastId } = location.state;
+  // const { oncastId } = location.state;
+  const oncastId = 57;
 
   const [currentMusicList, setCurrentMusicList] = useState<
     Array<{
@@ -110,10 +111,20 @@ export const Player = (): ReactElement => {
 
   return (
     <div
-      style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
+      style={{
+        backgroundColor: "#000104",
+        height: "100vh",
+        color: "white",
+      }}
     >
       {/* <NavBar /> */}
-      <div style={{ position: "absolute", top: "120px", right: "100px" }}>
+      <div
+        style={{
+          position: "absolute",
+          top: "120px",
+          right: "100px",
+        }}
+      >
         <QueueMusicIcon
           style={{ fontSize: "2.5rem", color: "white", cursor: "pointer" }}
           onClick={() => setIsModalOpen(true)}

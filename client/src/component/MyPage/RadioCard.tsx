@@ -15,7 +15,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RadioPlayModal from "../PlayerPage/RadioPlayModal";
 import styles from "./RadioCard.module.css";
-import gifImage from "../../assets/lp.gif"
+import gifImage from "../../assets/lp.gif";
 
 type RecipeReviewCardProps = {
   oncastId: number;
@@ -109,7 +109,7 @@ export default function RecipeReviewCard({
           }
         );
       })
-        .then((response) => {
+        .then(response => {
           console.log(response.data);
           if (response.data.message === "음악 추가 완료") {
             setOpen(true);
@@ -119,7 +119,7 @@ export default function RecipeReviewCard({
             alert("이미 보관함에 있는 음악입니다.");
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("에러발생", error);
         });
     }
@@ -202,7 +202,8 @@ export default function RecipeReviewCard({
           open={radioplayModalOpen}
           handleClose={handlePlayModalClose}
           radioName={subheader}
-          oncastId={oncastId}
+          // oncastId={oncastId}
+          oncastId={57}
         />
       </Card>
     </div>

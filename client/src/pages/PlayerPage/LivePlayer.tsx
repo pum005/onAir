@@ -59,7 +59,7 @@ export const LivePlayer = () => {
         console.log("Received Data:", data);
         if (data && typeof data === "object" && "data" in data) {
           setMusicData(data);
-          setCurrentSeq(data.data.seq); // seq 값을 저장
+          setCurrentSeq(data.data.seq - 1); // seq 값을 저장
 
           // operation 값이 'END'일 때 경고창 띄우기
           if (data.operation === "END") {
