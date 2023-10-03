@@ -16,6 +16,7 @@ import { Paper, styled } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import RepeatOneIcon from "@mui/icons-material/RepeatOne";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 
 //파일 분리 완료
 type YouTubePlayer = {
@@ -37,7 +38,7 @@ const Item = styled(Paper)(({ theme }) => ({
 export const GlobalYouTubePlayer = () => {
   const MusicData = useSelector((state: RootState) => state.music);
   const MusicDataArray: MusicInfo[] = Object.values(MusicData).filter(
-    item => item.musicId
+    (item) => item.musicId
   );
 
   const [player, setPlayer] = useState<any>(null);
@@ -55,6 +56,39 @@ export const GlobalYouTubePlayer = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [oneSecnonds, setOneSeconds] = useState<number>(0);
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    let interval: any;
+
+    if (!MusicDataArray || MusicDataArray.length === 0) {
+      return;
+    }
+
+    if (isPlaying) {
+      // 초기에는 바로 애니메이션을 시작하지 않습니다.
+      setTimeout(() => {
+        setAnimate(true);
+      }, 2000);
+
+      interval = setInterval(() => {
+        // 애니메이션이 끝나면 다음 노래로 넘어갑니다.
+        setAnimate(false);
+
+        setOneSeconds((prevIndex) => (prevIndex + 1) % MusicDataArray.length);
+
+        // 다음 노래를 보여주기 시작할 때만 애니메이션을 시작합니다.
+        setTimeout(() => {
+          setAnimate(true);
+        }, 2000);
+      }, 4000); // 애니메이션 (2초) + 대기 시간 (2초) = 총 4초
+    }
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [MusicDataArray.length, isPlaying]);
 
   const opts = {
     height: "0",
@@ -184,7 +218,7 @@ export const GlobalYouTubePlayer = () => {
   ]);
 
   const setCurrentMusicByMusicId = (musicId: number) => {
-    const newIndex = MusicDataArray.findIndex(m => m.musicId === musicId);
+    const newIndex = MusicDataArray.findIndex((m) => m.musicId === musicId);
     if (newIndex !== -1) {
       dispatch(setSelectedMusicIndex(newIndex));
     }
@@ -280,7 +314,7 @@ export const GlobalYouTubePlayer = () => {
           opts={opts}
           onEnd={handleMusicEnd}
           onReady={onPlayerReady}
-          onStateChange={event => {
+          onStateChange={(event) => {
             if (player) {
               setCurrentTime(player.getCurrentTime());
               setDuration(player.getDuration());
@@ -303,8 +337,8 @@ export const GlobalYouTubePlayer = () => {
             />
           </div>
 
-          <Grid container spacing={3} className={styles.gridContainer}>
-            <Grid item xs>
+          <Grid container spacing={1} className={styles.gridContainer}>
+            <Grid item xs={2}>
               <div className={styles.controlButtons}>
                 <Button onClick={skipToPrevious} disabled={!isButtonEnabled}>
                   <SkipPreviousIcon />
@@ -330,8 +364,15 @@ export const GlobalYouTubePlayer = () => {
               </div>
             </Grid>
 
-            <Grid item xs>
-              <div className={styles.timeInfo}>
+            <Grid item xs={1}>
+              <div
+                className={styles.timeInfo}
+                style={{
+                  fontFamily: "Pretendard-SemiBold",
+                  fontSize: "13px",
+                  color: "#A3A3A3",
+                }}
+              >
                 <span>
                   {Math.floor(currentTime / 60)}:
                   {String(Math.floor(currentTime % 60)).padStart(2, "0")}
@@ -344,53 +385,100 @@ export const GlobalYouTubePlayer = () => {
               </div>
             </Grid>
 
-            <Grid item xs>
+            <Grid item xs={4}>
               <Button
                 onClick={redirectToPlaylist}
                 style={{ textTransform: "none" }}
+                className={styles.redirectPlaylist}
               >
                 <div className={styles.currentSongInfo}>
                   <img
                     src={MusicDataArray[currentMusicIndex]?.albumCoverUrl}
                     alt="Album Cover"
-                    width="50"
-                    height="50"
+                    width="45"
+                    height="45"
                     style={{ marginRight: "10px" }}
                   />
                   <div>
-                    <span className={styles.currentSongTitle}>
+                    <span
+                      className={styles.currentSongTitle}
+                      style={{
+                        fontFamily: "Pretendard-SemiBold",
+                        fontSize: "15px",
+                      }}
+                    >
                       {MusicDataArray[currentMusicIndex]?.title}
                     </span>
-                    <br />
-                    <span className={styles.currentSongArtist}>
+                    <span> - </span>
+                    <span
+                      className={styles.currentSongArtist}
+                      style={{
+                        fontFamily: "Pretendard-SemiBold",
+                        fontSize: "12px",
+                        color: "#A3A3A3",
+                      }}
+                    >
                       {MusicDataArray[currentMusicIndex]?.artist}
                     </span>
                   </div>
                 </div>
               </Button>
             </Grid>
-
-            <Grid item xs>
+            <Grid item xs={2}>
+              <div
+                className={`${styles.nextMusicItem} ${
+                  animate ? styles.animateSlideUp : ""
+                }`}
+              >
+                <img
+                  src={MusicDataArray[oneSecnonds]?.albumCoverUrl}
+                  alt="Album Cover"
+                  width="45"
+                  height="45"
+                  style={{ marginRight: "10px" }}
+                />
+                <div style={{ flex: 2 }} className={styles.nextMusicBox}>
+                  <div
+                    className={styles.currentSongTitle}
+                    style={{
+                      fontFamily: "Pretendard-SemiBold",
+                      fontSize: "15px",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    {MusicDataArray[oneSecnonds]?.title}
+                  </div>
+                  <div
+                    className={styles.currentSongArtist}
+                    style={{
+                      fontFamily: "Pretendard-SemiBold",
+                      fontSize: "12px",
+                      color: "#A3A3A3",
+                      marginBottom: "2px",
+                    }}
+                  >
+                    {MusicDataArray[oneSecnonds]?.artist}
+                  </div>
+                </div>
+              </div>
+            </Grid>
+            <Grid item xs={2}>
               <div className={styles.iconControls}>
                 <Button
                   onClick={() => setIsRandom(!isRandom)}
                   disabled={!isButtonEnabled}
                 >
-                  <ShuffleIcon color={isRandom ? "secondary" : "action"} />
+                  <ShuffleIcon
+                    style={{ color: isRandom ? "white" : "rgb(62, 62, 62)" }}
+                  />
                 </Button>
                 <Button
                   onClick={() => setIsLoop(!isLoop)}
                   disabled={!isButtonEnabled}
                 >
-                  <RepeatOneIcon color={isLoop ? "secondary" : "action"} />
-                </Button>
-              </div>
-            </Grid>
-
-            <Grid item xs>
-              <div className={styles.closeIconContainer}>
-                <Button onClick={handleToggleStop}>
-                  <HighlightOffIcon />
+                  <RepeatOneIcon
+                    style={{ color: isLoop ? "white" : "rgb(62, 62, 62)" }}
+                  />
                 </Button>
               </div>
             </Grid>

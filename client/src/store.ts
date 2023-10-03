@@ -84,7 +84,7 @@ const initialState: User = {
 const initialLiveRadioDummyState: RadioDummyData[] = [];
 
 // 리듀서를 정의합니다. 리듀서는 액션에 따라 상태를 변경하는 함수입니다.
-const userReducer = createReducer(initialState, builder => {
+const userReducer = createReducer(initialState, (builder) => {
   // setUserData 액션이 디스패치될 때 상태를 어떻게 변경할지 정의합니다.
   builder.addCase(setNickName, (state, action) => {
     state.nickname = action.payload.nickname;
@@ -105,8 +105,8 @@ const initialPlayerVisibilityState: boolean = false;
 // 리듀서 정의
 const playerVisibilityReducer = createReducer(
   initialPlayerVisibilityState,
-  builder => {
-    builder.addCase(togglePlayerVisibility, state => {
+  (builder) => {
+    builder.addCase(togglePlayerVisibility, (state) => {
       return !state; // 현재 상태를 반전시킵니다.
     });
   }
@@ -114,19 +114,19 @@ const playerVisibilityReducer = createReducer(
 
 const liveRadioDummyReducer = createReducer(
   initialLiveRadioDummyState,
-  builder => {
+  (builder) => {
     builder
-      .addCase(incrementTTSIndex, state => {
+      .addCase(incrementTTSIndex, (state) => {
         // 마지막 원소의 TTS 인덱스 증가 (또는 원하는 인덱스의 TTS 인덱스 증가)
         const lastItem = state[state.length - 1];
         lastItem.currentTTSIndex++;
       })
-      .addCase(incrementMusicIndex, state => {
+      .addCase(incrementMusicIndex, (state) => {
         // 마지막 원소의 음악 인덱스 증가 (또는 원하는 인덱스의 음악 인덱스 증가)
         const lastItem = state[state.length - 1];
         lastItem.currentMusicIndex++;
       })
-      .addCase(resetIndices, state => {
+      .addCase(resetIndices, (state) => {
         // 마지막 원소의 인덱스 리셋 (또는 원하는 인덱스의 인덱스 리셋)
         const lastItem = state[state.length - 1];
         lastItem.currentTTSIndex = 0;
@@ -146,7 +146,7 @@ export type ChatMessage = {
 const initialChatState: ChatMessage[] = [];
 
 // 리듀서 정의
-const chatReducer = createReducer(initialChatState, builder => {
+const chatReducer = createReducer(initialChatState, (builder) => {
   builder
     .addCase(addChatMessage, (state, action) => {
       console.log("State before push:", action.payload);
@@ -154,7 +154,7 @@ const chatReducer = createReducer(initialChatState, builder => {
       console.log("Is state an array?", Array.isArray(state));
       state.push(action.payload); // state.push 대신 spread 연산자를 사용하여 배열에 추가
     })
-    .addCase(resetChatMessages, state => {
+    .addCase(resetChatMessages, (state) => {
       // 채팅 메시지 초기화
       return initialChatState;
     });
@@ -190,7 +190,7 @@ const initialMusicState: MusicState = [];
 // 액션 생성자 정의
 export const setMusicDataTemp = createAction<MusicState>("SET_MUSIC_DATA");
 
-const musicReducer = createReducer(initialMusicState, builder => {
+const musicReducer = createReducer(initialMusicState, (builder) => {
   builder.addCase(
     setMusicDataTemp,
     (state, action: PayloadAction<MusicState>) => {
@@ -219,7 +219,7 @@ export const setSelectedMusicIndex = createAction<number>(
 //리듀서 정의
 const selectedMusicIndexReducer = createReducer(
   initialSelectedMusicIndexState,
-  builder => {
+  (builder) => {
     builder.addCase(setSelectedMusicIndex, (state, action) => {
       return action.payload; // 선택된 노래의 인덱스를 상태에 설정합니다.
     });
@@ -233,7 +233,7 @@ const initialPlaylistMetaIdState: number = 0;
 
 const playlistMetaIdReducer = createReducer(
   initialPlaylistMetaIdState,
-  builder => {
+  (builder) => {
     builder.addCase(setPlaylistMetaId, (state, action) => {
       return action.payload;
     });
