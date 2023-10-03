@@ -27,7 +27,7 @@ public class RadioService {
     private final KafkaProducerService kafkaProducerService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private String currentState = "idle";
+    private String currentState = "Before";
 
     private static final Logger logger = LoggerFactory.getLogger(RadioService.class);
 
@@ -156,7 +156,7 @@ public class RadioService {
     /**
      * 1초마다 라디오 상태를 갱신하는 로직입니다. idle 상태가 지속되면 강제로 finishState에 메세지를 보냅니다.
      */
-    @Scheduled(cron = "0 0 11 * * *", zone = "Asia/Seoul")// 매일 11시부터 13시까지 1초 간격으로 실
+    @Scheduled(cron = "0 14 17 * * *", zone = "Asia/Seoul")// 매일 11시부터 13시까지 1초 간격으로 실
     public void startServer() {
         currentState = "idle";
     }
