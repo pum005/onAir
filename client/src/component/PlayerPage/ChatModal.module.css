@@ -4,8 +4,8 @@
   right: 0;
   width: 400px;
   height: 100%;
-  background-color: rgba(37, 35, 37, 0.9);
-  box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.5);
+  background-color: rgba(37, 35, 37, 0.95);
+  box-shadow: -4px 0px 10px rgba(0, 0, 0, 0.5);
   transition: right 0.3s;
   padding: 20px;
   overflow-y: auto;
@@ -20,39 +20,53 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  color: #ffffff;
 }
 
 .chatMessages {
   flex: 1;
-  height: 500px; /* 고정된 높이 설정 */
-  overflow-y: auto; /* 내부에서만 스크롤되게 설정 */
+  height: 500px;
+  overflow-y: auto;
   margin-bottom: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid #444;
   padding: 10px;
   border-radius: 5px;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .chatInputContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .chatInput {
   width: 85%;
   padding: 10px;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid #007bff;
+  background: rgba(255, 255, 255, 0.9);
+  font-family: "Pretendard-SemiBold", sans-serif;
 }
 
 .chatButton {
-  background-color: #007bff;
+  background-color: #7066e0;
   color: white;
   border: none;
   border-radius: 5px;
   padding: 10px 15px;
   cursor: pointer;
   width: 15%;
+  transition: background 0.3s;
+  font-family: "Pretendard-SemiBold", sans-serif;
+  font-size: 15px;
+}
+
+.chatButton:hover {
+  background-color: #0056b3;
 }
 
 .closeButton {
@@ -64,10 +78,15 @@
   font-size: 24px;
   cursor: pointer;
   color: white;
+  transition: transform 0.3s;
+}
+
+.closeButton:hover {
+  transform: scale(1.1);
 }
 
 .closed {
-  right: -500px; /* -400px 모달 너비와 -10px 패딩의 합계 */
+  right: -500px;
 }
 
 .chatMessage {
@@ -89,27 +108,32 @@
   height: 40px;
   border-radius: 20px;
   object-fit: cover;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .chatMessage .username {
   font-weight: bold;
-  margin-right: 10px; /* 이미지와의 간격 조정 */
+  margin-right: 10px;
+  color: #ffffff;
+  font-family: "GangwonEduPowerExtraBoldA", sans-serif;
 }
 
 .message_content {
   word-wrap: break-word;
   max-width: 85%;
-  padding: 8px 12px; /* 텍스트와 테두리 간의 간격 */
-  border-radius: 15px; /* 둥근 모서리 */
-  background-color: #525051; /* 기본 배경색 (받는 사람의 메시지) */
+  padding: 8px 12px;
+  border-radius: 15px;
+  color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  font-family: "Shilla_Gothic-Bold", sans-serif;
 }
 
 .chatMessage.sent {
-  align-items: flex-end; /* 보내는 사람의 메시지를 왼쪽 정렬 */
+  align-items: flex-end;
 }
 
 .chatMessage.sent .senderInfo {
-  justify-content: flex-end; /* 보내는 사람의 이미지와 닉네임을 왼쪽으로 정렬 */
+  justify-content: flex-end;
 }
 
 .chatMessage.received {
@@ -117,21 +141,15 @@
 }
 
 .chatMessage.sent .message_content {
-  background-color: #525051; /* 보내는 사람의 메시지 배경색 */
-  text-align: left;
+  background-color: #525051;
 }
 
 .chatMessage.received .message_content {
-  text-align: left;
-}
-
-.chatMessage .username {
-  font-weight: bold;
-  margin-right: 10px; /* 이미지와의 간격 조정 */
+  background-color: #666;
 }
 
 .chatMessage.sent .username {
-  margin-left: 10px; /* 보내는 사람의 경우, 닉네임을 사진의 왼쪽에 위치 */
-  margin-right: 0; /* 기존의 오른쪽 마진 제거 */
-  flex: none; /* 이 속성을 추가해서 닉네임이 전체 너비를 차지하는 것을 방지 */
+  margin-left: 10px;
+  margin-right: 0;
+  flex: none;
 }
