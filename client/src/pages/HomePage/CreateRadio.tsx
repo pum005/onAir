@@ -140,7 +140,7 @@ const CreateRadio = () => {
       customClass: {
         popup: "my-popup-class",
       },
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
         CreateOncast();
       } else {
@@ -183,8 +183,8 @@ const CreateRadio = () => {
       DJNameMapping[selectedDJ as keyof typeof DJNameMapping];
     requestWithTokenRefresh(() => {
       return axios.post(
-        "http://localhost:8080/api/oncast/create",
-        // dd
+        "http://52.78.65.222:5000/hadoop/songs",
+        // "http://localhost:8080/api/oncast/create",
         {
           title: title,
           theme: selectedTheme,
@@ -199,7 +199,7 @@ const CreateRadio = () => {
         }
       );
     })
-      .then((response) => {
+      .then(response => {
         console.log(response);
         console.log(response.data);
         if (response.status === 200) {
@@ -228,7 +228,7 @@ const CreateRadio = () => {
           alert("온캐스트 생성에 실패했습니다.");
         }
       })
-      .catch((error) => {
+      .catch(error => {
         setIsGame(false);
         if (
           error.response.data ===
@@ -278,7 +278,7 @@ const CreateRadio = () => {
                 <Grid item xs={9.5}>
                   <textarea
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={e => setTitle(e.target.value)}
                     className={styles.titleInput}
                   />
                 </Grid>
