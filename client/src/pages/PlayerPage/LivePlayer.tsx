@@ -81,21 +81,8 @@ export const LivePlayer = () => {
           if (data.operation === "END") {
             Swal.fire({
               icon: "error",
-              title: "지금은 라이브가 마쳤습니다!",
-              confirmButtonColor: "6966FF",
-              confirmButtonText: "확인",
-              customClass: {
-                popup: "my-popup-class",
-              },
-            }).then(result => {
-              if (result.isConfirmed) {
-                navigate("/"); // 홈페이지로 이동
-              }
-            });
-          } else if (data.operation === "BEFORE") {
-            Swal.fire({
-              icon: "error",
-              title: "지금은 라이브 시작 전입니다!",
+              title: "라이브가 마쳤습니다!",
+              text: "내일 오전 11시에 만나요!",
               confirmButtonColor: "6966FF",
               confirmButtonText: "확인",
               customClass: {
@@ -109,7 +96,7 @@ export const LivePlayer = () => {
           } else if (data.data.seq == 10 && data.operation === "IDLE") {
             Swal.fire({
               icon: "info",
-              title: "라이브가 마무리되었습니다!",
+              title: "라이브가 종료되었습니다!",
               confirmButtonColor: "6966FF",
               confirmButtonText: "확인",
               customClass: {
