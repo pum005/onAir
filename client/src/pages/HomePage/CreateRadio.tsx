@@ -250,7 +250,7 @@ const CreateRadio = () => {
       });
   };
   return (
-    <div>
+    <div className={styles.allContainer}>
       {/* <NavBar /> */}
       {isGame ? (
         <div
@@ -259,7 +259,8 @@ const CreateRadio = () => {
             justifyContent: "center",
             alignItems: "center",
             height: "80vh",
-            marginTop: "50px",
+            // marginTop: "60px",
+            // paddingTop: "30px",
           }}
         >
           <Game />
@@ -324,7 +325,14 @@ const CreateRadio = () => {
                 </Grid>
               </Grid>
 
-              <Grid item container xs={12} alignItems="center" spacing={2}>
+              <Grid
+                item
+                container
+                xs={12}
+                alignItems="center"
+                className={styles.djAlign}
+                spacing={2}
+              >
                 <Grid item xs={2}>
                   <Typography variant="h5" className={styles.itemTitle}>
                     DJ

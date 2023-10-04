@@ -1,4 +1,10 @@
 /* Base Styles */
+
+.allContainer {
+  overflow: hidden;
+  padding-top: 70px;
+}
+
 .container {
   background-color: #000104;
   color: white;
@@ -6,13 +12,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   font-family: "Shilla_Gothic-Bold" !important;
+  /* overflow: hidden; */
 }
 
 .oncastCreate {
   max-width: 1000px;
-  margin: 3rem auto;
+  margin: 2rem auto;
   border: 1px solid #626262;
   border-radius: 20px;
   background-color: rgb(50, 50, 50);
@@ -21,7 +28,7 @@
 
 .itemTitle {
   text-align: center;
-  padding-left: 10px;
+  /* padding-left: 10px; */
   font-family: "GangwonEduPowerExtraBoldA" !important;
 }
 .textFieldFont {
@@ -63,12 +70,18 @@
   font-weight: normal;
   font-style: normal;
 }
+.djAlign {
+  display: flex;
+  /* padding-left: 10px; */
+  margin-right: 40px;
+}
 
 .titleInput,
 .storyInput {
   width: 100%;
-  padding: 8px 12px;
+  padding: 8px 8px;
   font-size: 1rem;
+
   background-color: transparent;
   color: white !important;
   font-family: "Pretendard-SemiBold" !important;
@@ -100,6 +113,7 @@
 .themeSelect {
   display: flex;
   flex-wrap: wrap;
+  /* justify-content: space-around; */
   gap: 0.5rem;
 }
 .theme {
@@ -114,13 +128,14 @@
 }
 
 .createButton {
-  margin-right: 10px;
+  margin-right: 20px;
   background-color: #4f4dbd !important;
   color: white !important;
   font-family: "Shilla_Gothic-Bold" !important;
 }
 
 .cancleButton {
+  margin-right: 20px;
   font-family: "Shilla_Gothic-Bold" !important;
   background-color: #da0037;
   color: white;
