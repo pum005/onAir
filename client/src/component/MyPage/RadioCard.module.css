@@ -43,13 +43,43 @@ div.cards {
   align-items: center;
   color: white;
   text-align: center;
-  background-color: #626262;
+  /* background-color: #626262; */
   font-family: "GangwonEduPowerExtraBoldA";
-  border: 1px solid #717171;
-  border-radius: 10px;
-  font-size: 12px;
+  /* border: 1px solid #717171; */
+  /* border-radius: 5px; */
+  font-size: 13px;
+  /* padding: 5px; */
+  padding-bottom: 1px;
+  /* margin-bottom: 1px; */
+}
+.theme {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  /* background-color: #626262; */
+  font-family: "GangwonEduPowerExtraBoldA";
+  /* border: 1px solid #717171; */
+  border-radius: 5px;
+  font-size: 14px;
+  color: white;
   padding: 5px;
   padding-bottom: 1px;
+
+  /* 여기서부턴 */
+  background: linear-gradient(-45deg, #626262 0%, #222222 100%);
+  background-size: 400% 400%;
+  animation: gradient1 2s ease infinite;
+}
+@keyframes gradient1 {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .subheader {

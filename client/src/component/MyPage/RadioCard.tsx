@@ -101,6 +101,7 @@ export default function RecipeReviewCard({
     return title.replace(/\s\d{2}:\d{2}$/, "");
   }
 
+  const dummyTheme = "SENSITIVE";
   /**axios */
   //AddCircleOutlineIcon 이거 눌렀을때 전체 보관함 추가하고 나의 플레이리스트 열기
   React.useEffect(() => {
@@ -167,7 +168,7 @@ export default function RecipeReviewCard({
         <CardContent>
           <div className={styles.cardTop}>
             <div className={styles.title}>{removeTimeFromTitle(title)}</div>
-            <div className={styles.theme}>{theme}</div>
+            <div className={styles.theme}>{dummyTheme}</div>
           </div>
           <div>
             <div className={styles.gifImage}></div>
