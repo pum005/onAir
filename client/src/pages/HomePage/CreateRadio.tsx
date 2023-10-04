@@ -9,7 +9,7 @@ import axios from "axios";
 import { Navigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import Box from "@mui/material/Box";
-import { Loading } from "../../pages/PlayerPage/Loading";
+import Game from "../../pages/PlayerPage/Game";
 
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import { Grid, Button, Typography, styled } from "@mui/material";
@@ -39,7 +39,7 @@ const CreateRadio = () => {
   const navigate = useNavigate();
   const [showButton, setShowButton] = useState(false);
   const [contentMaxLengthReached, setContentMaxLengthReached] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isGame, setIsGame] = useState(false);
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newContent = e.target.value;
@@ -160,7 +160,7 @@ const CreateRadio = () => {
   }));
 
   const CreateOncast = () => {
-    setIsLoading(true);
+    setIsGame(true);
     const djEnglishName =
       DJNameMapping[selectedDJ as keyof typeof DJNameMapping];
     requestWithTokenRefresh(() => {
@@ -184,14 +184,14 @@ const CreateRadio = () => {
       .then(response => {
         console.log(response);
         if (response.status === 200) {
-          setIsLoading(false);
+          setIsGame(false);
           navigate("/OncastCreateComplete");
         } else {
           alert("온캐스트 생성에 실패했습니다.");
         }
       })
       .catch(error => {
-        setIsLoading(false);
+        setIsGame(false);
 
         console.log("통신에러 발생", error);
       });
@@ -199,8 +199,8 @@ const CreateRadio = () => {
   return (
     <div>
       {/* <NavBar /> */}
-      {isLoading ? (
-        <Loading />
+      {isGame ? (
+        <Game />
       ) : (
         <div className={styles.container}>
           <div>
