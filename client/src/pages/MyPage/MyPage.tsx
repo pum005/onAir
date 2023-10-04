@@ -22,7 +22,7 @@ export const MyPage = () => {
     >
       {/* <NavBar /> */}
       <InfoModify />
-      <p></p>
+      {/* <p></p> */}
       <BasicTabs initialValue={tabValue} />
       {/* <MyPageList /> */}
     </div>

@@ -4,7 +4,7 @@ import store from "../store"; // 수정된 부분: default import로 변경
 
 // axios 인스턴스 생성
 const instance = axios.create({
-  baseURL: "https://j9b302.p.ssafy.io",
+  baseURL: "http://localhost:8080",
 });
 
 // 응답 인터셉터 추가
