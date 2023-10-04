@@ -77,3 +77,30 @@
   font-size: 30px;
   margin: 100px;
 }
+
+.listScrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* 스크롤바 전체 */
+.listScrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* 스크롤바의 핸들 부분 */
+.listScrollbar::-webkit-scrollbar-thumb {
+  background-color: #323232;
+}
+
+/* 스크롤바의 트랙 부분 */
+.listScrollbar::-webkit-scrollbar-track {
+  background-color: rgb(0, 0, 0);
+}
+
+.listScrollbar {
+  height: 450px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  /* margin-bottom: 100px; */
+  margin-bottom: 10px;
+}

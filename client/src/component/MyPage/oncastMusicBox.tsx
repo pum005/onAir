@@ -202,7 +202,9 @@ export default function oncastMusicBox({ initialValue = 0 }) {
               display: "flex",
               flexWrap: "wrap",
               overflowY: "auto",
+              marginBottom: "20px",
             }}
+            className={styles.listScrollbar}
           >
             {oncasts.map((data, idx) => (
               <div

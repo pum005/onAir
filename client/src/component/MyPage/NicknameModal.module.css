@@ -10,7 +10,7 @@
   width: 400px;
   background-color: #ffffff; /* background.paper 스타일에 해당 */
   box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.15); /* boxShadow: 24에 해당 */
-  padding: 16px; /* p: 4에 해당 (MUI에서의 spacing 단위는 8이므로 4 x 8 = 32px) */
+  padding: 16px;
   background-color: rgb(37, 37, 37);
   border-radius: 10px;
   border: 1px solid rgb(62, 62, 62);

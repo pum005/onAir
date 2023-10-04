@@ -17,6 +17,7 @@ import RadioPlayModal from "../PlayerPage/RadioPlayModal";
 import styles from "./RadioCard.module.css";
 import gifImage from "../../assets/lp.gif";
 import Swal from "sweetalert2";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 type RecipeReviewCardProps = {
   oncastId: number;
@@ -120,36 +121,34 @@ export default function RecipeReviewCard({
         .then((response) => {
           console.log(response.data);
           if (response.data.message === "음악 추가 완료") {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top",
-              showConfirmButton: false,
-              timer: 1500,
-              timerProgressBar: true,
-              customClass: {
-                popup: "swal2-popup",
-              },
-            });
-            Toast.fire({
+            Swal.fire({
               icon: "success",
               title: "전체 보관함에 음악이 추가 되었습니다!",
+              confirmButtonColor: "6966FF",
+              confirmButtonText: "확인",
+              customClass: {
+                popup: "my-popup-class",
+              },
+            }).then((result) => {
+              if (result.isConfirmed) {
+                handleClose();
+              }
             });
           }
           if (response.data.message === "이미 보관함에 있는 음악입니다.") {
             setOpen(false);
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top",
-              showConfirmButton: false,
-              timer: 1500,
-              timerProgressBar: true,
-              customClass: {
-                popup: "swal2-popup",
-              },
-            });
-            Toast.fire({
+            Swal.fire({
               icon: "error",
               title: "이미 보관함에 있는 음악입니다.",
+              confirmButtonColor: "6966FF",
+              confirmButtonText: "확인",
+              customClass: {
+                popup: "my-popup-class",
+              },
+            }).then((result) => {
+              if (result.isConfirmed) {
+                handleClose();
+              }
             });
           }
         })
@@ -209,7 +208,7 @@ export default function RecipeReviewCard({
               />
             </div>
             <div>
-              <DeleteIcon
+              <DeleteOutlineIcon
                 onClick={handleDeleteClick}
                 className={styles.deleteIcon}
               />
