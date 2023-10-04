@@ -1,0 +1,88 @@
+.gameContainer {
+    width: 600px;
+    height: 600px;
+    border: 2px solid black;
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto;
+    border-radius: 50%;
+    background-color: #d8d8d8;
+    justify-content: center;
+}
+
+.player {
+    width: 20px;
+    height: 20px;
+    background-color: blue;
+    position: absolute;
+    border-radius: 50%;
+}
+
+.bullet {
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    position: absolute;
+    border-radius: 50%;
+}
+
+.gameOver {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.gameOver button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    background-color: white;
+    cursor: pointer;
+}
+
+/* Game.module.css */
+
+/* ... 기존 스타일 ... */
+
+.startScreen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.startScreen h1 {
+    font-size: 32px;
+    margin-bottom: 70px;
+    color: rgb(0, 0, 0);
+}
+
+.startScreen button {
+    padding: 10px 20px;
+    font-size: 20px;
+    border: none;
+    background-color: #f67b00; /* 예: 주황색 배경 */
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.startScreen button:hover {
+    background-color: #9f4f00; /* 예: 버튼 hover 시 색상 */
+}
+
+.timer {
+    position: absolute;
+    top: 10px; /* or any suitable value */
+    left: 50%;
+    transform: translateX(-50%); /* to center the timer horizontally */
+    font-size: 1.5em; /* optional, for better visibility */
+    color: rgb(0, 0, 0); /* or any color that contrasts with your background */
+    z-index: 10; /* optional, to ensure it's on top */
+}

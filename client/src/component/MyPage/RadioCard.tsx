@@ -17,9 +17,11 @@ import RadioPlayModal from "../PlayerPage/RadioPlayModal";
 import styles from "./RadioCard.module.css";
 import gifImage from "../../assets/lp.gif";
 import Swal from "sweetalert2";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 type RecipeReviewCardProps = {
   oncastId: number;
+  theme: string;
   title: string;
   subheader: string;
   shareCheck: boolean;
@@ -37,6 +39,7 @@ type SongDataType = {
 
 export default function RecipeReviewCard({
   oncastId,
+  theme,
   title,
   subheader,
   shareCheck,
@@ -93,6 +96,12 @@ export default function RecipeReviewCard({
     setRadioplayModalOpen(false);
   };
 
+  function removeTimeFromTitle(title: string) {
+    // 시간 포맷(예: 12:54)을 찾아 제거
+    return title.replace(/\s\d{2}:\d{2}$/, "");
+  }
+
+  const dummyTheme = "SENSITIVE";
   /**axios */
   //AddCircleOutlineIcon 이거 눌렀을때 전체 보관함 추가하고 나의 플레이리스트 열기
   React.useEffect(() => {
@@ -100,7 +109,7 @@ export default function RecipeReviewCard({
       // selectedMusicId가 설정되었을 때만 API 호출
       requestWithTokenRefresh(() => {
         return axios.post(
-          "https://j9b302.p.ssafy.io/api/my-musicbox",
+          "http://localhost:8080/api/my-musicbox",
           { musicId: selectedMusicId },
           {
             headers: {
@@ -113,36 +122,34 @@ export default function RecipeReviewCard({
         .then(response => {
           console.log(response.data);
           if (response.data.message === "음악 추가 완료") {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top",
-              showConfirmButton: false,
-              timer: 1500,
-              timerProgressBar: true,
-              customClass: {
-                popup: "swal2-popup",
-              },
-            });
-            Toast.fire({
+            Swal.fire({
               icon: "success",
               title: "전체 보관함에 음악이 추가 되었습니다!",
+              confirmButtonColor: "6966FF",
+              confirmButtonText: "확인",
+              customClass: {
+                popup: "my-popup-class",
+              },
+            }).then((result) => {
+              if (result.isConfirmed) {
+                handleClose();
+              }
             });
           }
           if (response.data.message === "이미 보관함에 있는 음악입니다.") {
             setOpen(false);
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top",
-              showConfirmButton: false,
-              timer: 1500,
-              timerProgressBar: true,
-              customClass: {
-                popup: "swal2-popup",
-              },
-            });
-            Toast.fire({
+            Swal.fire({
               icon: "error",
               title: "이미 보관함에 있는 음악입니다.",
+              confirmButtonColor: "6966FF",
+              confirmButtonText: "확인",
+              customClass: {
+                popup: "my-popup-class",
+              },
+            }).then((result) => {
+              if (result.isConfirmed) {
+                handleClose();
+              }
             });
           }
         })
@@ -159,14 +166,17 @@ export default function RecipeReviewCard({
     <div className={styles.mainCard}>
       <Card className={styles.cards}>
         <CardContent>
-          <div className={styles.title}>{title}</div>
+          <div className={styles.cardTop}>
+            <div className={styles.title}>{removeTimeFromTitle(title)}</div>
+            <div className={styles.theme}>{dummyTheme}</div>
+          </div>
           <div>
             <div className={styles.gifImage}></div>
             <div>
-              <Typography className={styles.subheader}>{subheader}</Typography>
+              <div className={styles.subheader}>{subheader}</div>
             </div>
           </div>
-          <hr></hr>
+          {/* <hr></hr> */}
           {songs.map((song, idx) => (
             <div key={idx} className={styles.songRow}>
               <img
@@ -178,7 +188,7 @@ export default function RecipeReviewCard({
                 <div className={styles.songTitle}>{song.songTitle}</div>
                 <div className={styles.songArtist}>{song.artist}</div>
               </div>
-              {/* <div className={styles.songDuration}>{song.duration}</div> */}
+              <div className={styles.songDuration}>{song.duration}</div>
               <AddCircleOutlineIcon
                 className={styles.addIcon}
                 onClick={() => handleClickOpen(song.musicId)}
@@ -199,7 +209,7 @@ export default function RecipeReviewCard({
               />
             </div>
             <div>
-              <DeleteIcon
+              <DeleteOutlineIcon
                 onClick={handleDeleteClick}
                 className={styles.deleteIcon}
               />
