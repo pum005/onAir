@@ -118,39 +118,12 @@ public class OncastService {
         Optional<Music> byId3 = musicRepository.findById(musicId3);
         Music music3 = byId3.get();
 
-        Music[] oncastMusic = new Music[3];
-
         String story = request.getStory();
         String[] script = new String[4];
 
-
-
-        oncastMusic[0] = Music.builder()
-                .artist(music1.getArtist())
-                .title(music1.getTitle())
-                .youtubeVideoId(music1.getYoutubeVideoId())
-                .duration(music1.getDuration())
-                .albumCoverUrl(music1.getAlbumCoverUrl())
-                .spotifyId(music1.getSpotifyId())
-                .build();
-
-        oncastMusic[1] = Music.builder()
-                .artist(music2.getArtist())
-                .title(music2.getTitle())
-                .youtubeVideoId(music2.getYoutubeVideoId())
-                .duration(music2.getDuration())
-                .albumCoverUrl(music2.getAlbumCoverUrl())
-                .spotifyId(music2.getSpotifyId())
-                .build();
-
-        oncastMusic[2] = Music.builder()
-                .artist(music3.getArtist())
-                .title(music3.getTitle())
-                .youtubeVideoId(music3.getYoutubeVideoId())
-                .duration(music3.getDuration())
-                .albumCoverUrl(music3.getAlbumCoverUrl())
-                .spotifyId(music3.getSpotifyId())
-                .build();
+        log.info(music1.toString());
+        log.info(music2.toString());
+        log.info(music3.toString());
 
 
         QuestionRequest questionRequest = new QuestionRequest();
@@ -164,9 +137,9 @@ public class OncastService {
                         "        6. 각 음악이 들어갈 자리엔 @@ 을 넣어줘. 이부분을 체크해서 단락을 나누고 음악을 재생시키려고 하는거니까 음악이 들어가는 부분에 딱 한번만 해야하는거야\n" +
                         "        7. 밑에 내가 준 예시를 보고 \"노래\" 와 [[story]] 를 바꾸고 내용도 그에 맞게 바꿔서 주면 돼 \n" +
                         "        - story: [[" + request.getStory() + "]]\n" +
-                        "        - 음악1: (" + oncastMusic[0].getArtist() + " 의 " + oncastMusic[0].getTitle() + ")\n" +
-                        "        - 음악2: (" + oncastMusic[1].getArtist() + " 의 " + oncastMusic[1].getTitle() + ")\n" +
-                        "        - 음악3:(" + oncastMusic[2].getArtist() + " 의 " + oncastMusic[2].getTitle() + ")\n" +
+                        "        - 음악1: (" + music1.getArtist() + " 의 " + music1.getTitle() + ")\n" +
+                        "        - 음악2: (" + music2.getArtist() + " 의 " + music2.getTitle() + ")\n" +
+                        "        - 음악3:(" + music3.getArtist() + " 의 " + music3.getTitle() + ")\n" +
                         "        예시 : \n" +
                         "        안녕하세요, 여러분! 오늘 하루도 고생 정말 많으셨어요. \n" +
                         "        오늘의 이야기를 들어볼까요? \n" +
@@ -184,6 +157,7 @@ public class OncastService {
                         "        다들 힘내시고! 다음에 또 만나요~"
         );
 
+        System.setProperty("https.protocols","TLSv1.2");
 
         ChatGptResponse chatGptResponse = chatGptService.askQuestion(questionRequest);
         String fullScript = chatGptResponse.getChoices().get(0).getMessage().getContent();
@@ -219,9 +193,9 @@ public class OncastService {
                 .ttsTwo(f.get(1))
                 .ttsThree(f.get(2))
                 .ttsFour(f.get(3))
-                .music1(oncastMusic[0])
-                .music2(oncastMusic[1])
-                .music3(oncastMusic[2])
+                .music1(music1)
+                .music2(music2)
+                .music3(music3)
                 .build();
 
         oncastCreateDataRepository.save(ocd);
