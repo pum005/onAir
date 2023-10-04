@@ -232,6 +232,7 @@ public class OncastService {
             musicDTOs.add(convertToDTO(oncast.getMusic3()));
 
             GetOncastDTO build = GetOncastDTO.builder()
+                    .djName(oncastCreateData.getDjName())
                     .oncastId(oncast.getOncastId())
                     .theme(String.valueOf(oncastCreateData.getTheme()))
                     .createTime(createTime)
