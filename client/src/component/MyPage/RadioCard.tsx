@@ -20,6 +20,7 @@ import Swal from "sweetalert2";
 
 type RecipeReviewCardProps = {
   oncastId: number;
+  theme: string;
   title: string;
   subheader: string;
   shareCheck: boolean;
@@ -37,6 +38,7 @@ type SongDataType = {
 
 export default function RecipeReviewCard({
   oncastId,
+  theme,
   title,
   subheader,
   shareCheck,
@@ -92,6 +94,11 @@ export default function RecipeReviewCard({
   const handlePlayModalClose = () => {
     setRadioplayModalOpen(false);
   };
+
+  function removeTimeFromTitle(title: string) {
+    // 시간 포맷(예: 12:54)을 찾아 제거
+    return title.replace(/\s\d{2}:\d{2}$/, "");
+  }
 
   /**axios */
   //AddCircleOutlineIcon 이거 눌렀을때 전체 보관함 추가하고 나의 플레이리스트 열기
@@ -159,14 +166,17 @@ export default function RecipeReviewCard({
     <div className={styles.mainCard}>
       <Card className={styles.cards}>
         <CardContent>
-          <div className={styles.title}>{title}</div>
+          <div className={styles.cardTop}>
+            <div className={styles.title}>{removeTimeFromTitle(title)}</div>
+            <div className={styles.theme}>{theme}</div>
+          </div>
           <div>
             <div className={styles.gifImage}></div>
             <div>
-              <Typography className={styles.subheader}>{subheader}</Typography>
+              <div className={styles.subheader}>{subheader}</div>
             </div>
           </div>
-          <hr></hr>
+          {/* <hr></hr> */}
           {songs.map((song, idx) => (
             <div key={idx} className={styles.songRow}>
               <img
@@ -178,7 +188,7 @@ export default function RecipeReviewCard({
                 <div className={styles.songTitle}>{song.songTitle}</div>
                 <div className={styles.songArtist}>{song.artist}</div>
               </div>
-              {/* <div className={styles.songDuration}>{song.duration}</div> */}
+              <div className={styles.songDuration}>{song.duration}</div>
               <AddCircleOutlineIcon
                 className={styles.addIcon}
                 onClick={() => handleClickOpen(song.musicId)}

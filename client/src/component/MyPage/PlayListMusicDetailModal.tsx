@@ -153,7 +153,16 @@ const PlayListMusicDetailModal: React.FC<MusicDetailModalProps> = ({
               </div>
             ))
           ) : (
-            <div>노래가 없습니다.</div>
+            <div
+              style={{
+                fontFamily: "GangwonEduPowerExtraBoldA",
+                margin: "10px",
+                justifyContent: "center",
+                fontSize: "20px",
+              }}
+            >
+              노래가 없습니다.
+            </div>
           )}
           <Menu
             anchorEl={anchorEl}

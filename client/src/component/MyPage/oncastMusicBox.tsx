@@ -17,6 +17,7 @@ interface TabPanelProps {
 }
 type OncastType = {
   oncastId: number;
+  theme: string;
   createTime: string;
   title: string;
   shareCheck: boolean;
@@ -188,7 +189,12 @@ export default function oncastMusicBox({ initialValue = 0 }) {
       </Box>
       <CustomTabPanel value={value} index={0}>
         {message ? (
-          <div>생성된 라디오가 없습니다.</div>
+          <Typography
+            className={styles.noRadio}
+            style={{ fontFamily: "GangwonEduPowerExtraBoldA" }}
+          >
+            생성된 라디오가 없습니다.
+          </Typography>
         ) : (
           <div
             style={{
@@ -208,6 +214,7 @@ export default function oncastMusicBox({ initialValue = 0 }) {
               >
                 <RecipeReviewCard
                   oncastId={data.oncastId}
+                  theme={data.theme}
                   title={data.createTime}
                   subheader={data.title}
                   shareCheck={data.shareCheck}

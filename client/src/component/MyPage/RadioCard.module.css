@@ -25,24 +25,42 @@ div.cards {
   width: 250px;
   border-radius: 10px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-  height: 450px;
+  height: 425px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   /* 최대한의 간격을 줌 */
   border: 1px solid #626262;
 }
-
+.cardTop {
+  display: flex;
+  align-content: space-between;
+  justify-content: space-between;
+  align-items: center;
+}
 .title {
+  display: flex;
+  align-items: center;
   color: white;
-  text-align: left;
+  text-align: center;
+  background-color: #626262;
+  font-family: "GangwonEduPowerExtraBoldA";
+  border: 1px solid #717171;
+  border-radius: 10px;
+  font-size: 12px;
+  padding: 5px;
+  padding-bottom: 1px;
 }
 
 .subheader {
-  padding: 5px 0px 5px 0px;
+  /* padding: 5px 0px 5px 0px; */
+  padding-top: 5px;
+  padding-bottom: 5px;
   color: white;
   font-size: 25px !important;
+  border-bottom: 1px solid white;
   text-align: center;
+  font-family: "GangwonEduPowerExtraBoldA";
 }
 
 .songRow {
@@ -50,17 +68,24 @@ div.cards {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
+  /* margin-top: 10px; */
+  padding-top: 5px;
   border-bottom: 1px solid #626262;
   padding-bottom: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.songRow:hover {
+  background-color: #4f4f4f6a;
 }
 
 .songTitle {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 110px;
+  width: 60px;
   position: relative;
+  font-family: "Pretendard-SemiBold";
 }
 
 .songTitle:hover {
@@ -84,8 +109,9 @@ div.cards {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 110px;
+  width: 60px;
   position: relative;
+  font-family: "Pretendard-SemiBold";
 }
 
 .songArtist:hover {
@@ -106,11 +132,15 @@ div.cards {
 .songDuration {
   color: #a3a3a3;
   padding-right: 10px;
+  font-family: "Pretendard-SemiBold";
 }
 
 .addIcon {
   margin-left: 8px;
   cursor: pointer;
+  /* display: none !important; */
+  margin-right: 10px;
+  /* position: absolute !important; */
 }
 
 .addIcon:hover {
@@ -155,7 +185,7 @@ div.cards {
 .actions {
   margin-top: 10px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 }
 

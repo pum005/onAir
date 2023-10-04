@@ -70,3 +70,10 @@
   font-weight: normal;
   font-style: normal;
 }
+
+.noRadio {
+  display: flex;
+  justify-content: center;
+  font-size: 30px;
+  margin: 100px;
+}
