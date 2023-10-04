@@ -203,6 +203,8 @@ public class OncastService {
 
         user.updateCreateCountPlus();
 
+        Long oncastId = oncast.getOncastId();
+
         return oncast;
     }
 
