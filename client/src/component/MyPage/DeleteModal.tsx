@@ -40,7 +40,7 @@ function DeleteModal({
     if (oncastId) {
       requestWithTokenRefresh(() => {
         return axios.patch(
-          `https://j9b302a.p.ssafy.io/ws/api/oncast/${oncastId}`,
+          `https://j9b302a.p.ssafy.io/api/oncast/${oncastId}`,
           {},
           {
             headers: headers,
@@ -64,17 +64,14 @@ function DeleteModal({
       console.log(musicId);
       // playlistId와 musicId 모두 있을 때의 처리
       requestWithTokenRefresh(() => {
-        return axios.delete(
-          "https://j9b302a.p.ssafy.io/ws/api/playlist/music",
-          {
-            data: {
-              playlistMetaId: playlistId,
-              musicId: musicId,
-            },
-            headers: headers,
-            withCredentials: true,
-          }
-        );
+        return axios.delete("https://j9b302a.p.ssafy.io/api/playlist/music", {
+          data: {
+            playlistMetaId: playlistId,
+            musicId: musicId,
+          },
+          headers: headers,
+          withCredentials: true,
+        });
       })
         .then(response => {
           setAlertMessage("삭제되었습니다");
@@ -89,7 +86,7 @@ function DeleteModal({
     } else if (musicId) {
       // musicId만 있을 때의 처리
       requestWithTokenRefresh(() => {
-        return axios.delete("https://j9b302a.p.ssafy.io/ws/api/my-musicbox", {
+        return axios.delete("https://j9b302a.p.ssafy.io/api/my-musicbox", {
           data: { musicId: musicId },
           headers: headers,
           withCredentials: true,
@@ -109,7 +106,7 @@ function DeleteModal({
       // playlistId만 있을 때의 처리
       requestWithTokenRefresh(() => {
         return axios.delete(
-          `https://j9b302a.p.ssafy.io/ws/api/playlist/${playlistId}`,
+          `https://j9b302a.p.ssafy.io/api/playlist/${playlistId}`,
           {
             headers: headers,
             withCredentials: true,

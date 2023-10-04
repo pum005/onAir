@@ -79,7 +79,7 @@ export default function oncastMusicBox({ initialValue = 0 }) {
   //라디오 list axios
   React.useEffect(() => {
     requestWithTokenRefresh(() => {
-      return axios.get("https://j9b302a.p.ssafy.io/ws/api/oncast", {
+      return axios.get("https://j9b302a.p.ssafy.i/api/oncast", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },
