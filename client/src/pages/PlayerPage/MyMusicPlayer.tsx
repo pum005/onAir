@@ -77,7 +77,7 @@ export const MyMusicPlayer = () => {
     if (playlistMetaId) {
       requestWithTokenRefresh(() => {
         return axios.get(
-          `https://j9b302a.p.ssafy.i/api/playlist/${playlistMetaId}`,
+          `https://j9b302a.p.ssafy.io/api/playlist/${playlistMetaId}`,
           {
             headers: {
               Authorization: "Bearer " + localStorage.getItem("accessToken"),
