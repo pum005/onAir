@@ -10,6 +10,7 @@
   display: flex;
   flex-direction: column;
   align-items: center; /* 중앙에 수직 정렬 */
+  /* height: 300px; */
 }
 
 /* border-radius : 동그랗게 */
@@ -31,6 +32,7 @@
   justify-content: center;
   align-items: center;
   width: 100%;
+  /* height: 50px; */
 }
 
 .nickname {
