@@ -35,7 +35,7 @@ public class CallFlaskService {
         requestBody.put("tempo", theme.getTheme().getTempo());
 
         // 플라스크 서버 엔드포인트
-        String flaskEndpoint = "http://52.78.65.222:5000/songs";
+        String flaskEndpoint = "http://52.78.65.222:5000/hadoop/songs";
 
         // HTTP 요청 보내기
         ResponseEntity<SongIdsResponse> response = restTemplate.postForEntity(flaskEndpoint, requestBody, SongIdsResponse.class);
