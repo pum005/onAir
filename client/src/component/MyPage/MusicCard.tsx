@@ -138,7 +138,7 @@ function MusicCard({ refreshFlag }: any) {
   //음악 보관함리스트 가져오기
   React.useEffect(() => {
     requestWithTokenRefresh(() => {
-      return axios.get("https://j9b302.p.ssafy.io/api/my-musicbox", {
+      return axios.get("http://localhost:8080/api/my-musicbox", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },

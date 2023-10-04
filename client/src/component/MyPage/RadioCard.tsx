@@ -109,7 +109,7 @@ export default function RecipeReviewCard({
       // selectedMusicId가 설정되었을 때만 API 호출
       requestWithTokenRefresh(() => {
         return axios.post(
-          "https://j9b302.p.ssafy.io/api/my-musicbox",
+          "http://localhost:8080/api/my-musicbox",
           { musicId: selectedMusicId },
           {
             headers: {
