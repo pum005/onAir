@@ -125,6 +125,8 @@ div.cards {
 }
 .addIcon {
   color: rgb(75, 75, 75);
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 .songRow:hover .addIcon {
   opacity: 1;

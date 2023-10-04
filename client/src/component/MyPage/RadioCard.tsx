@@ -150,7 +150,7 @@ export default function RecipeReviewCard({
           if (response.data.message === "음악 추가 완료") {
             Swal.fire({
               icon: "success",
-              title: "전체 보관함에 음악이 추가 되었습니다!",
+              title: "전체 보관함에 추가 되었습니다!",
               confirmButtonColor: "6966FF",
               confirmButtonText: "확인",
               customClass: {

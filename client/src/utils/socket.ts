@@ -1,8 +1,8 @@
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 
-const URL = "http://localhost:8081/ws";
-// const URL = "https://j9b302a.p.ssafy.io/ws";
+// const URL = "http://localhost:8081/ws";
+const URL = "https://j9b302a.p.ssafy.io/ws";
 
 // 소켓 객체 => 싱글톤 패턴
 class SocketManager {
@@ -23,7 +23,7 @@ class SocketManager {
       const socket = new SockJS(URL);
       this.stompClient = new Client({
         webSocketFactory: () => socket,
-        debug: str => {
+        debug: (str) => {
           console.log(str);
         },
       });

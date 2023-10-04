@@ -6,6 +6,8 @@ import AlertDialog from "../Common/AddFullList";
 import PlayListModal from "../Common/PlayListModal";
 import axios from "axios";
 import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
+import CloseIcon from "@mui/icons-material/Close";
+import Swal from "sweetalert2";
 
 type ModalProps = {
   isOpen: boolean;
@@ -73,11 +75,36 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, currentMusicList }) => {
         .then((response) => {
           console.log(response.data);
           if (response.data.message === "음악 추가 완료") {
-            setOpen(true);
+            Swal.fire({
+              icon: "success",
+              title: "전체 보관함에 추가 되었습니다!",
+              confirmButtonColor: "6966FF",
+              confirmButtonText: "확인",
+              customClass: {
+                popup: "my-popup-class",
+              },
+            }).then((result) => {
+              if (result.isConfirmed) {
+                handleClose();
+              }
+            });
           }
           if (response.data.message === "이미 보관함에 있는 음악입니다.") {
-            setOpen(false);
-            alert("이미 보관함에 있는 음악입니다.");
+            // setOpen(false);
+            // alert("이미 보관함에 있는 음악입니다.");
+            Swal.fire({
+              icon: "error",
+              title: "이미 보관함에 있는 음악입니다!",
+              confirmButtonColor: "6966FF",
+              confirmButtonText: "확인",
+              customClass: {
+                popup: "my-popup-class",
+              },
+            }).then((result) => {
+              if (result.isConfirmed) {
+                handleClose();
+              }
+            });
           }
         })
         .catch((error) => {
@@ -89,44 +116,70 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, currentMusicList }) => {
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <h2>PlayList</h2>
-        <hr className={styles.hrStyle} />
-
-        {songsToShow.map((music, index) => (
-          <div
-            key={index}
-            onClick={() => handleSongClick(index)}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginTop: "10px",
-              borderBottom: "1px solid #e5e5e5",
-              paddingBottom: "5px",
-            }}
-          >
-            <img
-              src={music.albumCoverUrl}
-              alt="Album Cover"
-              style={{ width: "40px", height: "40px", marginRight: "10px" }}
-            />
-            <div style={{ flex: 2 }}>
-              <div>{music.title}</div>
-              <div style={{ color: "#888", fontSize: "0.9em" }}>
-                {music.artist}
+        <div className={styles.closeButton}>
+          <CloseIcon style={{ cursor: "pointer" }} onClick={onClose}>
+            닫기
+          </CloseIcon>
+        </div>
+        <div className={styles.playListTitle}>
+          <h2 style={{ marginTop: "10px" }}>노래 목록</h2>
+        </div>
+        {/* <hr className={styles.hrStyle} /> */}
+        <div>
+          {songsToShow.map((music, index) => (
+            <div
+              key={index}
+              onClick={() => handleSongClick(index)}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderBottom: "1px solid #626262",
+                padding: "5px",
+              }}
+              className={styles.cursorHover}
+            >
+              <img
+                src={music.albumCoverUrl}
+                alt="Album Cover"
+                style={{ width: "40px", height: "40px", marginRight: "10px" }}
+              />
+              <div style={{ flex: 2 }}>
+                <div
+                  style={{ fontFamily: "Pretendard-SemiBold" }}
+                  className={styles.musicTitle}
+                >
+                  {music.title}
+                </div>
+                <div
+                  style={{
+                    color: "#888",
+                    fontSize: "15px",
+                    fontFamily: "Pretendard-SemiBold",
+                  }}
+                >
+                  {music.artist}
+                </div>
               </div>
+              <div
+                style={{
+                  flex: 1,
+                  textAlign: "right",
+                  fontFamily: "Pretendard-SemiBold",
+                }}
+                className={styles.songDuration}
+              >
+                {formatTime(music.duration)}
+              </div>
+              <AddCircleOutlineIcon
+                style={{ marginLeft: "8px", fontSize: "20px" }}
+                onClick={(event) => handleClickOpen(event, music.musicId)}
+                cursor="pointer"
+                className={styles.addIcon}
+              />
             </div>
-            <div style={{ flex: 1, textAlign: "right" }}>
-              {formatTime(music.duration)}
-            </div>
-            <AddCircleOutlineIcon
-              style={{ marginLeft: "8px" }}
-              onClick={(event) => handleClickOpen(event, music.musicId)}
-              cursor="pointer"
-            />
-          </div>
-        ))}
-        <button onClick={onClose}>닫기</button>
+          ))}
+        </div>
       </div>
       <AlertDialog open={open} handleClose={handleClose} />
       <PlayListModal

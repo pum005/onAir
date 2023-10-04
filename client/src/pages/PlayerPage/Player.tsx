@@ -80,7 +80,7 @@ export const Player = (): ReactElement => {
         withCredentials: true,
       });
     })
-      .then(response => {
+      .then((response) => {
         console.log(response.data);
         const oncastData = response.data.oncast;
         if (oncastData.djName in DJNameMappingReverse) {
@@ -89,7 +89,7 @@ export const Player = (): ReactElement => {
         }
         setOncasts(oncastData);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("통신에러 발생", error);
       });
   }, [oncastId]);
@@ -152,8 +152,8 @@ export const Player = (): ReactElement => {
       <div
         style={{
           position: "absolute",
-          top: "120px",
-          right: "100px",
+          top: "100px",
+          right: "20px",
         }}
       >
         <QueueMusicIcon
@@ -173,8 +173,8 @@ export const Player = (): ReactElement => {
           <Music
             musicFiles={[musicFiles[currentIndex]]}
             onFinish={handleFinished}
-            onMusicChange={music =>
-              setCurrentMusicList(prev => [...prev, music])
+            onMusicChange={(music) =>
+              setCurrentMusicList((prev) => [...prev, music])
             }
           />
         )
