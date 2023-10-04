@@ -25,6 +25,7 @@ public class RankService {
     // 랭크 저장
     @Transactional
     public Map<String, Object> saveRank(RankRequestDTO requestDTO){
+        log.info(requestDTO.toString());
 
         User user = getUser.getUser();
 
@@ -40,12 +41,13 @@ public class RankService {
         }else{
             UserRank userRank = byUserUserId.get();
 
-            if(userRank.getRecord() > requestDTO.getRecord()){
+            if(userRank.getRecord() < requestDTO.getRecord()){
                 userRank.updateRecord(requestDTO.getRecord());
             }
         }
 
         Map<String, Object> result = new HashMap<>();
+        log.info("랭크 저장됨");
 
         result.put("message", "랭크 저장 성공");
         return result;

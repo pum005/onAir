@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useCallback, useRef} from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styles from './Game.module.css';
 import playerImage from '../../assets/player.png';
+import axios from 'axios';
 
 const GAME_SIZE = 600;
 const PLAYER_SIZE = 10;
 const BULLET_SIZE = 10;
 const BULLET_SPEED = 10;
-const PLAYER_SPEED = 2; 
+const PLAYER_SPEED = 2;
 
 type Bullet = {
     id: number;
@@ -23,6 +24,16 @@ const Game = () => {
     const [keysPressed, setKeysPressed] = useState<Record<string, boolean>>({});
     const [isGameStarted, setIsGameStarted] = useState(false);
 
+    // 랭킹 데이터를 저장할 상태 변수
+    const [ranking, setRanking] = useState<RankingItem[]>([]);
+
+    type RankingItem = {
+        index: number;
+        profileImage: string;
+        nickname: string;
+        record: number;
+    };
+
     const getRandomColor = () => {
         const r = Math.floor(Math.random() * 256);
         const g = Math.floor(Math.random() * 256);
@@ -34,7 +45,7 @@ const Game = () => {
     const [gameTime, setGameTime] = useState(0);
     // 게임 타이머 ID
     const gameTimerId = useRef<number | null>(null);
-    
+
     const handleKeyDown = useCallback((e: KeyboardEvent) => {
         setKeysPressed((prev) => ({ ...prev, [e.key]: true }));
     }, []);
@@ -52,7 +63,7 @@ const Game = () => {
     const generateBullet = useCallback(() => {
         const angle = Math.random() * 2 * Math.PI;
         const speed = BULLET_SPEED;
-        
+
         // Calculate start position on the edge of the circle
         const x = (GAME_SIZE / 2) + (GAME_SIZE / 2 + BULLET_SIZE) * Math.cos(angle);
         const y = (GAME_SIZE / 2) + (GAME_SIZE / 2 + BULLET_SIZE) * Math.sin(angle);
@@ -71,29 +82,29 @@ const Game = () => {
     const movePlayer = useCallback(() => {
         let dx = 0;
         let dy = 0;
-    
+
         if (keysPressed["ArrowUp"] || keysPressed["w"]) dy -= 1;
         if (keysPressed["ArrowDown"] || keysPressed["s"]) dy += 1;
         if (keysPressed["ArrowLeft"] || keysPressed["a"]) dx -= 1;
         if (keysPressed["ArrowRight"] || keysPressed["d"]) dx += 1;
-    
+
         if (dx !== 0 || dy !== 0) {
             setPlayerPosition((prev) => {
                 let newX = prev.x + dx * PLAYER_SPEED;
                 let newY = prev.y + dy * PLAYER_SPEED;
-    
+
                 const distance = Math.sqrt((newX - GAME_SIZE / 2) ** 2 + (newY - GAME_SIZE / 2) ** 2);
                 const maxDistance = GAME_SIZE / 2 - PLAYER_SIZE / 2;
-    
+
                 if (distance > maxDistance) {
                     setIsGameOver(true);  // End the game if player goes beyond the boundary
                     return prev;          // Return previous position to prevent player from moving
                 }
-    
+
                 return { x: newX, y: newY };
             });
         }
-    
+
         frameId = requestAnimationFrame(movePlayer);
     }, [keysPressed]);
 
@@ -105,6 +116,52 @@ const Game = () => {
         return () => cancelAnimationFrame(frameId);
     }, [movePlayer]);
 
+    // 게임 시작 시 랭킹 데이터 가져오기
+    useEffect(() => {
+        if (isGameStarted) {
+            axios.get('http://localhost:8080/api/minigame/rank', {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("accessToken"),
+                },
+                withCredentials: true,
+            })
+                .then(response => {
+                    setRanking(response.data);
+                })
+                .catch(error => {
+                    console.error('랭킹 데이터 가져오기 실패', error);
+                });
+        }
+    }, [isGameStarted]);
+
+    // 랭킹 갱신 함수
+    const updateRanking = () => {
+        axios.post('http://localhost:8080/api/minigame/rank',
+            { record: gameTime },
+            {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("accessToken"),
+                },
+                withCredentials: true,
+            }
+        ).then(response => {
+            console.log('랭킹이 갱신되었습니다.', response.data);
+            // 랭킹 갱신 성공 후 랭킹 정보를 다시 가져옵니다.
+            return axios.get('http://localhost:8080/api/minigame/rank', {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("accessToken"),
+                },
+                withCredentials: true,
+            });
+        }).then(response => {
+            setRanking(response.data); // 가져온 랭킹 정보로 상태를 업데이트합니다.
+            setIsGameStarted(false);   // 게임 시작 화면으로 돌아갑니다.
+        }).catch(error => {
+            console.error('랭킹 갱신 또는 가져오기 실패', error);
+        });
+    };
+
+
     useEffect(() => {
         const bulletMoveInterval = setInterval(() => {
             setBullets(prevBullets => prevBullets.map(bullet => {
@@ -114,7 +171,7 @@ const Game = () => {
             }).filter(bullet => {
                 // Remove bullets that are off screen
                 return bullet.x >= -BULLET_SIZE && bullet.x <= GAME_SIZE + BULLET_SIZE &&
-                       bullet.y >= -BULLET_SIZE && bullet.y <= GAME_SIZE + BULLET_SIZE;
+                    bullet.y >= -BULLET_SIZE && bullet.y <= GAME_SIZE + BULLET_SIZE;
             }));
         }, 50);
 
@@ -124,7 +181,7 @@ const Game = () => {
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
-    
+
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
@@ -137,7 +194,7 @@ const Game = () => {
                 const newBullet = generateBullet();
                 setBullets(prev => [...prev, newBullet]);
             }, 100);
-    
+
             return () => clearInterval(bulletInterval);
         }
     }, [generateBullet, isGameStarted]);
@@ -150,7 +207,7 @@ const Game = () => {
         } else if (isGameOver && gameTimerId.current) {
             clearInterval(gameTimerId.current);
         }
-    
+
         return () => {
             if (gameTimerId.current) {
                 clearInterval(gameTimerId.current);
@@ -185,39 +242,65 @@ const Game = () => {
         return () => cancelAnimationFrame(frameId);
     }, [movePlayer, isGameOver]);
 
-    
+
 
     return (
-        <div className={styles.gameContainer}>
-            {!isGameStarted ? (
-                <div className={styles.startScreen}>
-                    <h1>탄막 피하기</h1>
-                    <h5>원에 닿으면 죽습니다.
-                        <br />
-                        최대한 오래 살아보세요!!
-                    </h5>
-                    <button onClick={() => setIsGameStarted(true)}>시작하기</button>
-                </div>
-            ) : (
-                <>
-                <div className={styles.timer}>{formatTime(gameTime)}</div>
-                {!isGameOver && bullets.map(bullet => (
-    <div 
-        key={bullet.id} 
-        className={styles.bullet} 
-        style={{ left: bullet.x, top: bullet.y, backgroundColor: bullet.color }}
-    ></div>
-))}
-                    {!isGameOver && <div className={styles.player} style={{ left: playerPosition.x, top: playerPosition.y, backgroundImage: `url(${playerImage})`, 
-            backgroundSize: 'cover'  }}></div>}
-                    {isGameOver && (
-                        <div className={styles.gameOver}>
-                            <div className={styles.centerTimer}>시간: {formatTime(gameTime)}</div>
-                            <button className={styles.reButton} onClick={restartGame}>다시하기</button>
-                        </div>
-                    )}
-                </>
-            )}
+        <div className={styles.gameWithRankingContainer}>
+            <div className={styles.gameContainer}>
+                {!isGameStarted ? (
+                    <div className={styles.startScreen}>
+                        <h1>탄막 피하기</h1>
+                        <h5>원에 닿으면 죽습니다.
+                            <br />
+                            최대한 오래 살아보세요!!
+                        </h5>
+                        <button onClick={() => {
+                            setIsGameStarted(true);
+                            setIsGameOver(false);  // 게임 오버 상태를 초기화합니다.
+                            setGameTime(0); // 게임 시간 초기화
+                            setPlayerPosition({ x: (GAME_SIZE - PLAYER_SIZE) / 2, y: (GAME_SIZE - PLAYER_SIZE) / 2 }); // 플레이어 위치 초기화
+                            setBullets([]); // 탄막들 초기화
+                        }}>시작하기</button>
+                    </div>
+                ) : (
+                    <>
+                        <div className={styles.timer}>{formatTime(gameTime)}</div>
+                        {!isGameOver && bullets.map(bullet => (
+                            <div
+                                key={bullet.id}
+                                className={styles.bullet}
+                                style={{ left: bullet.x, top: bullet.y, backgroundColor: bullet.color }}
+                            ></div>
+                        ))}
+                        {!isGameOver && <div className={styles.player} style={{
+                            left: playerPosition.x, top: playerPosition.y, backgroundImage: `url(${playerImage})`,
+                            backgroundSize: 'cover'
+                        }}></div>}
+                        {isGameOver && (
+                            <div className={styles.gameOver}>
+                                <div className={styles.centerTimer}>시간: {formatTime(gameTime)}</div>
+                                <button className={styles.reButton} onClick={restartGame} style={{ marginRight: '10px' }}>다시하기</button>
+                                <button className={styles.reButton} onClick={updateRanking}>랭킹 등록</button>
+                            </div>
+                        )}
+                    </>
+                )}
+
+            </div>
+            { /* 랭킹 표시 */}
+            <div className={styles.rankingContainer}>
+                <h2>Top Ranking</h2>
+                <ul>
+                    {ranking.map((user, index) => (
+                        <li key={user.index}>
+                            <span>{`${index + 1}등`}</span>
+                            <img src={user.profileImage} alt={`${user.nickname}'s profile`} />
+                            <span>{user.nickname}</span>
+                            <span>{formatTime(user.record)}</span> {/* 시간을 포맷하여 출력합니다. */}
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };
