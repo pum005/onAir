@@ -19,12 +19,27 @@
   margin-top: 20px;
 }
 
-.ball {
+.game {
+  width: 800px;
+  height: 800px;
+  background-color: #e4e4e4;
+  position: relative;
+  overflow: hidden;
+}
+
+.player {
   width: 50px;
   height: 50px;
-  background-color: red;
-  border-radius: 50%;
+  background-color: blue;
   position: absolute;
-  cursor: pointer;
-  transition: 0.2s ease;
+  bottom: 0;
+  left: 50px;
+}
+
+.obstacle {
+  width: 30px;
+  height: 50px;
+  background-color: red;
+  position: absolute;
+  bottom: 0;
 }
