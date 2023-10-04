@@ -60,7 +60,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, currentMusicList }) => {
     if (selectedMusicId) {
       requestWithTokenRefresh(() => {
         return axios.post(
-          "http://localhost:8080/api/my-musicbox",
+          "https://j9b302a.p.ssafy.io/ws/api/my-musicbox",
           { musicId: selectedMusicId },
           {
             headers: {
@@ -70,7 +70,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, currentMusicList }) => {
           }
         );
       })
-        .then((response) => {
+        .then(response => {
           console.log(response.data);
           if (response.data.message === "음악 추가 완료") {
             setOpen(true);
@@ -80,7 +80,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, currentMusicList }) => {
             alert("이미 보관함에 있는 음악입니다.");
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("에러발생", error);
         });
     }
@@ -121,7 +121,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, currentMusicList }) => {
             </div>
             <AddCircleOutlineIcon
               style={{ marginLeft: "8px" }}
-              onClick={(event) => handleClickOpen(event, music.musicId)}
+              onClick={event => handleClickOpen(event, music.musicId)}
               cursor="pointer"
             />
           </div>

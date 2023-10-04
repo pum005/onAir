@@ -49,12 +49,15 @@ export const LivePlayer = () => {
     const fetchOncastList = async () => {
       try {
         const response = await requestWithTokenRefresh(() => {
-          return axios.get("http://localhost:8080/api/oncast/livelist", {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("accessToken"),
-            },
-            withCredentials: true,
-          });
+          return axios.get(
+            "https://j9b302a.p.ssafy.io/ws/api/oncast/livelist",
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("accessToken"),
+              },
+              withCredentials: true,
+            }
+          );
         });
         setOncastList(response.data.oncast);
         console.log(response.data.oncast);

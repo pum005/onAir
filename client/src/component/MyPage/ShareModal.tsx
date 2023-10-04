@@ -28,7 +28,7 @@ function ShareModal({
 
     requestWithTokenRefresh(() => {
       return axios.patch(
-        `http://localhost:8080/api/oncast/shares/${oncastId}`,
+        `https://j9b302a.p.ssafy.io/ws/api/oncast/shares/${oncastId}`,
         {},
         {
           headers: {
@@ -38,7 +38,7 @@ function ShareModal({
         }
       );
     })
-      .then((response) => {
+      .then(response => {
         console.log(response.data);
         if (response.data.message === "이미 공유된 온캐스트입니다.") {
           Swal.fire({
@@ -77,7 +77,7 @@ function ShareModal({
           });
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("통신에러 발생", error);
       });
 
