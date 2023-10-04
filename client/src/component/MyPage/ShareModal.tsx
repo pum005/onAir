@@ -28,7 +28,7 @@ function ShareModal({
 
     requestWithTokenRefresh(() => {
       return axios.patch(
-        `https://j9b302a.p.ssafy.io/ws/api/oncast/shares/${oncastId}`,
+        `https://j9b302a.p.ssafy.io/api/oncast/shares/${oncastId}`,
         {},
         {
           headers: {
