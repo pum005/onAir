@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class RankResponseDTO {
 
-    private Long userId;
+    private int index;
+    private String profileImage;
+    private String nickname;
     private Long record;
 }
