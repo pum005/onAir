@@ -29,7 +29,7 @@ function MusicBoxModal({
     if (title) {
       requestWithTokenRefresh(() => {
         return axios.post(
-          "http://localhost:8080/api/playlist",
+          "https://j9b302.p.ssafy.io/api/playlist",
           { playlistName: title },
           {
             headers: {
@@ -39,10 +39,10 @@ function MusicBoxModal({
           }
         );
       })
-        .then((response) => {
+        .then(response => {
           console.log(response.data.message);
         })
-        .catch((error) => {
+        .catch(error => {
           console.log("통신에러발생", error);
         });
     }
@@ -54,7 +54,7 @@ function MusicBoxModal({
         <Typography id="modal-modal-title" variant="h6" component="h2">
           보관함 추가
         </Typography>
-        <input value={title} onChange={(e) => setTitle(e.target.value)} />
+        <input value={title} onChange={e => setTitle(e.target.value)} />
         <Button onClick={onClose}>닫기</Button>
         <button onClick={addMusicBox}>추가버튼</button>
       </Box>

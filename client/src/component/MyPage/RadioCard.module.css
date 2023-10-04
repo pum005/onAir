@@ -1,26 +1,31 @@
 .gifImage {
-  width: 200px;
-  height: 200px;
+  width: 100px;
+  height: 100px;
   /* GIF의 원래 높이에 맞게 설정하세요 */
   margin: 10px auto;
-  background-image: url('../../assets/lp.png');
+  background-image: url("../../assets/lp.png");
   /* 첫 프레임 이미지의 경로 */
   background-size: cover;
   background-repeat: no-repeat;
 }
 
+.mainCard {
+  display: flex;
+  justify-content: center;
+  /* margin: 50px; */
+}
 .gifImage:hover {
-  background-image: url('../../assets/lp.gif');
+  background-image: url("../../assets/lp.gif");
   /* 첫 프레임 이미지의 경로 */
 }
 
-
 div.cards {
   background-color: #222222;
-  max-width: 290px;
-  border-radius: 12px;
+  /* max-width: 250px; */
+  width: 250px;
+  border-radius: 10px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-  height: 580px;
+  height: 450px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -34,7 +39,7 @@ div.cards {
 }
 
 .subheader {
-  padding: 15px 0px 15px 0px;
+  padding: 5px 0px 5px 0px;
   color: white;
   font-size: 25px !important;
   text-align: center;
@@ -111,7 +116,7 @@ div.cards {
 .addIcon:hover {
   cursor: pointer;
   color: white;
-  transform: scale(1.10);
+  transform: scale(1.1);
 }
 
 .shareIcon {
@@ -122,7 +127,7 @@ div.cards {
 .shareIcon:hover {
   cursor: pointer;
   color: white;
-  transform: scale(1.10);
+  transform: scale(1.1);
 }
 
 .playIcon {
@@ -133,7 +138,7 @@ div.cards {
 .playIcon:hover {
   cursor: pointer;
   color: white;
-  transform: scale(1.10);
+  transform: scale(1.1);
 }
 
 .deleteIcon {
@@ -144,7 +149,7 @@ div.cards {
 .deleteIcon:hover {
   cursor: pointer;
   color: white;
-  transform: scale(1.10);
+  transform: scale(1.1);
 }
 
 .actions {
@@ -158,7 +163,7 @@ div.cards {
   position: absolute;
   right: 8px;
   bottom: 8px;
-  color: #FF5C58;
+  color: #ff5c58;
 }
 
 /* Input 보통 글씨체  */

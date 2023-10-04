@@ -287,7 +287,7 @@ body .css-zow5z4-MuiGrid-root > .MuiGrid-item {
 button.albumTrueButton {
   position: fixed;
   right: 10px;
-  bottom: 50px; /* 맨 밑에서 조금 떨어진 위치 */
+  bottom: 50px;
   width: 50px;
   height: 50px;
   z-index: 1001;
@@ -300,7 +300,8 @@ button.albumTrueButton {
 .nextMusicItem {
   display: flex;
   justify-content: space-between;
-  align-items: end;
+  align-items: flex-end;
+  /* align-items: end; */
   font-family: "Pretendard-SemiBold";
 }
 
