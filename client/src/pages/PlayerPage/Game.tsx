@@ -57,9 +57,12 @@ const Game = () => {
         const x = (GAME_SIZE / 2) + (GAME_SIZE / 2 + BULLET_SIZE) * Math.cos(angle);
         const y = (GAME_SIZE / 2) + (GAME_SIZE / 2 + BULLET_SIZE) * Math.sin(angle);
 
+        const deviation = (Math.random() - 0.5) * Math.PI / 3; // Deviating up to 60 degrees from the center
+        const adjustedAngle = angle + deviation;
+
         const velocity = {
-            x: -speed * Math.cos(angle),
-            y: -speed * Math.sin(angle)
+            x: -speed * Math.cos(adjustedAngle),
+            y: -speed * Math.sin(adjustedAngle)
         };
 
         return { id: Date.now(), x, y, velocity, color: getRandomColor() };
@@ -209,8 +212,8 @@ const Game = () => {
             backgroundSize: 'cover'  }}></div>}
                     {isGameOver && (
                         <div className={styles.gameOver}>
-                            <div>시간: {formatTime(gameTime)}</div>
-                            <button onClick={restartGame}>다시하기</button>
+                            <div className={styles.centerTimer}>시간: {formatTime(gameTime)}</div>
+                            <button className={styles.reButton} onClick={restartGame}>다시하기</button>
                         </div>
                     )}
                 </>

@@ -31,7 +31,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgb(0, 0, 0);
     padding: 20px;
     border-radius: 10px;
 }
@@ -85,4 +85,23 @@
     font-size: 1.5em; /* optional, for better visibility */
     color: rgb(0, 0, 0); /* or any color that contrasts with your background */
     z-index: 10; /* optional, to ensure it's on top */
+}
+
+.centerTimer{
+    color: white;
+}
+
+button.reButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #e5f2ff;
+    color: rgb(0, 0, 0);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.reButton:hover {
+    background-color: #9ecdff;
 }
