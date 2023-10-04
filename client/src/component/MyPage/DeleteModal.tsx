@@ -40,7 +40,7 @@ function DeleteModal({
     if (oncastId) {
       requestWithTokenRefresh(() => {
         return axios.patch(
-          `http://localhost:8080/api/oncast/${oncastId}`,
+          `https://j9b302.p.ssafy.io/api/oncast/${oncastId}`,
           {},
           {
             headers: headers,
@@ -48,7 +48,7 @@ function DeleteModal({
           }
         );
       })
-        .then((response) => {
+        .then(response => {
           console.log("OnCast Update 성공!", response);
           setAlertMessage("삭제되었습니다");
           setShowAlertModal(true);
@@ -56,7 +56,7 @@ function DeleteModal({
             setRefreshKey();
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("Error updating oncast", error);
         });
     } else if (playlistId && musicId) {
@@ -64,7 +64,7 @@ function DeleteModal({
       console.log(musicId);
       // playlistId와 musicId 모두 있을 때의 처리
       requestWithTokenRefresh(() => {
-        return axios.delete("http://localhost:8080/api/playlist/music", {
+        return axios.delete("https://j9b302.p.ssafy.io/api/playlist/music", {
           data: {
             playlistMetaId: playlistId,
             musicId: musicId,
@@ -73,54 +73,54 @@ function DeleteModal({
           withCredentials: true,
         });
       })
-        .then((response) => {
+        .then(response => {
           setAlertMessage("삭제되었습니다");
           setShowAlertModal(true);
           if (setRefreshKey) {
             setRefreshKey();
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("Error deleting the music from playlist", error);
         });
     } else if (musicId) {
       // musicId만 있을 때의 처리
       requestWithTokenRefresh(() => {
-        return axios.delete("http://localhost:8080/api/my-musicbox", {
+        return axios.delete("https://j9b302.p.ssafy.io/api/my-musicbox", {
           data: { musicId: musicId },
           headers: headers,
           withCredentials: true,
         });
       })
-        .then((response) => {
+        .then(response => {
           setAlertMessage("삭제되었습니다");
           setShowAlertModal(true);
           if (setRefreshKey) {
             setRefreshKey();
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("Error deleting the music", error);
         });
     } else if (playlistId) {
       // playlistId만 있을 때의 처리
       requestWithTokenRefresh(() => {
         return axios.delete(
-          `http://localhost:8080/api/playlist/${playlistId}`,
+          `https://j9b302.p.ssafy.io/api/playlist/${playlistId}`,
           {
             headers: headers,
             withCredentials: true,
           }
         );
       })
-        .then((response) => {
+        .then(response => {
           setAlertMessage("삭제되었습니다");
           setShowAlertModal(true);
           if (refresh) {
             refresh();
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("Error deleting the playlist", error);
         });
     } else {

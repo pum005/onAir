@@ -43,21 +43,24 @@ const PlayListMusicDetailModal: React.FC<MusicDetailModalProps> = ({
     if (!isOpen || !playlistMetaId) return; // isOpen이 false거나 playlistMetaId가 없으면 아무 작업도 수행하지 않습니다.
 
     requestWithTokenRefresh(() => {
-      return axios.get(`http://localhost:8080/api/playlist/${playlistMetaId}`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("accessToken"),
-        },
-        withCredentials: true,
-      });
+      return axios.get(
+        `https://j9b302.p.ssafy.io/api/playlist/${playlistMetaId}`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        }
+      );
     })
-      .then((response) => {
+      .then(response => {
         if (response.data?.length === 0 || !response.data) {
           setSongs([]);
         } else {
           setSongs(response.data);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("데이터 가져오기 오류", error);
       });
   }, [isOpen, playlistMetaId, refreshKey]);
@@ -147,7 +150,7 @@ const PlayListMusicDetailModal: React.FC<MusicDetailModalProps> = ({
                   {formatTime(song.duration)}
                   <MoreVertIcon
                     style={{ marginLeft: "8px", cursor: "pointer" }}
-                    onClick={(event) => handleMenuOpen(event, index)}
+                    onClick={event => handleMenuOpen(event, index)}
                   />
                 </div>
               </div>
@@ -181,7 +184,7 @@ const PlayListMusicDetailModal: React.FC<MusicDetailModalProps> = ({
           setDeleteListModalOpen(false);
           setSelectedSong(null);
         }}
-        setRefreshKey={() => setRefreshKey((prev) => !prev)}
+        setRefreshKey={() => setRefreshKey(prev => !prev)}
         playlistId={playlistMetaId}
       />
     </>

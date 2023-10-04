@@ -77,7 +77,7 @@ export const MyMusicPlayer = () => {
     if (playlistMetaId) {
       requestWithTokenRefresh(() => {
         return axios.get(
-          `http://localhost:8080/api/playlist/${playlistMetaId}`,
+          `https://j9b302.p.ssafy.io/api/playlist/${playlistMetaId}`,
           {
             headers: {
               Authorization: "Bearer " + localStorage.getItem("accessToken"),
@@ -86,7 +86,7 @@ export const MyMusicPlayer = () => {
           }
         );
       })
-        .then((response) => {
+        .then(response => {
           // 이부분 message 안뜸
           if (response.data) {
             setMusicData(response.data);
@@ -102,19 +102,19 @@ export const MyMusicPlayer = () => {
             setMusicData([]);
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("axios 에러", error);
         });
     } else {
       requestWithTokenRefresh(() => {
-        return axios.get("http://localhost:8080/api/my-musicbox/info", {
+        return axios.get("https://j9b302.p.ssafy.io/api/my-musicbox/info", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
           },
           withCredentials: true,
         });
       })
-        .then((response) => {
+        .then(response => {
           if (response.data.message === "보관함에 음악이 없습니다.") {
             Swal.fire({
               icon: "error",
@@ -129,7 +129,7 @@ export const MyMusicPlayer = () => {
             store.dispatch(setMusicDataTemp(musicDataArray));
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("axios 에러", error);
         });
     }
@@ -251,7 +251,7 @@ export const MyMusicPlayer = () => {
                   >
                     <DeleteOutlineIcon
                       className={styles.deleteIcon}
-                      onClick={(event) => {
+                      onClick={event => {
                         event.stopPropagation();
                         handleDeleteIconClick(song.musicId); // pass the song ID to be deleted
                       }}
@@ -270,14 +270,14 @@ export const MyMusicPlayer = () => {
         isOpen={isSearchModalOpen}
         onClose={handleSearchModalClose} // 모달 바깥쪽을 클릭하면 모달을 닫는다.
         playlistId={playlistMetaId}
-        setRefreshKey={() => setRefreshKey((prev) => !prev)}
+        setRefreshKey={() => setRefreshKey(prev => !prev)}
       />
       <DeleteModal
         isOpen={isDeleteModalOpen}
         onClose={handleDeleteModalClose} // 모달 바깥쪽을 클릭하면 모달을 닫는다.
         musicId={deletingMusicId}
         playlistId={playlistMetaId}
-        setRefreshKey={() => setRefreshKey((prev) => !prev)}
+        setRefreshKey={() => setRefreshKey(prev => !prev)}
       />
     </div>
   );
