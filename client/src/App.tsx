@@ -1,6 +1,7 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
+import Game from "./pages/PlayerPage/Game"; // 경로를 실제 Game 컴포넌트의 경로로 바꾸세요
 
 import CreateRadio from "./pages/HomePage/CreateRadio";
 import { Home } from "./pages/HomePage/Home";
