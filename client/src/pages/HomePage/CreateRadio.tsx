@@ -165,7 +165,8 @@ const CreateRadio = () => {
       DJNameMapping[selectedDJ as keyof typeof DJNameMapping];
     requestWithTokenRefresh(() => {
       return axios.post(
-        "http://localhost:8080/api/oncast/create",
+        "https://j9b302.p.ssafy.io/api/oncast/create",
+        // dd
         {
           title: title,
           theme: selectedTheme,
@@ -180,7 +181,7 @@ const CreateRadio = () => {
         }
       );
     })
-      .then((response) => {
+      .then(response => {
         console.log(response);
         if (response.status === 200) {
           setIsLoading(false);
@@ -189,7 +190,7 @@ const CreateRadio = () => {
           alert("온캐스트 생성에 실패했습니다.");
         }
       })
-      .catch((error) => {
+      .catch(error => {
         setIsLoading(false);
 
         console.log("통신에러 발생", error);
@@ -213,7 +214,7 @@ const CreateRadio = () => {
                 <Grid item xs={9.5}>
                   <textarea
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={e => setTitle(e.target.value)}
                     className={styles.titleInput}
                   />
                 </Grid>

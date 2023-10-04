@@ -56,7 +56,7 @@ function NickNameModal({
   useEffect(() => {
     if (submitClicked) {
       requestWithTokenRefresh(() => {
-        return axios.get("http://localhost:8080/api/user/check-nickname", {
+        return axios.get("https://j9b302.p.ssafy.io/api/user/check-nickname", {
           params: {
             nickName: newNickName,
           },
@@ -66,11 +66,11 @@ function NickNameModal({
           withCredentials: true,
         });
       })
-        .then((Response) => {
+        .then(Response => {
           if (Response.data === false) {
             return axios
               .put(
-                "http://localhost:8080/api/user/nickname/update",
+                "https://j9b302.p.ssafy.io/api/user/nickname/update",
                 {
                   nickname: newNickName,
                 },
@@ -115,7 +115,7 @@ function NickNameModal({
             setSubmitClicked(false);
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("닉네임 변경 에러 발생", error);
           setSubmitClicked(false);
         });

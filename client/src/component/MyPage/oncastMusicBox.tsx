@@ -73,27 +73,27 @@ export default function oncastMusicBox({ initialValue = 0 }) {
   }, [initialValue]);
 
   const refresh = () => {
-    setRefreshKey((prevKey) => !prevKey);
+    setRefreshKey(prevKey => !prevKey);
   };
 
   //라디오 list axios
   React.useEffect(() => {
     requestWithTokenRefresh(() => {
-      return axios.get("http://localhost:8080/api/oncast", {
+      return axios.get("https://j9b302.p.ssafy.io/api/oncast", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },
         withCredentials: true,
       });
     })
-      .then((response) => {
+      .then(response => {
         if (response.data.message) {
           setMessage(response.data.message);
         } else {
           setOncasts(response.data.oncasts);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("통신에러 발생", error);
       });
   }, [refreshKey]);
@@ -127,7 +127,7 @@ export default function oncastMusicBox({ initialValue = 0 }) {
           onChange={handleChange}
           aria-label="basic tabs example"
           sx={{
-            paddingLeft: "250px",
+            paddingLeft: "226px",
             ".Mui-selected": {
               // 활성 Tab 스타일
               color: "#000",
@@ -135,7 +135,7 @@ export default function oncastMusicBox({ initialValue = 0 }) {
               backgroundColor: "#646464",
               borderTopLeftRadius: "15px", // 상단 왼쪽 둥글게
               borderTopRightRadius: "15px", // 상단 오른쪽 둥글게
-              margin: "0 10px", // 좌우 여백 추가
+              // margin: "0 10px", // 좌우 여백 추가
             },
             ".MuiTab-root": {
               // 비활성 Tab 스타일 및 간격 설정
@@ -192,7 +192,7 @@ export default function oncastMusicBox({ initialValue = 0 }) {
         ) : (
           <div
             style={{
-              margin: "0px 150px 0px 150px",
+              margin: "0px 215px 0px 215px",
               display: "flex",
               flexWrap: "wrap",
               overflowY: "auto",
@@ -213,7 +213,7 @@ export default function oncastMusicBox({ initialValue = 0 }) {
                   shareCheck={data.shareCheck}
                   selectCheck={data.selectCheck}
                   refreshkey={refresh}
-                  songs={data.musicList.map((song) => ({
+                  songs={data.musicList.map(song => ({
                     musicId: song.musicId,
                     songTitle: song.title,
                     artist: song.artist,
@@ -235,7 +235,7 @@ export default function oncastMusicBox({ initialValue = 0 }) {
         isOpen={isSearchModalOpen}
         onClose={() => {
           handleSearchModalClose();
-          setRefreshFlag((prev) => !prev);
+          setRefreshFlag(prev => !prev);
         }}
       />
     </Box>
