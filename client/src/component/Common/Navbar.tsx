@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -20,6 +20,8 @@ import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
+import { socketConnection } from "../../utils/socket.atom";
+import SocketManager from "../../utils/socket";
 
 function NavBar() {
   const navigate = useNavigate();
@@ -35,6 +37,29 @@ function NavBar() {
   const [userImage, setUserImage] = useState<null | FileList>(null); // 사용자가 업로드한 이미지
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null); //햄버거 버튼 상태 관리
+  const [isLive, setIsLive] = useState(false);
+
+  useEffect(() => {
+    socketConnection(
+      data => {
+        // "operation" 값에 따라 라이브 상태를 결정합니다.
+        if (data.operation === "ONCAST") {
+          setIsLive(true);
+        } else {
+          setIsLive(false);
+        }
+      },
+      // 채팅 데이터 처리는 이 예제에서는 필요하지 않으므로 빈 함수를 전달합니다.
+      () => {},
+      () => {}
+    );
+
+    // 컴포넌트 언마운트 시 소켓 연결 종료
+    return () => {
+      let socketManager = SocketManager.getInstance();
+      socketManager.disconnect();
+    };
+  }, []);
 
   //메뉴 버튼 클릭
   const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -268,8 +293,8 @@ function NavBar() {
             >
               <Button onClick={handleImageClick}>
                 <img
-                  src="images/LiveLogo.png"
-                  alt="unlive"
+                  src={isLive ? "gif/live.gif" : "images/LiveLogo.png"}
+                  alt={isLive ? "live" : "unlive"}
                   className={style.liveImage}
                 />
               </Button>
