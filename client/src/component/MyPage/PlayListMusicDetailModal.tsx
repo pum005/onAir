@@ -44,7 +44,7 @@ const PlayListMusicDetailModal: React.FC<MusicDetailModalProps> = ({
 
     requestWithTokenRefresh(() => {
       return axios.get(
-        `https://j9b302.p.ssafy.io/api/playlist/${playlistMetaId}`,
+        `http://localhost:8080/api/playlist/${playlistMetaId}`,
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
