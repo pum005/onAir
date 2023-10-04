@@ -85,10 +85,6 @@ public class OncastService {
             throw new OncastAlreadyCreateException("오늘은 이미 온캐스트를 생성하셨습니다. 00시 이후로 다시 만들어주세요.");
         }
 
-//        String exstory = "오늘 하루종일 비가 와서 너무 힘들었습니다. 비가 오는날마다 너무 습하고 밖을 못돌아다녀서요. " +
-//                "저는 밖에서 산책하고 사람들을 만나는걸 좋아하기 때문이에요.\n" +
-//                "비오는날에도 행복할 수 있게 비를 맘껏 즐길 수 있는 하루가 되었으면 좋겠어요!";
-
         OncastCreateData ocd = OncastCreateData.builder()
                 .title(request.getTitle())
                 .theme(request.getTheme())
@@ -98,7 +94,6 @@ public class OncastService {
 
 
         // 음악 추천받는 로직
-
         SongIdsResponse ids = callFlaskService.getMusicData(request.getStory(),request.getTheme());
 
         Map<String,Object> RecommendResult = musicService.recommendMusic(new MusicRecommendRequestDTO(ids.getSong_ids()));
@@ -257,20 +252,21 @@ public class OncastService {
 
             String createTime = convertToFormattedString(oncast.getCreateTime());
 
-            GetOncastDTO oncastDTO = new GetOncastDTO();
-            oncastDTO.setOncastId(oncast.getOncastId());
-            oncastDTO.setCreateTime(createTime);
-            oncastDTO.setTitle(oncastCreateData.getTitle());
-            oncastDTO.setShareCheck(oncast.isShareCheck());
-            oncastDTO.setSelectCheck(oncast.isSelectCheck());
-
             List<GetMusicDTO> musicDTOs = new ArrayList<>();
             musicDTOs.add(convertToDTO(oncast.getMusic1()));
             musicDTOs.add(convertToDTO(oncast.getMusic2()));
             musicDTOs.add(convertToDTO(oncast.getMusic3()));
 
-            oncastDTO.setMusicList(musicDTOs);
-            return oncastDTO;
+            GetOncastDTO build = GetOncastDTO.builder()
+                    .oncastId(oncast.getOncastId())
+                    .theme(String.valueOf(oncastCreateData.getTheme()))
+                    .createTime(createTime)
+                    .title(oncastCreateData.getTitle())
+                    .shareCheck(oncast.isShareCheck())
+                    .selectCheck(oncast.isSelectCheck())
+                    .musicList(musicDTOs).build();
+
+            return build;
         }).collect(Collectors.toList());
 
         result.put("oncasts", oncastDTOs);
