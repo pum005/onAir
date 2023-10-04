@@ -1,6 +1,7 @@
 package com.b302.zizon.domain.rank.service;
 
 import com.b302.zizon.domain.rank.dto.RankRequestDTO;
+import com.b302.zizon.domain.rank.dto.RankResponseDTO;
 import com.b302.zizon.domain.rank.entity.UserRank;
 import com.b302.zizon.domain.rank.repository.RankRepository;
 import com.b302.zizon.domain.user.GetUser;
@@ -10,9 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -50,5 +49,28 @@ public class RankService {
 
         result.put("message", "랭크 저장 성공");
         return result;
+    }
+
+     //기록 가져오기
+    public List<RankResponseDTO> getRanking(){
+        User user = getUser.getUser();
+
+        List<UserRank> top10ByRecord = rankRepository.findTop10ByRecord();
+
+        List<RankResponseDTO> responseDTOList = new ArrayList<>();
+        int count = 1;
+
+        for(UserRank u : top10ByRecord){
+            RankResponseDTO dto = new RankResponseDTO();
+            dto.setIndex(count++);
+            dto.setNickname(u.getUser().getNickname());
+            dto.setProfileImage(u.getUser().getProfileImage());
+            dto.setRecord(u.getRecord());
+
+            responseDTOList.add(dto);
+        }
+
+        return responseDTOList;
+
     }
 }

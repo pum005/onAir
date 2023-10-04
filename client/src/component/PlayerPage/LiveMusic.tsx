@@ -108,7 +108,8 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
       }}
     >
       <h2 style={{ fontStyle: "italic" }}>{currentMusic.title}</h2>
-      <p>{currentMusic.artist}</p>
+      <p style={{ fontFamily: "Shilla_Gothic-Bold" }}>{currentMusic.artist}</p>
+
       <div
         style={{
           display: "flex",
