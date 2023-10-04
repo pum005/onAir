@@ -42,7 +42,7 @@ function ImgModal({
 
       requestWithTokenRefresh(() => {
         return axios.put(
-          "http://localhost:8080/api/user/profile/update",
+          "https://j9b302.p.ssafy.io/api/user/profile/update",
           formData,
           {
             headers: {
@@ -57,7 +57,7 @@ function ImgModal({
           onImageConfirm();
           setSubmitClicked(false);
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("이미지 변경 실패:", error);
           setSubmitClicked(false);
         });

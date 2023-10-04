@@ -100,7 +100,7 @@ export default function RecipeReviewCard({
       // selectedMusicId가 설정되었을 때만 API 호출
       requestWithTokenRefresh(() => {
         return axios.post(
-          "http://localhost:8080/api/my-musicbox",
+          "https://j9b302.p.ssafy.io/api/my-musicbox",
           { musicId: selectedMusicId },
           {
             headers: {
@@ -178,7 +178,7 @@ export default function RecipeReviewCard({
                 <div className={styles.songTitle}>{song.songTitle}</div>
                 <div className={styles.songArtist}>{song.artist}</div>
               </div>
-              <div className={styles.songDuration}>{song.duration}</div>
+              {/* <div className={styles.songDuration}>{song.duration}</div> */}
               <AddCircleOutlineIcon
                 className={styles.addIcon}
                 onClick={() => handleClickOpen(song.musicId)}
