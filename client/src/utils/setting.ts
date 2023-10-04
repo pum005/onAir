@@ -13,3 +13,5 @@ $.interceptors.request.use((config) => {
   config.headers["token"] = sessionStorage.getItem("token");
   return config;
 });
+
+//찍
