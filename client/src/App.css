@@ -320,3 +320,12 @@ div:where(.swal2-icon).swal2-success {
   text-decoration: none;
   background-color: transparent !important;
 }
+
+.css-h4y409-MuiList-root {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  padding-top: 8px;
+  padding-bottom: 0px !important;
+}
