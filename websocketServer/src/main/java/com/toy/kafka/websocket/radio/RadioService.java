@@ -334,7 +334,6 @@ public class RadioService {
     }
 
     private void resetInfo() {
-        seq = 0L;
         type = "none";
         path = "";
         title = "";
