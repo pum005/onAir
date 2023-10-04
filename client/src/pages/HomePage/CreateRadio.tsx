@@ -128,7 +128,25 @@ const CreateRadio = () => {
       return;
     }
 
-    CreateOncast();
+    Swal.fire({
+      icon: "info",
+      title: "라디오를 생성하시겠습니까?",
+      text: "2분정도 소요됩니다. 게임을 하시면서 잠시만 기다려주세요 . . .",
+      showCancelButton: true,
+      confirmButtonColor: "6966FF",
+      confirmButtonText: "확인",
+      cancelButtonColor: "#DA0037",
+      cancelButtonText: "취소",
+      customClass: {
+        popup: "my-popup-class",
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        CreateOncast();
+      } else {
+        return;
+      }
+    });
   };
 
   const handleThemeSelect = (theme: string) => {
@@ -181,7 +199,7 @@ const CreateRadio = () => {
         }
       );
     })
-      .then(response => {
+      .then((response) => {
         console.log(response);
         if (response.status === 200) {
           setIsGame(false);
@@ -190,9 +208,24 @@ const CreateRadio = () => {
           alert("온캐스트 생성에 실패했습니다.");
         }
       })
-      .catch(error => {
+      .catch((error) => {
         setIsGame(false);
-
+        if (
+          error.response.data ===
+          "오늘은 이미 온캐스트를 생성하셨습니다. 00시 이후로 다시 만들어주세요."
+        ) {
+          Swal.fire({
+            icon: "warning",
+            title:
+              "오늘은 이미 온캐스트를 생성하셨습니다. 00시 이후로 다시 만들어주세요.",
+            // text: "오늘은 이미 온캐스트를 생성하셨습니다. 00시 이후로 다시 만들어주세요.",
+            confirmButtonColor: "6966FF",
+            confirmButtonText: "확인",
+            customClass: {
+              popup: "my-popup-class",
+            },
+          });
+        }
         console.log("통신에러 발생", error);
       });
   };
@@ -200,15 +233,17 @@ const CreateRadio = () => {
     <div>
       {/* <NavBar /> */}
       {isGame ? (
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '80vh',
-          marginTop: "50px"
-      }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "80vh",
+            marginTop: "50px",
+          }}
+        >
           <Game />
-      </div>
+        </div>
       ) : (
         <div className={styles.container}>
           <div>
@@ -222,7 +257,7 @@ const CreateRadio = () => {
                 <Grid item xs={9.5}>
                   <textarea
                     value={title}
-                    onChange={e => setTitle(e.target.value)}
+                    onChange={(e) => setTitle(e.target.value)}
                     className={styles.titleInput}
                   />
                 </Grid>
