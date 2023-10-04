@@ -107,6 +107,20 @@ export const LivePlayer = () => {
                 navigate("/"); // 홈페이지로 이동
               }
             });
+          } else if (data.operation === "BEFORE") {
+            Swal.fire({
+              icon: "error",
+              title: "라이브 시작 전입니다!",
+              confirmButtonColor: "6966FF",
+              confirmButtonText: "확인",
+              customClass: {
+                popup: "my-popup-class",
+              },
+            }).then(result => {
+              if (result.isConfirmed) {
+                navigate("/"); // 홈페이지로 이동
+              }
+            });
           }
         } else {
           console.error("Invalid data received:", data);
