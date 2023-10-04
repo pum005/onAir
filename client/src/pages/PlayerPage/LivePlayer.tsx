@@ -60,10 +60,8 @@ export const LivePlayer = () => {
         });
         setOncastList(response.data.oncast);
         console.log(response.data.oncast);
-        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching oncast data:", error);
-        setIsLoading(false);
       }
     };
 
@@ -72,11 +70,13 @@ export const LivePlayer = () => {
     socketConnection(
       // 첫 번째 콜백: 음악 데이터를 처리합니다.
       (data: MusicData) => {
+        setIsLoading(false);
         console.log("소켓 연결 후 서버에서 데이터 받아옴");
         console.log("Received Data:", data);
         if (data && typeof data === "object" && "data" in data) {
           setMusicData(data);
           setCurrentSeq(data.data.seq - 1); // seq 값을 저장
+
           // operation 값이 'END'일 때 경고창 띄우기
           if (data.operation === "END") {
             Swal.fire({
@@ -148,7 +148,8 @@ export const LivePlayer = () => {
             senderImage: chatData.senderImage || "",
           })
         );
-      }
+      },
+      () => {}
     );
 
     // 컴포넌트가 언마운트될 때 웹소켓 연결 종료
