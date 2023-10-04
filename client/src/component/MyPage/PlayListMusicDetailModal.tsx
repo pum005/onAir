@@ -44,7 +44,7 @@ const PlayListMusicDetailModal: React.FC<MusicDetailModalProps> = ({
 
     requestWithTokenRefresh(() => {
       return axios.get(
-        `https://j9b302.p.ssafy.io/api/playlist/${playlistMetaId}`,
+        `http://localhost:8080/api/playlist/${playlistMetaId}`,
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
@@ -156,7 +156,16 @@ const PlayListMusicDetailModal: React.FC<MusicDetailModalProps> = ({
               </div>
             ))
           ) : (
-            <div>노래가 없습니다.</div>
+            <div
+              style={{
+                fontFamily: "GangwonEduPowerExtraBoldA",
+                margin: "10px",
+                justifyContent: "center",
+                fontSize: "20px",
+              }}
+            >
+              노래가 없습니다.
+            </div>
           )}
           <Menu
             anchorEl={anchorEl}
