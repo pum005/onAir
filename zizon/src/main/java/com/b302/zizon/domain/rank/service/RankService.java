@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -51,4 +52,11 @@ public class RankService {
         result.put("message", "랭크 저장 성공");
         return result;
     }
+
+     //기록 가져오기
+//    public Map<String, Object> getRanking(){
+//        User user = getUser.getUser();
+//
+//        List<UserRank> top10ByRecord = rankRepository.findTop10ByRecord();
+//    }
 }
