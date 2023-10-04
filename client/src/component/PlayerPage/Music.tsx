@@ -64,6 +64,10 @@ export const Music = ({ musicFiles, onFinish, onMusicChange }: MusicProps) => {
     return () => clearInterval(interval);
   }, [player]);
 
+  useEffect(() => {
+    window.scrollTo(0, 80);
+  }, []);
+
   const handleProgressBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (player && e.currentTarget) {
       const rect = e.currentTarget.getBoundingClientRect();
