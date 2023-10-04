@@ -110,7 +110,7 @@ export default function RecipeReviewCard({
           }
         );
       })
-        .then(response => {
+        .then((response) => {
           console.log(response.data);
           if (response.data.message === "음악 추가 완료") {
             const Toast = Swal.mixin({
@@ -146,7 +146,7 @@ export default function RecipeReviewCard({
             });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("에러발생", error);
         });
     }
@@ -178,7 +178,7 @@ export default function RecipeReviewCard({
                 <div className={styles.songTitle}>{song.songTitle}</div>
                 <div className={styles.songArtist}>{song.artist}</div>
               </div>
-              <div className={styles.songDuration}>{song.duration}</div>
+              {/* <div className={styles.songDuration}>{song.duration}</div> */}
               <AddCircleOutlineIcon
                 className={styles.addIcon}
                 onClick={() => handleClickOpen(song.musicId)}
