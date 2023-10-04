@@ -1,4 +1,3 @@
-// Equalizer.tsx
 import React, { useRef, useEffect } from "react";
 
 // audioElement라는 prop을 받아와서 이를 사용하는 Equalizer 컴포넌트의 Props 타입을 정의합니다.
