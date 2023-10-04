@@ -126,6 +126,7 @@
   width: 200px;
   position: relative;
   color: white;
+  /* font-style: italic !important; */
 }
 
 @keyframes marquee {

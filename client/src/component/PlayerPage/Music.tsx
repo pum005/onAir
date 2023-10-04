@@ -120,6 +120,8 @@ export const Music = ({ musicFiles, onFinish, onMusicChange }: MusicProps) => {
           style={{
             fontWeight: "bold",
             fontFamily: "Pretendard-ExtraBold",
+            fontStyle: "italic",
+            fontSize: "30px",
           }}
         >
           {currentMusic.title}
@@ -128,6 +130,7 @@ export const Music = ({ musicFiles, onFinish, onMusicChange }: MusicProps) => {
           style={{
             opacity: 0.7,
             fontFamily: "Pretendard-Medium",
+            fontSize: "20px",
           }}
         >
           {currentMusic.artist}
@@ -147,16 +150,18 @@ export const Music = ({ musicFiles, onFinish, onMusicChange }: MusicProps) => {
         <div
           style={{
             width: "50%",
-            background: "#ccc",
+            background: "rgb(62, 62, 62)",
             cursor: "pointer",
+            borderRadius: "10px",
           }}
           onClick={handleProgressBarClick}
         >
           <div
             style={{
               width: `${progress}%`,
-              background: "blue",
+              background: "#7066e0",
               height: "4px",
+              borderRadius: "10px",
             }}
           ></div>
         </div>
@@ -167,7 +172,9 @@ export const Music = ({ musicFiles, onFinish, onMusicChange }: MusicProps) => {
             width: "50%",
           }}
         >
-          <span>{formatTime(currentTime)}</span>
+          <span style={{ fontFamily: "Pretendard-Medium" }}>
+            {formatTime(currentTime)}
+          </span>
           <div>
             {isPlaying ? (
               <PauseIcon
@@ -181,7 +188,9 @@ export const Music = ({ musicFiles, onFinish, onMusicChange }: MusicProps) => {
               />
             )}
           </div>
-          <span>{formatTime(duration)}</span>
+          <span style={{ fontFamily: "Pretendard-Medium" }}>
+            {formatTime(duration)}
+          </span>
         </div>
       </div>
 
