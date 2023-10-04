@@ -42,7 +42,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
 public class OncastService {
 
@@ -81,8 +80,8 @@ public class OncastService {
 
         User user = getUser.getUser();
 
-        if(user.isCreateCheck()){
-            throw new OncastAlreadyCreateException("오늘은 이미 온캐스트를 생성하셨습니다. 00시 이후로 다시 만들어주세요.");
+        if(user.getCreateCount() == 3){
+            throw new OncastAlreadyCreateException("오늘은 이미 온캐스트를 3번 생성하셨습니다. 00시 이후로 다시 만들어주세요.");
         }
 
         OncastCreateData ocd = OncastCreateData.builder()
@@ -148,13 +147,12 @@ public class OncastService {
                         "        그러지 말고 오늘 하루정도는 오랜만에 친구를 만나 쌓인 이야기를 나누며 힐링을 찾는게 어떨까요?  \n" +
                         "        (음악1) 들으시면서 친구에게 연락 한번 해보세요! \n" +
                         "        @@\n" +
-                        "        다음 곡입니다. 이 노래 그대로 힐링이 필요한 여러분들이 듣고 마음에 안정을 찾으셨으면 좋겠어요. (음악2) 입니다\n" +
+                        "        다음 곡입니다. 이 노래 그대로 힐링이 필요한 여러분들이 듣고 마음에 안정을 찾으셨으면 좋겠어요. (음악2에 관련된 문장 2개 넣어줘). (음악2) 입니다\n" +
                         "        @@\n" +
                         "        다들 오늘의 음악들을 들으시면서 어떻게 오늘의 지친 마음을 회복할지 생각하고 계실거같은데요\n" +
-                        "       좋은 시간 보내신 후에 푹 주무시길 바라요. 마지막곡입니다 (음악3) \n" +
+                        "       좋은 시간 보내신 후에 푹 주무시길 바라요.(음악3에 관련된 문장 1개 넣어줘). 마지막곡입니다 (음악3) \n" +
                         "        @@ \n" +
-                        "        오늘 들은 세 곡 모두 여러분의 마음에 힘이 되었으면 좋겠어요 \n" +
-                        "        다들 힘내시고! 다음에 또 만나요~"
+                        "        라디오 마무리 멘트 \n" + "처음에 바로 인사부터 시작하는 대사를 줘."
         );
 
         System.setProperty("https.protocols","TLSv1.2");
@@ -203,7 +201,7 @@ public class OncastService {
         oncastRepository.save(oncast);
         System.out.println("db에 온캐스트 저장 완료");
 
-        user.updateCreateCheckTrue();
+        user.updateCreateCountPlus();
 
         return oncast;
     }
