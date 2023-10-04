@@ -107,7 +107,7 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
         alignItems: "center",
       }}
     >
-      <h2>{currentMusic.title}</h2>
+      <h2 style={{ fontStyle: "italic" }}>{currentMusic.title}</h2>
       <p>{currentMusic.artist}</p>
       <div
         style={{
@@ -122,14 +122,12 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
           style={{
             width: "50%",
             background: "#ccc",
-            cursor: "pointer",
           }}
-          onClick={handleProgressBarClick}
         >
           <div
             style={{
               width: `${progress}%`,
-              background: "blue",
+              background: "#7066e0",
               height: "4px",
             }}
           ></div>
