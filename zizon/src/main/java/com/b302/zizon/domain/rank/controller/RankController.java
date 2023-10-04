@@ -2,12 +2,10 @@ package com.b302.zizon.domain.rank.controller;
 
 import com.b302.zizon.domain.rank.dto.RankRequestDTO;
 import com.b302.zizon.domain.rank.service.RankService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -25,5 +23,11 @@ public class RankController {
 
         return ResponseEntity.status(200).body(result);
     }
+
+    //미니게임 기록 가져오기
+//    @GetMapping("minigame/rank")
+//    public ResponseEntity<?> minigameRanking(){
+//        rankService.
+//    }
 }
 
