@@ -21,6 +21,7 @@ public class RankController {
     // 미니게임 랭크 갱신
     @PostMapping("minigame/rank")
     public ResponseEntity<?> minigameRank(@RequestBody RankRequestDTO requestDTO){
+        System.out.println(requestDTO.getRecord() + "시간");
         Map<String, Object> result = rankService.saveRank(requestDTO);
 
         return ResponseEntity.status(200).body(result);

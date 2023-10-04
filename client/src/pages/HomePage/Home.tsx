@@ -48,24 +48,32 @@ export const Home = () => {
   return (
     <div
       className={styles.background}
-      style={{ backgroundColor: "#000104", height: "100vh", color: "white" }}
+      style={{
+        backgroundColor: "#000104",
+        height: "650px",
+        color: "white",
+        overflow: "hidden",
+        // paddingBottom: "10px",
+      }}
     >
       <div className={styles.centerContent}>
         {showText && (
           <>
-            <h2 className={styles.fadeInOutText} style={{ fontSize: "30px" }}>
-              <img
-                src={MainLogo}
-                alt="MainLogo"
-                className={styles.customImage}
-              />
-              <div className={styles.underline}></div>
-              <div className={styles.textBelowLine}>
-                <span className={styles.grayText}>당신만의 </span>
-                <span className={styles.whiteText}>" ONCAST "</span>
-                <span className={styles.grayText}> 를 만들어 보세요!</span>
-              </div>
-            </h2>
+            <div className={styles.fadeInBox}>
+              <h2 className={styles.fadeInOutText} style={{ fontSize: "30px" }}>
+                <img
+                  src={MainLogo}
+                  alt="MainLogo"
+                  className={styles.customImage}
+                />
+                <div className={styles.underline}></div>
+                <div className={styles.textBelowLine}>
+                  <span className={styles.grayText}>당신만의 </span>
+                  <span className={styles.whiteText}>" ONCAST "</span>
+                  <span className={styles.grayText}> 를 만들어 보세요!</span>
+                </div>
+              </h2>
+            </div>
           </>
         )}
 
@@ -80,8 +88,9 @@ export const Home = () => {
               alt="Magic Hall"
               className={styles.largeGif}
             />
-
-            <div className={styles.centerText}>MAKE A ONCAST</div>
+            <div className={styles.enterText}>
+              <div className={styles.centerText}>MAKE A ONCAST</div>
+            </div>
           </div>
         )}
         <LoginModal
