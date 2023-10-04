@@ -103,6 +103,7 @@ export const LiveListModal: React.FC<LiveListModalProps> = ({
                     index === currentSeq ? styles.currentOncast : ""
                   }`}
                 >
+                  <span className={styles.orderNumber}>{index + 1}</span>
                   <div className={styles.profileAndDetails}>
                     <img
                       src={oncast.profileImage}
