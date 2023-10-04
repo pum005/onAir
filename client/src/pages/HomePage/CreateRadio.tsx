@@ -165,7 +165,7 @@ const CreateRadio = () => {
       DJNameMapping[selectedDJ as keyof typeof DJNameMapping];
     requestWithTokenRefresh(() => {
       return axios.post(
-        "https://j9b302.p.ssafy.io/api/oncast/create",
+        "http://localhost:8080/api/oncast/create",
         // dd
         {
           title: title,
