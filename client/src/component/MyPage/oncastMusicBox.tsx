@@ -17,6 +17,7 @@ interface TabPanelProps {
 }
 type OncastType = {
   oncastId: number;
+  djName: string;
   theme: string;
   createTime: string;
   title: string;
@@ -216,6 +217,7 @@ export default function oncastMusicBox({ initialValue = 0 }) {
               >
                 <RecipeReviewCard
                   oncastId={data.oncastId}
+                  djName={data.djName}
                   theme={data.theme}
                   title={data.createTime}
                   subheader={data.title}

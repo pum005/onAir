@@ -20,6 +20,7 @@
   margin-left: 213px;
   margin-right: 213px;
   /* margin: "0px 225px 0px 225px", */
+  /* margin-top: 10px; */
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
