@@ -134,6 +134,34 @@ const Game = () => {
         }
     }, [isGameStarted]);
 
+    // 랭킹 갱신 함수
+    const updateRanking = () => {
+        axios.post('http://localhost:8080/api/minigame/rank',
+            { record: gameTime },
+            {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("accessToken"),
+                },
+                withCredentials: true,
+            }
+        ).then(response => {
+            console.log('랭킹이 갱신되었습니다.', response.data);
+            // 랭킹 갱신 성공 후 랭킹 정보를 다시 가져옵니다.
+            return axios.get('http://localhost:8080/api/minigame/rank', {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("accessToken"),
+                },
+                withCredentials: true,
+            });
+        }).then(response => {
+            setRanking(response.data); // 가져온 랭킹 정보로 상태를 업데이트합니다.
+            setIsGameStarted(false);   // 게임 시작 화면으로 돌아갑니다.
+        }).catch(error => {
+            console.error('랭킹 갱신 또는 가져오기 실패', error);
+        });
+    };
+
+
     useEffect(() => {
         const bulletMoveInterval = setInterval(() => {
             setBullets(prevBullets => prevBullets.map(bullet => {
@@ -226,7 +254,13 @@ const Game = () => {
                             <br />
                             최대한 오래 살아보세요!!
                         </h5>
-                        <button onClick={() => setIsGameStarted(true)}>시작하기</button>
+                        <button onClick={() => {
+                            setIsGameStarted(true);
+                            setIsGameOver(false);  // 게임 오버 상태를 초기화합니다.
+                            setGameTime(0); // 게임 시간 초기화
+                            setPlayerPosition({ x: (GAME_SIZE - PLAYER_SIZE) / 2, y: (GAME_SIZE - PLAYER_SIZE) / 2 }); // 플레이어 위치 초기화
+                            setBullets([]); // 탄막들 초기화
+                        }}>시작하기</button>
                     </div>
                 ) : (
                     <>
@@ -245,7 +279,8 @@ const Game = () => {
                         {isGameOver && (
                             <div className={styles.gameOver}>
                                 <div className={styles.centerTimer}>시간: {formatTime(gameTime)}</div>
-                                <button className={styles.reButton} onClick={restartGame}>다시하기</button>
+                                <button className={styles.reButton} onClick={restartGame} style={{ marginRight: '10px' }}>다시하기</button>
+                                <button className={styles.reButton} onClick={updateRanking}>랭킹 등록</button>
                             </div>
                         )}
                     </>
