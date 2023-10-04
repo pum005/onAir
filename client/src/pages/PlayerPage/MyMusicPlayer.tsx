@@ -77,7 +77,7 @@ export const MyMusicPlayer = () => {
     if (playlistMetaId) {
       requestWithTokenRefresh(() => {
         return axios.get(
-          `https://j9b302a.p.ssafy.io/api/playlist/${playlistMetaId}`,
+          `https://j9b302.p.ssafy.io/api/playlist/${playlistMetaId}`,
           {
             headers: {
               Authorization: "Bearer " + localStorage.getItem("accessToken"),
@@ -107,7 +107,7 @@ export const MyMusicPlayer = () => {
         });
     } else {
       requestWithTokenRefresh(() => {
-        return axios.get("https://j9b302a.p.ssafy.io/api/my-musicbox/info", {
+        return axios.get("https://j9b302.p.ssafy.io/api/my-musicbox/info", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
           },
