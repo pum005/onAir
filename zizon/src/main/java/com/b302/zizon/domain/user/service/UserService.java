@@ -93,7 +93,7 @@ public class UserService {
                 .profileImage(user.getProfileImage())
                 .accountType(user.getAccountType())
                 .uesrId(user.getUserId())
-                .createCheck(user.isCreateCheck()).build();
+                .createCount(user.getCreateCount()).build();
 
         if (user.getAccountType().equals("kakao")) {
             result.put("message", "카카오 로그인 성공");
