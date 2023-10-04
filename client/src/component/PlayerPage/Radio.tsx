@@ -48,6 +48,10 @@ export const Radio = ({
 
   const currentScript = scriptFiles[currentTTSIndex] || "";
 
+  useEffect(() => {
+    window.scrollTo(0, 80);
+  }, []);
+
   return (
     <div
       className={styles.container}

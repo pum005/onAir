@@ -2,9 +2,15 @@
   animation: fadeInOut 3s;
   opacity: 0;
   font-family: "GangwonEduPowerExtraBoldA" !important;
-  margin-top: 100px;
 
   /* font-family: "LINESeedKR-Bd" !important; */
+}
+
+.fadeInBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 100px;
 }
 
 .underline {
@@ -91,18 +97,28 @@
   height: 90vh;
 }
 
+.enterText {
+  display: flex;
+  border: 2px solid red;
+  border-radius: 12px;
+}
+
 .centerText {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-family: "MyFont", fallbackFont, sans-serif;
-  border: 2px solid red;
-  border-radius: 12px;
+  font-family: "MyFont";
+  font-size: 20px;
+  /* border: 2px solid red; */
+  /* border-radius: 12px; */
+  /* margin-bottom: ; */
+  margin-top: 2px;
+  margin-bottom: 2px;
   color: crimson;
-  width: 250px;
-  height: 11px;
-  padding: 10px; /* 내부 패딩 */
+  /* width: 250px; */
+  /* height: 40px; */
+  padding: 5px;
   cursor: pointer;
 }
 .verticalAlign {
@@ -113,7 +129,7 @@
 
 .largeGif {
   width: 1000px;
-  height: 500px;
+  height: 525px;
   cursor: pointer;
 }
 .ontext {
