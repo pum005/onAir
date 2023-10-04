@@ -106,21 +106,7 @@ export const LivePlayer = () => {
                 navigate("/"); // 홈페이지로 이동
               }
             });
-          } else if (data.operation === "BEFORE") {
-            Swal.fire({
-              icon: "error",
-              title: "지금은 라이브 시작 전입니다!",
-              confirmButtonColor: "6966FF",
-              confirmButtonText: "확인",
-              customClass: {
-                popup: "my-popup-class",
-              },
-            }).then(result => {
-              if (result.isConfirmed) {
-                navigate("/"); // 홈페이지로 이동
-              }
-            });
-          } else if (data.operation === "IDLE") {
+          } else if (data.data.seq == 10 && data.operation === "IDLE") {
             Swal.fire({
               icon: "info",
               title: "라이브가 마무리되었습니다!",
