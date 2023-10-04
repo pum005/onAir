@@ -24,8 +24,8 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 
         String assessToken = UserInfo.getPrivateAccess();
 
-//        response.sendRedirect("https://j9b302.p.ssafy.io/success?access=" + assessToken);
-        response.sendRedirect("http://localhost:3000/success?access=" + assessToken);
+        response.sendRedirect("https://j9b302.p.ssafy.io/success?access=" + assessToken);
+//        response.sendRedirect("http://localhost:3000/success?access=" + assessToken);
     }
 
 }
