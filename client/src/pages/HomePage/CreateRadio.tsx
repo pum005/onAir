@@ -201,9 +201,29 @@ const CreateRadio = () => {
     })
       .then(response => {
         console.log(response);
+        console.log(response.data);
         if (response.status === 200) {
           setIsGame(false);
-          navigate("/OncastCreateComplete");
+          Swal.fire({
+            icon: "success",
+            title: "온캐스트가 생성되었습니다!",
+            text: "바로 재생하시겠습니까?",
+            showCancelButton: true,
+            confirmButtonColor: "6966FF",
+            confirmButtonText: "확인",
+            cancelButtonColor: "#DA0037",
+            cancelButtonText: "취소",
+            customClass: {
+              popup: "my-popup-class",
+            },
+          }).then((result) => {
+            if (result.isConfirmed) {
+              const oncastId = response.data;
+              navigate("/Player", { state: { oncastId } });
+            } else {
+              return;
+            }
+          });
         } else {
           alert("온캐스트 생성에 실패했습니다.");
         }
@@ -230,7 +250,7 @@ const CreateRadio = () => {
       });
   };
   return (
-    <div>
+    <div className={styles.allContainer}>
       {/* <NavBar /> */}
       {isGame ? (
         <div
@@ -239,7 +259,8 @@ const CreateRadio = () => {
             justifyContent: "center",
             alignItems: "center",
             height: "80vh",
-            marginTop: "50px",
+            // marginTop: "60px",
+            // paddingTop: "30px",
           }}
         >
           <Game />
@@ -304,7 +325,14 @@ const CreateRadio = () => {
                 </Grid>
               </Grid>
 
-              <Grid item container xs={12} alignItems="center" spacing={2}>
+              <Grid
+                item
+                container
+                xs={12}
+                alignItems="center"
+                className={styles.djAlign}
+                spacing={2}
+              >
                 <Grid item xs={2}>
                   <Typography variant="h5" className={styles.itemTitle}>
                     DJ
@@ -340,5 +368,5 @@ const CreateRadio = () => {
     </div>
   );
 };
-
+//
 export default CreateRadio;
