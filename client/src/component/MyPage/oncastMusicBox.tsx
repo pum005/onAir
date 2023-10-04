@@ -17,6 +17,7 @@ interface TabPanelProps {
 }
 type OncastType = {
   oncastId: number;
+  theme: string;
   createTime: string;
   title: string;
   shareCheck: boolean;
@@ -79,7 +80,7 @@ export default function oncastMusicBox({ initialValue = 0 }) {
   //라디오 list axios
   React.useEffect(() => {
     requestWithTokenRefresh(() => {
-      return axios.get("https://j9b302.p.ssafy.io/api/oncast", {
+      return axios.get("http://localhost:8080/api/oncast", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },
@@ -188,7 +189,12 @@ export default function oncastMusicBox({ initialValue = 0 }) {
       </Box>
       <CustomTabPanel value={value} index={0}>
         {message ? (
-          <div>생성된 라디오가 없습니다.</div>
+          <Typography
+            className={styles.noRadio}
+            style={{ fontFamily: "GangwonEduPowerExtraBoldA" }}
+          >
+            생성된 라디오가 없습니다.
+          </Typography>
         ) : (
           <div
             style={{
@@ -196,7 +202,9 @@ export default function oncastMusicBox({ initialValue = 0 }) {
               display: "flex",
               flexWrap: "wrap",
               overflowY: "auto",
+              marginBottom: "20px",
             }}
+            className={styles.listScrollbar}
           >
             {oncasts.map((data, idx) => (
               <div
@@ -208,6 +216,7 @@ export default function oncastMusicBox({ initialValue = 0 }) {
               >
                 <RecipeReviewCard
                   oncastId={data.oncastId}
+                  theme={data.theme}
                   title={data.createTime}
                   subheader={data.title}
                   shareCheck={data.shareCheck}

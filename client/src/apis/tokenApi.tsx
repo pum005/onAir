@@ -11,7 +11,7 @@ export const refreshToken = async (userId: number): Promise<string | null> => {
 
   try {
     const response = await axios.post(
-      "https://j9b302.p.ssafy.io/token/refresh",
+      "http://localhost:8080/token/refresh",
       {
         userId: userId,
         refreshToken: refreshToken,
