@@ -14,7 +14,7 @@ public class OAuthFailHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         System.out.println("실패");
-//        response.sendRedirect("http://localhost:3000");
-        response.sendRedirect("https://j9b302.p.ssafy.io");
+        response.sendRedirect("http://localhost:3000");
+//        response.sendRedirect("https://j9b302.p.ssafy.io");
     }
 }
