@@ -60,8 +60,10 @@ export const LivePlayer = () => {
         });
         setOncastList(response.data.oncast);
         console.log(response.data.oncast);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching oncast data:", error);
+        setIsLoading(false);
       }
     };
 
@@ -75,7 +77,6 @@ export const LivePlayer = () => {
         if (data && typeof data === "object" && "data" in data) {
           setMusicData(data);
           setCurrentSeq(data.data.seq - 1); // seq 값을 저장
-          setIsLoading(false);
           // operation 값이 'END'일 때 경고창 띄우기
           if (data.operation === "END") {
             Swal.fire({
