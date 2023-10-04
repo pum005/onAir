@@ -41,7 +41,7 @@ const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
     } else {
       requestWithTokenRefresh(() => {
         return axios.post(
-          "https://j9b302a.p.ssafy.io/api/playlist",
+          "https://j9b302.p.ssafy.io/api/playlist",
           {
             playlistName: playlistName,
           },
