@@ -30,11 +30,14 @@ export type ChatData = {
 
 export const socketConnection = (
   onDataReceived: (data: MusicData) => void,
-  onChatReceived: (data: ChatData) => void
+  onChatReceived: (data: ChatData) => void,
+  onConnected: () => void // 여기에 콜백 추가
 ) => {
   let stompClient = socketManager.connect();
 
   stompClient.onConnect = () => {
+    onConnected(); // 연결이 성립되면 콜백 호출
+
     stompClient.subscribe("/topic", message => {
       let receivedData = JSON.parse(message.body);
 

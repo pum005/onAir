@@ -73,12 +73,15 @@ export const Player = (): ReactElement => {
   useEffect(() => {
     console.log(oncastId);
     requestWithTokenRefresh(() => {
-      return axios.get(`http://localhost:8080/api/oncast/play/${oncastId}`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("accessToken"),
-        },
-        withCredentials: true,
-      });
+      return axios.get(
+        `http://localhost:8080/api/oncast/play/${oncastId}`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        }
+      );
     })
       .then((response) => {
         console.log(response.data);

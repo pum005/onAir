@@ -38,7 +38,7 @@ function ShareModal({
         }
       );
     })
-      .then((response) => {
+      .then(response => {
         console.log(response.data);
         if (response.data.message === "이미 공유된 온캐스트입니다.") {
           Swal.fire({
@@ -77,7 +77,7 @@ function ShareModal({
           });
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("통신에러 발생", error);
       });
 

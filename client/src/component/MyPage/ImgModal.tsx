@@ -57,7 +57,7 @@ function ImgModal({
           onImageConfirm();
           setSubmitClicked(false);
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("이미지 변경 실패:", error);
           setSubmitClicked(false);
         });

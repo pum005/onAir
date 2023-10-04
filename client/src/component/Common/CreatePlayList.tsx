@@ -53,7 +53,7 @@ const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
           }
         );
       })
-        .then((response) => {
+        .then(response => {
           console.log(response);
           refresh();
           setPlaylistName("");
@@ -68,7 +68,7 @@ const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
           });
           onClose();
         })
-        .catch((error) => {
+        .catch(error => {
           console.log("통신에러 발생", error);
         });
     }
@@ -91,12 +91,12 @@ const MusicBoxAddModal: React.FC<Props> = ({ isOpen, onClose, refresh }) => {
             variant="standard"
             fullWidth
             value={playlistName}
-            onChange={(e) => setPlaylistName(e.target.value)}
+            onChange={e => setPlaylistName(e.target.value)}
             inputProps={{
               style: { color: "#f5e9e9" }, // This style is applied to the actual input element
             }}
             style={{ width: "300px", marginBottom: "10px" }}
-            onKeyDown={(e) => {
+            onKeyDown={e => {
               if (e.key === "Enter") {
                 handleConfirm();
               }

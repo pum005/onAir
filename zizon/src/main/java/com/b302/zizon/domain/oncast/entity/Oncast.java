@@ -74,15 +74,15 @@ public class Oncast {
     private String ttsFour;
 
     @JoinColumn(name = "music_id1")
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Music music1;
 
     @JoinColumn(name = "music_id2")
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Music music2;
 
     @JoinColumn(name = "music_id3")
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Music music3;
 
 

@@ -66,7 +66,7 @@ function NickNameModal({
           withCredentials: true,
         });
       })
-        .then((Response) => {
+        .then(Response => {
           if (Response.data === false) {
             return axios
               .put(
@@ -115,7 +115,7 @@ function NickNameModal({
             setSubmitClicked(false);
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("닉네임 변경 에러 발생", error);
           setSubmitClicked(false);
         });

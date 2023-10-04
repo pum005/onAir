@@ -95,6 +95,9 @@ public class MusicService {
             throw new RuntimeException("Failed to encode the query string.", e);
         }
 
+        query = query.trim();
+        log.info(query.toString());
+
         ResponseEntity<SearchResponseDTO> responseEntity = restTemplate.exchange(
                 "https://api.spotify.com/v1/search?q={query}&type=track&limit=50&market=KR&locale=ko-KR",
                 HttpMethod.GET,
@@ -140,8 +143,8 @@ public class MusicService {
         return results;
     }
 
-    @Transactional
     // 음악 추천
+    @Transactional
     public Map<String, Object> recommendMusic(MusicRecommendRequestDTO requestDTO) {
 
         User user = getUser.getUser();
@@ -190,6 +193,7 @@ public class MusicService {
         int count = 0;
 
         for (int i = 0; i < 10; i++) {
+            log.info(response.toString());
             SpotifySearchResultDTO dto = results.get(i);
             if(count == 3){
                 break;
@@ -353,6 +357,7 @@ public class MusicService {
             return out;
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new EntityNotFoundException("해당 영상 없음");
         }
     }

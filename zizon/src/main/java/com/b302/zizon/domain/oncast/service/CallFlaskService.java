@@ -4,6 +4,7 @@ import com.b302.zizon.domain.music.entity.Music;
 import com.b302.zizon.domain.music.entity.ThemeEnum;
 import com.b302.zizon.domain.oncast.dto.response.SongIdsResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CallFlaskService {
 
     private final RestTemplate restTemplate;
@@ -37,26 +39,13 @@ public class CallFlaskService {
 
         // HTTP 요청 보내기
         ResponseEntity<SongIdsResponse> response = restTemplate.postForEntity(flaskEndpoint, requestBody, SongIdsResponse.class);
-//        for(String s : response.getBody()){
-//            System.out.println(s);
-//        }
-
-
+        
         SongIdsResponse ids =response.getBody();
-        System.out.println("음악추천 완료");
-        System.out.println(ids);
-        System.out.println("끝");
+        log.info("음악 추천 완료");
         for (String s : ids.getSong_ids()){
-            System.out.println(s);
+            log.info("스포티파이 id : " + s);
         }
-        System.out.println("여기까지");
-
-        //검색해서 디비에 저장하는 로직
 
         return ids;
     }
-}
-
-class MusicData {
-    // 음악 데이터 관련 필드들
 }

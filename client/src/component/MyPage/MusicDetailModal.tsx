@@ -53,14 +53,14 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
         withCredentials: true,
       });
     })
-      .then((response) => {
+      .then(response => {
         if (response.data.message || !response.data.musicInfo) {
           setSongs([]);
         } else {
           setSongs(response.data.musicInfo);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("데이터 가져오기 오류", error);
       });
   }, [isOpen, refreshKey]);
@@ -180,7 +180,7 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
                         cursor: "pointer",
                         color: "white",
                       }}
-                      onClick={(event) => handleMenuOpen(event, index)}
+                      onClick={event => handleMenuOpen(event, index)}
                     />
                   </div>
                 </div>
@@ -236,7 +236,7 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
           setDeleteListModalOpen(false);
           setSelectedSong(null);
         }}
-        setRefreshKey={() => setRefreshKey((prev) => !prev)}
+        setRefreshKey={() => setRefreshKey(prev => !prev)}
       />
     </>
   );

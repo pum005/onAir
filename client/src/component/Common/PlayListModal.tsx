@@ -60,7 +60,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
           withCredentials: true,
         }
       )
-      .then((response) => {
+      .then(response => {
         if (
           response.data.message === "이미 플레이리스트에 추가된 음악입니다."
         ) {
@@ -71,7 +71,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
           setAlertModalOpen(true);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("Error adding music to playlist", error);
       });
   };
@@ -87,10 +87,10 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
           withCredentials: true,
         });
       })
-        .then((response) => {
+        .then(response => {
           setPlaylists(response.data);
         })
-        .catch((error) => {
+        .catch(error => {
           console.log("통신에러", error);
         });
     }
@@ -129,7 +129,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
           </div>
 
           <div className={styles.playlistContainer}>
-            {playlists.map((playlist) => (
+            {playlists.map(playlist => (
               <Box key={playlist.playlistMetaId} className={styles.playlist}>
                 <div className={styles.albumCoverUrl}>
                   <img
@@ -179,7 +179,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
         message={alertMessage}
         onClose={() => {
           setAlertModalOpen(false);
-          setRefreshKey((prevKey) => !prevKey);
+          setRefreshKey(prevKey => !prevKey);
         }}
       />
     </>

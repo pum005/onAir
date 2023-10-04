@@ -44,12 +44,15 @@ const PlayListMusicDetailModal: React.FC<MusicDetailModalProps> = ({
     if (!isOpen || !playlistMetaId) return; // isOpen이 false거나 playlistMetaId가 없으면 아무 작업도 수행하지 않습니다.
 
     requestWithTokenRefresh(() => {
-      return axios.get(`http://localhost:8080/api/playlist/${playlistMetaId}`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("accessToken"),
-        },
-        withCredentials: true,
-      });
+      return axios.get(
+        `http://localhost:8080/api/playlist/${playlistMetaId}`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        }
+      );
     })
       .then(response => {
         if (response.data?.length === 0 || !response.data) {

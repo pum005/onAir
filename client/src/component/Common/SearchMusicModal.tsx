@@ -70,7 +70,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
           }
         );
       })
-        .then((response) => {
+        .then(response => {
           setIsSearchLoading(false);
           if (Array.isArray(response.data) && response.data.length === 0) {
             alert("검색 결과가 없습니다.!");
@@ -79,7 +79,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
             setSearchResults(response.data);
           }
         })
-        .catch((error) => {
+        .catch(error => {
           setIsSearchLoading(false);
           console.log("에러발생", error);
         });
@@ -108,7 +108,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
         }
       );
     })
-      .then((response) => {
+      .then(response => {
         setIsAddLoading(false);
         if (response.data.message === "이미 보관함에 추가된 노래입니다.") {
           setOpen(false);
@@ -133,7 +133,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                     withCredentials: true,
                   }
                 )
-                .then((response) => {
+                .then(response => {
                   console.log(response.data.message);
                   if (
                     response.data.message ===
@@ -175,7 +175,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                     }
                   }
                 })
-                .catch((error) => {
+                .catch(error => {
                   console.error("Error adding music to playlist", error);
                 });
             });
@@ -207,7 +207,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                     withCredentials: true,
                   }
                 )
-                .then((response) => {
+                .then(response => {
                   if (
                     response.data.message ===
                     "이미 플레이리스트에 추가된 음악입니다."
@@ -246,14 +246,14 @@ const SearchModal: React.FC<SearchModalProps> = ({
                     }
                   }
                 })
-                .catch((error) => {
+                .catch(error => {
                   console.error("Error adding music to playlist", error);
                 });
             });
           }
         }
       })
-      .catch((error) => {
+      .catch(error => {
         setIsAddLoading(false);
         console.log("에러발생", error);
       });
@@ -304,8 +304,8 @@ const SearchModal: React.FC<SearchModalProps> = ({
               placeholder="음악 제목을 입력해주세요"
               variant="standard"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={(e) => {
+              onChange={e => setSearchTerm(e.target.value)}
+              onKeyDown={e => {
                 if (e.key === "Enter") {
                   handleSearch();
                 }
@@ -335,7 +335,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
                   />
                   <div className={styles.musicDetails}>
                     <div
-                      ref={(el) => (titleRefs.current[index] = el)}
+                      ref={el => (titleRefs.current[index] = el)}
                       className={styles.musicTitle}
                       title={music.musicTitle}
                       onMouseOver={() => {

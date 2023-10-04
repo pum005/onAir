@@ -21,7 +21,7 @@ const Login: React.FC = () => {
   const sendLoginRequest = async (token: string | null) => {
     // 서버에 POST 요청을 보냅니다.
     const response = await fetch(
-      "https://j9b302.p.ssafy.io/api/oauth/login",
+      "http://localhost:8080/api/oauth/login",
       // "http://localhost:8080/api/oauth/login",
       {
         method: "POST",
@@ -34,7 +34,6 @@ const Login: React.FC = () => {
     );
 
     const data = await response.json(); // 서버의 응답을 JSON 형태로 파싱합니다.
-    console.log(data);
     console.log(data);
 
     // accessToken을 localStorage에 저장
