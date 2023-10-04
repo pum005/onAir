@@ -25,6 +25,7 @@
   align-items: flex-start;
   border-bottom: 1px solid #333;
   padding: 15px 0;
+  position: relative;
 }
 
 .profileAndDetails {
@@ -90,7 +91,8 @@
 .musicItem {
   display: flex;
   align-items: center;
-  margin-top: 5px;
+  border-bottom: 2px solid #333; /* 아래쪽 경계선 추가 */
+  padding: 10px 0; /* 위 아래 패딩을 추가하고 좌우 패딩은 0으로 설정 */
 }
 
 .albumCover {
@@ -109,18 +111,23 @@
 }
 
 .songTitle {
-  font-size: 17px;
+  font-size: 15px;
   font-family: "Pretendard-SemiBold", sans-serif;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 150%; /* 부모 요소보다 큰 너비 설정 */
+  width: 150%;
   position: relative;
   color: white;
 }
 
 .songTitle:hover {
-  animation: marquee 10s linear infinite; /* 전광판처럼 스크롤되게 하는 애니메이션 */
+  animation: marquee 10s linear infinite;
+}
+
+.musicItem:first-child,
+.songItem:first-child {
+  border-top: 1px solid #a3a3a3;
 }
 
 .artist {
@@ -169,4 +176,51 @@
 
 h2 {
   font-family: "GangwonEduPowerExtraBoldA", sans-serif; /* 폴백 폰트로 sans-serif 추가 */
+}
+
+.musicItem,
+.songItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #a3a3a3;
+  padding: 10px;
+  font-family: "Pretendard-SemiBold";
+}
+
+.musicItem:hover,
+.songItem:hover {
+  background-color: #3b3a3a;
+}
+
+.albumCover,
+.albumCoverUrl {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.musicDetails,
+.musicDetails {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  overflow: hidden;
+  flex: 2;
+  color: white;
+}
+
+.orderNumber {
+  position: absolute; /* 절대적 위치를 지정 */
+  left: -32px; /* 왼쪽 경계에 붙임 */
+  top: 10%;
+  transform: translateY(
+    -50%
+  ); /* 상위 항목의 정중앙에 위치하기 위해 자신의 높이의 반만큼 위로 올림 */
+  font-weight: bold;
+  font-size: 16px;
+  background-color: #333; /* 배경색을 설정 */
+  padding: 1px 6px; /* 패딩을 조절 */
+  border: 1px solid white;
 }
