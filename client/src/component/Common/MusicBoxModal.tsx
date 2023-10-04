@@ -29,7 +29,7 @@ function MusicBoxModal({
     if (title) {
       requestWithTokenRefresh(() => {
         return axios.post(
-          "https://j9b302a.p.ssafy.io/api/playlist",
+          "https://j9b302.p.ssafy.io/api/playlist",
           { playlistName: title },
           {
             headers: {

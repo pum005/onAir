@@ -46,7 +46,7 @@ const MusicDetailModal: React.FC<MusicDetailModalProps> = ({
 
     requestWithTokenRefresh(() => {
       console.log("재렌더링 몇번?");
-      return axios.get("https://j9b302a.p.ssafy.io/api/my-musicbox/info", {
+      return axios.get("https://j9b302.p.ssafy.io/api/my-musicbox/info", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },
