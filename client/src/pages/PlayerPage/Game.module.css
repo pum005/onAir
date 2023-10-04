@@ -1,5 +1,12 @@
-/* Game.module.css */
-.gameContainer {
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .gameContainer {
     width: 500px;
     height: 500px;
     border: 1px solid black;
