@@ -300,7 +300,8 @@ button.albumTrueButton {
 .nextMusicItem {
   display: flex;
   justify-content: space-between;
-  align-items: end;
+  align-items: flex-end;
+  /* align-items: end; */
   font-family: "Pretendard-SemiBold";
 }
 
