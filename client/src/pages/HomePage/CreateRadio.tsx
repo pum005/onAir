@@ -201,9 +201,29 @@ const CreateRadio = () => {
     })
       .then((response) => {
         console.log(response);
+        console.log(response.data);
         if (response.status === 200) {
           setIsGame(false);
-          navigate("/OncastCreateComplete");
+          Swal.fire({
+            icon: "success",
+            title: "온캐스트가 생성되었습니다!",
+            text: "바로 재생하시겠습니까?",
+            showCancelButton: true,
+            confirmButtonColor: "6966FF",
+            confirmButtonText: "확인",
+            cancelButtonColor: "#DA0037",
+            cancelButtonText: "취소",
+            customClass: {
+              popup: "my-popup-class",
+            },
+          }).then((result) => {
+            if (result.isConfirmed) {
+              const oncastId = response.data;
+              navigate("/Player", { state: { oncastId } });
+            } else {
+              return;
+            }
+          });
         } else {
           alert("온캐스트 생성에 실패했습니다.");
         }
