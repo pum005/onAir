@@ -61,7 +61,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
       requestWithTokenRefresh(() => {
         console.log(searchTerm);
         return axios.get(
-          `https://j9b302a.p.ssafy.io/ws/api/search/spotify?title=${searchTerm}`,
+          `https://j9b302a.p.ssafy.io/api/search/spotify?title=${searchTerm}`,
           {
             headers: {
               Authorization: "Bearer " + localStorage.getItem("accessToken"),
@@ -99,7 +99,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
     setIsAddLoading(true);
     requestWithTokenRefresh(() => {
       return axios.get(
-        `https://j9b302a.p.ssafy.io/ws/api/search/youtube?musicTitle=${music.musicTitle}&musicArtist=${music.musicArtist}&spotifyMusicDuration=${music.spotifyMusicDuration}&musicImageUrl=${music.musicImage}&spotifyId=${music.externalIds}`,
+        `https://j9b302a.p.ssafy.io/api/search/youtube?musicTitle=${music.musicTitle}&musicArtist=${music.musicArtist}&spotifyMusicDuration=${music.spotifyMusicDuration}&musicImageUrl=${music.musicImage}&spotifyId=${music.externalIds}`,
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
@@ -120,7 +120,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
             requestWithTokenRefresh(() => {
               return axios
                 .post(
-                  "https://j9b302a.p.ssafy.io/ws/api/playlist/music",
+                  "https://j9b302a.p.ssafy.io/api/playlist/music",
                   {
                     playlistMetaId: playlistId,
                     musicId: response.data.musicId,
@@ -194,7 +194,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
             requestWithTokenRefresh(() => {
               return axios
                 .post(
-                  "https://j9b302a.p.ssafy.io/ws/api/playlist/music",
+                  "https://j9b302a.p.ssafy.io/api/playlist/music",
                   {
                     playlistMetaId: playlistId,
                     musicId: response.data.musicId,

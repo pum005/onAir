@@ -60,7 +60,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, currentMusicList }) => {
     if (selectedMusicId) {
       requestWithTokenRefresh(() => {
         return axios.post(
-          "https://j9b302a.p.ssafy.io/ws/api/my-musicbox",
+          "https://j9b302a.p.ssafy.io/api/my-musicbox",
           { musicId: selectedMusicId },
           {
             headers: {

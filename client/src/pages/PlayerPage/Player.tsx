@@ -74,7 +74,7 @@ export const Player = (): ReactElement => {
     console.log(oncastId);
     requestWithTokenRefresh(() => {
       return axios.get(
-        `https://j9b302a.p.ssafy.io/ws/api/oncast/play/${oncastId}`,
+        `https://j9b302a.p.ssafy.io/api/oncast/play/${oncastId}`,
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
