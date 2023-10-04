@@ -8,7 +8,7 @@ export const Loading = () => {
         <div className={styles.loader}>
           <img src={"/gif/loading4.gif"} alt="Loading..." />
         </div>
-        <h2 style={{ color: "white" }}>로딩중...</h2>
+        <h2 style={{ color: "white" }}>라이브 들어가는 중...</h2>
       </div>
     </div>
   );
