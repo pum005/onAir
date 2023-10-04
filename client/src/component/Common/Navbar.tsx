@@ -43,7 +43,7 @@ function NavBar() {
     socketConnection(
       data => {
         // "operation" 값에 따라 라이브 상태를 결정합니다.
-        if (data.operation === "START" || data.operation === "RUNNING") {
+        if (data.operation === "ONCAST") {
           setIsLive(true);
         } else {
           setIsLive(false);
