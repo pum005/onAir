@@ -23,7 +23,7 @@ class SocketManager {
       const socket = new SockJS(URL);
       this.stompClient = new Client({
         webSocketFactory: () => socket,
-        debug: str => {
+        debug: (str) => {
           console.log(str);
         },
       });

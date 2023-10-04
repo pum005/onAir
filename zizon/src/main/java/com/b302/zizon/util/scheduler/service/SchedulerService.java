@@ -80,7 +80,7 @@ public class SchedulerService {
         log.info("유저의 온캐스트 생성 제한 해제");
         List<User> all = userRepository.findAll();
         for(User u : all){
-            u.updateCreateCheckFalse();
+            u.updateCreateCheckReset();
         }
     }
 
