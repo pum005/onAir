@@ -91,7 +91,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, currentMusicList }) => {
           }
           if (response.data.message === "이미 보관함에 있는 음악입니다.") {
             // setOpen(false);
-            // alert("이미 보관함에 있는 음악입니다.");
+
             Swal.fire({
               icon: "error",
               title: "이미 보관함에 있는 음악입니다!",
