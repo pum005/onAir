@@ -5,56 +5,73 @@ const GAME_WIDTH = 500;
 const GAME_HEIGHT = 500;
 const PLAYER_SIZE = 30;
 const OBSTACLE_WIDTH = 30;
-const OBSTACLE_HEIGHT = Math.floor(Math.random() * 150) + 50; // Random height between 50 and 200
+const JUMP_MIN_HEIGHT = 100;
+const JUMP_MAX_HEIGHT = 250;
 
 type Obstacle = {
-    id: number;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  };
-
-
+  id: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
 
 const Game = () => {
   const [playerY, setPlayerY] = useState(GAME_HEIGHT - PLAYER_SIZE);
   const [obstacles, setObstacles] = useState<Obstacle[]>([]);
   const [score, setScore] = useState(0);
   const [isJumping, setIsJumping] = useState(false);
+  const [jumpEndTime, setJumpEndTime] = useState<number | null>(null);
 
   // Handle jump
   useEffect(() => {
-    const handleJump = () => {
+    let jumpInterval: any;
+
+    const handleJumpStart = () => {
       if (!isJumping) {
         setIsJumping(true);
-        let jumpHeight = 0;
-
-        const jumpInterval = setInterval(() => {
-          setPlayerY((prev) => prev - 5);
-          jumpHeight += 5;
-
-          if (jumpHeight >= 100) {
-            clearInterval(jumpInterval);
-            setIsJumping(false);
-          }
-        }, 20);
+        setJumpEndTime(Date.now() + 300);
       }
     };
 
-    window.addEventListener('click', handleJump);
-    return () => window.removeEventListener('click', handleJump);
-  }, [isJumping]);
+    const handleJumpEnd = () => {
+      if (isJumping) {
+        const jumpDuration = Date.now() - (jumpEndTime || 0);
+        const jumpHeight = JUMP_MIN_HEIGHT + (JUMP_MAX_HEIGHT - JUMP_MIN_HEIGHT) * (jumpDuration / 300);
+        
+        let currentJumpHeight = 0;
 
-  // Generate obstacles
+        jumpInterval = setInterval(() => {
+          setPlayerY((prev) => prev - 5);
+          currentJumpHeight += 5;
+
+          if (currentJumpHeight >= jumpHeight) {
+            clearInterval(jumpInterval);
+            setIsJumping(false);
+          }
+        }, 10);
+      }
+    };
+
+    window.addEventListener('mousedown', handleJumpStart);
+    window.addEventListener('mouseup', handleJumpEnd);
+
+    return () => {
+      window.removeEventListener('mousedown', handleJumpStart);
+      window.removeEventListener('mouseup', handleJumpEnd);
+    };
+  }, [isJumping, jumpEndTime]);
+
+  // Generate obstacles with random height
   useEffect(() => {
     const obstacleInterval = setInterval(() => {
+      const obstacleHeight = Math.floor(Math.random() * 150) + 50;
       const newObstacle = {
         id: Date.now(),
         x: GAME_WIDTH,
-        y: GAME_HEIGHT - OBSTACLE_HEIGHT,
+        y: GAME_HEIGHT - obstacleHeight,
         width: OBSTACLE_WIDTH,
-        height: OBSTACLE_HEIGHT,
+        height: obstacleHeight,
       };
       setObstacles((prev) => [...prev, newObstacle]);
     }, 2000);
@@ -66,9 +83,9 @@ const Game = () => {
   useEffect(() => {
     const moveInterval = setInterval(() => {
       setObstacles((prev) =>
-        prev.map((obs) => ({ ...obs, x: obs.x - 5 })).filter((obs) => obs.x > 0)
+        prev.map((obs) => ({ ...obs, x: obs.x - 10 })).filter((obs) => obs.x > 0)
       );
-    }, 50);
+    }, 30);
 
     return () => clearInterval(moveInterval);
   }, []);
@@ -109,7 +126,6 @@ const Game = () => {
       <div className={styles.score}>Score: {score}</div>
     </div>
   );
-        }
-    
+};
 
 export default Game;
