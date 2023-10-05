@@ -194,7 +194,7 @@ export default function oncastMusicBox({ initialValue = 0 }) {
             className={styles.noRadio}
             style={{ fontFamily: "GangwonEduPowerExtraBoldA" }}
           >
-            생성된 라디오가 없습니다.
+            생성된 온캐스트가 없습니다.
           </Typography>
         ) : (
           <div
