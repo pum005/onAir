@@ -64,6 +64,7 @@ public class NaverTTSService {
         
         // 시간을 받는 메서드
         int durationInSeconds = getDurationOfMp3(generatedFile);
+        // 출력
         log.info("tts 시간 출력 : " + durationInSeconds);
 
         FileItem fileItem = convertToFileItem(generatedFile);
