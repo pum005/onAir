@@ -20,6 +20,7 @@ import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useLocation } from "react-router-dom";
 
 function NavBar() {
   const navigate = useNavigate();
