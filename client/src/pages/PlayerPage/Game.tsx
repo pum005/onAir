@@ -68,7 +68,7 @@ const Game = () => {
       .toString()
       .padStart(3, "0")
       .substring(0, 2); // 처음 두 자리만 표시
-    return `${seconds}:${milliseconds}`;
+    return `${seconds} : ${milliseconds}`;
   };
 
   const generateBullet = useCallback(() => {
@@ -326,7 +326,7 @@ const Game = () => {
             {isGameOver && (
               <div className={styles.gameOver}>
                 <div className={styles.centerTimer}>
-                  시간: {formatTime(gameTime)}
+                  기록: {formatTime(gameTime)}
                 </div>
                 <button
                   className={styles.reButton}
@@ -345,15 +345,17 @@ const Game = () => {
       </div>
       {/* 랭킹 표시 */}
       <div className={styles.rankingContainer}>
-        <h2>Top Ranking</h2>
+        <h2>Top Player</h2>
         <ul>
           {ranking.map((user, index) => (
             <li key={user.index}>
               <div className={styles.rankContainer}>
+                <div>
                 <span className={styles.rank}>{`${index + 1}등`}</span>
                 {index === 0 && <img src={goldMedal} alt="Gold Medal" />}
                 {index === 1 && <img src={silverMedal} alt="Silver Medal" />}
                 {index === 2 && <img src={bronzeMedal} alt="Bronze Medal" />}
+                </div>
               </div>
               <div className={styles.profileImageWrapper}>
                 <img
@@ -361,7 +363,7 @@ const Game = () => {
                   alt={`${user.nickname}'s profile`}
                 />
               </div>
-              <span>{user.nickname}</span>
+              <span className={styles.nickname}>{user.nickname}</span>
               <span>{formatTime(user.record)}</span>
             </li>
           ))}
