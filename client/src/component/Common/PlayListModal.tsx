@@ -60,7 +60,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
           withCredentials: true,
         }
       )
-      .then(response => {
+      .then((response) => {
         if (
           response.data.message === "이미 플레이리스트에 추가된 음악입니다."
         ) {
@@ -71,7 +71,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
           setAlertModalOpen(true);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error adding music to playlist", error);
       });
   };
@@ -87,10 +87,10 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
           withCredentials: true,
         });
       })
-        .then(response => {
+        .then((response) => {
           setPlaylists(response.data);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("통신에러", error);
         });
     }
@@ -129,48 +129,62 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
           </div>
 
           <div className={styles.playlistContainer}>
-            {playlists.map(playlist => (
-              <Box key={playlist.playlistMetaId} className={styles.playlist}>
-                <div className={styles.albumCoverUrl}>
-                  <img
-                    src={playlist.playlistImage || nullImg}
-                    alt={playlist.playlistName}
-                    style={{
-                      width: "40px",
-                      height: "40px",
-                      marginRight: "10px",
-                    }}
-                  />
-                </div>
-                <div>
-                  <Typography
-                    variant="subtitle1"
-                    className={styles.songTitle}
-                    style={{ fontFamily: "Pretendard-SemiBold" }}
-                  >
-                    {playlist.playlistName}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    className={styles.songCount}
-                    style={{ fontFamily: "Pretendard-SemiBold" }}
-                  >
-                    음악 : {playlist.playlistCount}곡
-                  </Typography>
-                </div>
-                <Box sx={{ marginLeft: "auto", cursor: "pointer" }}>
-                  <AddCircleOutlineIcon
-                    className={styles.addButton}
-                    onClick={() =>
-                      handleAddClick(
-                        playlist.playlistName,
-                        playlist.playlistMetaId
-                      )
-                    }
-                  />
+            {playlists.length > 0 ? (
+              playlists.map((playlist) => (
+                <Box key={playlist.playlistMetaId} className={styles.playlist}>
+                  <div className={styles.albumCoverUrl}>
+                    <img
+                      src={playlist.playlistImage || nullImg}
+                      alt={playlist.playlistName}
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        marginRight: "10px",
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <Typography
+                      variant="subtitle1"
+                      className={styles.songTitle}
+                      style={{ fontFamily: "Pretendard-SemiBold" }}
+                    >
+                      {playlist.playlistName}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      className={styles.songCount}
+                      style={{ fontFamily: "Pretendard-SemiBold" }}
+                    >
+                      음악 : {playlist.playlistCount}곡
+                    </Typography>
+                  </div>
+                  <Box sx={{ marginLeft: "auto", cursor: "pointer" }}>
+                    <AddCircleOutlineIcon
+                      className={styles.addButton}
+                      onClick={() =>
+                        handleAddClick(
+                          playlist.playlistName,
+                          playlist.playlistMetaId
+                        )
+                      }
+                    />
+                  </Box>
                 </Box>
-              </Box>
-            ))}
+              ))
+            ) : (
+              <Typography
+                style={{
+                  fontFamily: "GangwonEduPowerExtraBoldA",
+                  fontSize: "20px",
+                  color: "white",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                플레이리스트가 없습니다.
+              </Typography>
+            )}
           </div>
         </Box>
       </Modal>
@@ -179,7 +193,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
         message={alertMessage}
         onClose={() => {
           setAlertModalOpen(false);
-          setRefreshKey(prevKey => !prevKey);
+          setRefreshKey((prevKey) => !prevKey);
         }}
       />
     </>
