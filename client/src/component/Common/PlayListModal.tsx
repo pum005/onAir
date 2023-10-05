@@ -48,7 +48,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
     }
     axios
       .post(
-        "http://localhost:8080/api/playlist/music",
+        "https://j9b302.p.ssafy.io/api/playlist/music",
         {
           playlistMetaId: playlistMetaId,
           musicId: musicId,
@@ -60,7 +60,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
           withCredentials: true,
         }
       )
-      .then((response) => {
+      .then(response => {
         if (
           response.data.message === "이미 플레이리스트에 추가된 음악입니다."
         ) {
@@ -71,7 +71,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
           setAlertModalOpen(true);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("Error adding music to playlist", error);
       });
   };
@@ -80,17 +80,17 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
   useEffect(() => {
     if (isOpen) {
       requestWithTokenRefresh(() => {
-        return axios.get("http://localhost:8080/api/playlist", {
+        return axios.get("https://j9b302.p.ssafy.io/api/playlist", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
           },
           withCredentials: true,
         });
       })
-        .then((response) => {
+        .then(response => {
           setPlaylists(response.data);
         })
-        .catch((error) => {
+        .catch(error => {
           console.log("통신에러", error);
         });
     }
@@ -130,7 +130,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
 
           <div className={styles.playlistContainer}>
             {playlists.length > 0 ? (
-              playlists.map((playlist) => (
+              playlists.map(playlist => (
                 <Box key={playlist.playlistMetaId} className={styles.playlist}>
                   <div className={styles.albumCoverUrl}>
                     <img
@@ -193,7 +193,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
         message={alertMessage}
         onClose={() => {
           setAlertModalOpen(false);
-          setRefreshKey((prevKey) => !prevKey);
+          setRefreshKey(prevKey => !prevKey);
         }}
       />
     </>
