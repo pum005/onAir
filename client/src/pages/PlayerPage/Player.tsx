@@ -157,7 +157,7 @@ export const Player = (): ReactElement => {
         }}
       >
         <QueueMusicIcon
-          style={{ fontSize: "2.5rem", color: "white", cursor: "pointer" }}
+          style={{ fontSize: "45px", color: "white", cursor: "pointer" }}
           onClick={() => setIsModalOpen(true)}
         />
       </div>

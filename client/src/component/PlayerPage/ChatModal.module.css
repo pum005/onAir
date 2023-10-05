@@ -10,10 +10,12 @@
   padding: 20px;
   overflow-y: auto;
   z-index: 1000;
+  border-radius: 20px;
+  border: 1px solid #545454;
 }
 
 .chatHeader {
-  font-size: 24px;
+  font-size: 30px;
   margin-bottom: 20px;
   font-weight: bold;
   display: flex;
@@ -25,13 +27,33 @@
 
 .chatMessages {
   flex: 1;
-  height: 500px;
+  height: 550px;
   overflow-y: auto;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   border: 1px solid #444;
   padding: 10px;
   border-radius: 5px;
   background: rgba(0, 0, 0, 0.1);
+}
+
+.chatMessages::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* 스크롤바 전체 */
+.chatMessages::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* 스크롤바의 핸들 부분 */
+.chatMessages::-webkit-scrollbar-thumb {
+  background-color: #bdbdbd;
+  border-radius: 10px;
+}
+
+/* 스크롤바의 트랙 부분 */
+.chatMessages::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .chatInputContainer {
@@ -39,16 +61,17 @@
   justify-content: space-between;
   align-items: center;
   background: rgba(0, 0, 0, 0.1);
-  padding: 5px;
+  /* padding: 5px; */
   border-radius: 5px;
 }
 
 .chatInput {
-  width: 85%;
+  width: 75%;
   padding: 10px;
   border-radius: 5px;
-  border: 1px solid #007bff;
-  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #7066e0;
+  background: rgba(0, 0, 0, 0.1);
+  color: white;
   font-family: "Pretendard-SemiBold", sans-serif;
 }
 
@@ -66,7 +89,7 @@
 }
 
 .chatButton:hover {
-  background-color: #0056b3;
+  background-color: #6960d1;
 }
 
 .closeButton {
@@ -93,7 +116,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .senderInfo {
@@ -125,7 +148,7 @@
   border-radius: 15px;
   color: #ffffff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  font-family: "Shilla_Gothic-Bold", sans-serif;
+  font-family: "Pretendard-ExtraBold", sans-serif;
 }
 
 .chatMessage.sent {
@@ -142,6 +165,7 @@
 
 .chatMessage.sent .message_content {
   background-color: #525051;
+  border-radius: 10px;
 }
 
 .chatMessage.received .message_content {
@@ -150,6 +174,6 @@
 
 .chatMessage.sent .username {
   margin-left: 10px;
-  margin-right: 0;
+  margin-right: 10px;
   flex: none;
 }
