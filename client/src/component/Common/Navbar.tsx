@@ -133,8 +133,7 @@ function NavBar() {
         if (response.data.logoutUrl) {
           window.location.href = response.data.logoutUrl;
         } else if (response.data.naver) {
-          // window.location.href = "http://localhost:3000"; // 메인 페이지로 리다이렉트
-          window.location.href = "http://localhost:8080";
+          window.location.href = "http://localhost:3000"; // 메인 페이지로 리다이렉트
         }
         localStorage.removeItem("accessToken"); // 액세스 토큰 제거
         for (let key in localStorage) {

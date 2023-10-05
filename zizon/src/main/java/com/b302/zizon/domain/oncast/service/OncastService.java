@@ -98,6 +98,7 @@ public class OncastService {
         Map<String,Object> RecommendResult = musicService.recommendMusic(new MusicRecommendRequestDTO(ids.getSong_ids()));
         // ids로 데이터셋에서 조회해서 음악배열 완성하는 로직 넣기
 
+
         Object song1 = RecommendResult.get("song1");
         Object song2 = RecommendResult.get("song2");
         Object song3 = RecommendResult.get("song3");
@@ -145,12 +146,12 @@ public class OncastService {
                         "        [[ 너무 힘든 하루네요. 많이 지친 하루 힐링이 필요해요 ]]\n" +
                         "        많은 분들이 바쁜 하루가 끝나고 퇴근길에 오르면 신나는 마음과 달리 지친 몸이 친구와 연인보단 침대 속을 찾게 되죠 \n" +
                         "        그러지 말고 오늘 하루정도는 오랜만에 친구를 만나 쌓인 이야기를 나누며 힐링을 찾는게 어떨까요?  \n" +
-                        "        [음악1(이건 추천받은 1번째 음악이야)] 들으시면서 친구에게 연락 한번 해보세요! \n" +
+                        "        [음악1(음악1을 넣고, 괄호를 넣지마!)] 들으시면서 친구에게 연락 한번 해보세요! \n" +
                         "        @@\n" +
-                        "        다음 곡입니다. 이 노래 그대로 힐링이 필요한 여러분들이 듣고 마음에 안정을 찾으셨으면 좋겠어요. (음악2에 관련된 문장 2개 넣어줘). [음악2(이건 추천받은 2번째 음악이야)] 입니다.\n" +
+                        "        다음 곡입니다. 이 노래 그대로 힐링이 필요한 여러분들이 듣고 마음에 안정을 찾으셨으면 좋겠어요. (음악2에 관련된 문장 2개 넣어줘). [음악2(음악2를 넣고, 괄호를 넣지마!)] 입니다.\n" +
                         "        @@\n" +
                         "        다들 오늘의 음악들을 들으시면서 어떻게 오늘의 지친 마음을 회복할지 생각하고 계실거같은데요\n" +
-                        "       좋은 시간 보내신 후에 푹 주무시길 바라요.(음악3에 관련된 문장 1개 넣어줘). 마지막곡입니다 [음악3(이건 추천받은 3번째 음악이야)] \n" +
+                        "       좋은 시간 보내신 후에 푹 주무시길 바라요.(음악3에 관련된 문장 1개 넣어줘). 마지막곡입니다 [음악3(음악3을 넣고, 괄호를 넣지마!)] \n" +
                         "        @@ \n" +
                         "        라디오 마무리 멘트 \n" + "처음에 -story: 이렇게 시작하지말고 바로 인사하면서 스크립트를 줘."
         );
@@ -164,13 +165,15 @@ public class OncastService {
             script = fullScript.split("@@");
         }
 
-        List<String> f = new ArrayList<>();
+        List<String> ttsFile = new ArrayList<>();
+        List<Integer> ttsTime = new ArrayList<>();
 
         for (String s : script) {
             try {
-                String str = naverTTSService.generateTTS(s, request.getDjName());
+                Map<String, Object> stringObjectMap = naverTTSService.generateTTS(s, request.getDjName());
 
-                f.add(str);
+                ttsFile.add((String) stringObjectMap.get("tts"));
+                ttsTime.add((Integer) stringObjectMap.get("time"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -187,10 +190,14 @@ public class OncastService {
                 .scriptTwo(script[1])
                 .scriptThree(script[2])
                 .scriptFour(script[3])
-                .ttsOne(f.get(0))
-                .ttsTwo(f.get(1))
-                .ttsThree(f.get(2))
-                .ttsFour(f.get(3))
+                .ttsOne(ttsFile.get(0))
+                .ttsTwo(ttsFile.get(1))
+                .ttsThree(ttsFile.get(2))
+                .ttsFour(ttsFile.get(3))
+                .ttsDurationOne(ttsTime.get(0))
+                .ttsDurationTwo(ttsTime.get(1))
+                .ttsDurationThree(ttsTime.get(2))
+                .ttsDurationFour(ttsTime.get(3))
                 .music1(music1)
                 .music2(music2)
                 .music3(music3)

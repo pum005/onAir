@@ -57,7 +57,7 @@ public class RankService {
     public List<RankResponseDTO> getRanking(){
         User user = getUser.getUser();
 
-        List<UserRank> top10ByRecord = rankRepository.findTop10ByRecord();
+        List<UserRank> top10ByRecord = rankRepository.findTop10ByOrderByRecordDesc();
 
         List<RankResponseDTO> responseDTOList = new ArrayList<>();
         int count = 1;

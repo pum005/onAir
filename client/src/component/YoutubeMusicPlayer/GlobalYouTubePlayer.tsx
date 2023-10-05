@@ -58,6 +58,7 @@ export const GlobalYouTubePlayer = () => {
   const navigate = useNavigate();
   const [oneSecnonds, setOneSeconds] = useState<number>(0);
   const [animate, setAnimate] = useState(false);
+  const [showAlbumIcon, setShowAlbumIcon] = useState(true);
 
   useEffect(() => {
     let interval: any;
@@ -296,16 +297,18 @@ export const GlobalYouTubePlayer = () => {
       className={styles.audioContainer}
       style={isVisible ? {} : { width: "0px", overflow: "hidden" }}
     >
-      <Tooltip title={getTooltipMessage()}>
-        <Button
-          onClick={handleToggleVisibility}
-          className={
-            isVisible && videoId ? styles.albumTrueButton : styles.albumButton
-          }
-        >
-          <BiSolidAlbum color="white" size="200px" />
-        </Button>
-      </Tooltip>
+      {showAlbumIcon && (
+        <Tooltip title={getTooltipMessage()}>
+          <Button
+            onClick={handleToggleVisibility}
+            className={
+              isVisible && videoId ? styles.albumTrueButton : styles.albumButton
+            }
+          >
+            <BiSolidAlbum color="white" size="200px" />
+          </Button>
+        </Tooltip>
+      )}
 
       {videoId && (
         <YouTube

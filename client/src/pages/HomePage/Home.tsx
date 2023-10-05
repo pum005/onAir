@@ -6,6 +6,10 @@ import LoginModal from "../../component/Common/LoginModal";
 import MainLogo from "../../resources/MainLogo.png";
 import NavBar from "../../component/Common/Navbar";
 
+type HomeProps = {
+  setShowNavBar: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
 export const Home = () => {
   /** state 관리 */
   const [showText, setShowText] = useState(false);
