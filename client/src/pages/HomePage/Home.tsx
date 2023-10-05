@@ -5,24 +5,53 @@ import Swal from "sweetalert2";
 import LoginModal from "../../component/Common/LoginModal";
 import MainLogo from "../../resources/MainLogo.png";
 
-export const Home = () => {
+type HomeProps = {
+  setShowNavBar: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowAlbumIcon: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const Home: React.FC<HomeProps> = ({ setShowNavBar }) => {
   /** state 관리 */
-  const [showText, setShowText] = useState(true);
-  const [showRadioButton, setShowRadioButton] = useState(false);
+  const [showText, setShowText] = useState(false);
+  const [showRadioButton, setShowRadioButton] = useState(true);
   const [loginModalOpen, setLoginModalOpen] = React.useState(false);
   const handleLoginModalOpen = () => setLoginModalOpen(true);
   const handleLoginModalClose = () => setLoginModalOpen(false);
+  const [showBlackScreen, setShowBlackScreen] = useState(true); // 검정 화면 표시 상태
 
-  //페이지 이동 함수 생성.
+  const handleShowMainScreen = () => {
+    setShowNavBar(true); // NavBar를 표시
+    localStorage.setItem("showNavBar", JSON.stringify(true)); // 변경된 상태를 로컬 스토리지에 저장
+    setShowBlackScreen(false); // 검정 화면을 숨기고 메인 화면을 표시
+  };
+
   const navigate = useNavigate();
 
+  if (showBlackScreen) {
+    return (
+      <div
+        style={{
+          backgroundColor: "#000",
+          height: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <button onClick={handleShowMainScreen}>메인 화면 보기</button>
+      </div>
+    );
+  }
+
+  //페이지 이동 함수 생성.
+
   /** action 관리 */
-  useEffect(() => {
-    setTimeout(() => {
-      setShowText(false);
-      setShowRadioButton(true);
-    }, 3000);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setShowText(false);
+  //     setShowRadioButton(true);
+  //   }, 3000);
+  // }, []);
 
   const navigateToCreateRadio = () => {
     const isLoggedIn = Boolean(localStorage.getItem("accessToken"));
@@ -37,7 +66,7 @@ export const Home = () => {
         customClass: {
           popup: "my-popup-class",
         },
-      }).then((result) => {
+      }).then(result => {
         if (result.isConfirmed) {
           handleLoginModalOpen();
         }
