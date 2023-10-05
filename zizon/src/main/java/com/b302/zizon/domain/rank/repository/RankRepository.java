@@ -14,6 +14,5 @@ public interface RankRepository extends JpaRepository<UserRank, Long> {
 
     Optional<UserRank> findByUserUserId(Long userId);
 
-    @Query(value = "SELECT r FROM UserRank r ORDER BY r.record DESC ")
-    List<UserRank> findTop10ByRecord();
+    List<UserRank> findTop10ByOrderByRecordDesc();
 }

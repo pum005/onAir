@@ -4,11 +4,10 @@
     border: 2px solid black;
     position: relative;
     overflow: hidden;
-    margin: 0 auto;
     border-radius: 50%;
     background-color: #d8d8d8;
     justify-content: center;
-    margin-right: 20px;  /* 오른쪽 여백 추가 */
+    margin-right: 10px;  /* 오른쪽 여백 추가 */
 }
 
 .player {
@@ -90,6 +89,10 @@
 
 .centerTimer{
     color: white;
+    margin-bottom: 50px;
+    display: flex;
+    justify-content: center;
+    font-size: 30px;
 }
 
 button.reButton {
@@ -112,45 +115,68 @@ button.reButton {
     justify-content: space-between;  /* 항목들 사이에 공간을 최대로 줌 */
     align-items: center;
     width: 1300px;  /* 이 값을 조절하여 적절한 너비를 설정 */
-    gap: 20px;  /* 간격 조절 */
 }
 
 .rankingContainer {
-    width: 300px; /* 또는 원하는 너비로 조절 */
+    width: 500px; /* 또는 원하는 너비로 조절 */
     border: 1px solid rgb(255, 255, 255); /* 선택적인 테두리 스타일 */
-    padding: 10px;
-    margin-left: 20px;  /* 왼쪽 여백 추가 */
+}
+
+.rankContainer {
+    width: 120px;
 }
 
 .rankingContainer h2 {
     text-align: center;
-    margin-bottom: 20px;
     color: white;
 }
 
 .rankingContainer ul {
-    list-style-type: none;
     padding: 0;
     color: white;
 }
 
 .rankingContainer li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+    display: flex; /* 플렉스박스로 변경 */
+    align-items: center; /* 중앙 정렬 추가 */
+
     color: white;
-    border-bottom: 1px solid #e0e0e0; /* 각 아이템 사이에 경계선 추가 */
+    border-bottom: 1px solid #ffffff;
+    padding: 9px; 
+}
+
+.rankingContainer li > span, .rankingContainer li > img {
+    flex: 1; /* 모든 항목에 동일한 너비를 부여 */
+    overflow: hidden; /* 오버플로우 숨김 */
+    white-space: nowrap; /* 줄바꿈 방지 */
 }
 
 .rankingContainer img {
-    width: 30px;  /* 이미지 크기를 조금 줄입니다. */
+    width: 30px;
     height: 30px;
     border-radius: 50%;
+    text-align: center; 
     margin-right: 10px;
-    vertical-align: middle; /* 추가된 부분 */
 }
 
-.rankingContainer li span {
-    line-height: 30px; /* 이미지의 높이와 동일하게 설정 */
+.rankingContainer .rank {
+    flex: 0.7; /* 이 값을 조절하여 원하는 너비로 설정하세요. */
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* 기록에 대한 스타일 */
+.rankingContainer .record {
+    flex: 0.5; /* 이 값을 조절하여 원하는 너비로 설정하세요. */
+}
+
+.nickname{
+    padding-right: 150px;
+    font-size: 20px;
+}
+
+
+.rankingContainer .rankContainer div {
+    display: flex; /* 플렉스박스로 변경 */
+    align-items: center; /* 항목들을 중앙에 배치 */
 }

@@ -240,6 +240,7 @@ public class MusicService {
         YoutubeSearchResultDTO result = new YoutubeSearchResultDTO();
 
         String query = artist + " " + title + " " + "음원";
+
         YouTube.Search.List searchRequest;
         log.info("검색어 : " + query);
         log.info("음악 시간 : " + spotifyMusicDuration);
