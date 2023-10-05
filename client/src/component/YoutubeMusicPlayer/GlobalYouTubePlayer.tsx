@@ -58,7 +58,7 @@ export const GlobalYouTubePlayer = () => {
   const navigate = useNavigate();
   const [oneSecnonds, setOneSeconds] = useState<number>(0);
   const [animate, setAnimate] = useState(false);
-  const [showAlbumIcon, setShowAlbumIcon] = useState(false);
+  const [showAlbumIcon, setShowAlbumIcon] = useState(true);
 
   useEffect(() => {
     let interval: any;

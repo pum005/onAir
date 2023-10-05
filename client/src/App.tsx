@@ -42,7 +42,6 @@ function App() {
       setShowNavBar(JSON.parse(storedShowNavBar));
     }
   }, []);
-  const [showAlbumIcon, setShowAlbumIcon] = useState(false);
 
   return (
     <div className="App">
@@ -53,12 +52,7 @@ function App() {
             <Routes>
               <Route
                 path="/"
-                element={
-                  <Home
-                    setShowNavBar={setShowNavBar}
-                    setShowAlbumIcon={setShowAlbumIcon}
-                  />
-                }
+                element={<Home setShowNavBar={setShowNavBar} />}
               />
               {/* 상태 변경 함수를 Home 컴포넌트로 전달 */}
               <Route path="/CreateRadio" element={<CreateRadio />} />
