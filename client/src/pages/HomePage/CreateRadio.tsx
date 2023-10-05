@@ -43,7 +43,7 @@ const CreateRadio = () => {
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newContent = e.target.value;
-    if (newContent.length <= 1000) {
+    if (newContent.length <= 200) {
       setContent(newContent);
       setContentLength(newContent.length);
       setContentMaxLengthReached(false); // 내용 길이가 1000자 이하일 경우 상태를 false로 설정
@@ -327,7 +327,7 @@ const CreateRadio = () => {
                     className={styles.typingLimit}
                     style={{ color: contentMaxLengthReached ? "red" : "white" }}
                   >
-                    {`${contentLength}/1000`}
+                    {`${contentLength}/200`}
                   </div>
                 </Grid>
               </Grid>
