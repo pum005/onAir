@@ -7,7 +7,6 @@ import MainLogo from "../../resources/MainLogo.png";
 
 type HomeProps = {
   setShowNavBar: React.Dispatch<React.SetStateAction<boolean>>;
-  setShowAlbumIcon: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const Home: React.FC<HomeProps> = ({ setShowNavBar }) => {
