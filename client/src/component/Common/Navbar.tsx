@@ -136,6 +136,9 @@ function NavBar() {
           window.location.href = "http://localhost:3000"; // 메인 페이지로 리다이렉트
         }
         localStorage.removeItem("accessToken"); // 액세스 토큰 제거
+        localStorage.removeItem("firstVisit");
+        localStorage.removeItem("isVisible");
+        localStorage.removeItem("displayIcon");
         for (let key in localStorage) {
           if (key.startsWith("persist:")) {
             localStorage.removeItem(key);
