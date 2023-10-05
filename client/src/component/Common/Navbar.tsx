@@ -118,7 +118,7 @@ function NavBar() {
     requestWithTokenRefresh(() => {
       return axios.post(
         // "http://localhost:8080/api/oauth/social/logout",
-        "http://localhost:8080/api/oauth/social/logout",
+        "https://j9b302.p.ssafy.io/api/oauth/social/logout",
         {},
         {
           headers: {
