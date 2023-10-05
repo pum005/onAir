@@ -73,7 +73,7 @@ export const Radio = ({
         className={styles.audioStyle}
         crossOrigin="anonymous"
         onTimeUpdate={handleTimeUpdate}
-        // style={{ width: "0px", height: "0px" }}
+        style={{ width: "0px", height: "0px" }}
       >
         <source src={ttsFiles[currentTTSIndex]} type="audio/mp3" />{" "}
         {/* props에서 가져오도록 수정 */}
