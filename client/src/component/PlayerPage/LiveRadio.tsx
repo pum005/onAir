@@ -30,6 +30,9 @@ export const Radio = ({ ttsFile, script, playedTime, djName }: RadioProps) => {
       setCharIndex(Math.floor(currentSeconds * 8)); // 재생 시간에 따른 글자 인덱스를 계산하는 로직
     }
   };
+  useEffect(() => {
+    window.scrollTo(0, 84);
+  }, []);
 
   const { backgroundColor } = getColorByDjName(djName);
 

@@ -88,7 +88,7 @@ export const LivePlayer = () => {
               customClass: {
                 popup: "my-popup-class",
               },
-            }).then(result => {
+            }).then((result) => {
               if (result.isConfirmed) {
                 navigate("/"); // 홈페이지로 이동
               }
@@ -102,7 +102,7 @@ export const LivePlayer = () => {
               customClass: {
                 popup: "my-popup-class",
               },
-            }).then(result => {
+            }).then((result) => {
               if (result.isConfirmed) {
                 navigate("/"); // 홈페이지로 이동
               }
@@ -116,7 +116,7 @@ export const LivePlayer = () => {
               customClass: {
                 popup: "my-popup-class",
               },
-            }).then(result => {
+            }).then((result) => {
               if (result.isConfirmed) {
                 navigate("/"); // 홈페이지로 이동
               }
@@ -127,7 +127,7 @@ export const LivePlayer = () => {
         }
       },
       // 두 번째 콜백: 채팅 데이터를 처리합니다.
-      chatData => {
+      (chatData) => {
         dispatch(
           addChatMessage({
             content: chatData.content,
@@ -145,6 +145,10 @@ export const LivePlayer = () => {
     };
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 84);
+  }, []);
+
   return (
     <>
       {isLoading ? (
@@ -158,15 +162,15 @@ export const LivePlayer = () => {
           }}
         >
           {/* <NavBar /> */}
-          <div style={{ position: "absolute", top: "125px", right: "150px" }}>
+          <div style={{ position: "absolute", top: "104px", right: "80px" }}>
             <ChatIcon
-              style={{ fontSize: "2.3rem", color: "white", cursor: "pointer" }}
+              style={{ fontSize: "40px", color: "white", cursor: "pointer" }}
               onClick={() => setIsChatModalOpen(true)}
             />
           </div>
-          <div style={{ position: "absolute", top: "120px", right: "100px" }}>
+          <div style={{ position: "absolute", top: "100px", right: "20px" }}>
             <FormatListBulletedIcon
-              style={{ fontSize: "2.5rem", color: "white", cursor: "pointer" }}
+              style={{ fontSize: "40px", color: "white", cursor: "pointer" }}
               onClick={() => setIsModalOpen(true)}
             />
           </div>
