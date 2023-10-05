@@ -38,6 +38,7 @@ const Equalizer: React.FC<EqualizerProps> = ({ audioElement, djName }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const { color: equalizerColor } = getColorByDjName(djName);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // 컴포넌트가 마운트되거나 audioElement가 변경될 때 실행되는 useEffect 훅입니다.
   useEffect(() => {
