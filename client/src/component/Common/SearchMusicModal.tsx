@@ -73,7 +73,21 @@ const SearchModal: React.FC<SearchModalProps> = ({
         .then(response => {
           setIsSearchLoading(false);
           if (Array.isArray(response.data) && response.data.length === 0) {
-            alert("검색 결과가 없습니다.!");
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top",
+              showConfirmButton: false,
+              timer: 1500,
+              timerProgressBar: true,
+              customClass: {
+                popup: "swal2-popup",
+              },
+            });
+            Toast.fire({
+              icon: "warning",
+              title: "검색 결과가 없습니다!",
+            });
+
             setSearchResults([]);
           } else {
             setSearchResults(response.data);
