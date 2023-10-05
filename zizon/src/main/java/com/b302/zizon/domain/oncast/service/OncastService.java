@@ -98,6 +98,7 @@ public class OncastService {
         Map<String,Object> RecommendResult = musicService.recommendMusic(new MusicRecommendRequestDTO(ids.getSong_ids()));
         // ids로 데이터셋에서 조회해서 음악배열 완성하는 로직 넣기
 
+
         Object song1 = RecommendResult.get("song1");
         Object song2 = RecommendResult.get("song2");
         Object song3 = RecommendResult.get("song3");
@@ -164,13 +165,15 @@ public class OncastService {
             script = fullScript.split("@@");
         }
 
-        List<String> f = new ArrayList<>();
+        List<String> ttsFile = new ArrayList<>();
+        List<Integer> ttsTime = new ArrayList<>();
 
         for (String s : script) {
             try {
-                String str = naverTTSService.generateTTS(s, request.getDjName());
+                Map<String, Object> stringObjectMap = naverTTSService.generateTTS(s, request.getDjName());
 
-                f.add(str);
+                ttsFile.add((String) stringObjectMap.get("tts"));
+                ttsTime.add((Integer) stringObjectMap.get("time"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -187,10 +190,14 @@ public class OncastService {
                 .scriptTwo(script[1])
                 .scriptThree(script[2])
                 .scriptFour(script[3])
-                .ttsOne(f.get(0))
-                .ttsTwo(f.get(1))
-                .ttsThree(f.get(2))
-                .ttsFour(f.get(3))
+                .ttsOne(ttsFile.get(0))
+                .ttsTwo(ttsFile.get(1))
+                .ttsThree(ttsFile.get(2))
+                .ttsFour(ttsFile.get(3))
+                .ttsDurationOne(ttsTime.get(0))
+                .ttsDurationTwo(ttsTime.get(1))
+                .ttsDurationThree(ttsTime.get(2))
+                .ttsDurationFour(ttsTime.get(3))
                 .music1(music1)
                 .music2(music2)
                 .music3(music3)

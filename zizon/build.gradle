@@ -76,6 +76,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
 	implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.12.1'
 
+//	implementation group: 'net.jthink', name: 'jaudiotagger', version: '3.0.1'
+
+	implementation group: 'com.mpatric', name: 'mp3agic', version: '0.9.1'
 }
 
 tasks.named('test') {
