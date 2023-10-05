@@ -130,8 +130,7 @@ const CreateRadio = () => {
 
     Swal.fire({
       icon: "info",
-      title: "라디오를 생성하시겠습니까?",
-      text: "2분정도 소요됩니다. 게임을 하시면서 잠시만 기다려주세요 . . .",
+      title: "1~2분정도 소요될 수 있습니다.",
       showCancelButton: true,
       confirmButtonColor: "6966FF",
       confirmButtonText: "확인",
