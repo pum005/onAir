@@ -157,7 +157,7 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
           <span style={{ fontFamily: "Pretendard-Medium" }}>
             {formatTime(currentTime)}
           </span>
-          <div>
+          {/* <div>
             {isPlaying ? (
               <PauseIcon
                 onClick={handlePlayPause}
@@ -169,7 +169,7 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
                 style={{ cursor: "pointer" }}
               />
             )}
-          </div>
+          </div> */}
           <span style={{ fontFamily: "Pretendard-Medium" }}>
             {formatTime(duration)}
           </span>

@@ -145,7 +145,7 @@ export default function RecipeReviewCard({
           }
         );
       })
-        .then(response => {
+        .then((response) => {
           console.log(response.data);
           if (response.data.message === "음악 추가 완료") {
             Swal.fire({
@@ -179,7 +179,7 @@ export default function RecipeReviewCard({
             });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("에러발생", error);
         });
     }
