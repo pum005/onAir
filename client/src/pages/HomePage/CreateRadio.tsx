@@ -183,8 +183,8 @@ const CreateRadio = () => {
       DJNameMapping[selectedDJ as keyof typeof DJNameMapping];
     requestWithTokenRefresh(() => {
       return axios.post(
-        "http://52.78.65.222:5000/hadoop/songs",
-        // "http://localhost:8080/api/oncast/create",
+        // "http://52.78.65.222:5000/hadoop/songs",
+        "http://localhost:8080/api/oncast/create",
         {
           title: title,
           theme: selectedTheme,
