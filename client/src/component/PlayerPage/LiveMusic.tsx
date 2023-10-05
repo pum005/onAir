@@ -58,6 +58,9 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
       setProgress((newCurrentTime / newDuration) * 100);
     }
   };
+  useEffect(() => {
+    window.scrollTo(0, 84);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(updateProgress, 1000);
@@ -107,8 +110,18 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
         alignItems: "center",
       }}
     >
-      <h2 style={{ fontStyle: "italic" }}>{currentMusic.title}</h2>
-      <p style={{ fontFamily: "Shilla_Gothic-Bold" }}>{currentMusic.artist}</p>
+      <h2 style={{ fontStyle: "italic", fontSize: "30px" }}>
+        {currentMusic.title}
+      </h2>
+      <p
+        style={{
+          fontFamily: "Pretendard-Medium",
+          opacity: 0.7,
+          fontSize: "15px",
+        }}
+      >
+        {currentMusic.artist}
+      </p>
       <div
         style={{
           display: "flex",
@@ -121,7 +134,8 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
         <div
           style={{
             width: "50%",
-            background: "#ccc",
+            background: "rgb(62, 62, 62)",
+            borderRadius: "10px",
           }}
         >
           <div
@@ -129,6 +143,7 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
               width: `${progress}%`,
               background: "#7066e0",
               height: "4px",
+              borderRadius: "10px",
             }}
           ></div>
         </div>
@@ -139,7 +154,9 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
             width: "50%",
           }}
         >
-          <span>{formatTime(currentTime)}</span>
+          <span style={{ fontFamily: "Pretendard-Medium" }}>
+            {formatTime(currentTime)}
+          </span>
           <div>
             {isPlaying ? (
               <PauseIcon
@@ -153,14 +170,20 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
               />
             )}
           </div>
-          <span>{formatTime(duration)}</span>
+          <span style={{ fontFamily: "Pretendard-Medium" }}>
+            {formatTime(duration)}
+          </span>
         </div>
       </div>
 
       <img
         src={currentMusic.image}
         alt="Album cover"
-        style={{ width: "400px", height: "400px" }}
+        style={{
+          width: "400px",
+          height: "400px",
+          boxShadow: "15px 15px 6px black",
+        }}
       />
 
       <YouTube
