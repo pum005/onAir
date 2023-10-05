@@ -202,7 +202,11 @@ export const Music = ({ musicFiles, onFinish, onMusicChange }: MusicProps) => {
       <img
         src={currentMusic.albumCoverUrl}
         alt="Album cover"
-        style={{ width: "400px", height: "400px" }}
+        style={{
+          width: "400px",
+          height: "400px",
+          boxShadow: "15px 15px 5px black",
+        }}
       />
 
       {/* YouTube Player */}

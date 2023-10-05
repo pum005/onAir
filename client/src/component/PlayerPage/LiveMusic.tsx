@@ -58,6 +58,9 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
       setProgress((newCurrentTime / newDuration) * 100);
     }
   };
+  useEffect(() => {
+    window.scrollTo(0, 84);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(updateProgress, 1000);
@@ -167,14 +170,20 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
               />
             )}
           </div>
-          <span>{formatTime(duration)}</span>
+          <span style={{ fontFamily: "Pretendard-Medium" }}>
+            {formatTime(duration)}
+          </span>
         </div>
       </div>
 
       <img
         src={currentMusic.image}
         alt="Album cover"
-        style={{ width: "400px", height: "400px" }}
+        style={{
+          width: "400px",
+          height: "400px",
+          boxShadow: "15px 15px 6px black",
+        }}
       />
 
       <YouTube
