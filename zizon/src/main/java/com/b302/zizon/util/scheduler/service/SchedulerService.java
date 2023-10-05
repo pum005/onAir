@@ -27,7 +27,7 @@ public class SchedulerService {
     private final RedisTemplate<String, String> redisTemplate;
 
     // 채택하기 라이브큐
-    @Scheduled(cron = "0 35 09 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 51 16 * * *", zone = "Asia/Seoul")
     @Transactional
     public void selectedOncast(){
         log.info("라이브큐 채택 스케줄러 동작");
@@ -45,6 +45,7 @@ public class SchedulerService {
                 LiveQueue build = LiveQueue.builder()
                         .oncast(oncast)
                         .user(oncast.getUser())
+                        .oncastCreateData(oncast.getOncastCreateData())
                         .build();
                 liveQueueRepository.save(build);
 
@@ -56,6 +57,7 @@ public class SchedulerService {
                 LiveQueue build = LiveQueue.builder()
                         .oncast(oncast)
                         .user(oncast.getUser())
+                        .oncastCreateData(oncast.getOncastCreateData())
                         .build();
                 liveQueueRepository.save(build);
             }
