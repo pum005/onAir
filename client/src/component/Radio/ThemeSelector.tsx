@@ -14,14 +14,7 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({
 }) => {
   const themes = [
     { theme: "JOYFUL", description: "#활기찬 #기쁜" },
-    {
-      theme: "SENSITIVE",
-      description: "#섬세한 #감각적인",
-    },
-    {
-      theme: "HOPEFUL",
-      description: "#희망적인 #기대감",
-    },
+
     {
       theme: "CHILL",
       description: "#여유로운 #휴식",
@@ -46,10 +39,7 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({
       theme: "FUNKY",
       description: "#리듬감 #경쾌한",
     },
-    {
-      theme: "EXOTIC",
-      description: "#이국적인 #독특한 #문화",
-    },
+
     {
       theme: "ACOUSTIC",
       description: "#자연스러운 #깔끔한 #악기위주",
@@ -58,14 +48,7 @@ const ThemeSelector: React.FC<ThemeSelectorProps> = ({
       theme: "NOSTALGIC",
       description: "#추억 #그리운",
     },
-    {
-      theme: "DREAMY",
-      description: "#환상적인 #몽롱한",
-    },
-    {
-      theme: "UPBEAT",
-      description: "#빠른 #활기찬",
-    },
+
     {
       theme: "ENERGETIC",
       description: "#에너제틱 #활동적인",
