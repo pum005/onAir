@@ -80,12 +80,6 @@ public class OncastService {
 
         User user = getUser.getUser();
 
-        try {
-    Thread.sleep(5000000);  // 5초 동안 대기
-} catch (InterruptedException e) {
-    e.printStackTrace();
-}
-
         if(user.getCreateCount() == 3){
             throw new OncastAlreadyCreateException("오늘은 이미 온캐스트를 3번 생성하셨습니다. 00시 이후로 다시 만들어주세요.");
         }
