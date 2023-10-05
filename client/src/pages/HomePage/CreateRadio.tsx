@@ -144,12 +144,12 @@ const CreateRadio = () => {
         setIsGame(true);
 
         // 5분 뒤에 CreateOncast() 함수 호출 (300000ms = 5분)
-        setTimeout(() => {
-          CreateOncast();
-        }, 300000);
+        // setTimeout(() => {
+        //   CreateOncast();
+        // }, 300000);
 
         //이부분 주석풀기
-        // CreateOncast();
+        CreateOncast();
       } else {
         return;
       }
