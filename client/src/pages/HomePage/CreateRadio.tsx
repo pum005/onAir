@@ -140,7 +140,7 @@ const CreateRadio = () => {
       customClass: {
         popup: "my-popup-class",
       },
-    }).then(result => {
+    }).then((result) => {
       if (result.isConfirmed) {
         CreateOncast();
       } else {
@@ -199,7 +199,7 @@ const CreateRadio = () => {
         }
       );
     })
-      .then(response => {
+      .then((response) => {
         console.log(response);
         console.log(response.data);
         if (response.status === 200) {
@@ -228,11 +228,11 @@ const CreateRadio = () => {
           alert("온캐스트 생성에 실패했습니다.");
         }
       })
-      .catch(error => {
+      .catch((error) => {
         setIsGame(false);
         if (
           error.response.data ===
-          "오늘은 이미 온캐스트를 생성하셨습니다. 00시 이후로 다시 만들어주세요."
+          "오늘은 이미 온캐스트를 3번 생성하셨습니다. 00시 이후로 다시 만들어주세요."
         ) {
           Swal.fire({
             icon: "warning",
@@ -278,7 +278,7 @@ const CreateRadio = () => {
                 <Grid item xs={9.5}>
                   <textarea
                     value={title}
-                    onChange={e => setTitle(e.target.value)}
+                    onChange={(e) => setTitle(e.target.value)}
                     className={styles.titleInput}
                   />
                 </Grid>
