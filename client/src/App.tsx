@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import Game from "./pages/PlayerPage/Game"; // 경로를 실제 Game 컴포넌트의 경로로 바꾸세요
+import { useLocation } from "react-router-dom";
 
 import CreateRadio from "./pages/HomePage/CreateRadio";
 import { Home } from "./pages/HomePage/Home";
@@ -23,6 +24,42 @@ import store, { persistor } from "./store";
 import { PersistGate } from "redux-persist/integration/react";
 import { GlobalYouTubePlayer } from "./component/YoutubeMusicPlayer/GlobalYouTubePlayer";
 import NavBar from "./component/Common/Navbar";
+import { useState } from "react";
+
+function MainContent() {
+  const location = useLocation();
+
+  const showNavBar = () => {
+    if (location.pathname === "/") {
+      return localStorage.getItem("showNavBar") === "true";
+    }
+    return true;
+  };
+
+  return (
+    <>
+      {showNavBar() && <NavBar />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/CreateRadio" element={<CreateRadio />} />
+
+        <Route path="/MyPage" element={<MyPage />} />
+
+        <Route path="/Loading" element={<Loading />} />
+        <Route
+          path="/OncastCreateComplete"
+          element={<OncastCreateComplete />}
+        />
+        <Route path="/LivePlayer" element={<LivePlayer />} />
+        <Route path="/Player" element={<Player />} />
+        <Route path="/MyMusicPlayer" element={<MyMusicPlayer />} />
+
+        <Route path="/Success" element={<Success />} />
+      </Routes>
+      <GlobalYouTubePlayer></GlobalYouTubePlayer>
+    </>
+  );
+}
 
 function App() {
   return (
@@ -30,30 +67,11 @@ function App() {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <Router>
-            <NavBar></NavBar>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/CreateRadio" element={<CreateRadio />} />
-
-              <Route path="/MyPage" element={<MyPage />} />
-
-              <Route path="/Loading" element={<Loading />} />
-              <Route
-                path="/OncastCreateComplete"
-                element={<OncastCreateComplete />}
-              />
-              <Route path="/LivePlayer" element={<LivePlayer />} />
-              <Route path="/Player" element={<Player />} />
-              <Route path="/MyMusicPlayer" element={<MyMusicPlayer />} />
-
-              <Route path="/Success" element={<Success />} />
-            </Routes>
-            <GlobalYouTubePlayer></GlobalYouTubePlayer>
+            <MainContent />
           </Router>
         </PersistGate>
       </Provider>
     </div>
-    //ㅏㅓㅏ
   );
 }
 
