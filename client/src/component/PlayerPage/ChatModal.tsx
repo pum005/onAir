@@ -4,6 +4,7 @@ import { RootState } from "../../store";
 import { useSelector, useDispatch } from "react-redux";
 import { sendData, socketConnection } from "../../utils/socket.atom";
 import { addChatMessage } from "../../store";
+import CloseIcon from "@mui/icons-material/Close";
 type ChatMessage = {
   content: string;
   sender: string;
@@ -52,10 +53,8 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className={isOpen ? styles.modal : `${styles.modal} ${styles.closed}`}>
-      <button className={styles.closeButton} onClick={onClose}>
-        x
-      </button>
-      <h2 className={styles.chatHeader}>대화방</h2>
+      <CloseIcon className={styles.closeButton} onClick={onClose}></CloseIcon>
+      <h2 className={styles.chatHeader}>채팅창</h2>
       <div className={styles.chatMessages}>
         {Array.isArray(messages) &&
           messages.map((msg, index) => {
@@ -88,8 +87,8 @@ export const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose }) => {
           placeholder="메시지를 입력하세요..."
           className={styles.chatInput}
           value={message}
-          onChange={e => setMessage(e.target.value)}
-          onKeyPress={e => {
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyPress={(e) => {
             if (e.key === "Enter") {
               clickSubmit();
             }

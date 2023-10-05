@@ -1,5 +1,6 @@
 import { Modal, Backdrop, Fade } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import CloseIcon from "@mui/icons-material/Close";
 import styles from "./LiveListModal.module.css";
 import axios from "axios";
 import AlertModal from "../Common/AlertModal";
@@ -59,7 +60,7 @@ export const LiveListModal: React.FC<LiveListModalProps> = ({
           }
         );
       })
-        .then(response => {
+        .then((response) => {
           if (response.data.message === "음악 추가 완료") {
             setAlertMessage("추가되었습니다.");
             setAlertModalOpen(true);
@@ -71,7 +72,7 @@ export const LiveListModal: React.FC<LiveListModalProps> = ({
             setAlertModalOpen(true);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("에러발생", error);
         });
     }
@@ -90,54 +91,64 @@ export const LiveListModal: React.FC<LiveListModalProps> = ({
       >
         <Fade in={isOpen}>
           <div className={styles.paper}>
-            <button className={styles.closeButton} onClick={onClose}>
-              x
-            </button>
+            <CloseIcon
+              className={styles.closeButton}
+              onClick={onClose}
+            ></CloseIcon>
             <h2>온캐스트 편성표</h2>
-            <hr />
+            {/* <hr /> */}
             <div className={styles.oncastList}>
-              {oncastList.map((oncast, index) => (
-                <div
-                  key={index}
-                  className={`${styles.oncastItem} ${
-                    index === currentSeq ? styles.currentOncast : ""
-                  }`}
-                >
-                  <span className={styles.orderNumber}>{index + 1}</span>
-                  <div className={styles.profileAndDetails}>
-                    <img
-                      src={oncast.profileImage}
-                      alt={oncast.nickname}
-                      className={styles.profileImage}
-                    />
-                    <div className={styles.oncastDetails}>
-                      <span className={styles.nickname}>{oncast.nickname}</span>
-                      <span className={styles.title}>{oncast.title}</span>
-                    </div>
-                  </div>
-                  <ul className={styles.musicList}>
-                    {oncast.musicList.map((music, mIndex) => (
-                      <li key={mIndex} className={styles.musicItem}>
+              <div className={styles.containerNumberflex}>
+                {oncastList.map((oncast, index) => (
+                  <div
+                    key={index}
+                    className={`${styles.oncastItem} ${
+                      index === currentSeq ? styles.currentOncast : ""
+                    }`}
+                  >
+                    {/* <span className={styles.orderNumber}>{index + 1}</span> */}
+                    <div className={styles.flexHeader}>
+                      <span className={styles.orderNumber}> {index + 1}</span>
+                      <div className={styles.profileAndDetails}>
                         <img
-                          src={music.albumCoverUrl}
-                          alt={music.title}
-                          className={styles.albumCover}
+                          src={oncast.profileImage}
+                          alt={oncast.nickname}
+                          className={styles.profileImage}
                         />
-                        <div className={styles.musicDetails}>
-                          <span className={styles.songTitle}>
-                            {music.title}
+                        <div className={styles.oncastDetails}>
+                          <span className={styles.nickname}>
+                            {oncast.nickname}
                           </span>
-                          <span className={styles.artist}>{music.artist}</span>
+                          <span className={styles.title}>{oncast.title}</span>
                         </div>
-                        <AddCircleOutlineIcon
-                          className={styles.addIcon}
-                          onClick={() => handleClickOpen(music.musicId)}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
+                      </div>
+                    </div>
+                    <ul className={styles.musicList}>
+                      {oncast.musicList.map((music, mIndex) => (
+                        <li key={mIndex} className={styles.musicItem}>
+                          <img
+                            src={music.albumCoverUrl}
+                            alt={music.title}
+                            className={styles.albumCover}
+                          />
+                          <div className={styles.musicDetails}>
+                            <span className={styles.songTitle}>
+                              {music.title}
+                            </span>
+                            <span className={styles.artist}>
+                              {music.artist}
+                            </span>
+                          </div>
+                          <AddCircleOutlineIcon
+                            className={styles.addIcon}
+                            onClick={() => handleClickOpen(music.musicId)}
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </Fade>
