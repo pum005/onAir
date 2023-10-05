@@ -1,8 +1,10 @@
 package com.b302.zizon.util.tts.service;
 
 import com.b302.zizon.util.S3.service.S3UploadService;
+import com.mpatric.mp3agic.Mp3File;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 
@@ -17,6 +19,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.fileupload.FileItem;
@@ -24,6 +28,7 @@ import org.apache.commons.fileupload.FileItem;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class NaverTTSService {
 
 
@@ -36,8 +41,9 @@ public class NaverTTSService {
 
 
 
-    public String generateTTS(String text, String speaker) throws IOException {
+    public Map<String, Object> generateTTS(String text, String speaker) throws IOException {
         File generatedFile = null;
+        Map<String, Object> result = new HashMap<>();
         try {
             String encodedText = URLEncoder.encode(text, "UTF-8");
             HttpURLConnection con = setupConnection(API_URL);
@@ -55,15 +61,46 @@ public class NaverTTSService {
             e.printStackTrace();
         }
 
+        
+        // 시간을 받는 메서드
+        int durationInSeconds = getDurationOfMp3(generatedFile);
+        log.info("tts 시간 출력 : " + durationInSeconds);
+
         FileItem fileItem = convertToFileItem(generatedFile);
         MultipartFile generatedFileConverted = new CommonsMultipartFile(fileItem);
         String s3Url = s3UploadService.fileSaveFile(generatedFileConverted);
+
+
 
         if (generatedFile != null && generatedFile.exists()) {
             generatedFile.delete();
         }
 
-        return s3Url;
+        result.put("tts", s3Url);
+        result.put("time", durationInSeconds);
+
+        return result;
+    }
+
+//    private int getDurationOfMp3(File mp3File) {
+//        try {
+//            AudioFile audioFile = AudioFileIO.read(mp3File);
+//            return audioFile.getAudioHeader().getTrackLength();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return -1; // 혹은 적절한 오류 처리를 해주세요
+//        }
+//    }
+
+    private int getDurationOfMp3(File mp3File) {
+        try {
+            Mp3File mp3 = new Mp3File(mp3File);
+            long durationInMilliseconds = mp3.getLengthInMilliseconds();
+            return (int) durationInMilliseconds;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1; // 혹은 적절한 오류 처리를 해주세요
+        }
     }
 
 
