@@ -73,6 +73,18 @@ public class Oncast {
     @Column(name = "tts_four")
     private String ttsFour;
 
+    @Column(nullable = false)
+    private int ttsDurationOne;
+
+    @Column(nullable = false)
+    private int ttsDurationTwo;
+
+    @Column(nullable = false)
+    private int ttsDurationThree;
+
+    @Column(nullable = false)
+    private int ttsDurationFour;
+
     @JoinColumn(name = "music_id1")
     @ManyToOne(fetch = FetchType.LAZY)
     private Music music1;
