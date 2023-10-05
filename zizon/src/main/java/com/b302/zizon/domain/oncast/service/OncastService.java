@@ -306,6 +306,7 @@ public class OncastService {
         }
 
         oncast.updateDeleteOncast();
+        oncastRepository.save(oncast);
         result.put("message", "온캐스트 삭제 성공.");
         return result;
     }
