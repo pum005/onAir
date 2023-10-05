@@ -40,8 +40,8 @@ public class  OAuth2Controller {
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;
 //    @Value("${kakao.logout-redirect-uri}")
-    private String kakaoLogoutRedirectUri = "http://localhost:8080/api/oauth/logout";
-//    private String kakaoLogoutRedirectUri = "https://j9b302.p.ssafy.io/api/oauth/logout";
+//    private String kakaoLogoutRedirectUri = "http://localhost:8080/api/oauth/logout";
+    private String kakaoLogoutRedirectUri = "https://j9b302.p.ssafy.io/api/oauth/logout";
 
 
     private final UserRepository userRepository;
@@ -72,8 +72,8 @@ public class  OAuth2Controller {
     public ResponseEntity<?> Logout(HttpServletRequest request, HttpServletResponse response){
         System.out.println("들어옴");
         Map<String, Object> result = userService.logout(request, response);
-        URI redirectUri = URI.create("http://localhost:3000");
-//        URI redirectUri = URI.create("https://j9b302.p.ssafy.io");
+//        URI redirectUri = URI.create("http://localhost:3000");
+        URI redirectUri = URI.create("https://j9b302.p.ssafy.io");
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(redirectUri);
 
