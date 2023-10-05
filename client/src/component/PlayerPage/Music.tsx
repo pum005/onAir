@@ -65,7 +65,7 @@ export const Music = ({ musicFiles, onFinish, onMusicChange }: MusicProps) => {
   }, [player]);
 
   useEffect(() => {
-    window.scrollTo(0, 80);
+    window.scrollTo(0, 84);
   }, []);
 
   const handleProgressBarClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -122,8 +122,8 @@ export const Music = ({ musicFiles, onFinish, onMusicChange }: MusicProps) => {
       <div style={{ textAlign: "center", zIndex: 2, marginBottom: "20px" }}>
         <h2
           style={{
-            fontWeight: "bold",
-            fontFamily: "Pretendard-ExtraBold",
+            // fontWeight: "bold",
+            fontFamily: "GangwonEduPowerExtraBoldA",
             fontStyle: "italic",
             fontSize: "30px",
           }}
@@ -134,7 +134,7 @@ export const Music = ({ musicFiles, onFinish, onMusicChange }: MusicProps) => {
           style={{
             opacity: 0.7,
             fontFamily: "Pretendard-Medium",
-            fontSize: "20px",
+            fontSize: "15px",
           }}
         >
           {currentMusic.artist}

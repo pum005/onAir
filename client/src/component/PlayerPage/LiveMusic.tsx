@@ -107,8 +107,18 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
         alignItems: "center",
       }}
     >
-      <h2 style={{ fontStyle: "italic" }}>{currentMusic.title}</h2>
-      <p style={{ fontFamily: "Shilla_Gothic-Bold" }}>{currentMusic.artist}</p>
+      <h2 style={{ fontStyle: "italic", fontSize: "30px" }}>
+        {currentMusic.title}
+      </h2>
+      <p
+        style={{
+          fontFamily: "Pretendard-Medium",
+          opacity: 0.7,
+          fontSize: "15px",
+        }}
+      >
+        {currentMusic.artist}
+      </p>
       <div
         style={{
           display: "flex",
@@ -121,7 +131,8 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
         <div
           style={{
             width: "50%",
-            background: "#ccc",
+            background: "rgb(62, 62, 62)",
+            borderRadius: "10px",
           }}
         >
           <div
@@ -129,6 +140,7 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
               width: `${progress}%`,
               background: "#7066e0",
               height: "4px",
+              borderRadius: "10px",
             }}
           ></div>
         </div>
@@ -139,7 +151,9 @@ export const LiveMusic = ({ musicFiles, playedTime }: LiveMusicProps) => {
             width: "50%",
           }}
         >
-          <span>{formatTime(currentTime)}</span>
+          <span style={{ fontFamily: "Pretendard-Medium" }}>
+            {formatTime(currentTime)}
+          </span>
           <div>
             {isPlaying ? (
               <PauseIcon
