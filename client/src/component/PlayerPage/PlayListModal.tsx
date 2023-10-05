@@ -62,7 +62,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, currentMusicList }) => {
     if (selectedMusicId) {
       requestWithTokenRefresh(() => {
         return axios.post(
-          "http://localhost:8080/api/my-musicbox",
+          "https://j9b302.p.ssafy.io/api/my-musicbox",
           { musicId: selectedMusicId },
           {
             headers: {
@@ -72,7 +72,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, currentMusicList }) => {
           }
         );
       })
-        .then((response) => {
+        .then(response => {
           console.log(response.data);
           if (response.data.message === "음악 추가 완료") {
             Swal.fire({
@@ -83,7 +83,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, currentMusicList }) => {
               customClass: {
                 popup: "my-popup-class",
               },
-            }).then((result) => {
+            }).then(result => {
               if (result.isConfirmed) {
                 handleClose();
               }
@@ -100,14 +100,14 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, currentMusicList }) => {
               customClass: {
                 popup: "my-popup-class",
               },
-            }).then((result) => {
+            }).then(result => {
               if (result.isConfirmed) {
                 handleClose();
               }
             });
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("에러발생", error);
         });
     }
@@ -173,7 +173,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, currentMusicList }) => {
               </div>
               <AddCircleOutlineIcon
                 style={{ marginLeft: "8px", fontSize: "20px" }}
-                onClick={(event) => handleClickOpen(event, music.musicId)}
+                onClick={event => handleClickOpen(event, music.musicId)}
                 cursor="pointer"
                 className={styles.addIcon}
               />

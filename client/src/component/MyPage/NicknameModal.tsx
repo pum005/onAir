@@ -56,7 +56,7 @@ function NickNameModal({
   useEffect(() => {
     if (submitClicked) {
       requestWithTokenRefresh(() => {
-        return axios.get("http://localhost:8080/api/user/check-nickname", {
+        return axios.get("https://j9b302.p.ssafy.io/api/user/check-nickname", {
           params: {
             nickName: newNickName,
           },
@@ -70,7 +70,7 @@ function NickNameModal({
           if (Response.data === false) {
             return axios
               .put(
-                "http://localhost:8080/api/user/nickname/update",
+                "https://j9b302.p.ssafy.io/api/user/nickname/update",
                 {
                   nickname: newNickName,
                 },

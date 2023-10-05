@@ -73,14 +73,17 @@ export const Player = (): ReactElement => {
   useEffect(() => {
     console.log(oncastId);
     requestWithTokenRefresh(() => {
-      return axios.get(`http://localhost:8080/api/oncast/play/${oncastId}`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("accessToken"),
-        },
-        withCredentials: true,
-      });
+      return axios.get(
+        `https://j9b302.p.ssafy.io/api/oncast/play/${oncastId}`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("accessToken"),
+          },
+          withCredentials: true,
+        }
+      );
     })
-      .then((response) => {
+      .then(response => {
         console.log(response.data);
         const oncastData = response.data.oncast;
         if (oncastData.djName in DJNameMappingReverse) {
@@ -89,7 +92,7 @@ export const Player = (): ReactElement => {
         }
         setOncasts(oncastData);
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("통신에러 발생", error);
       });
   }, [oncastId]);
@@ -173,8 +176,8 @@ export const Player = (): ReactElement => {
           <Music
             musicFiles={[musicFiles[currentIndex]]}
             onFinish={handleFinished}
-            onMusicChange={(music) =>
-              setCurrentMusicList((prev) => [...prev, music])
+            onMusicChange={music =>
+              setCurrentMusicList(prev => [...prev, music])
             }
           />
         )

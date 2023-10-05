@@ -61,7 +61,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
       requestWithTokenRefresh(() => {
         console.log(searchTerm);
         return axios.get(
-          `http://localhost:8080/api/search/spotify?title=${searchTerm}`,
+          `https://j9b302.p.ssafy.io/api/search/spotify?title=${searchTerm}`,
           {
             headers: {
               Authorization: "Bearer " + localStorage.getItem("accessToken"),
@@ -99,7 +99,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
     setIsAddLoading(true);
     requestWithTokenRefresh(() => {
       return axios.get(
-        `http://localhost:8080/api/search/youtube?musicTitle=${music.musicTitle}&musicArtist=${music.musicArtist}&spotifyMusicDuration=${music.spotifyMusicDuration}&musicImageUrl=${music.musicImage}&spotifyId=${music.externalIds}`,
+        `https://j9b302.p.ssafy.io/api/search/youtube?musicTitle=${music.musicTitle}&musicArtist=${music.musicArtist}&spotifyMusicDuration=${music.spotifyMusicDuration}&musicImageUrl=${music.musicImage}&spotifyId=${music.externalIds}`,
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
@@ -120,7 +120,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
             requestWithTokenRefresh(() => {
               return axios
                 .post(
-                  "http://localhost:8080/api/playlist/music",
+                  "https://j9b302.p.ssafy.io/api/playlist/music",
                   {
                     playlistMetaId: playlistId,
                     musicId: response.data.musicId,
@@ -194,7 +194,7 @@ const SearchModal: React.FC<SearchModalProps> = ({
             requestWithTokenRefresh(() => {
               return axios
                 .post(
-                  "http://localhost:8080/api/playlist/music",
+                  "https://j9b302.p.ssafy.io/api/playlist/music",
                   {
                     playlistMetaId: playlistId,
                     musicId: response.data.musicId,

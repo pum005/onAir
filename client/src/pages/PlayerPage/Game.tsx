@@ -54,11 +54,11 @@ const Game = () => {
   const gameTimerId = useRef<number | null>(null);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    setKeysPressed((prev) => ({ ...prev, [e.key]: true }));
+    setKeysPressed(prev => ({ ...prev, [e.key]: true }));
   }, []);
 
   const handleKeyUp = useCallback((e: KeyboardEvent) => {
-    setKeysPressed((prev) => ({ ...prev, [e.key]: false }));
+    setKeysPressed(prev => ({ ...prev, [e.key]: false }));
   }, []);
 
   const formatTime = (time: number) => {
@@ -101,7 +101,7 @@ const Game = () => {
     if (keysPressed["ArrowRight"] || keysPressed["d"]) dx += 1;
 
     if (dx !== 0 || dy !== 0) {
-      setPlayerPosition((prev) => {
+      setPlayerPosition(prev => {
         let newX = prev.x + dx * PLAYER_SPEED;
         let newY = prev.y + dy * PLAYER_SPEED;
 
@@ -133,16 +133,16 @@ const Game = () => {
   // 게임 시작 시 랭킹 데이터 가져오기
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/minigame/rank", {
+      .get("https://j9b302.p.ssafy.io/api/minigame/rank", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },
         withCredentials: true,
       })
-      .then((response) => {
+      .then(response => {
         setRanking(response.data);
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("랭킹 데이터 가져오기 실패", error);
       });
   }, [isGameStarted]);
@@ -151,7 +151,7 @@ const Game = () => {
   const updateRanking = () => {
     axios
       .post(
-        "http://localhost:8080/api/minigame/rank",
+        "https://j9b302.p.ssafy.io/api/minigame/rank",
         { record: gameTime },
         {
           headers: {
@@ -160,35 +160,35 @@ const Game = () => {
           withCredentials: true,
         }
       )
-      .then((response) => {
+      .then(response => {
         console.log("랭킹이 갱신되었습니다.", response.data);
         // 랭킹 갱신 성공 후 랭킹 정보를 다시 가져옵니다.
-        return axios.get("http://localhost:8080/api/minigame/rank", {
+        return axios.get("https://j9b302.p.ssafy.io/api/minigame/rank", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
           },
           withCredentials: true,
         });
       })
-      .then((response) => {
+      .then(response => {
         setRanking(response.data); // 가져온 랭킹 정보로 상태를 업데이트합니다.
         setIsGameStarted(false); // 게임 시작 화면으로 돌아갑니다.
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("랭킹 갱신 또는 가져오기 실패", error);
       });
   };
 
   useEffect(() => {
     const bulletMoveInterval = setInterval(() => {
-      setBullets((prevBullets) =>
+      setBullets(prevBullets =>
         prevBullets
-          .map((bullet) => {
+          .map(bullet => {
             const newX = bullet.x + bullet.velocity.x;
             const newY = bullet.y + bullet.velocity.y;
             return { ...bullet, x: newX, y: newY };
           })
-          .filter((bullet) => {
+          .filter(bullet => {
             // Remove bullets that are off screen
             return (
               bullet.x >= -BULLET_SIZE &&
@@ -217,7 +217,7 @@ const Game = () => {
     if (isGameStarted) {
       const bulletInterval = setInterval(() => {
         const newBullet = generateBullet();
-        setBullets((prev) => [...prev, newBullet]);
+        setBullets(prev => [...prev, newBullet]);
       }, 100);
 
       return () => clearInterval(bulletInterval);
@@ -227,7 +227,7 @@ const Game = () => {
   useEffect(() => {
     if (isGameStarted && !isGameOver) {
       gameTimerId.current = window.setInterval(() => {
-        setGameTime((prevTime) => prevTime + 10); // 10ms 증가
+        setGameTime(prevTime => prevTime + 10); // 10ms 증가
       }, 10); // 10ms마다 실행
     } else if (isGameOver && gameTimerId.current) {
       clearInterval(gameTimerId.current);
@@ -240,7 +240,7 @@ const Game = () => {
     };
   }, [isGameStarted, isGameOver]);
   useEffect(() => {
-    bullets.forEach((bullet) => {
+    bullets.forEach(bullet => {
       if (
         bullet.x < playerPosition.x + PLAYER_SIZE &&
         bullet.x + BULLET_SIZE > playerPosition.x &&
@@ -306,7 +306,7 @@ const Game = () => {
           <>
             <div className={styles.timer}>{formatTime(gameTime)}</div>
             {!isGameOver &&
-              bullets.map((bullet) => (
+              bullets.map(bullet => (
                 <div
                   key={bullet.id}
                   className={styles.bullet}

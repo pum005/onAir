@@ -135,7 +135,7 @@ export default function RecipeReviewCard({
       // selectedMusicId가 설정되었을 때만 API 호출
       requestWithTokenRefresh(() => {
         return axios.post(
-          "http://localhost:8080/api/my-musicbox",
+          "https://j9b302.p.ssafy.io/api/my-musicbox",
           { musicId: selectedMusicId },
           {
             headers: {
@@ -145,7 +145,7 @@ export default function RecipeReviewCard({
           }
         );
       })
-        .then((response) => {
+        .then(response => {
           console.log(response.data);
           if (response.data.message === "음악 추가 완료") {
             Swal.fire({
@@ -156,7 +156,7 @@ export default function RecipeReviewCard({
               customClass: {
                 popup: "my-popup-class",
               },
-            }).then((result) => {
+            }).then(result => {
               if (result.isConfirmed) {
                 handleClose();
               }
@@ -172,14 +172,14 @@ export default function RecipeReviewCard({
               customClass: {
                 popup: "my-popup-class",
               },
-            }).then((result) => {
+            }).then(result => {
               if (result.isConfirmed) {
                 handleClose();
               }
             });
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("에러발생", error);
         });
     }

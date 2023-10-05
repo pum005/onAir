@@ -51,7 +51,7 @@ export const LivePlayer = () => {
     const fetchOncastList = async () => {
       try {
         const response = await requestWithTokenRefresh(() => {
-          return axios.get("http://localhost:8080/api/oncast/livelist", {
+          return axios.get("https://j9b302.p.ssafy.io/api/oncast/livelist", {
             headers: {
               Authorization: "Bearer " + localStorage.getItem("accessToken"),
             },
@@ -88,7 +88,7 @@ export const LivePlayer = () => {
               customClass: {
                 popup: "my-popup-class",
               },
-            }).then((result) => {
+            }).then(result => {
               if (result.isConfirmed) {
                 navigate("/"); // 홈페이지로 이동
               }
@@ -102,7 +102,7 @@ export const LivePlayer = () => {
               customClass: {
                 popup: "my-popup-class",
               },
-            }).then((result) => {
+            }).then(result => {
               if (result.isConfirmed) {
                 navigate("/"); // 홈페이지로 이동
               }
@@ -116,7 +116,7 @@ export const LivePlayer = () => {
               customClass: {
                 popup: "my-popup-class",
               },
-            }).then((result) => {
+            }).then(result => {
               if (result.isConfirmed) {
                 navigate("/"); // 홈페이지로 이동
               }
@@ -127,7 +127,7 @@ export const LivePlayer = () => {
         }
       },
       // 두 번째 콜백: 채팅 데이터를 처리합니다.
-      (chatData) => {
+      chatData => {
         dispatch(
           addChatMessage({
             content: chatData.content,
