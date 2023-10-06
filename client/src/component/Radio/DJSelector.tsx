@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import dj1 from "../../resources/ncs1.gif";
 import dj2 from "../../resources/ncs2.gif";
@@ -15,6 +15,9 @@ type DJSelectorProps = {
 
 function DJSelector({ onSelect }: DJSelectorProps) {
   const [selectedDJ, setSelectedDJ] = useState<string | null>(null);
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(
+    null
+  );
 
   const preview1 = "/preview/아라.mp3";
   const preview2 = "/preview/이안.mp3";
@@ -33,8 +36,15 @@ function DJSelector({ onSelect }: DJSelectorProps) {
     playSound(soundSrc);
   };
   const playSound = (soundSrc: string) => {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
+
     const audio = new Audio(soundSrc);
     audio.play();
+
+    setCurrentAudio(audio);
   };
 
   const DJData = [
@@ -108,6 +118,14 @@ function DJSelector({ onSelect }: DJSelectorProps) {
   const handlePrev = () => {
     setCenterIndex((prev) => Math.max(prev - 1, 3));
   };
+
+  useEffect(() => {
+    return () => {
+      if (currentAudio) {
+        currentAudio.pause();
+      }
+    };
+  }, [currentAudio]);
 
   return (
     <Grid container alignItems="center" justifyContent="center" spacing={2}>

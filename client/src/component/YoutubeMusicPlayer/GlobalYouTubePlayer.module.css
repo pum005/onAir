@@ -336,4 +336,6 @@ button.albumTrueButton {
   animation: slideUp 1s forwards; /* 슬라이드 업 애니메이션으로 변경 */
 }
 
-/* 다음 항목에 slideIn 애니메이션을 적용하려면 동일한 방법으로 추가할 수 있습니다. */
+.hidden {
+  display: none !important;
+}
