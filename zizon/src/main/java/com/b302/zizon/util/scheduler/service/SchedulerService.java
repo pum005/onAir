@@ -27,53 +27,53 @@ public class SchedulerService {
     private final RedisTemplate<String, String> redisTemplate;
 
     // 채택하기 라이브큐
-    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
-    @Transactional
-    public void selectedOncast(){
-        log.info("라이브큐 채택 스케줄러 동작");
-        List<Oncast> byOncast = oncastRepository.findByDeleteCheckFalseAndSelectCheckFalseAndShareCheckTrue();
-        Collections.shuffle(byOncast);
-        // 공유 상태가 10개를 넘은 경우
-        if(byOncast.size() > 10){
-            // 섞고
-            int count = 0;
-            for(Oncast oncast : byOncast){
-                if(count >= 10){
-                    break;
-                }
-                oncast.updateSeletedOncast();
-                LiveQueue build = LiveQueue.builder()
-                        .oncast(oncast)
-                        .user(oncast.getUser())
-                        .oncastCreateData(oncast.getOncastCreateData())
-                        .build();
-                liveQueueRepository.save(build);
-
-                count++;
-            }
-        }else{
-            for(Oncast oncast : byOncast){
-                oncast.updateSeletedOncast();
-                LiveQueue build = LiveQueue.builder()
-                        .oncast(oncast)
-                        .user(oncast.getUser())
-                        .oncastCreateData(oncast.getOncastCreateData())
-                        .build();
-                liveQueueRepository.save(build);
-            }
-        }
-    }
+    //    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+    //    @Transactional
+    //    public void selectedOncast(){
+    //        log.info("라이브큐 채택 스케줄러 동작");
+    //        List<Oncast> byOncast = oncastRepository.findByDeleteCheckFalseAndSelectCheckFalseAndShareCheckTrue();
+    //        Collections.shuffle(byOncast);
+    //        // 공유 상태가 10개를 넘은 경우
+    //        if(byOncast.size() > 10){
+    //            // 섞고
+    //            int count = 0;
+    //            for(Oncast oncast : byOncast){
+    //                if(count >= 10){
+    //                    break;
+    //                }
+    //                oncast.updateSeletedOncast();
+    //                LiveQueue build = LiveQueue.builder()
+    //                        .oncast(oncast)
+    //                        .user(oncast.getUser())
+    //                        .oncastCreateData(oncast.getOncastCreateData())
+    //                        .build();
+    //                liveQueueRepository.save(build);
+    //
+    //                count++;
+    //            }
+    //        }else{
+    //            for(Oncast oncast : byOncast){
+    //                oncast.updateSeletedOncast();
+    //                LiveQueue build = LiveQueue.builder()
+    //                        .oncast(oncast)
+    //                        .user(oncast.getUser())
+    //                        .oncastCreateData(oncast.getOncastCreateData())
+    //                        .build();
+    //                liveQueueRepository.save(build);
+    //            }
+    //        }
+    //    }
 
 //     라이브큐에 있는 내용 삭제하기
-    @Scheduled(cron = "0 0 23 * * *", zone = "Asia/Seoul")
-    @Transactional
-    public void deleteLiveQueue(){
-        log.info("라이브큐 삭제 스케줄러 동작");
-        List<LiveQueue> byLiveQueue = liveQueueRepository.findAll();
-        for(LiveQueue q : byLiveQueue){
-            liveQueueRepository.delete(q);
-        }
-    }
+//    @Scheduled(cron = "0 0 23 * * *", zone = "Asia/Seoul")
+//    @Transactional
+//    public void deleteLiveQueue(){
+//        log.info("라이브큐 삭제 스케줄러 동작");
+//        List<LiveQueue> byLiveQueue = liveQueueRepository.findAll();
+//        for(LiveQueue q : byLiveQueue){
+//            liveQueueRepository.delete(q);
+//        }
+//    }
 
     // 모든 유저의 온캐스트 생성 여부 false로 초기화
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")

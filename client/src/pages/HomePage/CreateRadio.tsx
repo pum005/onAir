@@ -191,7 +191,7 @@ const CreateRadio = () => {
     requestWithTokenRefresh(() => {
       return axios.post(
         // "http://52.78.65.222:5000/hadoop/songs",
-        "https://j9b302.p.ssafy.io/api/oncast/create",
+        "http://localhost:8080/api/oncast/create",
         {
           title: title,
           theme: selectedTheme,
