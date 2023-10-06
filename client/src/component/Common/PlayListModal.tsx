@@ -48,7 +48,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
     }
     axios
       .post(
-        "http://localhost:8080/api/playlist/music",
+        "https://j9b302.p.ssafy.io/api/playlist/music",
         {
           playlistMetaId: playlistMetaId,
           musicId: musicId,
@@ -80,7 +80,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
   useEffect(() => {
     if (isOpen) {
       requestWithTokenRefresh(() => {
-        return axios.get("http://localhost:8080/api/playlist", {
+        return axios.get("https://j9b302.p.ssafy.io/api/playlist", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
           },
