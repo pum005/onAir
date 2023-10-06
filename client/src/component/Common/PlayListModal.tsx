@@ -48,7 +48,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
     }
     axios
       .post(
-        "http://localhost:8080/api/playlist/music",
+        "https://j9b302.p.ssafy.io/api/playlist/music",
         {
           playlistMetaId: playlistMetaId,
           musicId: musicId,
@@ -80,7 +80,7 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
   useEffect(() => {
     if (isOpen) {
       requestWithTokenRefresh(() => {
-        return axios.get("http://localhost:8080/api/playlist", {
+        return axios.get("https://j9b302.p.ssafy.io/api/playlist", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
           },
@@ -129,48 +129,62 @@ function PlayListModal({ isOpen, onClose, musicId }: PlayListModalProps) {
           </div>
 
           <div className={styles.playlistContainer}>
-            {playlists.map(playlist => (
-              <Box key={playlist.playlistMetaId} className={styles.playlist}>
-                <div className={styles.albumCoverUrl}>
-                  <img
-                    src={playlist.playlistImage || nullImg}
-                    alt={playlist.playlistName}
-                    style={{
-                      width: "40px",
-                      height: "40px",
-                      marginRight: "10px",
-                    }}
-                  />
-                </div>
-                <div>
-                  <Typography
-                    variant="subtitle1"
-                    className={styles.songTitle}
-                    style={{ fontFamily: "Pretendard-SemiBold" }}
-                  >
-                    {playlist.playlistName}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    className={styles.songCount}
-                    style={{ fontFamily: "Pretendard-SemiBold" }}
-                  >
-                    음악 : {playlist.playlistCount}곡
-                  </Typography>
-                </div>
-                <Box sx={{ marginLeft: "auto", cursor: "pointer" }}>
-                  <AddCircleOutlineIcon
-                    className={styles.addButton}
-                    onClick={() =>
-                      handleAddClick(
-                        playlist.playlistName,
-                        playlist.playlistMetaId
-                      )
-                    }
-                  />
+            {playlists.length > 0 ? (
+              playlists.map(playlist => (
+                <Box key={playlist.playlistMetaId} className={styles.playlist}>
+                  <div className={styles.albumCoverUrl}>
+                    <img
+                      src={playlist.playlistImage || nullImg}
+                      alt={playlist.playlistName}
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        marginRight: "10px",
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <Typography
+                      variant="subtitle1"
+                      className={styles.songTitle}
+                      style={{ fontFamily: "Pretendard-SemiBold" }}
+                    >
+                      {playlist.playlistName}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      className={styles.songCount}
+                      style={{ fontFamily: "Pretendard-SemiBold" }}
+                    >
+                      음악 : {playlist.playlistCount}곡
+                    </Typography>
+                  </div>
+                  <Box sx={{ marginLeft: "auto", cursor: "pointer" }}>
+                    <AddCircleOutlineIcon
+                      className={styles.addButton}
+                      onClick={() =>
+                        handleAddClick(
+                          playlist.playlistName,
+                          playlist.playlistMetaId
+                        )
+                      }
+                    />
+                  </Box>
                 </Box>
-              </Box>
-            ))}
+              ))
+            ) : (
+              <Typography
+                style={{
+                  fontFamily: "GangwonEduPowerExtraBoldA",
+                  fontSize: "20px",
+                  color: "white",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                플레이리스트가 없습니다.
+              </Typography>
+            )}
           </div>
         </Box>
       </Modal>

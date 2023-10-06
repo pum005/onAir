@@ -25,7 +25,7 @@ export const ShareConfirm: React.FC<ShareConfirmProps> = ({
       <DialogTitle id="alert-dialog-title">{"공유 완료"}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          라디오 공유가 완료되었습니다!
+          온캐스트 공유가 완료되었습니다!
         </DialogContentText>
       </DialogContent>
       <DialogActions>
