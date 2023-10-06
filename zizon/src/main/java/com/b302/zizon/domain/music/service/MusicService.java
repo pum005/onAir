@@ -287,6 +287,7 @@ public class MusicService {
                         videoTitle.contains("MV") || videoDescription.contains("MV") ||
                         videoTitle.contains("practice") || videoDescription.contains("practice")
                 ) {
+                    log.info("건너뀜" + videoTitle);
                     continue;
                 }
 
