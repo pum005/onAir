@@ -1,0 +1,32 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  justify-content: space-between;
+  align-items: center;
+  height: calc(100vh - 60px);
+}
+
+.centerContainer {
+  max-width: 1000px;
+  margin: 3rem auto;
+  border: 1px solid #626262;
+  border-radius: 20px;
+  background-color: rgb(61, 61, 61);
+  padding: 1rem;
+  text-align: center;
+  color: white;
+  font-family: "Ramche";
+  letter-spacing: 3px;
+}
+
+.createButton {
+  margin-right: 10px;
+}
+
+.createButton,
+.cancleButton {
+  font-family: "Ramche";
+  width: 100px;
+  margin-top: 10px;
+}

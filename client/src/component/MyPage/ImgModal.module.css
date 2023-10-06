@@ -1,0 +1,159 @@
+/* 강원도 굵은 글씨체 영어(제목) */
+@font-face {
+  font-family: "GangwonEduPowerExtraBoldA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+.ImgContainer {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.ImgContainer:hover .ImgModifyButton {
+  display: flex !important; /* 변경: flex로 변경하여 아이콘을 중앙에 배치 */
+  align-items: center; /* 추가: 아이콘을 세로 중앙에 배치 */
+  justify-content: center; /* 추가: 아이콘을 가로 중앙에 배치 */
+}
+
+.ImgModifyButton {
+  display: none !important;
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.112) !important; /* 반투명한 배경 */
+}
+
+.ImgContainer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.modalContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 가로 중앙 정렬 */
+  justify-content: center; /* 세로 중앙 정렬 (필요하다면) */
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  background-color: #ffffff; /* background.paper 스타일에 해당 */
+  box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.15); /* boxShadow: 24에 해당 */
+  padding: 16px; /* p: 4에 해당 (MUI에서의 spacing 단위는 8이므로 4 x 8 = 32px) */
+  background-color: rgb(37, 37, 37);
+  border-radius: 10px;
+  border: 1px solid rgb(62, 62, 62);
+  font-family: "GangwonEduPowerExtraBoldA";
+}
+
+.ImgModifyTitle {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+.ImgModifyTitle h2 {
+  font-size: 20px;
+}
+
+.fileUpload {
+  background-color: #e3e3e3;
+  padding: 10px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.fileUpload:hover {
+  background-color: #a7a7a7;
+  transform: scale(1.05);
+  border: none;
+}
+
+button.imgModifyConfirmButton {
+  background-color: rgb(105, 102, 255);
+  color: rgb(255, 255, 255);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  font-family: "Shilla_Gothic-Bold";
+}
+
+button.imgModifyConfirmButton:hover {
+  background-color: rgb(92, 90, 249) !important;
+  transform: scale(1.05);
+  border: none;
+}
+
+button.ImgModalCloseButton {
+  background-color: #da0037;
+  color: rgb(255, 255, 255);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  font-family: "Shilla_Gothic-Bold";
+}
+
+button.ImgModalCloseButton:hover {
+  background-color: #a50029 !important;
+  transform: scale(1.05);
+  border: none;
+}
+
+/* Input 보통 글씨체  */
+@font-face {
+  font-family: "Pretendard-Medium";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Medium.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+/* Input 살짝 굵은 글씨체  */
+@font-face {
+  font-family: "Pretendard-SemiBold";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-SemiBold.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Input 굵은글씨체  */
+@font-face {
+  font-family: "Pretendard-ExtraBold";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraBold.woff")
+    format("woff");
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* 강원도 굵은 글씨체 영어(제목) */
+@font-face {
+  font-family: "GangwonEduPowerExtraBoldA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* 신라 고딕체 얇은 글씨 */
+@font-face {
+  font-family: "Shilla_Gothic-Bold";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/Shilla_Gothic-Bold.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}

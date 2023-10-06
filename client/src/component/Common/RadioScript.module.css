@@ -1,0 +1,23 @@
+.container {
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid #e1e1e6;
+  border-radius: 10px;
+  margin-top: 20px;
+  width: 80%;
+  box-shadow: 0 0 10px white;
+}
+
+.hrStyle {
+  margin-bottom: 20px;
+  background-color: #e1e1e6;
+}
+
+/* RadioScript.module.css */
+h2 {
+  font-family: "Pretendard-ExtraBold", sans-serif; /* 폴백 폰트로 sans-serif 추가 */
+}
+
+p {
+  font-family: "Pretendard-Medium", sans-serif;
+}

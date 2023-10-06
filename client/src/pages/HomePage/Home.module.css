@@ -1,0 +1,250 @@
+.fadeInOutText {
+  animation: fadeInOut 3s;
+  opacity: 0;
+  font-family: "GangwonEduPowerExtraBoldA" !important;
+
+  /* font-family: "LINESeedKR-Bd" !important; */
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  verflow: hidden;
+}
+
+.fadeInBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 100px;
+}
+
+.underline {
+  width: 100%; /* 혹은 원하는 넓이로 설정 */
+  height: 2px; /* 줄의 높이 설정 */
+  background-color: white;
+  margin-top: 10px; /* 텍스트와 줄 사이의 간격 조정 */
+  margin-bottom: 10px; /* 줄과 이미지 사이의 간격 조정 */
+}
+.customImage {
+  width: 300px; /* 원하는 이미지 넓이로 설정 */
+  height: 200px;
+  height: auto;
+  display: block;
+  margin: 0 auto; /* 이미지를 중앙 정렬하기 위함 */
+}
+.textBelowLine {
+  padding-top: 10px;
+}
+
+.grayText {
+  color: rgb(62, 62, 62);
+}
+
+.whiteText {
+  color: white;
+}
+
+@font-face {
+  font-family: "BookkGothic-Bd";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkGothic-Bd.woff2")
+    format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "LINESeedKR-Bd";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2")
+    format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Interop";
+  src: url("https://raw.githubusercontent.com/payw-org/Interop/main/web/fonts/Interop-Regular.woff2")
+      format("woff2"),
+    url("https://raw.githubusercontent.com/payw-org/Interop/main/web/fonts/Interop-Regular.woff")
+      format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.fadeInGif {
+  animation: fadeIn 2s;
+  opacity: 1;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  60% {
+    /* 2.5초 / 3.5초 = 약 71% */
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.centerContent {
+  display: grid;
+  place-items: center;
+  height: 90vh;
+}
+
+.enterText {
+  display: flex;
+  border: 2px solid red;
+  border-radius: 12px;
+}
+
+.centerText {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: "MyFont";
+  font-size: 20px;
+  /* border: 2px solid red; */
+  /* border-radius: 12px; */
+  /* margin-bottom: ; */
+  margin-top: 2px;
+  margin-bottom: 2px;
+  color: crimson;
+  /* width: 250px; */
+  /* height: 40px; */
+  padding: 5px;
+  cursor: pointer;
+}
+.verticalAlign {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.largeGif {
+  width: 140%;
+  height: 140%;
+  cursor: pointer;
+}
+
+.ontext {
+  text-align: center;
+}
+
+/* 메인 컨테이너의 높이를 뷰포트 높이로 설정 */
+.background {
+  background-color: #000104;
+  height: 100vh; /* 화면 높이를 100vh로 설정 */
+  color: white;
+  overflow: hidden; /* 스크롤 숨기기 */
+}
+
+@font-face {
+  font-family: "Ramche";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/Ramche.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.loadingScreen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: black;
+}
+
+.redCircle {
+  width: 50px;
+  height: 50px;
+  background-color: red;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative; /* 이 부분 추가 */
+}
+
+/* 3D 애니메이션 정의 */
+@keyframes slideCircle {
+  0% {
+    transform: translate(-50%, -70%) rotateX(90deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotateX(0deg);
+  }
+}
+
+@keyframes shadowPulse {
+  0% {
+    box-shadow: 0 0 5px 5px rgba(253, 253, 253, 0.7); /* 초기 그림자 크기 */
+  }
+  50% {
+    box-shadow: 0 0 10px 10px rgba(178, 81, 81, 0.5); /* 그림자가 최대로 커지는 상태 */
+  }
+  100% {
+    box-shadow: 0 0 5px 5px rgba(255, 0, 0, 0.7); /* 다시 초기 그림자 크기로 */
+  }
+}
+
+/* 원래의 빨간 원 바깥쪽에 속이 빈 원을 만드는 가상 요소 */
+.redCircle::before {
+  content: "";
+  display: block;
+  width: 60px; /* 이 크기는 빨간색 원보다 조금 큰 크기로 설정 */
+  height: 60px;
+  border: 3px solid red; /* 원의 테두리 색상 및 두께 설정 */
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -70%) rotateX(90deg); /* 초기 상태 설정 */
+  transform-origin: center; /* 회전 중심점 설정 */
+  opacity: 0; /* 초기 상태에서는 투명하게 설정 */
+}
+
+.redCircle:hover::before {
+  opacity: 1;
+  animation: slideCircle 0.5s forwards, shadowPulse 1s infinite; /* 두 개의 애니메이션을 동시에 적용 */
+}
+
+@keyframes moveTopLeft {
+  100% {
+    transform: translate(-50%, -50%) translate(-200px, -200px);
+  }
+}
+
+.redCircle.clicked {
+  animation: moveTopLeft 5s forwards;
+}
+
+.redCircle.clicked::before {
+  animation: slideCircle 5s forwards, shadowPulse 5s infinite,
+    moveTopLeft 5s forwards;
+}
+
+@keyframes simpleAnimation {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+.redCircle.clicked {
+  animation: simpleAnimation 5s forwards;
+}

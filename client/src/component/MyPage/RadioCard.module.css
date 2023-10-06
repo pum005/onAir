@@ -1,0 +1,353 @@
+.gifImage {
+  width: 100px;
+  height: 100px;
+  /* GIF의 원래 높이에 맞게 설정하세요 */
+  margin: 10px auto;
+  background-image: url("../../assets/lp.png");
+  /* 첫 프레임 이미지의 경로 */
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.mainCard {
+  display: flex;
+  justify-content: center;
+  /* margin: 50px; */
+}
+.gifImage:hover {
+  background-image: url("../../assets/lp.gif");
+  /* 첫 프레임 이미지의 경로 */
+}
+
+div.cards {
+  background-color: #222222;
+  /* max-width: 250px; */
+  width: 250px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  height: 425px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* 최대한의 간격을 줌 */
+  border: 1px solid #626262;
+}
+.cardTop {
+  display: flex;
+  align-content: space-between;
+  justify-content: space-between;
+  align-items: center;
+}
+.title {
+  display: flex;
+  align-items: center;
+  color: white;
+  text-align: center;
+  /* background-color: #626262; */
+  font-family: "GangwonEduPowerExtraBoldA";
+  /* border: 1px solid #717171; */
+  /* border-radius: 5px; */
+  font-size: 13px;
+  /* padding: 5px; */
+  padding-bottom: 1px;
+  /* margin-bottom: 1px; */
+}
+.theme {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  /* background-color: #626262; */
+  font-family: "GangwonEduPowerExtraBoldA";
+  /* border: 1px solid #717171; */
+  border-radius: 5px;
+  font-size: 14px;
+  color: white;
+  padding: 5px;
+  padding-bottom: 1px;
+
+  /* 여기서부턴 */
+  background: linear-gradient(-45deg, #626262 0%, #222222 100%);
+  background-size: 400% 400%;
+  animation: gradient1 2.5s ease infinite;
+}
+@keyframes gradient1 {
+  0% {
+    background-position: 100% 50%;
+  }
+  50% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.subheader {
+  /* padding: 5px 0px 5px 0px; */
+  padding-top: 5px;
+  padding-bottom: 5px;
+  color: white;
+  font-size: 25px !important;
+  border-bottom: 1px solid white;
+  text-align: center;
+  font-family: "GangwonEduPowerExtraBoldA";
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subheader:hover {
+  animation: marquees 5s linear infinite;
+  /* 전광판처럼 스크롤되게 하는 애니메이션 */
+}
+
+@keyframes marquees {
+  0% {
+    text-indent: 0%;
+  }
+
+  100% {
+    text-indent: -100%;
+  }
+}
+
+.songRow {
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* margin-top: 10px; */
+  padding-top: 5px;
+  border-bottom: 1px solid #626262;
+  padding-bottom: 5px;
+  /* cursor: pointer; */
+  transition: background-color 0.3s ease;
+}
+.addIcon {
+  color: rgb(75, 75, 75);
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.songRow:hover .addIcon {
+  opacity: 1;
+  visibility: visible;
+  /* background-color: #4f4f4f6a; */
+}
+.songRow:hover {
+  background-color: #4f4f4f6a;
+}
+.addIcon:hover {
+  color: rgba(255, 255, 255, 0.703) !important;
+}
+
+.songTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 60px;
+  position: relative;
+  /* cursor: n; */
+  font-family: "Pretendard-SemiBold";
+}
+
+.songTitle:hover {
+  animation: marquee 10s linear infinite;
+  /* 전광판처럼 스크롤되게 하는 애니메이션 */
+}
+
+@keyframes marquee {
+  0% {
+    text-indent: 0%;
+  }
+
+  100% {
+    text-indent: -200%;
+  }
+}
+
+.songArtist {
+  color: #a3a3a3;
+  font-size: 0.9em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 60px;
+  position: relative;
+  font-family: "Pretendard-SemiBold";
+}
+
+.songArtist:hover {
+  animation: marquee 10s linear infinite;
+  /* 전광판처럼 스크롤되게 하는 애니메이션 */
+}
+
+.songImage {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.songDetails {
+  flex: 2;
+}
+
+.songDuration {
+  color: #a3a3a3;
+  padding-right: 10px;
+  font-size: 15px;
+  font-family: "Pretendard-SemiBold";
+}
+
+.addIcon {
+  margin-left: 8px;
+  cursor: pointer;
+  /* display: none !important; */
+  margin-right: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.addIcon:hover {
+  cursor: pointer;
+  color: white;
+  transform: scale(1.1);
+}
+
+.shareIcon {
+  cursor: pointer;
+  color: rgb(75, 75, 75);
+}
+
+.shareIcon:hover {
+  cursor: pointer;
+  color: #6966ff;
+  transform: scale(1.1);
+}
+
+.playIcon {
+  cursor: pointer;
+  color: rgb(75, 75, 75);
+}
+
+.playIcon:hover {
+  cursor: pointer;
+  color: white;
+  transform: scale(1.1);
+}
+
+.deleteIcon {
+  cursor: pointer;
+  color: rgb(75, 75, 75);
+}
+
+.deleteIcon:hover {
+  cursor: pointer;
+  color: #da0037;
+  transform: scale(1.1);
+}
+
+.actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 60px;
+
+  justify-content: space-around;
+  align-items: center;
+}
+
+.favoriteButton {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  color: #ff5c58;
+}
+
+/* Input 보통 글씨체  */
+@font-face {
+  font-family: "Pretendard-Medium";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Medium.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+/* Input 살짝 굵은 글씨체  */
+@font-face {
+  font-family: "Pretendard-SemiBold";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-SemiBold.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Input 굵은글씨체  */
+@font-face {
+  font-family: "Pretendard-ExtraBold";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraBold.woff")
+    format("woff");
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* 강원도 굵은 글씨체 영어(제목) */
+@font-face {
+  font-family: "GangwonEduPowerExtraBoldA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* 신라 고딕체 얇은 글씨 */
+@font-face {
+  font-family: "Shilla_Gothic-Bold";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/Shilla_Gothic-Bold.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.listScrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* 스크롤바 전체 */
+.listScrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* 스크롤바의 핸들 부분 */
+.listScrollbar::-webkit-scrollbar-thumb {
+  background-color: #323232;
+}
+
+/* 스크롤바의 트랙 부분 */
+.listScrollbar::-webkit-scrollbar-track {
+  background-color: rgb(0, 0, 0);
+}
+
+.listScrollbar {
+  height: 400px;
+  /* border-radius: 5px; */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  margin-bottom: 100px;
+}
+
+.shadowWhite {
+  box-shadow: 0px 0px 10px rgb(255, 255, 255); /* Adjust shadow as needed */
+  border-radius: 10px;
+}
+
+.shadowPurple {
+  box-shadow: 0px 0px 10px #6966ff; /* Adjust shadow as needed */
+  border-radius: 10px;
+}
+
+.djImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}

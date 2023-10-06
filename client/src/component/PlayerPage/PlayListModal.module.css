@@ -1,0 +1,105 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 100px;
+}
+.closeButton {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal {
+  width: 300px;
+  padding: 20px;
+  background-color: #222222;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.playListTitle {
+  display: flex;
+  justify-content: center;
+}
+
+.musicTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 150px;
+  font-size: 15px;
+  position: relative;
+}
+
+.musicTitle:hover {
+  animation: marquee 10s linear infinite;
+  /* 전광판처럼 스크롤되게 하는 애니메이션 */
+}
+
+@keyframes marquee {
+  0% {
+    text-indent: 0%;
+  }
+
+  100% {
+    text-indent: -200%;
+  }
+}
+
+.hrStyle {
+  margin: 10px 0;
+  border: 0;
+  border-top: 1px solid #eee;
+}
+.songDuration {
+  color: #a3a3a3;
+  font-size: 15px;
+}
+
+.songList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.songList li {
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+  cursor: pointer;
+}
+
+.songList img {
+  width: 60px;
+  height: 60px;
+  margin-right: 15px;
+  border-radius: 5px;
+}
+
+typography.songCount {
+  color: #a3a3a3;
+}
+
+.addIcon {
+  color: rgb(75, 75, 75);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.cursorHover:hover .addIcon {
+  opacity: 1;
+  visibility: visible;
+  /* background-color: #4f4f4f6a; */
+}
+.cursorHover:hover {
+  background-color: #4f4f4f6a;
+}
+.addIcon:hover {
+  color: rgba(255, 255, 255, 0.703) !important;
+}

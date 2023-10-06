@@ -1,0 +1,100 @@
+.hoverableListItem .playButton {
+  display: flex; /* Flexbox 사용 */
+  align-items: center; /* 수직 중앙 정렬 */
+  justify-content: center; /* 수평 중앙 정렬 */
+  opacity: 0;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ffffff;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.hoverableListItem:hover .playButton {
+  opacity: 1; /* 호버 상태에서 완전 불투명 */
+  transform: translateY(-50%) scale(1.1); /* 약간 확대되는 효과를 위한 scale 추가 */
+  font-family: "MonoplexKR-Regular";
+}
+@font-face {
+  font-family: "MonoplexKR-Regular";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_Monoplex-kr@1.0/MonoplexKR-Regular.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+.hoverableListItem .DeleteOutlineIcon {
+  display: block; /* 항상 보이지만 opacity 0으로 시작함 */
+  opacity: 0; /* 기본적으로 투명 */
+  position: absolute;
+  right: 7%;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ffffff;
+  transition: opacity 0.3s, transform 0.3s; /* opacity와 transform에 대한 transition 추가 */
+}
+
+.hoverableListItem:hover .DeleteOutlineIcon {
+  opacity: 1; /* 호버 상태에서 완전 불투명 */
+  transform: translateY(-50%) scale(1.1); /* 약간 확대되는 효과를 위한 scale 추가 */
+}
+
+.playArrowIcon:hover {
+  color: #6966ff !important;
+}
+.DeleteOutlineIcon:hover {
+  color: #da0037 !important;
+}
+
+.playArrowIcon {
+  font-size: 30px;
+}
+
+.hoverableListItem:hover {
+  background-color: rgba(228, 224, 224, 0.197);
+}
+
+.hoverableListItem {
+  border-bottom: 1px solid #e0e0e06f;
+  transition: background-color 0.3s;
+}
+
+.audiotrackIcon {
+  font-size: 40px;
+}
+
+.textPrimary {
+  color: #ffffff;
+}
+
+.textSecondary {
+  color: #ffffff;
+}
+
+.listScrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* 스크롤바 전체 */
+.listScrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* 스크롤바의 핸들 부분 */
+.listScrollbar::-webkit-scrollbar-thumb {
+  background-color: #323232;
+}
+
+/* 스크롤바의 트랙 부분 */
+.listScrollbar::-webkit-scrollbar-track {
+  background-color: rgb(0, 0, 0);
+}
+
+.listScrollbar {
+  height: 350px;
+  /* border-radius: 5px; */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  /* margin-bottom: 100px; */
+}

@@ -1,0 +1,162 @@
+/* Base Styles */
+
+.allContainer {
+  overflow: hidden;
+  padding-top: 60px;
+}
+
+.container {
+  background-color: #000104;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* min-height: 100vh; */
+  font-family: "Shilla_Gothic-Bold" !important;
+  /* overflow: hidden; */
+}
+
+.oncastCreate {
+  max-width: 1000px;
+  margin: 2rem auto;
+  border: 1px solid #626262;
+  border-radius: 20px;
+  background-color: rgb(50, 50, 50);
+  padding: 1rem;
+}
+
+.itemTitle {
+  text-align: center;
+  /* padding-left: 10px; */
+  font-family: "GangwonEduPowerExtraBoldA" !important;
+}
+.textFieldFont {
+  font-family: "GangwonEduPowerExtraBoldA" !important;
+}
+
+/* Input 글씨체  */
+@font-face {
+  font-family: "Pretendard-SemiBold";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-SemiBold.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Input 굵은글씨체  */
+@font-face {
+  font-family: "Pretendard-ExtraBold";
+  src: url("https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraBold.woff")
+    format("woff");
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* 강원도 굵은 글씨체 영어(제목) */
+@font-face {
+  font-family: "GangwonEduPowerExtraBoldA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* 신라 고딕체 얇은 글씨 */
+@font-face {
+  font-family: "Shilla_Gothic-Bold";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/Shilla_Gothic-Bold.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+.djAlign {
+  display: flex;
+  /* padding-left: 10px; */
+  margin-right: 40px;
+}
+
+.titleInput,
+.storyInput {
+  width: 100%;
+  padding: 8px 8px;
+  font-size: 1rem;
+
+  background-color: transparent;
+  color: white !important;
+  font-family: "Pretendard-SemiBold" !important;
+  border: 1px solid white;
+  border-radius: 4px;
+  resize: none; /* textarea 크기 조절 방지 */
+  transition: border 0.2s ease-in-out;
+}
+.storyInput {
+  height: 70px;
+}
+.titleInput:hover,
+.storyInput:hover {
+  border-color: #aaa; /* 원하는 hover 테두리 색상으로 변경 가능 */
+}
+
+.titleInput:focus,
+.storyInput:focus {
+  border-color: #fff;
+}
+
+.typingLimit {
+  text-align: right;
+  color: aliceblue;
+  font-family: "GangwonEduPowerExtraBoldA" !important;
+  margin-top: 5px;
+}
+
+.themeSelect {
+  display: flex;
+  flex-wrap: wrap;
+  /* justify-content: space-around; */
+  gap: 0.5rem;
+}
+.theme {
+  font-family: "Pretendard-ExtraBold" !important;
+  color: #ededed !important;
+  /* font-family: "IAMAPLAYER" !important; */
+  /* font-family: "SUITE-Regular" !important; */
+  /* font-family: "intelone-mono-font-family-regular" !important; */
+}
+.selectedTheme {
+  color: red !important;
+}
+
+.createButton {
+  margin-right: 20px;
+  background-color: #4f4dbd !important;
+  color: white !important;
+  font-family: "Shilla_Gothic-Bold" !important;
+}
+
+.cancleButton {
+  margin-right: 20px;
+  font-family: "Shilla_Gothic-Bold" !important;
+  background-color: #da0037;
+  color: white;
+}
+
+.createButton:hover {
+  background-color: #4f4dbd !important; /* 원하는 색상으로 조절 */
+}
+
+.cancleButton:hover {
+  background-color: #b80129 !important; /* 원하는 색상으로 조절 */
+}
+
+.djName {
+  font-family: "Shilla_Gothic-Bold" !important;
+}
+
+/* .swal2-warning {
+  border-color: #ed6c02 !important;
+  color: #ed6c02 !important;
+} */
+/* .colored-toast.swal2-icon-warning {
+  background-color: #ed6c02 !important;
+} */
