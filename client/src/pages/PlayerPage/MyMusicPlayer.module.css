@@ -1,0 +1,204 @@
+.playlistItem {
+  display: flex;
+  justifycontent: space-between;
+  alignitems: center;
+  padding: 10px;
+  marginbottom: 10px;
+  cursor: pointer;
+  borderradius: 5px;
+  transition: background-color 0.3s ease;
+  font-family: "Pretendard-SemiBold", sans-serif;
+  border-bottom: 1px solid #a3a3a3;
+}
+
+.playlistItem:hover {
+  background-color: #1f1e1e71;
+}
+
+.songListHeader div {
+  font-weight: bold;
+  font-size: 1.5em;
+  font-family: "Pretendard-SemiBold", sans-serif;
+}
+
+.AddCircleOutline:hover {
+  transform: scale(1.2);
+  transition: transform 0.3s ease;
+}
+
+.deleteIcon:hover {
+  color: red !important;
+}
+
+.playlistItemActive {
+  background-color: #222222;
+}
+
+/* 기존 스타일에 추가 */
+.playlistItem .deleteIcon {
+  display: none; /* 기본적으로 아이콘을 숨깁니다. */
+
+  margin-right: 10px;
+}
+
+.playlistItem:hover .deleteIcon {
+  display: block;
+}
+
+.root {
+  /* background: linear-gradient(45deg, #000104, #1a1a2e); */
+  /* height: 100vh; */
+  /* overflow: hidden; */
+  /* overflow: hidden; */
+  color: white;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  /* padding: 20px; */
+  justify-content: space-between;
+  align-items: center;
+  /* height: calc(100vh - 60px); */
+}
+
+.songDisplayContainer {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  max-height: 100%;
+}
+
+.coverImageContainer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px;
+}
+
+.coverImage {
+  width: 500px;
+  height: 500px;
+  margin-top: 50px;
+  transition: transform 0.3s ease; /* 부드러운 변환 효과를 위해 추가합니다. */
+  box-shadow: 0px 0px 50px rgba(255, 255, 255, 0.5); /* 그림자 효과를 추가합니다. */
+  transform: rotateY(0deg); /* 초기 상태는 회전 없음 */
+  border-radius: 5px; /* 이미지의 모서리를 둥글게 만들어 줍니다. */
+  margin-left: 0px;
+}
+
+.coverImageContainer:hover .coverImage {
+  box-shadow: 0 0px 50px rgba(255, 255, 255, 0.6);
+}
+
+.songListContainer {
+  flex: 0.7;
+  padding-right: 80px;
+  margin-left: 10%;
+}
+
+.songListHeader {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 50px;
+  margin-bottom: 15px;
+  /* padding: 5px 0; */
+}
+
+.songList {
+  overflow-y: auto;
+
+  height: 450px;
+}
+
+.songTitle:hover {
+  animation: marquee 10s linear infinite; /* 전광판처럼 스크롤되게 하는 애니메이션 */
+}
+
+.songTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 200px;
+  position: relative;
+  color: white;
+  /* font-style: italic !important; */
+}
+
+@keyframes marquee {
+  0% {
+    text-indent: 0%;
+  }
+  100% {
+    text-indent: -200%;
+  }
+}
+
+.albumImage {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.songLength {
+  display: flex;
+  align-items: center;
+}
+
+.audioContainer {
+  width: 90%;
+  text-align: center;
+  position: absolute; /* 이 속성을 추가합니다. */
+  bottom: 10%; /* 화면의 하단에 위치시킵니다. */
+}
+
+.audioControls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.audioControls button {
+  background-color: transparent;
+  border: none;
+  font-size: 18px;
+  color: white;
+  cursor: pointer;
+  outline: none;
+}
+
+.progressBar {
+  flex: 1;
+  height: 5px;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin: 0 10px;
+  position: relative;
+}
+
+.progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: white;
+}
+
+/* 스크롤바 전체 */
+.songList::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* 스크롤바의 핸들 부분 */
+.songList::-webkit-scrollbar-thumb {
+  background-color: #999999;
+}
+
+/* 스크롤바의 트랙 부분 */
+.songList::-webkit-scrollbar-track {
+  background-color: rgb(0, 0, 0);
+}

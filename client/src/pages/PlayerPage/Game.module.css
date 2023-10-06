@@ -1,0 +1,296 @@
+.gameContainer {
+  width: 600px;
+  height: 600px;
+  border: 4px solid white;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+  background-color: rgb(55, 55, 55);
+  justify-content: center;
+  margin-right: 10px; /* 오른쪽 여백 추가 */
+  margin-bottom: 50px;
+  box-shadow: 0 0 15px 10px rgba(150, 150, 150, 0.5);
+}
+
+.player {
+  width: 20px;
+  height: 20px;
+  background-color: blue;
+  position: absolute;
+  border-radius: 50%;
+}
+
+.bullet {
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  position: absolute;
+  border-radius: 50%;
+}
+
+.gameOver {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #222222;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.gameOver button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: white;
+  cursor: pointer;
+}
+
+/* Game.module.css */
+
+/* ... 기존 스타일 ... */
+
+.startScreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  /* margin-bottom: 10px; */
+  padding-bottom: 20px;
+  /* padding-top: 10px; */
+}
+
+.startScreen h1 {
+  font-size: 32px;
+  margin-bottom: 70px;
+  color: rgb(0, 0, 0);
+}
+
+.startScreen button {
+  padding: 10px 20px;
+  font-size: 20px;
+  border: none;
+  background-color: #7066e0; /* 예: 주황색 배경 */
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #675ecd;
+  transition: background-color 0.3s;
+}
+
+.startScreen button:hover {
+  background-color: #46408d; /* 예: 버튼 hover 시 색상 */
+}
+
+.startBox {
+  border: 1px solid white;
+  padding: 30px 50px;
+  background-color: #222222;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.gameTitleBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gameTitle {
+  font-family: "GangwonEduPowerExtraBoldA";
+  font-size: 30px;
+  color: white;
+  /* margin-bottom: 100px; */
+}
+
+.gameSubTitle {
+  display: flex;
+  justify-content: center;
+  font-family: "Pretendard-SemiBold";
+  font-size: 15px;
+  color: white;
+  /* margin-bottom: 50px; */
+}
+.startButton {
+  display: flex;
+  justify-content: center;
+}
+
+.startGame {
+  font-family: "Shilla_Gothic-Bold";
+  font-size: 20px;
+  color: white;
+}
+
+.timer {
+  position: absolute;
+  top: 10px; /* or any suitable value */
+  left: 50%;
+  transform: translateX(-50%); /* to center the timer horizontally */
+  font-size: 1.5em; /* optional, for better visibility */
+  color: white; /* or any color that contrasts with your background */
+  z-index: 10; /* optional, to ensure it's on top */
+  font-family: "Pretendard-ExtraBold";
+}
+
+.centerTimer {
+  color: white;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  font-size: 30px;
+  flex-direction: column;
+  align-items: center;
+  font-family: "GangwonEduPowerExtraBoldA";
+  gap: 10px;
+}
+.gameSeconds {
+  font-size: 20px;
+  font-family: "GangwonEduPowerExtraBoldA";
+  margin-bottom: 10px;
+}
+
+button.reButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #8f8f8f;
+  color: rgb(255, 255, 255);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-family: "Shilla_Gothic-Bold";
+}
+
+.reButton:hover {
+  background-color: #414141;
+}
+
+button.ranking {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #7066e0;
+  color: rgb(255, 255, 255);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-family: "Shilla_Gothic-Bold";
+}
+.ranking:hover {
+  background-color: #46408d;
+}
+
+.gameWithRankingContainer {
+  display: flex;
+  justify-content: space-between; /* 항목들 사이에 공간을 최대로 줌 */
+  align-items: center;
+  width: 1300px; /* 이 값을 조절하여 적절한 너비를 설정 */
+}
+
+.rankingContainer {
+  display: flex;
+  flex-direction: column;
+  width: 500px; /* 또는 원하는 너비로 조절 */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: #222222;
+  border-radius: 10px;
+  margin-bottom: 50px;
+}
+
+.rankContainer {
+  width: 60px;
+}
+
+.rankingContainer h2 {
+  text-align: center;
+  color: white;
+}
+
+.rankingContainer ul {
+  padding: 0;
+  color: white;
+}
+
+.rankingContainer li {
+  display: flex; /* 플렉스박스로 변경 */
+  align-items: center; /* 중앙 정렬 추가 */
+
+  color: white;
+  border-top: 1px solid #626262;
+  padding: 9px;
+}
+
+.rankingContainer li > span,
+.rankingContainer li > img {
+  flex: 1; /* 모든 항목에 동일한 너비를 부여 */
+  overflow: hidden; /* 오버플로우 숨김 */
+  white-space: nowrap; /* 줄바꿈 방지 */
+}
+
+.rankingContainer img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  text-align: center;
+  margin-right: 10px;
+}
+
+.rankingContainer .rank {
+  /* flex: 0.7; 이 값을 조절하여 원하는 너비로 설정하세요. */
+  padding-left: 10px;
+  /* padding-right: 10px; */
+}
+
+/* 기록에 대한 스타일 */
+.rankingContainer .record {
+  flex: 0.5; /* 이 값을 조절하여 원하는 너비로 설정하세요. */
+}
+
+.nickname {
+  /* padding-right: 150px; */
+
+  font-size: 20px;
+  font-family: "Pretendard-SemiBold";
+}
+
+.rankingContainer .rankContainer div {
+  display: flex; /* 플렉스박스로 변경 */
+  align-items: center; /* 항목들을 중앙에 배치 */
+}
+
+.profileImageWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.rank {
+  font-family: "Pretendard-Medium";
+}
+
+.recordDiv {
+  font-family: "Pretendard-SemiBold";
+}
+.titelTitle {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.gold {
+  background-color: #ffd700;
+}
+
+.silver {
+  background-color: #c0c0c0;
+}
+
+.bronze {
+  background-color: #a05822;
+}
+
+.default {
+  background-color: defaultColor; /* defaultColor 값을 정확하게 기입해주세요. */
+}

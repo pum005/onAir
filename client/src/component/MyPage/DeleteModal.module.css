@@ -1,0 +1,59 @@
+/* DeleteModal.module.css */
+.modalContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.modalBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #222222;
+  color: white;
+  padding: 40px 100px 40px 100px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.modalTypography {
+  margin-bottom: 20px;
+}
+
+button.modalButtonDelete {
+  background-color: #6966ff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button.modalButtonDelete:hover {
+  background-color: rgb(92, 90, 249);
+  transform: scale(1.05);
+  border: none;
+}
+
+button.modalButtonCancle {
+  background-color: #da0037;
+  color: rgb(255, 255, 255);
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button.modalButtonCancle:hover {
+  background-color: #a50029;
+  transform: scale(1.05);
+  border: none;
+}
