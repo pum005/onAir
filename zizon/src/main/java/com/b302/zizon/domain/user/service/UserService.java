@@ -37,7 +37,7 @@ public class UserService {
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;
     //    @Value("${kakao.logout-redirect-uri}")
-    private String kakaoLogoutRedirectUri = "http://localhost:8080/api/oauth/logout";
+    private String kakaoLogoutRedirectUri = "https://j9b302.p.ssafy.io/api/oauth/logout";
     @Value("${jwt.secret}")
     private String secretKey;
     @Value("${spring.security.oauth2.client.registration.naver.clientId}")
