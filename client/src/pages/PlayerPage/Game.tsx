@@ -133,7 +133,7 @@ const Game = () => {
   // 게임 시작 시 랭킹 데이터 가져오기
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/minigame/rank", {
+      .get("https://j9b302.p.ssafy.io/api/minigame/rank", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("accessToken"),
         },
@@ -151,7 +151,7 @@ const Game = () => {
   const updateRanking = () => {
     axios
       .post(
-        "http://localhost:8080/api/minigame/rank",
+        "https://j9b302.p.ssafy.io/api/minigame/rank",
         { record: gameTime },
         {
           headers: {
@@ -163,7 +163,7 @@ const Game = () => {
       .then(response => {
         console.log("랭킹이 갱신되었습니다.", response.data);
         // 랭킹 갱신 성공 후 랭킹 정보를 다시 가져옵니다.
-        return axios.get("http://localhost:8080/api/minigame/rank", {
+        return axios.get("https://j9b302.p.ssafy.io/api/minigame/rank", {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("accessToken"),
           },

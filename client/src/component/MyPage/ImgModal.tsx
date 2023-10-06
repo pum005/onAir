@@ -42,7 +42,7 @@ function ImgModal({
 
       requestWithTokenRefresh(() => {
         return axios.put(
-          "http://localhost:8080/api/user/profile/update",
+          "https://j9b302.p.ssafy.io/api/user/profile/update",
           formData,
           {
             headers: {
