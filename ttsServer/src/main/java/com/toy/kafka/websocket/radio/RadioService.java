@@ -127,7 +127,7 @@ public class RadioService {
         TTSDto ttsThreeDto = new TTSDto("tts", ttsThreeScript,ttsThree, ttsThreeLength);
         TTSDto ttsFourDto = new TTSDto("tts", ttsFourScript,ttsFour, ttsFourLength);
         MusicDto musicOneDto = new MusicDto("youtube", musicOneId, musicOneLength, musicOne.getArtist(), musicOne.getTitle(), musicOne.getAlbumCoverUrl());
-        MusicDto musicTwoDto = new MusicDto("youtube", musicTwoId, musicTwoLength,musicTwo.getArtist(), musicTwo.getTitle(), musicThree.getAlbumCoverUrl());
+        MusicDto musicTwoDto = new MusicDto("youtube", musicTwoId, musicTwoLength,musicTwo.getArtist(), musicTwo.getTitle(), musicTwo.getAlbumCoverUrl());
         MusicDto musicThreeDto = new MusicDto("youtube", musicThreeId, musicThreeLength, musicThree.getArtist(), musicThree.getTitle(), musicThree.getAlbumCoverUrl());
 
         String djName = findLiveQueue.getOncastCreateData().getDjName();
