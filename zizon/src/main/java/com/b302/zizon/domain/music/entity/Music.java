@@ -7,10 +7,10 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@ToString
 @EntityListeners(AuditingEntityListener.class)
 @Builder
 @AllArgsConstructor
+@ToString
 public class Music {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
