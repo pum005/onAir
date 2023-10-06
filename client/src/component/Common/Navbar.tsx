@@ -20,6 +20,7 @@ import { requestWithTokenRefresh } from "../../utils/requestWithTokenRefresh ";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useLocation } from "react-router-dom";
 
 function NavBar() {
   const navigate = useNavigate();
@@ -117,7 +118,7 @@ function NavBar() {
     requestWithTokenRefresh(() => {
       return axios.post(
         // "http://localhost:8080/api/oauth/social/logout",
-        "http://localhost:8080/api/oauth/social/logout",
+        "https://j9b302.p.ssafy.io/api/oauth/social/logout",
         {},
         {
           headers: {
@@ -132,9 +133,12 @@ function NavBar() {
         if (response.data.logoutUrl) {
           window.location.href = response.data.logoutUrl;
         } else if (response.data.naver) {
-          window.location.href = "http://localhost:3000"; // 메인 페이지로 리다이렉트
+          window.location.href = "https://j9b302.p.ssafy.io"; // 메인 페이지로 리다이렉트
         }
         localStorage.removeItem("accessToken"); // 액세스 토큰 제거
+        localStorage.removeItem("firstVisit");
+        localStorage.removeItem("isVisible");
+        localStorage.removeItem("displayIcon");
         for (let key in localStorage) {
           if (key.startsWith("persist:")) {
             localStorage.removeItem(key);

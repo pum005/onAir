@@ -50,7 +50,7 @@ export const LiveListModal: React.FC<LiveListModalProps> = ({
     if (selectedMusicId) {
       requestWithTokenRefresh(() => {
         return axios.post(
-          "http://localhost:8080/api/my-musicbox",
+          "https://j9b302.p.ssafy.io/api/my-musicbox",
           { musicId: selectedMusicId },
           {
             headers: {
@@ -60,7 +60,7 @@ export const LiveListModal: React.FC<LiveListModalProps> = ({
           }
         );
       })
-        .then((response) => {
+        .then(response => {
           if (response.data.message === "음악 추가 완료") {
             setAlertMessage("추가되었습니다.");
             setAlertModalOpen(true);
@@ -72,7 +72,7 @@ export const LiveListModal: React.FC<LiveListModalProps> = ({
             setAlertModalOpen(true);
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("에러발생", error);
         });
     }
