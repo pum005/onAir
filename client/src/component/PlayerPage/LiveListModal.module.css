@@ -16,10 +16,14 @@
 }
 
 .oncastList {
-  padding: 0 20px;
+  padding: 0 40px;
+  /* display: flex; */
+  gap: 10px;
+  /* margin-top: 20px; */
 }
 
 .oncastItem {
+  margin-bottom: 30px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -67,11 +71,11 @@
 
 .nickname {
   font-weight: 500;
-  font-size: 18px;
+  font-size: 15px;
   margin-bottom: 5px;
   font-family: "Pretendard-ExtraBold", sans-serif;
   white-space: nowrap; /* 줄바꿈 방지 */
-  width: 150%;
+  width: 100%;
 }
 
 .title:hover {
@@ -134,7 +138,7 @@
   overflow: hidden;
   /* text-overflow: ellipsis; */
   /* white-space: nowrap; */
-  width: 150px;
+  width: 120px;
   /* position: relative; */
   color: #a3a3a3;
 }

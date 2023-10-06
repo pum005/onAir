@@ -43,7 +43,7 @@ const CreateRadio = () => {
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newContent = e.target.value;
-    if (newContent.length <= 1000) {
+    if (newContent.length <= 200) {
       setContent(newContent);
       setContentLength(newContent.length);
       setContentMaxLengthReached(false); // 내용 길이가 1000자 이하일 경우 상태를 false로 설정
@@ -130,8 +130,7 @@ const CreateRadio = () => {
 
     Swal.fire({
       icon: "info",
-      title: "라디오를 생성하시겠습니까?",
-      text: "2분정도 소요됩니다. 게임을 하시면서 잠시만 기다려주세요 . . .",
+      title: "1~2분정도 소요될 수 있습니다.",
       showCancelButton: true,
       confirmButtonColor: "6966FF",
       confirmButtonText: "확인",
@@ -140,8 +139,16 @@ const CreateRadio = () => {
       customClass: {
         popup: "my-popup-class",
       },
-    }).then((result) => {
+    }).then(result => {
       if (result.isConfirmed) {
+        setIsGame(true);
+
+        // 5분 뒤에 CreateOncast() 함수 호출 (300000ms = 5분)
+        // setTimeout(() => {
+        //   CreateOncast();
+        // }, 300000);
+
+        //이부분 주석풀기
         CreateOncast();
       } else {
         return;
@@ -184,7 +191,7 @@ const CreateRadio = () => {
     requestWithTokenRefresh(() => {
       return axios.post(
         // "http://52.78.65.222:5000/hadoop/songs",
-        "http://localhost:8080/api/oncast/create",
+        "https://j9b302.p.ssafy.io/api/oncast/create",
         {
           title: title,
           theme: selectedTheme,
@@ -199,7 +206,7 @@ const CreateRadio = () => {
         }
       );
     })
-      .then((response) => {
+      .then(response => {
         console.log(response);
         console.log(response.data);
         if (response.status === 200) {
@@ -216,7 +223,7 @@ const CreateRadio = () => {
             customClass: {
               popup: "my-popup-class",
             },
-          }).then((result) => {
+          }).then(result => {
             if (result.isConfirmed) {
               const oncastId = response.data;
               navigate("/Player", { state: { oncastId } });
@@ -228,7 +235,7 @@ const CreateRadio = () => {
           alert("온캐스트 생성에 실패했습니다.");
         }
       })
-      .catch((error) => {
+      .catch(error => {
         setIsGame(false);
         if (
           error.response.data ===
@@ -278,7 +285,7 @@ const CreateRadio = () => {
                 <Grid item xs={9.5}>
                   <textarea
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={e => setTitle(e.target.value)}
                     className={styles.titleInput}
                   />
                 </Grid>
@@ -320,7 +327,7 @@ const CreateRadio = () => {
                     className={styles.typingLimit}
                     style={{ color: contentMaxLengthReached ? "red" : "white" }}
                   >
-                    {`${contentLength}/1000`}
+                    {`${contentLength}/200`}
                   </div>
                 </Grid>
               </Grid>

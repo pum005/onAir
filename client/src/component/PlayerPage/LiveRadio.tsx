@@ -55,6 +55,7 @@ export const Radio = ({ ttsFile, script, playedTime, djName }: RadioProps) => {
         className={styles.audioStyle}
         crossOrigin="anonymous"
         onTimeUpdate={handleTimeUpdate}
+        style={{ width: "0px", height: "0px" }}
       >
         <source src={ttsFile} type="audio/mp3" />
         Your browser does not support the audio element.
