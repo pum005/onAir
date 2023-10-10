@@ -13,7 +13,7 @@ import java.io.IOException;
 public class OAuthFailHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        System.out.println("실패");
+        log.info("로그인 실패 핸들러 동작");
         response.sendRedirect("http://localhost:3000");
 //        response.sendRedirect("https://j9b302.p.ssafy.io");
     }
