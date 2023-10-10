@@ -148,7 +148,7 @@ topicname = properties.get('CONFIG', 'TOPIC')
 topic = search_category
 message_producer = MessageProducer(broker, topicname)
 
-#for i in range(len(playlists)):
+#for i in range(len(playlists))::
 message_producer.send_message(playlists[0])
 
 for i in range(len(playlists)):
