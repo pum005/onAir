@@ -17,7 +17,13 @@
 ###### OnAIr는 빅데이터 분산 처리 기반의 'AI 라디오' 프로젝트로 사용자가 '사연'과 '희망테마'를 입력하면 그에 맞는 대본과 음악 추천 결과를 생성하여 스트리밍 하는 서비스입니다.
 </br>
 
+
+
+
 # ⌛ 프로젝트 기간 : 2023. 08. 21 ~ 2023. 10. 06.
+
+
+
 
 # 👥 팀 구성
 
@@ -36,18 +42,25 @@
 
 </br>
 
+
 # 📌 주요 기능
 
-## 박기현
 
-### 뭐하는 프로젝트?
+## 기현 작성 예정
+
+
 
 # 🔗 주요 기술
-### 캡쳐한것들 다 이어붙여보기
+
+## 시환, 재용 작성 예정
+
+
 
 # 🔨 개발 및 협업 환경
 
-## 강현
+
+
+## 현 작성 예정
 
 
 ### Backend
@@ -68,7 +81,10 @@
 <img src="https://img.shields.io/badge/Python-blue?style=flat-square&logo=python&logoColor=white"/>
 &nbsp;<img src="https://img.shields.io/badge/Kafka-black?style=flat-square&logo=apachekafka&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Spark-black?style=flat-square&logo=apachespark&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Hadoop-blue?style=flat-square&logo=apachehadoop&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Hive-yellow?style=flat-square&logo=apachehive&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Flask-black?style=flat-square&logo=flask&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Spotify-green?style=flat-square&logo=spotify&logoColor=white"/>
 
+
+
 # 🖼 서비스 화면
+## 추후 모여서 작성 예정
 
 ### gif1 메인화면 - 사연 테마 입력- 온캐스트 생성 완료까지
 
@@ -87,3 +103,9 @@
 
 # 💬 화면 설계서(목업)
 ![피그마](https://github.com/hyunnn12/CodingTestPractice/assets/119777617/9d27af23-5b1e-4c47-ab88-a77debd5ee02)
+
+# 💬 인터페이스 설계서(API명세서)
+
+### 기현 작성 예정
+
+
