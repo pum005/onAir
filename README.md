@@ -66,15 +66,55 @@
 
 # 🔗 주요 기술
 
-## 시환, 재용 작성 예정
+- **AWS EC2를 활용한 Spark 클러스터 구축**
+    - AWS EC2 5대의 서버로 Spark 클러스터 구축
+    - NameNode 1대, Backup NameNode 1대, DataNode 3대
+    - YARN과 ZOOKEEPER는 구동 중인 NameNode 상 운영
+    - 800만 개의 노래 데이터를 HDFS에 적재하여 분산 병렬 처리
+    - 클러스터 실행, 종료, 재실행 스크립트 작성
+
+![Untitled](.frontend/src/assets/demo1.png)
+
+- **PCA와 K-평균 군집화를 활용한 음악 추천 기능**
+    - 차원 축소법(PCA)으로 노래 데이터의 특성들의 다중공선성 제거 및 모델 성능 개선
+    - PySpark와 분산 병렬 처리를 이용한 800만 개의 노래 데이터를 K-평균 군집화
+    - 실루엣(Silhouette) 계수 기반으로 최적의 K 값 활용
+    - 사용자 입력 데이터가 속한 클러스터 내 중심점에 가까운 노래 목록 일부 추출
+    - ~~NVIDIA RAPIDS 기반 GPU 병렬 처리 가속화~~
+
+![**노래 군집 분포도**](.frontend/src/assets/demo2.png)
+
+![**노래 특성 별 분포**](.frontend/src/assets/demo3.png)
+
+- **사용자 사연 분석을 위해 BERT 기반의 트랜스포머 모델을 활용한 텍스트 감성 분석**
+    - 추천 알고리즘에 필요한 Valence와 Energy를 얻기 위한 감성 분석 수행
+    - HuggingFace BERT 토크나이저 및 트랜스포머 모델(XLM-RoBERTa-large) 활용
+- **랜덤 포레스트로 음악 특성 값에 대한 특성 중요도를 도출하고 이를 코사인 유사도에 가중치로 적용하여 추천 결과 생성**
+    - 앙상블 모델인 랜덤 포레스트(**[sklearn.ensemble.RandomForestClassifier](http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html))**를 기반으로 각 노래 특성 별 중요도를 측정
+    - 전체 특성 중 일부를 제거하여 모델의 성능이 얼마나 변화하는가 기준으로 중요도 계산
+    - 특성 중요도는 클러스터마다 개별 측정
+
+![Untitled](.frontend/src/assets/demo4.png)
+
+- **데이터 수집기 구현 및 HDFS, YARN, ZOOKEEPER 서버 환경 구축**
+    - Spotify API를 이용하여 키워드(ex. KPOP, ROCK etc.) 별 플레이리스트에 등록된 노래들과 특성 값들을 수집하여 HDFS에 적재
+    - YARN, ZOOKEEPER를 NameNode 서버 상에서 구동 및 관리
+- **Flask, Hive와 Zeppelin을 활용한 추천 결과 집계 및 시각화**
+    - Flask REST API 서버를 구축하여 사용자에게 추천 결과 제공
+    - Hive와 Zeppelin를 연동하여 MapReduce 기반 집계 및 시각화 수행
+    - Hive 메타스토어 DB로 Derby DB  사용
+    
+- **kafka를 통한, 실시간 라이브 서버간 비동기 메시지 통신 구현**
+    - 라이브에 참여한 사용자에게 실시간 라이브 정보를 제공하는 서버와 라이브 스케줄을 관리하는 서버 사이에 실시간성을 높이기 위해 효율적인 데이터 전달 기술이 필요했습니다.
+    - kafka 와 zookeeper를 활용해 클러스터를 구축하여, 비동기 메시지 통신을 구현하고 안정적인 라이브 기능을 제공할수 있었습니다.
+
+- **불필요한 데이터 전송을 막기 위한 Websocket 도입**
+    - 실시간 채팅과 실시간 라이브 방송을 진행을 위해, 사용자들이 서로 데이터를 주고 받아야만 했습니다.
+    - HTTP Polling 방식 대신, WebSocket 방식을 도입해 불필요한 데이터 전송을 줄여, 서버 부하를 막고, 네트워크 대역폭을 줄일수 있었습니다.
 
 
 
 # 🔨 개발 및 협업 환경
-
-
-
-## 현 작성 예정
 
 
 ### Backend
@@ -96,19 +136,6 @@
 &nbsp;<img src="https://img.shields.io/badge/Kafka-black?style=flat-square&logo=apachekafka&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Spark-black?style=flat-square&logo=apachespark&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Hadoop-blue?style=flat-square&logo=apachehadoop&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Hive-yellow?style=flat-square&logo=apachehive&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Flask-black?style=flat-square&logo=flask&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Spotify-green?style=flat-square&logo=spotify&logoColor=white"/>
 
 
-
-# 🖼 서비스 화면
-## 추후 모여서 작성 예정
-
-### gif1 메인화면 - 사연 테마 입력- 온캐스트 생성 완료까지
-
-### gif2 마이페이지 - 온캐스트 재생 - 스크립트, 음악 재생까지
-
-### gif3 마이페이지 - 음악 플레이리스트에 추가 - 플레이어로 재생 - 백그라운드 재생까지(메인화면으로)
-
-### gif4 라이브 페이지 - 편성표 - 채팅
-
-
 # 💬 시스템 아키텍처
 ![system_architecture](https://github.com/hyunnn12/CodingTestPractice/assets/119777617/d549215c-c5ca-40f0-beb5-c876e8655ad8)
 
@@ -119,7 +146,7 @@
 ![피그마](https://github.com/hyunnn12/CodingTestPractice/assets/119777617/9d27af23-5b1e-4c47-ab88-a77debd5ee02)
 
 # 💬 인터페이스 설계서(API명세서)
-
-### 기현 작성 예정
+![인터페이스명세서1](/uploads/30994209b462018101e4b8664b577094/인터페이스명세서1.PNG)
+![인터페이스명세서2](/uploads/f2fb45560be7e1f4e94a2b6cd8e01027/인터페이스명세서2.PNG)
 
 
