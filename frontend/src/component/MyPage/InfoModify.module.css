@@ -1,0 +1,48 @@
+@font-face {
+  font-family: "GangwonEduPowerExtraBoldA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 중앙에 수직 정렬 */
+  /* height: 300px; */
+}
+
+/* border-radius : 동그랗게 */
+/* border : 테두리 */
+/* boxShadow : 외부테두리(인스타그램) */
+.profileImage {
+  cursor: pointer;
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid white;
+  margin-top: 3rem;
+  box-shadow: 0 0 15px 10px rgba(150, 150, 150, 0.5);
+}
+
+.nicknameWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  /* height: 50px; */
+}
+
+.nickname {
+  font-family: "GangwonEduPowerExtraBoldA"; /* 폰트 적용 */
+  font-size: 30px;
+  margin-right: 10px; /* 닉네임과 "변경" 글자 사이의 간격 */
+}
+
+.changeNickname {
+  cursor: pointer;
+  font-size: 20px;
+  font-family: "GangwonEduPowerExtraBoldA"; /* 폰트 적용 */
+}

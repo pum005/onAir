@@ -1,0 +1,179 @@
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100%;
+  background-color: rgba(37, 35, 37, 0.95);
+  box-shadow: -4px 0px 10px rgba(0, 0, 0, 0.5);
+  transition: right 0.3s;
+  padding: 20px;
+  overflow-y: auto;
+  z-index: 1000;
+  border-radius: 20px;
+  border: 1px solid #545454;
+}
+
+.chatHeader {
+  font-size: 30px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+}
+
+.chatMessages {
+  flex: 1;
+  height: 550px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  border: 1px solid #444;
+  padding: 10px;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.chatMessages::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* 스크롤바 전체 */
+.chatMessages::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* 스크롤바의 핸들 부분 */
+.chatMessages::-webkit-scrollbar-thumb {
+  background-color: #bdbdbd;
+  border-radius: 10px;
+}
+
+/* 스크롤바의 트랙 부분 */
+.chatMessages::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.chatInputContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.1);
+  /* padding: 5px; */
+  border-radius: 5px;
+}
+
+.chatInput {
+  width: 75%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #7066e0;
+  background: rgba(0, 0, 0, 0.1);
+  color: white;
+  font-family: "Pretendard-SemiBold", sans-serif;
+}
+
+.chatButton {
+  background-color: #7066e0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  width: 15%;
+  transition: background 0.3s;
+  font-family: "Pretendard-SemiBold", sans-serif;
+  font-size: 15px;
+}
+
+.chatButton:hover {
+  background-color: #6960d1;
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+  transition: transform 0.3s;
+}
+
+.closeButton:hover {
+  transform: scale(1.1);
+}
+
+.closed {
+  right: -500px;
+}
+
+.chatMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.senderInfo {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.chatMessage img {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  object-fit: cover;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.chatMessage .username {
+  font-weight: bold;
+  margin-right: 10px;
+  color: #ffffff;
+  font-family: "GangwonEduPowerExtraBoldA", sans-serif;
+}
+
+.message_content {
+  word-wrap: break-word;
+  max-width: 85%;
+  padding: 8px 12px;
+  border-radius: 15px;
+  color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  font-family: "Pretendard-ExtraBold", sans-serif;
+}
+
+.chatMessage.sent {
+  align-items: flex-end;
+}
+
+.chatMessage.sent .senderInfo {
+  justify-content: flex-end;
+}
+
+.chatMessage.received {
+  align-items: flex-start;
+}
+
+.chatMessage.sent .message_content {
+  background-color: #525051;
+  border-radius: 10px;
+}
+
+.chatMessage.received .message_content {
+  background-color: #666;
+}
+
+.chatMessage.sent .username {
+  margin-left: 10px;
+  margin-right: 10px;
+  flex: none;
+}

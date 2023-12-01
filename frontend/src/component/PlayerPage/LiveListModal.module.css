@@ -1,0 +1,283 @@
+.modalContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Align modal to the right */
+}
+
+.closeButton {
+  color: #fff;
+  font-size: 24px;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.oncastList {
+  padding: 0 40px;
+  /* display: flex; */
+  gap: 10px;
+  /* margin-top: 20px; */
+}
+
+.oncastItem {
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* padding: 10px 0; */
+  position: relative;
+}
+
+.profileAndDetails {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 8px;
+  margin-top: 10px;
+  margin-left: 5px;
+  /* margin-left: 20px; */
+  border-radius: 300px;
+}
+
+.profileImage {
+  width: 50px;
+  height: 50px;
+  border-radius: 100px;
+  /* margin-right: 20px; */
+}
+
+.oncastDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 10px;
+  overflow: hidden;
+}
+
+@keyframes marquee {
+  0% {
+    text-indent: 0%;
+  }
+  100% {
+    text-indent: -100%;
+  }
+}
+
+.nickname {
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 5px;
+  font-family: "Pretendard-ExtraBold", sans-serif;
+  white-space: nowrap; /* 줄바꿈 방지 */
+  width: 100%;
+}
+
+.title:hover {
+  animation: marquee 10s linear infinite;
+}
+
+.title {
+  font-family: "Pretendard-SemiBold", sans-serif;
+  font-size: 13px;
+  color: #bbb;
+  white-space: nowrap; /* 줄바꿈 방지 */
+  /* width: 150%; */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* white-space: nowrap; */
+  width: 150px;
+  position: relative;
+  /* cursor: n; */
+  /* font-family: "Pretendard-SemiBold"; */
+}
+
+.musicList {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 5px;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.musicItem {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #333; /* 아래쪽 경계선 추가 */
+  padding: 10px 0; /* 위 아래 패딩을 추가하고 좌우 패딩은 0으로 설정 */
+}
+
+.albumCover {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
+
+.musicDetails {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  overflow: hidden; /* 스크롤되는 내용이 밖으로 나가지 않도록 설정 */
+  flex: 2;
+  color: white;
+}
+
+.songTitle {
+  font-size: 12px;
+  font-family: "Pretendard-SemiBold", sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* width: 150%; */
+  position: relative;
+  overflow: hidden;
+  /* text-overflow: ellipsis; */
+  /* white-space: nowrap; */
+  width: 120px;
+  /* position: relative; */
+  color: #a3a3a3;
+}
+
+.songTitle:hover {
+  animation: marquee 10s linear infinite;
+  color: white;
+}
+
+.musicItem:first-child,
+.songItem:first-child {
+  border-top: 1px solid #a3a3a3;
+}
+
+.artist {
+  font-size: 12px;
+  color: #bbb;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  /* text-overflow: ellipsis; */
+  /* white-space: nowrap; */
+  width: 150px;
+  font-family: "Pretendard-Medium", sans-serif;
+}
+
+.paper {
+  position: relative;
+  width: 30%;
+  max-width: 350px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background-color: #222222;
+  border: 1px solid #626262;
+  border-radius: 5px;
+  color: #fff;
+  padding: 20px;
+  outline: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.paper h2 {
+  text-align: center;
+}
+
+.addIcon {
+  position: absolute; /* 절대 위치를 지정 */
+  right: 0; /* 오른쪽에 붙이기 */
+  margin-right: 10%;
+  color: #ffffff77;
+  cursor: pointer;
+  opacity: 0; /* 기본적으로 아이콘이 보이지 않도록 설정 */
+  transition: opacity 0.3s;
+}
+
+/* .musicItem에 마우스를 올려놓았을 때의 + 아이콘 스타일 */
+.musicItem:hover .addIcon {
+  opacity: 1; /* 아이콘을 완전히 불투명하게 만듭니다 */
+}
+
+.addIcon:hover {
+  color: white;
+}
+
+.currentOncast {
+  background-color: #3f3f3f6e; /* 밝은 회색으로 배경색 변경 */
+  border: 1px solid white; /* 오렌지색 테두리 추가 */
+  border-radius: 5px;
+  padding: 0;
+}
+
+h2 {
+  font-family: "GangwonEduPowerExtraBoldA", sans-serif; /* 폴백 폰트로 sans-serif 추가 */
+}
+
+.musicItem,
+.songItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #a3a3a3;
+  padding: 5px;
+  font-family: "Pretendard-SemiBold";
+}
+
+.musicItem:hover,
+.songItem:hover {
+  background-color: #3b3a3a;
+}
+
+.albumCover,
+.albumCoverUrl {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.musicDetails,
+.musicDetails {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  overflow: hidden;
+  flex: 2;
+  color: white;
+}
+
+.orderNumber {
+  position: absolute; /* 절대적 위치를 지정 */
+  /* left: -32px; 왼쪽 경계에 붙임 */
+  left: -30px;
+  /* top: 11px; */
+  /* transform: translateY(
+    -50%
+  ); 상위 항목의 정중앙에 위치하기 위해 자신의 높이의 반만큼 위로 올림 */
+  margin-left: 3px;
+  margin-top: 3px;
+  font-weight: bold;
+  font-size: 10px;
+  background-color: #333; /* 배경색을 설정 */
+  /* padding:  6px; */
+  /* padding: auto; */
+  padding-left: 4px;
+  padding-right: 4px;
+  border-radius: 100px;
+  font-family: "Pretendard-SemiBold";
+  /* padding-top: 1px; */
+  /* ; */
+  border: 1px solid white;
+  /* bor */
+}
+
+/* .containerNumberflex {
+  display: flex;
+  /* justify-content: column; */
+
+.flexHeader {
+  display: flex;
+  /* align-items: center; */
+}

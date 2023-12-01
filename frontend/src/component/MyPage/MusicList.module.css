@@ -1,0 +1,23 @@
+.hoverableListItem .playButton {
+  display: none;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.hoverableListItem:hover .playButton {
+  display: block;
+}
+
+.audiotrackIcon {
+  font-size: 40px;
+}
+
+.textPrimary {
+  color: #ff69b4;
+}
+
+.textSecondary {
+  color: #ff69b4;
+}

@@ -1,0 +1,101 @@
+/* 스크롤바 전체 */
+.playlistContainer::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* 스크롤바의 핸들 부분 */
+.playlistContainer::-webkit-scrollbar-thumb {
+  background-color: #999999;
+  border-radius: 0px;
+}
+
+/* 스크롤바의 트랙 부분 */
+.playlistContainer::-webkit-scrollbar-track {
+  background-color: #222222;
+}
+
+.modalContainer {
+  position: relative;
+  background-color: #222222;
+  border-radius: 10px;
+  padding: 20px;
+  width: 400px;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.closeIcon {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  cursor: pointer;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  color: #f5e9e9;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.header > div > div:first-child {
+  text-align: right;
+}
+
+.header > div > div:last-child {
+  text-align: center;
+}
+
+.playlist {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #a3a3a3;
+  padding: 5px 10px 5px 10px;
+}
+
+.albumCoverUrl {
+  width: 40px;
+  height: 40px;
+  margin-right: 30px;
+}
+
+.songTitle {
+  color: white;
+}
+
+.songCount {
+  color: #a3a3a3;
+}
+
+.playlist:hover {
+  background-color: #3b3a3a;
+}
+
+.playlist:hover .addButton {
+  display: block !important; /* 플레이리스트 아이템에 호버되었을 때 + 버튼 보임 */
+}
+
+/* PlayListModal.module.css */
+
+.playlistContainer {
+  max-height: 200px; /* 원하는 최대 높이 값으로 설정 */
+  overflow-y: auto;
+}
+
+.addButton {
+  display: none !important;
+  color: rgba(255, 255, 255, 0.2);
+  margin-right: 20px;
+  align-self: center;
+  vertical-align: middle;
+  size: 15px;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.addButton:hover {
+  color: #ffffff !important;
+}
