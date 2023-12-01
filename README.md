@@ -125,20 +125,10 @@
 &nbsp;
 
 ### Frontend
-<img src="https://img.shields.io/badge/React-skyblue?style=flat-square&logo=react&logoColor=white"/>
-<img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white"/>
-<img src="https://img.shields.io/badge/HTML-red?style=flat-square&logo=html5&logoColor=white"/>
-<img src="https://img.shields.io/badge/CSS-blue?style=flat-square&logo=css3&logoColor=white"/>
-<img src="https://img.shields.io/badge/Node.js-green?style=flat-square&logo=nodedotjs&logoColor=white"/>
+<img src="https://img.shields.io/badge/React-skyblue?style=flat-square&logo=react&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/HTML-red?style=flat-square&logo=html5&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/CSS-blue?style=flat-square&logo=css3&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Node.js-green?style=flat-square&logo=nodedotjs&logoColor=white"/>
 
 ### Data
-<img src="https://img.shields.io/badge/Python-blue?style=flat-square&logo=python&logoColor=white"/>
-<img src="https://img.shields.io/badge/Kafka-black?style=flat-square&logo=apachekafka&logoColor=white"/>
-<img src="https://img.shields.io/badge/Spark-black?style=flat-square&logo=apachespark&logoColor=white"/>
-<img src="https://img.shields.io/badge/Hadoop-blue?style=flat-square&logo=apachehadoop&logoColor=white"/>
-<img src="https://img.shields.io/badge/Hive-yellow?style=flat-square&logo=apachehive&logoColor=white"/>
-<img src="https://img.shields.io/badge/Flask-black?style=flat-square&logo=flask&logoColor=white"/>
-<img src="https://img.shields.io/badge/Spotify-green?style=flat-square&logo=spotify&logoColor=white"/>
+<img src="https://img.shields.io/badge/Python-blue?style=flat-square&logo=python&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Kafka-black?style=flat-square&logo=apachekafka&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Spark-black?style=flat-square&logo=apachespark&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Hadoop-blue?style=flat-square&logo=apachehadoop&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Hive-yellow?style=flat-square&logo=apachehive&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Flask-black?style=flat-square&logo=flask&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Spotify-green?style=flat-square&logo=spotify&logoColor=white"/>
 
 
 # 💬 시스템 아키텍처
@@ -149,9 +139,3 @@
 
 # 💬 화면 설계서(목업)
 ![피그마](https://github.com/hyunnn12/CodingTestPractice/assets/119777617/9d27af23-5b1e-4c47-ab88-a77debd5ee02)
-
-# 💬 인터페이스 설계서(API명세서)
-![인터페이스명세서1](/uploads/30994209b462018101e4b8664b577094/인터페이스명세서1.PNG)
-![인터페이스명세서2](/uploads/f2fb45560be7e1f4e94a2b6cd8e01027/인터페이스명세서2.PNG)
-
-
