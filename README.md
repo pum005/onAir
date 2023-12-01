@@ -73,7 +73,7 @@
     - 800만 개의 노래 데이터를 HDFS에 적재하여 분산 병렬 처리
     - 클러스터 실행, 종료, 재실행 스크립트 작성
 
-![Untitled](.frontend/src/assets/demo1.png)
+![Untitled](./frontend/src/assets/demo1.png)
 
 - **PCA와 K-평균 군집화를 활용한 음악 추천 기능**
     - 차원 축소법(PCA)으로 노래 데이터의 특성들의 다중공선성 제거 및 모델 성능 개선
@@ -82,9 +82,9 @@
     - 사용자 입력 데이터가 속한 클러스터 내 중심점에 가까운 노래 목록 일부 추출
     - ~~NVIDIA RAPIDS 기반 GPU 병렬 처리 가속화~~
 
-![**노래 군집 분포도**](.frontend/src/assets/demo2.png)
+![**노래 군집 분포도**](./frontend/src/assets/demo2.png)
 
-![**노래 특성 별 분포**](.frontend/src/assets/demo3.png)
+![**노래 특성 별 분포**](./frontend/src/assets/demo3.png)
 
 - **사용자 사연 분석을 위해 BERT 기반의 트랜스포머 모델을 활용한 텍스트 감성 분석**
     - 추천 알고리즘에 필요한 Valence와 Energy를 얻기 위한 감성 분석 수행
@@ -94,7 +94,7 @@
     - 전체 특성 중 일부를 제거하여 모델의 성능이 얼마나 변화하는가 기준으로 중요도 계산
     - 특성 중요도는 클러스터마다 개별 측정
 
-![Untitled](.frontend/src/assets/demo4.png)
+![Untitled](./frontend/src/assets/demo4.png)
 
 - **데이터 수집기 구현 및 HDFS, YARN, ZOOKEEPER 서버 환경 구축**
     - Spotify API를 이용하여 키워드(ex. KPOP, ROCK etc.) 별 플레이리스트에 등록된 노래들과 특성 값들을 수집하여 HDFS에 적재
